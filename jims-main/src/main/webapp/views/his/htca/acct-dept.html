@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>基础数据维护-同步核算单元</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+        .fitem{
+            margin-left: 20px;
+            margin-top:10px;
+        }
+    </style>
+</head>
+
+<body class="easyui-layout">
+<div id="main" data-options="region:'center'" style="padding:1px;background:#eee;">
+
+    <table id="acctDeptDataGrid">
+    </table>
+</div>
+<div id="right" data-options="region:'east'" style="padding:1px;width:300px;background:#eee;">
+    <table id="acctVsDatagrid">
+    </table>
+</div>
+<div id="ft" style="margin:5px;">
+    <!--选择月份：<input type="text" id="synDate" class="easyui-datebox" />-->
+    <a href="#" id="synBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">同步科室信息</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存核算单元信息</a>
+    <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加核算单元</a>
+    <a href="#" id="addNextBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加下级核算单元</a>
+    <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除选中数据</a>
+    <a href="#">双击记录设置对照</a>
+</div>
+
+<div id="footBar" style="margin:5px;">
+    <a href="#" id="cancleVsBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">取消对照</a>
+</div>
+
+<div id="acctDeptStaffWindow" class="easyui-window">
+    <table id="deptDictTable" class="easyui-tree">
+
+    </table>
+</div>
+
+<div id="acctDeptFormWindow" class="easyui-window">
+    <form id="acctDeptForm">
+        <div class="fitem">
+            <label for="deptName">核算单位名称:</label>
+            <input type="text" id="deptName" class="easyui-textbox"/>
+        </div>
+        <div class="fitem">
+            <label for="deptCode">核算单元编码:</label>
+            <input type="text" id="deptCode" class="easyui-textbox"/>
+        </div>
+        <div class="fitem">
+            <label for="inpOrOutp">门诊或住院:</label>
+            <select id="inpOrOutp" class="easyui-combobox" style="width:165px;">
+                <option value="0">门诊</option>
+                <option value="1">住院</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label for="deptType">核算单元类别:</label>
+            <select id="deptType" class="easyui-combobox" style="width:165px;">
+                <option value="0">直接医疗类科室</option>
+                <option value="1">医疗技术类科室</option>
+                <option value="2">医疗辅助类科室</option>
+                <option value="3">管理类科室</option>
+                <option value="4">未纳入科室</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label for="costAppInd">是否参与分摊:</label>
+            <select id="costAppInd" class="easyui-combobox" style="width:165px;">
+                <option value="0">是</option>
+                <option value="1">否</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label for="costAppLevel">分摊级别:</label>
+            <select id="costAppLevel" class="easyui-combobox" style="width:165px;">
+                <option value="5">直接医疗类科室</option>
+                <option value="4">医疗技术类科室</option>
+                <option value="3">医疗辅助类科室</option>
+                <option value="2">管理类科室</option>
+                <option value="1">未纳入科室</option>
+            </select>
+        </div>
+        <input type="hidden" class="easyui-textbox" id="parentId"/>
+    </form>
+</div>
+
+<div id="winFt" style="margin:5px;">
+    <a href="#" id="clearBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">重置表单</a>
+    <a href="#" id="addAcctBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">添加核算单元</a>
+</div>
+
+<div id="acctDeptVsDeptDictFt">
+    <a href="#" id="accDeptVsClearBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">全部取消</a>
+    <a href="#" id="accDeptVsAddBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存对照</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/acc-dept.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

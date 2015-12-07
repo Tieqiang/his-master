@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>核算科目维护</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+<div data-options="region:'center'" style="padding:1px;background:#eee;">
+    <table id="reckClassDatagrid">
+
+    </table>
+</div>
+
+
+<div id="ft" style="margin:5px;">
+    <a href="#" id="getHisNewItemBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">提取HIS新增项目</a>
+    <a href="#" id="fetchItemBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">提取核算项目</a>
+    <a href="#" id="saveReckItemClassBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存核算项目修改</a>
+    <a href="#" id="removeReckItemClassBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除核算项目</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/acct-reck-item-class-dict.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

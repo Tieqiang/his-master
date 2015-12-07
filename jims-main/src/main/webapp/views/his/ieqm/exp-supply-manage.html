@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>医院管理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div id="ft" style="height: 30px;font-size: 12px">
+    <input type="checkbox" id="expName" name="checkboxOne"  onclick="checkRadio()" />名称
+    <input type="text" id="searchInput"  name="checkboxOne" style="width: 200px" disabled="true">
+    <input type="radio" id="allSupply" name="radioOne" value="2"/>全部
+    <input type="radio" id="okSupply" name="radioOne" checked value="1" />可供应
+    <input type="radio" id="noSupply" name="radioOne"  value="0" />不可供
+</div>
+
+<table id="dg" class="easyui-datagrid">
+</table>
+
+
+<div id="tb" style="padding:2px 5px;">
+    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search" plain="true">提取</a>
+    <!--<a href="#" id="noBtn" class="easyui-linkbutton" iconCls="icon-no" plain="true">不可供消耗品</a>-->
+    <!--<a href="#" id="allBtn" class="easyui-linkbutton" iconCls="icon-ok" plain="true">所有消耗品</a>-->
+    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save" plain="true">保存</a>
+    <a href="#" id="printBtn" class="easyui-linkbutton" iconCls="icon-print" plain="true">打印</a>
+</div>
+
+
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/exp-supply-manage.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

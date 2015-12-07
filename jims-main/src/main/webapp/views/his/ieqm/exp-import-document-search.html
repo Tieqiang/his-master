@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>消耗品入库单据查询</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div id="expImportDetail">
+    <form id="detailForm" class="easyui-form">
+
+        <div class="row">
+            <input type="checkbox" id="billing" name="checkboxOne"  onclick="checkRadio()" />单据区间
+            <input type="text" id="startBill"  name="checkboxOne" class="easyui-textbox" style="width: 200px" disabled="true">&nbsp;&nbsp;到&nbsp;&nbsp;
+            <input type="text" id="stopBill"  name="checkboxOne" class="easyui-textbox" style="width: 200px" disabled="true">&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" id="allBill" name="radioTwo" checked value=""/>所有
+            <input type="radio" id="noBill" name="radioTwo"  value="0"/>未作废&nbsp;
+            <input type="radio" id="okBill" name="radioTwo"  value="1"/>作废
+        </div>
+        <div class="row">
+            <input type="checkbox" id="dateTime" name="checkboxOne"  onclick="checkRadio()" />日期区间
+            <input type="text" id="startDate"  name="checkboxOne" class="easyui-datebox" data-options="formatter:myFormatter2,parser:w3" style="width: 200px" disabled="true">&nbsp;&nbsp;到&nbsp;&nbsp;
+            <input type="text" id="stopDate"  name="checkboxOne" class="easyui-datebox" data-options="formatter:myFormatter2,parser:w3" style="width: 200px" disabled="true">&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" id="allClass" name="radioOne" checked value=""/>所有
+            <input type="radio" id="okClass" name="radioOne"  value="1" />已记账
+            <input type="radio" id="noClass" name="radioOne"  value="0" />未记账
+        </div>
+        <div class="row">
+            <input type="checkbox" id="expName" name="checkboxOne"  onclick="checkRadio()" />产品名称
+            <input type="text" id="searchInput"  name="checkboxOne" style="width: 200px" disabled="true">
+            <input type="checkbox" id="supply" name="checkboxOne"  onclick="checkRadio()" />供货商
+            <input type="text" id="supplier"  name="checkboxOne" style="width: 200px" disabled="true">
+            <input type="checkbox" id="importClassName" name="checkboxOne"  onclick="checkRadio()" />类别
+            <input type="text" id="importClass"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+        </div>
+
+        <div class="row">
+
+
+        </div>
+        <div class="row">
+
+        </div>
+    </form>
+</div>
+
+<div class="easyui-datagrid" id="importMaster">
+
+</div>
+
+<div id="ft">
+    <a class="easyui-linkbutton" id="searchBtn" href="#" data-options="iconCls:'icon-search'">查询</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'">打印</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-clear'">退出</a>
+</div>
+
+<div id="retailDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="importRetailData">
+
+    </div>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/exp-import-document-search.js"></script>
+</body>
+</html>

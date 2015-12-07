@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>产品价格维护</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<table id="dg" class="easyui-datagrid">
+</table>
+
+
+<div id="tb" style="padding:2px 5px;">
+    <a href="#" id="filter" class="easyui-linkbutton" iconCls="icon-filter">提取</a>
+    <a href="#" id="add" class="easyui-linkbutton" iconCls="icon-add">增加</a>
+    <a href="#" id="delete" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    <a href="#" id="save" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+    <a href="#" id="print" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+</div>
+<div id="ft" style="padding:2px 5px;">
+    产品名称：<select id="expName" title="消耗品字典" style="width:250px"></select>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/exp-price-list.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

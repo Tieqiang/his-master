@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>成本字典维护</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+<div id="costItemClass" data-options="region:'west'" style="padding:1px;background:#eee;width: 200px;">
+    <table id="costItemClassGrid" class="easyui-datagrid">
+
+    </table>
+</div>
+<div id="costItemDict" data-options="region:'center',fit:true" style="padding:1px;background:#eee;">
+    <table id="costItemDictGrid" class="easyui-datagrid">
+
+    </table>
+</div>
+
+<div id="ft" style="margin:5px;">
+    <!--选择月份：<input type="text" id="synDate" class="easyui-datebox" />-->
+    <a href="#" id="loadBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">加载成本项目数据</a>
+    <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增成本项目</a>
+    <a href="#" id="editBtn" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">编辑成本项目</a>
+    <a href="#" id="addVsIncomeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-man'">添加收入对照</a>
+    <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-reload'">校验数据合法性</a>
+</div>
+
+<div id="classft" style="margin:5px;">
+    <a href="#" id="addClassBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加分类</a>
+    <a href="#" id="removeClassBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除分类</a>
+</div>
+<!--添加分类模态-->
+<div id="classWin" class="easyui-window" style="height: 150px;width:280px;" data-options="footer:'#classWinFt',title:'成本分类维护'">
+
+    <form id="classForm" data-options="fit:true">
+        <div style="padding-top: 10px">
+            <label for="costItemClassCode">成本分类编码：</label>
+            <input class="easyui-validatebox" type="text" id="costItemClassCode" data-options="required:true,missingMessage:'请填写成本分类编码'"/>
+        </div>
+        <div style="padding-top:10px;">
+            <label for="costItemClassName">成本分类名称：</label>
+            <input class="easyui-validatebox" id="costItemClassName" type="text" data-options="required:true,missingMessage:'请填写成本分类名称'" />
+        </div>
+    </form>
+</div>
+
+<!--项目分类-->
+<div id="itemWin" class="easyui-window" data-options="footer:'#itemWinFt',title:'核算类型维护'">
+    <form id="itemForm" data-options="fit:true" style="padding:10px;">
+        <input type="hidden" class="easyui-textbox" id="id" />
+        <div style="padding-top: 10px">
+            <label for="costItemClassId">&nbsp;&nbsp;&nbsp;&nbsp;项目类别：</label>
+            <input class="easyui-combobox" type="text" id="costItemClassId"/>
+            <label for="costItemName">&nbsp;&nbsp;&nbsp;&nbsp;项目名称：</label>
+            <input class="easyui-validatebox" id="costItemName" type="text" data-options="required:true,missingMessage:'项目名称不能为空'" />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="costItemCode">&nbsp;&nbsp;&nbsp;&nbsp;项目编码：</label>
+            <input class="easyui-validatebox" id="costItemCode" type="text" data-options="required:true,missingMessage:'项目编码不能为空'" />
+            <label for="inputCode">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;输入码：</label>
+            <input class="easyui-textbox" id="inputCode" type="text"  />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="costItemAttr">&nbsp;&nbsp;&nbsp;&nbsp;成本属性：</label>
+            <input class="easyui-combobox" id="costItemAttr" type="text"/>
+            <label for="armyLocayCalcWay">&nbsp;&nbsp;军地分摊方案：</label>
+            <input class="easyui-combobox" id="armyLocayCalcWay" type="text" />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="secondCalcWay">&nbsp;&nbsp;次级分摊方案：</label>
+            <input class="easyui-combobox" id="secondCalcWay" type="text" />
+            <label for="personCalcWay">&nbsp;&nbsp;人员分摊方案：</label>
+            <input class="easyui-combobox" id="personCalcWay" type="text" />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="calcType">&nbsp;&nbsp;&nbsp;&nbsp;核算类型：</label>
+            <input class="easyui-combobox" id="calcType" type="text" />
+            <label for="costType">&nbsp;&nbsp;直接间接成本：</label>
+            <input class="easyui-combobox" id="costType" type="text"  />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="getWay">&nbsp;&nbsp;&nbsp;&nbsp;获取方式：</label>
+            <input class="easyui-combobox" id="getWay" type="text" />
+            <label for="calcPercent">&nbsp;&nbsp;&nbsp;计入百分比：</label>
+            <input class="easyui-validatebox" id="calcPercent" type="text" data-options="validateType:'number',required:true,missingMessage:'项目编码不能为空'" />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="inpOrderRate">&nbsp;&nbsp;住院开单分摊：</label>
+            <input class="easyui-textbox" id="inpOrderRate" type="text" />
+            <label for="inpPerformRate">&nbsp;&nbsp;住院执行分摊：</label>
+            <input class="easyui-textbox" id="inpPerformRate" type="text"  />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="inpWardRate">住院护理单元分摊：</label>
+            <input class="easyui-textbox" id="inpWardRate" type="text" />
+            <label for="outpOrderRate">&nbsp;&nbsp;门诊开单分摊：</label>
+            <input class="easyui-textbox" id="outpOrderRate" type="text" />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="outpPerformRate">&nbsp;&nbsp;门诊执行分摊：</label>
+            <input class="easyui-textbox" id="outpPerformRate" type="text"  />
+            <label for="outpWardRate">门诊护理单元分摊：</label>
+            <input class="easyui-textbox" id="outpWardRate" type="text"  />
+        </div>
+    </form>
+</div>
+
+<div style="padding:5px;text-align:right;" id="classWinFt">
+    <a href="#" id="saveClassBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="cancelClassBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+<div style="padding:5px;text-align:right;" id="itemWinFt">
+    <a href="#" id="saveItemBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="cancelItemBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+
+<div id="incomeTypeWindow" class="easyui-window">
+    <div class="easyui-layout" data-options="fit:true">
+        <div  data-options="region:'east'" style="height:800px;width:400px">
+            <table id="incomeTypeSelectdDg"></table>
+        </div>
+        <div data-options="region:'center'" style="height: 800px;width: 100px">
+            <a style="margin-top:160px" href="#" id="rightAllBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">添加全部</a><br/>
+            <br/>
+            <a href="#" id="rightBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加所选</a><br/>
+            <br/>
+            <a href="#" id="leftBtn" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">删除所选</a><br/>
+            <br/>
+            <a href="#" id="leftAllBtn" class="easyui-linkbutton" data-options="iconCls:'icon-man'">删除全部</a><br/>
+        </div>
+        <div data-options="region:'west'" style="height:800px;width: 400px;">
+            <table id="incomeTypeWaitDg"></table>
+        </div>
+    </div>
+</div>
+
+<!--<div style="padding:5px;text-align:right;" id="incomeTypeFt">-->
+    <!--<a href="#" id="saveTypeBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>-->
+    <!--<a href="#" id="cancelTypeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>-->
+<!--</div>-->
+
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/cost-item.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

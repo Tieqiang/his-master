@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>登陆</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div id="loginPanel" class="easyui-panel" title="系统登录" style="width:300px;height:350px;background:#fafafa;">
+    <form id="login" method="post">
+        <table cellpadding="5">
+            <tr>
+                <td>用户名:</td>
+                <td><input class="easyui-textbox" type="text" id="loginName"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>密码:</td>
+                <td><input class="easyui-textbox" type="password" id="password" /></td>
+                <td></td>
+            </tr>
+            <!--<tr>-->
+                <!--<td>验证码:</td>-->
+                <!--<td><input class="easyui-textbox" type="text" id="validateCode" data-options="required:true"/></td>-->
+                <!--<td><img id="code" border="1" title="看不清，请单击图片" src="/api/login/code"/></td>-->
+            <!--</tr>-->
+            <tr>
+                <td>医院:</td>
+                <td>
+                    <select class="easyui-combobox" id="hospitalId">
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <div id="tb" style="padding:2px 5px;">
+        <a href="#" id="loginBtn" class="easyui-linkbutton" iconCls="icon-ok">登陆</a>
+        <a href="#" id="clearBtn" class="easyui-linkbutton" iconCls="icon-clear">重置</a>
+    </div>
+</div>
+<div id="moduleDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="module">
+        <a href="#" id="OABtn" class="easyui-linkbutton" style="width:286px;height:132px;background:url(/assert/images/OA.png) no-repeat;"></a>
+        <a href="#" id="RLBtn" class="easyui-linkbutton" style="width:138px;height:132px;background:url(/assert/images/RL.png) no-repeat;"></a>
+        <a href="#" id="ZLBtn" class="easyui-linkbutton" style="width:138px;height:132px;background:url(/assert/images/ZL.png) no-repeat;"></a><br/>
+        <a href="#" id="JXBtn" class="easyui-linkbutton" style="width:138px;height:132px;background:url(/assert/images/JX.png) no-repeat;"></a>
+        <a href="#" id="WZBtn" class="easyui-linkbutton" style="width:138px;height:132px;background:url(/assert/images/WZ.png) no-repeat;"></a>
+        <a href="#" id="HQBtn" class="easyui-linkbutton" style="width:138px;height:132px;background:url(/assert/images/HQ.png) no-repeat;"></a>
+        <a href="#" id="YYBtn" class="easyui-linkbutton" style="width:138px;height:132px;background:url(/assert/images/YY.png) no-repeat;"></a>
+    </div>
+
+</div>
+<div id="stockDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="stock">
+    </div>
+</div>
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/common/login.js"></script>
+</body>
+</html>

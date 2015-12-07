@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>按出库类型出库统计</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div class="easyui-datagrid" id="dg">
+
+</div>
+<div id="ft">
+    开始时间：<input id="startDate" class="easyui-validatebox easyui-datetimebox"/>
+    结束时间：<input id="endDate" class="easyui-validatebox easyui-datetimebox"/>
+    出库类型：<select id="expClass" class="easyui-combobox" name="state" style="width:150px"></select>
+</div>
+<div id="tb">
+    <a href="#" id="search" class="easyui-linkbutton" iconCls="">检索</a>
+    <a href="#" id="clear" class="easyui-linkbutton" iconCls="">清屏</a>
+    <a href="#" id="saveAs" class="easyui-linkbutton" iconCls="">另存为</a>
+    <a href="#" id="print" class="easyui-linkbutton" iconCls="">打印</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/export-detail-by-exp-class.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>付款情况查询</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+
+        form{
+            margin-bottom: 3px;
+        }
+        .row{
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+<div id="tb">
+    <form id="detailForm" class="easyui-form">
+        <div class="row">
+            &nbsp;供应商：<input type="text" id="supplier"  name="checkboxOne" style="width: 155px" >&nbsp;
+            时段：
+            <input type="text" id="startDate"  name="checkboxOne" class="easyui-datebox" data-options="formatter:myformatter2,parser:w3" style="width: 155px" >&nbsp;&nbsp;&nbsp;到&nbsp;&nbsp;
+            <input type="text" id="stopDate"  name="checkboxOne" class="easyui-datebox" data-options="formatter:myformatter2,parser:w3" style="width: 155px" >&nbsp;
+        </div>
+        <div class="row">
+            入库单号：<input type="text" id="documentNo"  class="easyui-textbox"  name="checkboxOne" style="width: 150px" >&nbsp;
+            产品名称：<input type="text" id="searchInput"  name="checkboxOne" style="width: 200px" >
+            <input type="radio" id="allPay" name="radioOne" value="2"/>已全付
+            <input type="radio" id="somePay" name="radioOne"  value="1" />部分付
+            <input type="radio" id="noPay" name="radioOne"  value="0" />未付
+            <input type="radio" id="all" name="radioOne" checked value="0" />全部
+
+        </div>
+        <div class="row">
+
+        </div>
+    </form>
+</div>
+
+
+<div class="easyui-datagrid" id="importDetail">
+</div>
+
+
+<div id="ft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-search'" id="searchBtn">提取</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'" id="printBtn">打印</a>
+    <!--<a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'" id="outBtn">退出</a>-->
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-pay-search.js"></script>
+</body>
+</html>

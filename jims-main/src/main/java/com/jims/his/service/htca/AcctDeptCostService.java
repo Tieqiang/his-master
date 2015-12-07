@@ -1,0 +1,113 @@
+package com.jims.his.service.htca;
+
+import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.vo.PageEntity;
+import com.jims.his.domain.htca.entity.AcctDeptCost;
+import com.jims.his.domain.htca.facade.AcctDeptCostFacade;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 科室成本Service
+ * Created by heren on 2015/11/30.
+ */
+@Produces("application/json")
+@Path("acct-dept-cost")
+public class AcctDeptCostService {
+
+
+    private AcctDeptCostFacade acctDeptCostFacade;
+
+    @Inject
+    public AcctDeptCostService(AcctDeptCostFacade acctDeptCostFacade) {
+        this.acctDeptCostFacade = acctDeptCostFacade;
+    }
+
+
+    @GET
+    @Path("list")
+    public List<AcctDeptCost> getAcctDeptCost(@QueryParam("yearMonth") String yearMonth, @QueryParam("hospitalId") String hospitalId,
+                                              @QueryParam("costItemId") String costItemId) {
+
+        return acctDeptCostFacade.listAccctDeptCost(yearMonth, hospitalId, costItemId);
+
+    }
+
+    @POST
+    @Path("save")
+    public Response saveAcctDeptCost(List<AcctDeptCost> acctDeptCosts) {
+
+        try {
+            acctDeptCostFacade.saveOrUpdate(acctDeptCosts);
+            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+    @POST
+    @Path("delete-dept-cost")
+    public Response deleteAcctDeptCost(List<String> ids) {
+
+        try {
+            acctDeptCostFacade.deleteAcctDeptCost(ids);
+            return Response.status(Response.Status.OK).entity(ids).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+    @GET
+    @Path("list-by-dept")
+    public List<AcctDeptCost> findAcctDeptCostByDeptId(@QueryParam("hospitalId") String hospitalId, @QueryParam("deptId") String deptId,
+                                                       @QueryParam("yearMonth") String yearMonth) {
+
+        String hql = "from AcctDeptCost as cost where cost.hospitalId='" + hospitalId + "' and cost.yearMonth = '" + yearMonth + "' and " +
+                "cost.acctDeptId = '" + deptId + "'";
+
+        return acctDeptCostFacade.find(AcctDeptCost.class, hql, new ArrayList<Object>());
+
+    }
+
+
+    /**
+     * 分页加载某一个月份的数据
+     * @param hospitalId
+     * @param yearMonth
+     * @param page
+     * @param rows
+     * @return
+     */
+    @GET
+    @Path("list-all")
+    public PageEntity<AcctDeptCost> findAllDeptCost(@QueryParam("hospitalId") String hospitalId, @QueryParam("yearMonth") String yearMonth,
+                                                    @QueryParam("page")String page, @QueryParam("rows")String rows) {
+        return acctDeptCostFacade.listAll(hospitalId, yearMonth,page,rows);
+    }
+
+    @GET
+    @Path("fetch-cost")
+    @Produces("text/plain")
+    public Response fetchCostData(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
+        try {
+            acctDeptCostFacade.fetchCostData(hospitalId,yearMonth);
+            return Response.status(Response.Status.OK).entity("Ok").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+}

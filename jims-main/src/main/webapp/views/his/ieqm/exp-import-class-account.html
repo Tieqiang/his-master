@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>按入库类型入库统计</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+        div{
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="easyui-datagrid" id="importDetail">
+</div>
+
+<div id="tb">
+    入库类别：
+    <input type="text" id="importClass"  name="checkboxOne" style="width: 150px" >&nbsp;
+    时段：
+    <input type="text" id="startDate"  name="checkboxOne" class="easyui-datetimebox" data-options="formatter:myFormatter2,parser:w3" style="width: 155px" >&nbsp;到&nbsp;
+    <input type="text" id="stopDate"  name="checkboxOne" class="easyui-datetimebox" data-options="formatter:myFormatter2,parser:w3" style="width: 155px" >&nbsp;
+    <!--<input type="text" id="startDate"  name="checkboxOne" class="easyui-datetimebox"  style="width: 155px" >&nbsp;到&nbsp;-->
+    <!--<input type="text" id="stopDate"  name="checkboxOne" class="easyui-datetimebox"  style="width: 155px" >&nbsp;-->
+</div>
+<div id="ft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-search'" id="searchBtn">提取</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'" id="printBtn">打印</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'" id="outBtn">退出</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-import-class-account.js"></script>
+</body>
+</html>

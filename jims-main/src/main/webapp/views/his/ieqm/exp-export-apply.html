@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>申请出库</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+        select {
+            width: 139px
+        }
+
+        input {
+            width: 135px;
+        }
+
+        .narrowInput {
+            width: 35px;
+        }
+        label {
+            width: 40px;
+            margin: 2px;
+        }
+
+        .row {
+            margin-left: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="easyui-layout" id="dg">
+    <div region="north" title="申请出库" border="false">
+        <table id="top" class="easyui-datagrid" style="width:100%"></table>
+    </div>
+    <div region="south" border="false">
+        <table id="bottom" class="easyui-datagrid" style="width:100%"></table>
+    </div>
+    <div region="west" border="false" style="width:320px;">
+        <table id="left" class="easyui-datagrid"></table>
+    </div>
+    <div region="center" border="false">
+        <table id="right" class="easyui-datagrid"></table>
+    </div>
+</div>
+
+
+<div id="ft" class="easyui-panel">
+    <div id="expExportSearch" style="width:320px; float:left;border-right:1px solid #95B8E7;">
+        <form id="masterForm" class="easyui-form">
+            <div class="row">
+                <label for="exportDate">申请开始日期：</label>
+                <input type="text" id="startDate" class="easyui-datebox">
+            </div>
+            <div class="row">
+                <label for="exportDate">申请结束日期：</label>
+                <input type="text" id="endDate" class="easyui-datebox">
+            </div>
+            <div class="row">
+                <label for="accountPayed">&nbsp;&nbsp;申请库房：</label>
+                <select id="storage" title="库房列表"></select>
+                <a id="search" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-search'">查询</a>
+            </div>
+        </form>
+    </div>
+    <div id="expExportMaster" style="float:left;">
+        <div class="row">
+            <label for="exportClass">出库类别：</label>
+            <select id="exportClass" class="easyui-combobox"></select>
+            <label for="exportDate">出库日期：</label>
+            <input type="text" id="exportDate" required="required" class="easyui-datebox">
+            <label for="receiver">&nbsp;&nbsp;发往：</label>
+            <input id="receiver" class="easyui-combobox" required="required">
+            <label for="accountReceivable">&nbsp;应收款：</label>
+            <input type="text" id="accountReceivable" class="easyui-numberbox narrowInput" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+            <label for="accountPayed">已收款：</label>
+            <input type="text" id="accountPayed" class="easyui-numberbox narrowInput" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+        </div>
+        <div class="row">
+            <label for="additionalFee">&nbsp;附加费：</label>
+            <input type="text" id="additionalFee" class="easyui-numberbox" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+            <label for="fundItem">开支类别：</label>
+            <select id="fundItem" class="easyui-combogrid"></select>
+            <label for="memos">&nbsp;&nbsp;备注：</label>
+            <input type="text" id="memos" class="easyui-textbox">
+            <label for="subStorage">&nbsp;子库房：</label>
+            <input type="text" id="subStorage" class="easyui-textbox">
+        </div>
+        <div class="row">
+            <label for="principal">&nbsp;负责人：</label>
+            <select id="principal" class="easyui-combogrid"></select>
+            <label for="storekeeper">&nbsp;保管员：</label>
+            <select id="storekeeper" class="easyui-combogrid"></select>
+            <label for="buyer">&nbsp;领取人：</label>
+            <select id="buyer" class="easyui-combogrid"></select>
+            <label for="documentNo">&nbsp;单据号：</label>
+            <input type="text" id="documentNo" class="easyui-textbox">
+        </div>
+    </div>
+</div>
+
+<div id="tb">
+    <a id="addRow" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'">追加</a>
+    <a id="delete" class="easyui-linkbutton" href="#" data-options="">删除</a>
+    <a id="apply" class="easyui-linkbutton" href="#" data-options="">申请数据</a>
+    <a id="save" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'">保存</a>
+    <a id="print" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'">打印</a>
+    <a id="clear" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-clear'">清屏</a>
+</div>
+<div id="applyDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="applyDatagrid">
+
+    </div>
+</div>
+<div id="footer">
+    <a id="selectAll" class="easyui-linkbutton" href="#" data-options="">全选</a>
+    <a id="selectNon" class="easyui-linkbutton" href="#" data-options="">不选</a>
+    <a id="abandon" class="easyui-linkbutton" href="#" data-options="">作废</a>
+    <a id="confirm" class="easyui-linkbutton" href="#" data-options="">确定</a>
+    <a id="cancel" class="easyui-linkbutton" href="#" data-options="">取消</a>
+</div>
+<div id="expDetailDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="expDetailDatagrid">
+
+    </div>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-export-apply.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>医院管理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div id="topBar" style="height: 30px;font-size: 12px">
+    <span>申请日期:</span>
+    <input type="text" id="startTime" class="easyui-datebox"/><span>&nbsp;～</span>
+    <input type="text" id="endTime" class="easyui-datebox"/>
+    <span>是否确认:</span>
+    <input type="radio" id="no" name="radioOne" checked  value="0"  />未确认
+    <input type="radio" id="yes" name="radioOne"  value="1" />已确认
+</div>
+
+<table id="dg" class="easyui-datagrid">
+</table>
+
+
+<div id="tb" style="padding:2px 5px;">
+    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
+    <a href="#" id="clearBtn" class="easyui-linkbutton" iconCls="icon-clear" plain="true">清屏</a>
+</div>
+
+
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/exp-provide-application-search.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

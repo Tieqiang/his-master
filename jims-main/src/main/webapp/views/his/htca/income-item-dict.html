@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>基础数据维护-收入项目维护</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+<div id="main" data-options="region:'center'" style="padding:1px;background:#eee;">
+
+    <table id="incomeItemGrid">
+    </table>
+</div>
+
+
+<div id="ft" style="margin:5px;">
+    <select id="reckCombo" class="easyui-combobox" name="dept" style="width:200px;">
+    </select>
+    <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">提取新增收入项目</a>
+    <!--<a href="#" id="modifyBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">提取未设置收入项目</a>-->
+    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存收入项目</a>
+    <!--<a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除选中的收入项目</a>-->
+    <a href="#" id="makeInputCodeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">更新收入法</a>
+    <input type="text" class="easyui-textbox" id="searchText" />&nbsp;
+    <a href="#" id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">按分类过滤收入项目</a>
+</div>
+
+<div class="easyui-menu" id="rightMenu" style="width: 120px">
+    <div id="makeAllBtn">设置该类别的默认值</div>
+    <div id="makeOtherBtn">设置其他项目</div>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/income-item-dict.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

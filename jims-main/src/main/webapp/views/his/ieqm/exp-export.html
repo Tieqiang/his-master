@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>消耗品出库处理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+        select{
+            width:139px
+        }
+        input{
+            width:135px;
+        }
+        label{
+            width:40px;
+            margin:2px;
+        }
+        .row{
+            margin-left:10px;
+            margin-top:5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="expExportMaster">
+    <form id="masterForm" class="easyui-form">
+        <div class="row">
+            <label for="exportClass">出库类别：</label>
+            <select id="exportClass" class="easyui-combobox"></select>
+
+            <label for="exportDate">出库日期：</label>
+            <input type="text" id="exportDate"  required="required" class="easyui-datebox" data-options="formatter:myformatter2,parser:w3">
+
+            <label for="receiver">&nbsp;&nbsp;发往：</label>
+            <input id="receiver"  class="easyui-combobox" required="required">
+
+            <label for="documentNo">&nbsp;单据号：</label>
+            <input type="text" id="documentNo"  class="easyui-textbox" >
+            <label for="memos">&nbsp;&nbsp;备注：</label>
+            <input type="text" id="memos"  class="easyui-textbox" >
+
+        </div>
+        <div class="row">
+            <label for="accountPayed">&nbsp;已付款：</label>
+            <input type="text" id="accountPayed" class="easyui-numberbox" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+
+            <label for="accountReceivable">&nbsp;应付款：</label>
+            <input type="text" id="accountReceivable"  class="easyui-numberbox" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+
+            <label for="additionalFee">&nbsp;附加费：</label>
+            <input type="text" id="additionalFee"  class="easyui-numberbox" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+
+            <label for="fundItem">开支类别：</label>
+            <select id="fundItem"  class="easyui-combogrid"></select>
+            <label for="subStorage">&nbsp;子库房：</label>
+            <input type="text" id="subStorage"  class="easyui-combobox">
+        </div>
+        <div class="row">
+            <label for="principal">&nbsp;负责人：</label>
+            <select id="principal"  class="easyui-combogrid"></select>
+
+            <label for="storekeeper">&nbsp;保管员：</label>
+            <select id="storekeeper"  class="easyui-combogrid"></select>
+
+            <label for="acctoperator">&nbsp;领取人：</label>
+            <select id="acctoperator"  class="easyui-combogrid"></select>
+
+        </div>
+    </form>
+</div>
+
+<div class="easyui-datagrid" id="exportDetail">
+
+</div>
+
+<div id="stockRecordDialog"  >
+    <div id="stockRecordDatagrid">
+
+    </div>
+</div>
+
+<div id="ft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cut'" id="delRow">删除</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'" id="addRow">追加</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'">打印</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'" id="saveBtn">保存</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-search'" id="searchBtn">查询</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'">定义新供应商</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-edit'" id="newBtn">新单</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-clear'">退出</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/exp-export.js"></script>
+</body>
+</html>

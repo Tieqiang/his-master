@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>医院管理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<table id="dg" class="easyui-datagrid">
+</table>
+
+
+<div id="tb" style="padding:2px 5px;">
+    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">统计</a>&nbsp;
+    <a href="#" id="locationBtn" class="easyui-linkbutton" iconCls="icon-search">定位</a>&nbsp;
+    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>&nbsp;
+    <a href="#" id="printBtn" class="easyui-linkbutton" iconCls="icon-print" plain="true">打印</a>
+</div>
+<div id="ft" style="padding:2px 5px;">
+    统计区间：<input id="startDate" class="easyui-datebox"  data-options="formatter:myformatter,parser:w3"/>&nbsp;&nbsp;到&nbsp;&nbsp;
+    <input id="stopDate" class="easyui-datebox" data-options="formatter:myformatter2,parser:w3"/>&nbsp;定位&nbsp;<input id="expName" type="text" class="easyui-combogrid"/>
+</div>
+
+
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/exp-storage-upper-lower-market.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

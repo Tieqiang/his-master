@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>库存量查询</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div id="tb">
+    <form id="numberForm" class="easyui-form">
+        <div class="row">
+            <input type="checkbox" id="expName" name="checkboxOne"  onclick="checkRadio()" />产品名称
+            <input type="text" id="searchInput"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+            <input type="checkbox" id="formClassName" name="checkboxOne"  onclick="checkRadio()" />类&nbsp;&nbsp;&nbsp;型
+            <input type="text" id="formClass"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+            <input type="radio" id="okPrint" name="radioOne" checked value="0"/>显示零库存
+        </div>
+        <div class="row">
+            <input type="checkbox" id="stockClass" name="checkboxOne"  onclick="checkRadio()" />库房类别
+            <input type="text" id="subStorageClass"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+            <input type="checkbox" id="supply" name="checkboxOne"  onclick="checkRadio()" />供&nbsp;货&nbsp;商
+            <input type="text" id="supplier"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+            <input type="radio" id="noPrint" name="radioOne"  value="" />不显示零库存
+        </div>
+        <div class="row">
+
+
+        </div>
+
+
+    </form>
+</div>
+
+<div class="easyui-datagrid" id="expStockCol">
+
+</div>
+
+<div id="ft">
+    <a class="easyui-linkbutton" id="searchBtn" href="#" data-options="iconCls:'icon-search'">查询</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'">打印</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-stock-number-search.js"></script>
+</body>
+</html>

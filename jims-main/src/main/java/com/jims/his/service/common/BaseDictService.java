@@ -1,0 +1,69 @@
+package com.jims.his.service.common;
+
+import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.entity.BaseDict;
+import com.jims.his.domain.common.facade.BaseDictFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.util.List;
+
+/**
+ * Created by heren on 2015/10/9.
+ */
+@Path("base-dict")
+@Produces("application/json")
+public class BaseDictService {
+
+
+    private BaseDictFacade baseDictFacade ;
+
+
+    @Inject
+    public BaseDictService(BaseDictFacade baseDictFacade) {
+        this.baseDictFacade = baseDictFacade;
+    }
+
+    @GET
+    @Path("list")
+    @Produces("application/json")
+    public List<BaseDict> listBaseDict(){
+        return baseDictFacade.findAll(BaseDict.class) ;
+    }
+
+    /**
+     * 根据 字典类型获取字典的列表
+     * @param baseType
+     * @return
+     */
+    @GET
+    @Path("list-by-type")
+    public List<BaseDict> listBaseDict(@QueryParam("baseType")String baseType, @QueryParam("length")int length){
+
+        return baseDictFacade.findByBaseType(baseType,length) ;
+    }
+
+
+    /**
+     * 保存，修改的项目
+     * @param baseDictBeanChangeVo
+     * @return
+     */
+    @POST
+    @Path("merge")
+    public Response mergerBaseDict(BeanChangeVo<BaseDict> baseDictBeanChangeVo){
+        try {
+            baseDictFacade.mergeBaseDict(baseDictBeanChangeVo) ;
+            return Response.status(Response.Status.OK).entity(baseDictBeanChangeVo).build() ;
+        }catch(Exception ex){
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+        }
+
+    }
+
+
+}
