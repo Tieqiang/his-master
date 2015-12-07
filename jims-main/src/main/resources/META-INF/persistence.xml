@@ -118,9 +118,9 @@
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
              <!--Database Connection URL -->
             <!--<property name="hibernate.connection.url" value="jdbc:oracle:thin:@192.168.0.12:1521:orcl"/>-->
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@(description=(address=(protocol=tcp)(port=1521)(host=127.0.0.1))(connect_data=(service_name=oracle)))"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@(description=(address=(protocol=tcp)(port=1521)(host=192.168.6.143))(connect_data=(service_name=oracle)))"/>
             <property name="hibernate.connection.username" value="jims"/>
-            <property name="hibernate.connection.password" value="hisuser"/>
+            <property name="hibernate.connection.password" value="jims"/>
             <!--
              其实这个hibernate.hbm2ddl.auto参数的作用主要用于：自动创建|更新|验证数据库表结构。如果不是此方面的需求建议set value="none"。
                 create：
