@@ -5,7 +5,6 @@ import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.jims.his.filter.CorsFilter;
 import com.jims.his.filter.RelamFilter;
-import com.jims.his.filter.TestFilter;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 

@@ -676,6 +676,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="dataSourceStorageLocal">
     <data-source name="JIMSSERVER" uuid="4f1e5104-d578-404f-bd1b-2a6a937d9d58">
