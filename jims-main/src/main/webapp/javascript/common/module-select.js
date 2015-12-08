@@ -37,30 +37,41 @@ $(function(){
                     var data = $(this).combobox('getData');
                     if (data.length > 0) {
                         $(this).combobox('select', data[0].id);
+                        $("#modualDiv").show();
+                    }else{
+                        $("#modual").combobox("clear");
+                        $("#stock").combobox("clear");
+                        $("#modualDiv").hide();
+                        $("#stockDiv").hide();
                     }
                 },
                 onSelect: function (item) {
                     if (item.moduleName == "消耗品管理系统") {
-                        $("#stockDiv").show();
+                        //库房选择
+                        $('#stock').combobox({
+                            panelHeight: 'auto',
+                            url: '/api/exp-storage-dept/list?hospitalId=' + $("#hospital").combobox('getValue'),
+                            method: 'GET',
+                            valueField: 'id',
+                            textField: 'storageName',
+                            onLoadSuccess: function () {
+                                var data = $(this).combobox('getData');
+                                if (data.length > 0) {
+                                    $(this).combobox('select', data[0].id);
+                                    $("#stockDiv").show();
+                                } else {
+                                    $("#stock").combobox("clear");
+                                    $("#stockDiv").hide();
+                                }
+                            }
+                        });
                     } else {
                         $("#stockDiv").hide();
                     }
+
                 }
             });
-            //库房选择
-            $('#stock').combobox({
-                panelHeight: 'auto',
-                url: '/api/exp-storage-dept/list?hospitalId=' + item.id,
-                method: 'GET',
-                valueField: 'id',
-                textField: 'storageName',
-                onLoadSuccess: function () {
-                    var data = $(this).combobox('getData');
-                    if (data.length>0) {
-                        $(this).combobox('select', data[0].id);
-                    }
-                }
-            });
+
         }
     }) ;
 
