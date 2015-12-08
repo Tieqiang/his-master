@@ -8,6 +8,8 @@ import com.jims.his.domain.common.facade.RoleDictFacade;
 import com.jims.his.domain.common.facade.StaffDictFacade;
 import com.jims.his.domain.common.vo.Config;
 import com.jims.his.domain.common.vo.ErrorMessager;
+import com.jims.his.domain.ieqm.entity.ExpStorageDept;
+import com.jims.his.domain.ieqm.facade.ExpStorageDeptFacade;
 import org.codehaus.jettison.json.JSONArray;
 
 
@@ -36,16 +38,18 @@ public class LoginService {
     private ModuleDictFacade moduleDictFacade;
     private StaffDictFacade staffDictFacade ;
     private RoleDictFacade roleDictFacade ;
+    private ExpStorageDeptFacade expStorageDeptFacade;
     private HttpServletResponse resp;
     private HttpServletRequest request;
 
 
 
     @Inject
-    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade) {
+    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade) {
         this.moduleDictFacade = moduleDictFacade;
         this.staffDictFacade = staffDictFacade;
         this.roleDictFacade = roleDictFacade;
+        this.expStorageDeptFacade = expStorageDeptFacade;
         this.resp = resp;
         this.request = request;
     }
@@ -241,15 +245,25 @@ public class LoginService {
     @Path("add-login-info")
     @POST
     public Config addLoginInfo(Config config){
-        HospitalDict hospitalDict =staffDictFacade.get(HospitalDict.class,config.getHospitalId()) ;
-        ModulDict modulDict = staffDictFacade.get(ModulDict.class,config.getModuleId()) ;
         HttpSession session = request.getSession();
-        session.setAttribute("hospitalId",hospitalDict.getId());
-        session.setAttribute("hospitalName",hospitalDict.getHospitalName());
-        session.setAttribute("moduleId",modulDict.getId());
-        session.setAttribute("moduleName",modulDict.getModuleName());
-        config.setHospitalName(hospitalDict.getHospitalName());
-        config.setModuleName(modulDict.getModuleName());
+        if(null != config.getHospitalId() && !config.getHospitalId().trim().equals("")){
+            HospitalDict hospitalDict = staffDictFacade.get(HospitalDict.class, config.getHospitalId());
+            session.setAttribute("hospitalId", hospitalDict.getId());
+            session.setAttribute("hospitalName", hospitalDict.getHospitalName());
+            config.setHospitalName(hospitalDict.getHospitalName());
+        }
+        if(null != config.getModuleId() && !config.getModuleId().trim().equals("")){
+            ModulDict modulDict = staffDictFacade.get(ModulDict.class, config.getModuleId());
+            session.setAttribute("moduleId", modulDict.getId());
+            session.setAttribute("moduleName", modulDict.getModuleName());
+            config.setModuleName(modulDict.getModuleName());
+        }
+        if (null != config.getStorageCode() && !config.getStorageCode().trim().equals("")) {
+            ExpStorageDept storageDict = expStorageDeptFacade.get(ExpStorageDept.class, config.getStorageCode());
+            session.setAttribute("storageName", storageDict.getStorageName());
+            session.setAttribute("storageCode", storageDict.getStorageCode());
+            config.setStorageName(storageDict.getStorageName());
+        }
 
         return config ;
 
@@ -266,6 +280,8 @@ public class LoginService {
         config.setModuleId((String)session.getAttribute("moduleId"));
         config.setLoginId((String)session.getAttribute("loginId"));
         config.setLoginName((String)session.getAttribute("loginName"));
+        config.setStorageCode((String) session.getAttribute("storageCode"));
+        config.setStorageName((String) session.getAttribute("storageName"));
         return config ;
     }
 }

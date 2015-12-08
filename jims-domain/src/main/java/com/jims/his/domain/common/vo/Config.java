@@ -12,6 +12,7 @@ public class Config implements Serializable {
     private String hospitalId ;
     private String hospitalName ;
     private String storageCode ;
+    private String storageName;
     private String loginId ;
     private String moduleId ;
     private String moduleName ;
@@ -27,11 +28,13 @@ public class Config implements Serializable {
     public Config() {
     }
 
+    public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String storageName,String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier) {
     public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath) {
         this.loginName = loginName;
         this.hospitalId = hospitalId;
         this.hospitalName = hospitalName;
         this.storageCode = storageCode;
+        this.storageName = storageName;
         this.loginId = loginId;
         this.moduleId = moduleId;
         this.moduleName = moduleName;
@@ -158,6 +161,14 @@ public class Config implements Serializable {
 
     public void setDefaultSupplier(String defaultSupplier) {
         this.defaultSupplier = defaultSupplier;
+    }
+
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
     }
 }
 
