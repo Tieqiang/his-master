@@ -245,21 +245,25 @@ public class LoginService {
     @Path("add-login-info")
     @POST
     public Config addLoginInfo(Config config){
-        HospitalDict hospitalDict =staffDictFacade.get(HospitalDict.class,config.getHospitalId()) ;
-        ModulDict modulDict = staffDictFacade.get(ModulDict.class,config.getModuleId()) ;
-
         HttpSession session = request.getSession();
-        session.setAttribute("hospitalId",hospitalDict.getId());
-        session.setAttribute("hospitalName",hospitalDict.getHospitalName());
-        session.setAttribute("moduleId",modulDict.getId());
-        session.setAttribute("moduleName",modulDict.getModuleName());
+        if(null != config.getHospitalId() && !config.getHospitalId().trim().equals("")){
+            HospitalDict hospitalDict = staffDictFacade.get(HospitalDict.class, config.getHospitalId());
+            session.setAttribute("hospitalId", hospitalDict.getId());
+            session.setAttribute("hospitalName", hospitalDict.getHospitalName());
+            config.setHospitalName(hospitalDict.getHospitalName());
+        }
+        if(null != config.getModuleId() && !config.getModuleId().trim().equals("")){
+            ModulDict modulDict = staffDictFacade.get(ModulDict.class, config.getModuleId());
+            session.setAttribute("moduleId", modulDict.getId());
+            session.setAttribute("moduleName", modulDict.getModuleName());
+            config.setModuleName(modulDict.getModuleName());
+        }
         if (null != config.getStorageCode() && !config.getStorageCode().trim().equals("")) {
             ExpStorageDept storageDict = expStorageDeptFacade.get(ExpStorageDept.class, config.getStorageCode());
             session.setAttribute("storageName", storageDict.getStorageName());
             session.setAttribute("storageCode", storageDict.getStorageCode());
+            config.setStorageName(storageDict.getStorageName());
         }
-        config.setHospitalName(hospitalDict.getHospitalName());
-        config.setModuleName(modulDict.getModuleName());
 
         return config ;
 
