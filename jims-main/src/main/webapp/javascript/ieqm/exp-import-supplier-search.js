@@ -2,34 +2,7 @@
  * 供货商供货情况查询
  * Created by wangbinbin on 2015/11、05.
  */
-function myFormatter2(val,row) {
-    if(val != null){
-        var date = new Date(val);
-        var y = date.getFullYear();
-        var m = date.getMonth()+1;
-        var d = date.getDate();
-        var h = date.getHours();
-        var min = date.getMinutes();
-        var sec = date.getSeconds();
-        var str = y+'/'+(m<10?('0'+m):m)+'/'+(d<10?('0'+d):d)+'/'+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
-        return str;
-    }
 
-}
-function w3(s) {
-    if (!s) return new Date();
-    var y = s.substring(0, 4);
-    var m = s.substring(5, 7);
-    var d = s.substring(8, 10);
-    var h = s.substring(11, 14);
-    var min = s.substring(15, 17);
-    var sec = s.substring(18, 20);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
-        return new Date(y, m - 1, d, h, min, sec);
-    } else {
-        return new Date();
-    }
-}
 $.extend($.fn.datagrid.methods, {
     autoMergeCells: function (jq, fields) {
         return jq.each(function () {
@@ -94,7 +67,34 @@ $.extend($.fn.datagrid.methods, {
 });
 
 $(function () {
+    function myFormatter2(val,row) {
+        if(val != null){
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+            var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
+            return str;
+        }
 
+    }
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
+        } else {
+            return new Date();
+        }
+    }
     /**
      * 定义明细表格
      */
@@ -159,7 +159,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
@@ -175,7 +175,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#stopDate').datetimebox('setText', dateTime);
             $('#stopDate').datetimebox('hidePanel');
         }
@@ -191,7 +191,7 @@ $(function () {
             idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
-            panelWidth: 200,
+            panelWidth: 230,
             columns: [[{
                 title: '供应商名称',
                 field: 'supplierName'

@@ -233,12 +233,23 @@ $(function () {
         var promiseDetail = loadDict();
     })
     var loadDict = function(){
-        importDetailDataVO.stopDate = new  Date($("#stopDate").datebox("getText"));
-        importDetailDataVO.startDate = new Date($("#startDate").datebox("getText"));
+        if($("#dateTime:checked").val()){
+            importDetailDataVO.startDate = new Date($("#startDate").datetimebox("getText"));
+            importDetailDataVO.stopDate = new Date($("#stopDate").datetimebox("getText"));
+        }else{
+            $("#startDate").datetimebox("clear");
+            $("#stopDate").datetimebox("clear");
+            importDetailDataVO.startDate = $("#startDate").datetimebox("getText");
+            importDetailDataVO.stopDate = $("#stopDate").datetimebox("getText");
+        }
         importDetailDataVO.supplier = $("#supplier").combogrid("getText");
         importDetailDataVO.documentNo = $("#documentNo").textbox("getValue");
         importDetailDataVO.hospitalId = parent.config.hospitalId;
         importDetailDataVO.storage = parent.config.storageCode;
+        if(importDetailDataVO.documentNo.length==0&&importDetailDataVO.startDate.length==0&&importDetailDataVO.supplier.length==0){
+            $.messager.alert('系统提示','请选择查询参数','info');
+            return;
+        }
         var promise =$.get("/api/exp-import/exp-pay-manage",importDetailDataVO,function(data){
             for(var i = 0 ;i<data.length;i++){
                 var impo = [];

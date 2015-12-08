@@ -324,17 +324,18 @@ $(function () {
         }else{
             $("#startDate").datetimebox("clear");
             $("#stopDate").datetimebox("clear");
-            masterDataVo.startDate = new Date($("#startDate").datetimebox("getText"));
-            masterDataVo.stopDate = new Date($("#stopDate").datetimebox("getText"));
+            masterDataVo.startDate = $("#startDate").datetimebox("getText");
+            masterDataVo.stopDate = $("#stopDate").datetimebox("getText");
         }
         masterDataVo.supplier = $("#supplier").combogrid("getText");
         masterDataVo.expCode = $("#searchInput").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
-        if(masterDataVo.expCode.length==0&&masterDataVo.imClass.length==0&&masterDataVo.startBill.length==0&&masterDataVo.billRadio.length==0&&masterDataVo.startDate.length==0&&masterDataVo.supplier.length==0){
+        if(masterDataVo.expCode.length==0&&masterDataVo.imClass.length==0&&masterDataVo.startBill.length==0&&masterDataVo.startDate.length==0&&masterDataVo.supplier.length==0){
             $.messager.alert('系统提示','请选择查询参数','info');
             return;
         }
+        console.log(masterDataVo);
         var promise =$.get("/api/exp-import/exp-do-account",masterDataVo,function(data){
             for(var i = 0 ;i<data.length;i++){
                 if(data[i].accountIndicator=='1'){
