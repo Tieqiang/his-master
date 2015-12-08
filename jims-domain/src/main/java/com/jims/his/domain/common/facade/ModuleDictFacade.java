@@ -38,6 +38,24 @@ public class ModuleDictFacade extends BaseFacade {
     }
 
     /**
+     * 根据医院编号和员工编号查询模块列表
+     * @param staffId
+     * @param hospitalId
+     * @return
+     */
+    public List<ModulDict> findByStaff(String staffId, String hospitalId) {
+        String sql = "select a.* from Modul_Dict a,Staff_Vs_Module b where a.id=b.module_Id";
+        if (staffId != null && staffId.trim().length() > 0) {
+            sql += " and b.staff_Id='" + staffId.trim() + "'";
+        }
+        if (null != hospitalId && !hospitalId.trim().equals("")) {
+            sql += " and a.hospital_Id='" + hospitalId + "'";
+        }
+        List<ModulDict> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ModulDict.class);
+        return nativeQuery;
+    }
+
+    /**
      * 保存模块儿维护信息
      * @param modulDict
      */
