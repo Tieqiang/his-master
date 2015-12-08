@@ -25,6 +25,22 @@ $(function(){
             if(data){
                 $(this).combobox('select',data[0].id) ;
             }
+        },
+        onSelect:function(item){
+            //库房选择
+            $('#stock').combobox({
+                panelHeight: 'auto',
+                url: '/api/exp-storage-dept/list?hospitalId=' + item.id,
+                method: 'GET',
+                valueField: 'storageCode',
+                textField: 'storageName',
+                onLoadSuccess: function () {
+                    var data = $(this).combobox('getData');
+                    if (data.length>0) {
+                        $(this).combobox('select', data[0].storageName);
+                    }
+                }
+            });
         }
     }) ;
 
@@ -39,6 +55,13 @@ $(function(){
             if(data){
                 $(this).combobox('select',data[0].id) ;
             }
+        },
+        onSelect: function (item) {
+            if(item.moduleName=="消耗品管理系统"){
+                $("#stockDiv").show();
+            }else{
+                $("#stockDiv").hide();
+            }
         }
     }) ;
 
@@ -46,10 +69,12 @@ $(function(){
     $("#saveItemBtn").on('click',function(){
         var hospitalId = $("#hospital").combobox('getValue') ;
         var moduleId = $("#modual").combobox('getValue') ;
+        var storageCode = $("#stock").combobox('getValue');
 
         var config ={} ;
         config.hospitalId = hospitalId ;
         config.moduleId = moduleId ;
+        config.storageCode = storageCode;
 
         $.postJSON("/api/login/add-login-info",config,function(data){
             //登录成功跳转至index.html
