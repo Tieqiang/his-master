@@ -31,8 +31,8 @@ public class ModuleDictService {
      */
     @GET
     @Path("list")
-    public List<ModulDict> list(@QueryParam("name") String name){
-        return moduleDictFacade.findAll(name) ;
+    public List<ModulDict> list(@QueryParam("name") String name, @QueryParam("hospitalId") String hospitalId){
+        return moduleDictFacade.findAll(name, hospitalId) ;
     }
 
     @POST
