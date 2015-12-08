@@ -7,6 +7,9 @@ import com.jims.his.domain.common.facade.ModuleDictFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -19,9 +22,13 @@ import java.util.List;
 public class ModuleDictService {
 
     private ModuleDictFacade moduleDictFacade ;
+    private HttpServletResponse resp;
+    private HttpServletRequest request;
 
     @Inject
-    public ModuleDictService(ModuleDictFacade moduleDictFacade) {
+    public ModuleDictService(HttpServletRequest request, HttpServletResponse resp,ModuleDictFacade moduleDictFacade) {
+        this.request = request;
+        this.resp = resp;
         this.moduleDictFacade = moduleDictFacade;
     }
 
@@ -33,6 +40,14 @@ public class ModuleDictService {
     @Path("list")
     public List<ModulDict> list(@QueryParam("name") String name, @QueryParam("hospitalId") String hospitalId){
         return moduleDictFacade.findAll(name, hospitalId) ;
+    }
+
+    @GET
+    @Path("list-by-staff")
+    public List<ModulDict> listByStaff(@QueryParam("hospitalId") String hospitalId) {
+        HttpSession session = request.getSession();
+        String staffId = (String) session.getAttribute("loginId");
+        return moduleDictFacade.findByStaff(staffId, hospitalId);
     }
 
     @POST
