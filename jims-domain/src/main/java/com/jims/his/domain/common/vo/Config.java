@@ -20,12 +20,14 @@ public class Config implements Serializable {
     private String reportServerPort ;
     private String reportServerResourcePath ;
     private String defaultSupplier ;
+    private String reportServerName;
+    private String defaultReportPath;
 
 
     public Config() {
     }
 
-    public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier) {
+    public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath) {
         this.loginName = loginName;
         this.hospitalId = hospitalId;
         this.hospitalName = hospitalName;
@@ -38,6 +40,24 @@ public class Config implements Serializable {
         this.reportServerPort = reportServerPort;
         this.reportServerResourcePath = reportServerResourcePath;
         this.defaultSupplier = defaultSupplier;
+        this.reportServerName = reportServerName;
+        this.defaultReportPath = defaultReportPath;
+    }
+
+    public String getDefaultReportPath() {
+        return defaultReportPath;
+    }
+
+    public void setDefaultReportPath(String defaultReportPath) {
+        this.defaultReportPath = defaultReportPath;
+    }
+
+    public String getReportServerName() {
+        return reportServerName;
+    }
+
+    public void setReportServerName(String reportServerName) {
+        this.reportServerName = reportServerName;
     }
 
     public String getLoginName() {
