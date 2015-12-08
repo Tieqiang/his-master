@@ -30,7 +30,7 @@ $(function(){
             //模块选择
             $("#modual").combobox({
                 method: 'GET',
-                url: '/api/module-dict/list?hospitalId=' + item.id,
+                url: '/api/module-dict/list-by-staff?hospitalId=' + item.id,
                 valueField: 'id',
                 textField: 'moduleName',
                 onLoadSuccess: function () {
