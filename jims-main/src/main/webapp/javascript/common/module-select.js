@@ -27,43 +27,44 @@ $(function(){
             }
         },
         onSelect:function(item){
+            //模块选择
+            $("#modual").combobox({
+                method: 'GET',
+                url: '/api/module-dict/list?hospitalId=' + item.id,
+                valueField: 'id',
+                textField: 'moduleName',
+                onLoadSuccess: function () {
+                    var data = $(this).combobox('getData');
+                    if (data.length > 0) {
+                        $(this).combobox('select', data[0].id);
+                    }
+                },
+                onSelect: function (item) {
+                    if (item.moduleName == "消耗品管理系统") {
+                        $("#stockDiv").show();
+                    } else {
+                        $("#stockDiv").hide();
+                    }
+                }
+            });
             //库房选择
             $('#stock').combobox({
                 panelHeight: 'auto',
                 url: '/api/exp-storage-dept/list?hospitalId=' + item.id,
                 method: 'GET',
-                valueField: 'storageCode',
+                valueField: 'id',
                 textField: 'storageName',
                 onLoadSuccess: function () {
                     var data = $(this).combobox('getData');
                     if (data.length>0) {
-                        $(this).combobox('select', data[0].storageName);
+                        $(this).combobox('select', data[0].id);
                     }
                 }
             });
         }
     }) ;
 
-    //模块选择
-    $("#modual").combobox({
-        method:'GET',
-        url:'/api/module-dict/list',
-        valueField:'id',
-        textField:'moduleName',
-        onLoadSuccess:function(){
-            var data = $(this).combobox('getData') ;
-            if(data){
-                $(this).combobox('select',data[0].id) ;
-            }
-        },
-        onSelect: function (item) {
-            if(item.moduleName=="消耗品管理系统"){
-                $("#stockDiv").show();
-            }else{
-                $("#stockDiv").hide();
-            }
-        }
-    }) ;
+
 
 
     $("#saveItemBtn").on('click',function(){
