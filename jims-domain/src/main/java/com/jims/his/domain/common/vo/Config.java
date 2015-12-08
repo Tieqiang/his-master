@@ -28,8 +28,7 @@ public class Config implements Serializable {
     public Config() {
     }
 
-    public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String storageName,String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier) {
-    public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath) {
+    public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath) {
         this.loginName = loginName;
         this.hospitalId = hospitalId;
         this.hospitalName = hospitalName;
