@@ -24,10 +24,13 @@ public class ModuleDictFacade extends BaseFacade {
      * @param name
      * @return
      */
-    public List<ModulDict> findAll(String name) {
+    public List<ModulDict> findAll(String name, String hospitalId) {
         String hql = "from ModulDict as dict where 1=1";
         if (name != null && name.trim().length() > 0) {
             hql += " and dict.moduleName like '%" + name.trim() + "%'";
+        }
+        if(null !=hospitalId && !hospitalId.trim().equals("")){
+            hql += " and dict.hospitalId='"+hospitalId+"'";
         }
         Query query = entityManager.createQuery(hql);
         List resultList = query.getResultList();
