@@ -11,7 +11,7 @@ function myFormatter2(val,row) {
         var h = date.getHours();
         var min = date.getMinutes();
         var sec = date.getSeconds();
-        var str = y+'/'+(m<10?('0'+m):m)+'/'+(d<10?('0'+d):d)+'/'+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
+        var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
         return str;
     }
 
@@ -76,7 +76,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
@@ -92,7 +92,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#stopDate').datetimebox('setText', dateTime);
             $('#stopDate').datetimebox('hidePanel');
         }
@@ -105,8 +105,8 @@ $(function () {
     var specCodeAll =[];
     var loadDict = function(){
         var importPrice = 0.00;
-        importDetailDataVO.stopDate = $("#stopDate").datetimebox("getText");
-        importDetailDataVO.startDate = $("#startDate").datetimebox("getText");
+        importDetailDataVO.stopDate = new Date($("#stopDate").datetimebox("getText"));
+        importDetailDataVO.startDate = new Date($("#startDate").datetimebox("getText"));
         importDetailDataVO.hospitalId = parent.config.hospitalId;
         importDetailDataVO.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-export/exp-export-assign-search",importDetailDataVO,function(data){

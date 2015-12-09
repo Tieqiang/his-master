@@ -64,15 +64,18 @@ $.extend($.fn.datagrid.methods, {
         });
     }
 });
-function myFormatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth()+1;
-    var d = date.getDate();
-    var h = date.getHours();
-    var min = date.getMinutes();
-    var sec = date.getSeconds();
-    var str = y+'/'+(m<10?('0'+m):m)+'/'+(d<10?('0'+d):d)+'/'+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
-    return str;
+function myFormatter2(val,row) {
+    if(val!=null){
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth()+1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+        var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
+        return str;
+    }
 }
 function w3(s) {
     if (!s) return new Date();
@@ -89,21 +92,21 @@ function w3(s) {
     }
 }
 $(function () {
-    //格式化日期函数
-    function formatterDate(val, row) {
-        if (val != null) {
-            var date = new Date(val);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var h = date.getHours();
-            var mm = date.getMinutes();
-            var s = date.getSeconds();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
-                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-            return dateTime
-        }
-    }
+    ////格式化日期函数
+    //function formatterDate(val, row) {
+    //    if (val != null) {
+    //        var date = new Date(val);
+    //        var y = date.getFullYear();
+    //        var m = date.getMonth() + 1;
+    //        var d = date.getDate();
+    //        var h = date.getHours();
+    //        var mm = date.getMinutes();
+    //        var s = date.getSeconds();
+    //        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+    //            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+    //        return dateTime
+    //    }
+    //}
     var masterDataVo = {};//主表vo
     var masters = [];//信息
     $('#startDate').datetimebox({
@@ -116,7 +119,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
@@ -131,7 +134,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#stopDate').datetimebox('setText', dateTime);
             $('#stopDate').datetimebox('hidePanel');
         }
@@ -216,7 +219,7 @@ $(function () {
             title: '有效期',
             width: '11%',
             field: 'expireDate',
-            formatter: formatterDate
+            formatter: myFormatter2
         }, {
             title: '批号',
             width: '4%',
@@ -266,8 +269,8 @@ $(function () {
     var loadDict = function(){
         masterDataVo.formClass = $("#formClass").combobox("getText");
         masterDataVo.deptAttr = $("#exportDeptAttr").textbox("getValue");
-        masterDataVo.startDate = $("#startDate").datebox("getText");
-        masterDataVo.stopDate = $("#stopDate").datebox("getText");
+        masterDataVo.startDate = new Date($("#startDate").datebox("getText"));
+        masterDataVo.stopDate = new Date($("#stopDate").datebox("getText"));
         masterDataVo.expCode = $("#searchInput").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;

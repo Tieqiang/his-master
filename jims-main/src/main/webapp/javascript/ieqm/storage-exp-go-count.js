@@ -73,7 +73,7 @@ function myFormatter2(val,row) {
         var h = date.getHours();
         var min = date.getMinutes();
         var sec = date.getSeconds();
-        var str = y+'/'+(m<10?('0'+m):m)+'/'+(d<10?('0'+d):d)+'/'+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
+        var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
         return str;
     }
 
@@ -193,7 +193,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
@@ -209,7 +209,7 @@ $(function () {
             var m = date.getMonth() + 1;
             var d = date.getDate();
             var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "/" + (m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#stopDate').datetimebox('setText', dateTime);
             $('#stopDate').datetimebox('hidePanel');
         }
@@ -225,8 +225,8 @@ $(function () {
         }else{
             masterDataVo.subStorage =sub;
         }
-        masterDataVo.startDate = $("#startDate").datebox("getText");
-        masterDataVo.stopDate = $("#stopDate").datebox("getText");
+        masterDataVo.startDate =new Date($("#startDate").datebox("getText"));
+        masterDataVo.stopDate = new Date($("#stopDate").datebox("getText"));
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
         var retailAmount = 0.00;
