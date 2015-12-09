@@ -15,12 +15,6 @@ $(function () {
         }
     }
 
-    //设置工具栏高度
-    $("#toolbardiv").treegrid({
-        toolbar: '#topbar',
-        height: 55
-    });
-
     //产品名称、产品代码二选一切换
     $(".radios").click(function () {
         $(this).next().combogrid('enable');
@@ -30,24 +24,22 @@ $(function () {
 
     //定义页面中部expNAmeDict列表
     $("#expNameDict").datagrid({
-        title:'消耗品目录维护',
-        toolbar: '#tb',
         footer: '#tbNameDict',
-        height:'50%',
         singleSelect: true,
+        fit:true,
         columns: [[{
             title: '代码',
             field: 'expCode',
-            width: "10%"
+            width: "30%"
         }, {
             title: '品名',
             field: 'expName',
-            width: "10%",
+            width: "30%",
             editor: {type: 'text', options: {required: true}}
         }, {
             title: '拼音码',
             field: 'inputCode',
-            width: "7%",
+            width: "30%",
             editor: 'text'
         }
         ]],
@@ -63,7 +55,7 @@ $(function () {
     $("#expDict").datagrid({
         footer: '#tbDict',
         singleSelect: true,
-        height: '50%',
+        fit: true,
         columns: [[{
             title: '代码',
             field: 'expCode',
@@ -75,12 +67,12 @@ $(function () {
         }, {
             title: '规格',
             field: 'expSpec',
-            width: "7%",
+            width: "10%",
             editor: {type: 'text', options: {required: true}}
         }, {
             title: '单位',
             field: 'units',
-            width: "7%",
+            width: "10%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -94,7 +86,7 @@ $(function () {
         }, {
             title: '类型',
             field: 'expForm',
-            width: "7%",
+            width: "10%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -108,7 +100,7 @@ $(function () {
         }, {
             title: '属性',
             field: 'toxiProperty',
-            width: "7%",
+            width: "10%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -127,7 +119,7 @@ $(function () {
         }, {
             title: '数量单位',
             field: 'doseUnits',
-            width: "7%",
+            width: "10%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -141,7 +133,7 @@ $(function () {
         }, {
             title: '标志',
             field: 'storageCode',
-            width: "7%",
+            width: "10%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -161,13 +153,13 @@ $(function () {
                     panelHeight: 'auto',
                     valueField: 'code',
                     textField: 'name',
-                    data: [{'code': 'true', 'name': '是'}, {'code': 'false', 'name': '否'}]
+                    data: [{'code': '1', 'name': '是'}, {'code': '2', 'name': '否'}]
                 }
             }
         }, {
             title: '输入码',
             field: 'inputCode',
-            width: "10%",
+            width: "5%",
             editor: 'text'
         }
         ]],
@@ -180,6 +172,21 @@ $(function () {
         }
     });
 
+    $("#top").datagrid({
+        toolbar: '#tb',
+        border: false
+    });
+    $("#bottom").datagrid({
+        footer: '#ft',
+        border: false
+    });
+
+    $('#dg').layout('panel', 'north').panel('resize', {height: 'auto'});
+    $('#dg').layout('panel', 'south').panel('resize', {height: 'auto'});
+
+    $("#dg").layout({
+        fit: true
+    });
 
     //定义expName
     $('#expName').combogrid({
@@ -269,7 +276,6 @@ $(function () {
 
     //expNameDict数据添加
     $('#expNameDict').datagrid({
-        height: 200,
         singleSelect: true,
         url: '',
         method: 'get',
@@ -278,7 +284,6 @@ $(function () {
     //expDict数据添加
     $('#expDict').datagrid({
         singleSelect: true,
-        height: 300,
         url: '',
         method: 'get',
         footer: '#ftEd'
@@ -294,10 +299,9 @@ $(function () {
     $("#filter").on('click',function(){
         var val = $(':radio:checked').next().combogrid('getValue');
 
-        if (true) {
+        if (val) {
             //expNameDict数据添加
             $('#expNameDict').datagrid({
-                height: 300,
                 singleSelect: true,
                 url: '/api/exp-name-dict/list?expCode=' + val,
                 method: 'get',
@@ -305,14 +309,13 @@ $(function () {
             });
             //expDict数据添加
             $('#expDict').datagrid({
-                height: 300,
                 singleSelect: true,
                 url: '/api/exp-dict/list-query?expCode=' + val,
                 method: 'get',
                 footer: '#tbDict'
             });
         } else {
-            alert("请先选择产品名称或代码！");
+            $.messager.alert("提示","请先选择产品名称或代码！","info");
         }
     });
 
