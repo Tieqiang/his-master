@@ -31,8 +31,8 @@ $(function () {
             field: 'buyId',
             width: "55%"
         }, {
-            title: '仓管员',
-            field: 'storer',
+            title: '采购员',
+            field: 'buyer',
             width: "45%"
         }]],
         onClickRow: function (index, row) {
@@ -106,6 +106,7 @@ $(function () {
             title: '审核金额',
             field: 'planNumber',
             width: "7%",
+            hidden:true,
             editor: {
                 type: 'numberbox',
                 options: {
@@ -256,12 +257,12 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].planNumber == undefined || rows[i].planNumber <= 0) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行:审核金额不能小于0 请重新填写", 'error');
-                $("#right").datagrid('selectRow', i);
-                //$("#right").datagrid('beginEdit', i);
-                return false;
-            }
+            //if (rows[i].planNumber == undefined || rows[i].planNumber <= 0) {
+            //    $.messager.alert("系统提示", "第" + (i + 1) + "行:审核金额不能小于0 请重新填写", 'error');
+            //    $("#right").datagrid('selectRow', i);
+            //    //$("#right").datagrid('beginEdit', i);
+            //    return false;
+            //}
             if (!rows[i].checkSupplier) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:审核供应商不能为空 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
