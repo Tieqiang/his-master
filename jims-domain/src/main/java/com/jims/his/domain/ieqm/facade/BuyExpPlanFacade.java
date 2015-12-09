@@ -142,8 +142,11 @@ public class BuyExpPlanFacade extends BaseFacade {
     public String getBuyId(){
         Calendar now = Calendar.getInstance();
         String dmd = now.get(Calendar.YEAR)+"";
-        dmd = dmd + (now.get(Calendar.MONTH) + 1);
-        dmd = dmd + now.get(Calendar.DAY_OF_MONTH);
+        String month = (now.get(Calendar.MONTH) + 1)+"";
+        String day = now.get(Calendar.DAY_OF_MONTH)+"";
+        month = month.length()==2? month: "0"+month;
+        day = day.length()==2?day:"0"+day;
+        dmd = dmd + month + day;
 
         String sql = "select count(*) from buy_exp_plan\n" +
                 "where buy_id like '"+dmd+"%'";
@@ -381,7 +384,7 @@ public class BuyExpPlanFacade extends BaseFacade {
      * @return
      */
     public List<BuyExpPlan> listConfirm(String storageCode, String loginName){
-        String sql = "SELECT distinct buy_id,buyer\n" +
+        String sql = "SELECT distinct buy_id,storer\n" +
                 "\tFROM buy_exp_plan\n" +
                 "\tWHERE ( (flag = 2 and  buyer = '"+loginName+"') or flag = 1 ) \n" +
                 "\tand storage = '"+ storageCode+"'\t      \n" +
@@ -397,7 +400,7 @@ public class BuyExpPlanFacade extends BaseFacade {
      * @return
      */
     public List<BuyExpPlan> listAudit(String storageCode, String loginName){
-        String sql = "SELECT distinct buy_id\n" +
+        String sql = "SELECT distinct buy_id,buyer\n" +
                 "\tFROM buy_exp_plan\n" +
                 "\tWHERE flag = 3 or (flag = 4 and checker='"+loginName+"') or (flag = 8 and buyer='"+loginName+"')\n" +
                 "\tand storage = '" + storageCode + "'\t      \n" +
@@ -413,7 +416,7 @@ public class BuyExpPlanFacade extends BaseFacade {
      * @return
      */
     public List<BuyExpPlan> listExecute(String storageCode, String loginName) {
-        String sql = "SELECT distinct buy_id\n" +
+        String sql = "SELECT distinct buy_id,checker \n" +
                 "\tFROM buy_exp_plan\n" +
                 "\tWHERE (flag = 5 and checker='"+loginName+"') or flag = 7 or (flag = 3 and buyer='"+loginName+"')\n" +
                 "\tand storage = '" + storageCode + "'\t      \n" +
