@@ -29,25 +29,30 @@ public class ExpMenuSearchFacade extends BaseFacade {
      * @return
      */
     public List<ExpMenuSearchVo> findAll(String storageCode,String hospitalId){
-        Date time = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
-        String sysTime=formatter.format(time);
-        String sql = "select a.exp_name,a.exp_form,a.exp_indicator \n" +
-                ",b.exp_code,b.exp_spec,b.firm_id,b.units,b.trade_price,b.retail_price,exp_quantity.quantity\n" +
-                "from exp_dict a, exp_price_list b,  \n" +
-                "         (SELECT exp_code, PACKAGE_SPEC, firm_id, sum(QUANTITY) quantity " +
-                "         FROM exp_stock \n" +
-                "\t\t\t   WHERE STORAGE = '"+storageCode+"' and \n" +
+        String sql = "SELECT EXP_PRICE_LIST.EXP_CODE,   \n" +
+                "         EXP_DICT.EXP_NAME,   \n" +
+                "         EXP_PRICE_LIST.EXP_SPEC,   \n" +
+                "         EXP_PRICE_LIST.FIRM_ID,   \n" +
+                "         EXP_PRICE_LIST.UNITS,   \n" +
+                "         EXP_DICT.EXP_FORM,   \n" +
+                "         EXP_PRICE_LIST.TRADE_PRICE,   \n" +
+                "         EXP_PRICE_LIST.RETAIL_PRICE,\n" +
+                "      EXP_DICT.EXP_INDICATOR,\n" +
+                "      exp_quantity.quantity\n" +
+                "    FROM EXP_DICT,   \n" +
+                "         EXP_PRICE_LIST,(SELECT exp_code, PACKAGE_SPEC, firm_id, sum(QUANTITY) quantity FROM exp_stock \n" +
+                "         WHERE STORAGE = '" + storageCode + "' and \n" +
                 "               HOSPITAL_ID='"+hospitalId+"'"+
-                "\t\t\t   GROUP BY exp_code, PACKAGE_SPEC, firm_id) exp_quantity\n" +
-                "where ( b.exp_code = a.exp_code  ) and  \n" +
-                "      ( a.exp_spec = b.exp_spec ) and  \n" +
-                "\t    ( b.exp_code = exp_quantity.exp_code(+) ) and \n" +
-                "\t    ( b.exp_spec = exp_quantity.PACKAGE_SPEC(+) ) and\n" +
-                "\t    ( b.firm_id = exp_quantity.firm_id(+) ) and\n" +
-                "\t    ( start_date <to_date ( '"+sysTime +"' , 'yyyy-MM-dd HH24:MI:SS' ) ) AND \n" +
-                "      ( stop_date >= to_date ( '"+sysTime +"' , 'yyyy-MM-dd HH24:MI:SS' )  OR stop_date IS NULL ) and\n" +
-                "\t    ( a.storage_code = '"+storageCode+"' )";
+                "      GROUP BY exp_code, PACKAGE_SPEC, firm_id) exp_quantity\n" +
+                "   WHERE  EXP_PRICE_LIST.EXP_CODE = EXP_DICT.EXP_CODE  and  \n" +
+                "          EXP_DICT.EXP_SPEC = EXP_PRICE_LIST.EXP_SPEC  and  \n" +
+                "       EXP_PRICE_LIST.EXP_CODE = exp_quantity.exp_code(+)  and \n" +
+                "       EXP_PRICE_LIST.EXP_SPEC = exp_quantity.PACKAGE_SPEC(+)  and\n" +
+                "       EXP_PRICE_LIST.FIRM_ID = exp_quantity.firm_id(+)  and\n" +
+                "       start_date < SYSDATE  AND \n" +
+                "         ( stop_date >= SYSDATE OR stop_date IS NULL ) and\n" +
+                "       EXP_DICT.storage_code = '"+storageCode + "' and \n" +
+                "       EXP_PRICE_LIST.HOSPITAL_ID='" + hospitalId + "'";
         List<ExpMenuSearchVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpMenuSearchVo.class);
         return nativeQuery;
     }
