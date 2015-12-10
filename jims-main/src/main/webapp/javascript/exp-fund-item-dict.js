@@ -23,14 +23,12 @@ $(function(){
             title:'序号',
             field:'serialNo',
             width:"20%",
-            editor:{type:'numberbox',options:{required:true,validType:'length[0,2]',
-                min: 0,max: 99,precision: 0,missingMessage:'请输入0-99的数字',invalidMessage:'输入数值不在范围之内'}
-            }
+            editor: 'numberbox'
         },{
             title:'支出经费名称',
             field:'fundItem',
             width:"30%",
-            editor:{type:'validatebox',options:{
+            editor:{type:'text',options:{
                 required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字'}
             }}]],
         onClickRow: function (index, row) {
