@@ -41,11 +41,7 @@ $(function(){
     })  ;
 
     $("#searchBtn").on("click", function () {
-        var name = $("#name").textbox("getValue");
-
-        $.get("/api/exp-fund-item-dict/list?name=" + name, function (data) {
-            $("#dg").datagrid('loadData', data);
-        });
+        loadDict();
     });
 
     $("#addBtn").on('click',function(){
