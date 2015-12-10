@@ -25,7 +25,7 @@ $(function(){
             title:'分类名称',
             field:'importClass',
             width:"50%",
-            editor:{type:'validatebox',options:{required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字',invalidMessage:'输入值不在范围'}}
+            editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字',invalidMessage:'输入值不在范围'}}
         }]],
         onClickRow: function (index, row) {
             stopEdit();
