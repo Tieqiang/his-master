@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpFundItemDict;
 
 import java.util.ArrayList;
@@ -19,40 +20,35 @@ public class ExpFundItemDictFacade extends BaseFacade {
         }
         return entityManager.createQuery(hql).getResultList();
     }
+
     /**
-     * 保存、新增、删除、修改的内容
-     * @param insertData
-     * @param updateData
-     * @param deleteData
-     * @return
+     * 保存增删改
+     *
+     * @param beanChangeVo
      */
     @Transactional
-    public List<ExpFundItemDict> saveExpFundItemDict(List<ExpFundItemDict> insertData, List<ExpFundItemDict> updateData, List<ExpFundItemDict> deleteData) {
-
-        List<ExpFundItemDict> newUpdateDict = new ArrayList<>() ;
-        if(insertData.size() >0 ){
-            for (ExpFundItemDict dict:insertData){
-                ExpFundItemDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-            }
+    public List<ExpFundItemDict> save(BeanChangeVo<ExpFundItemDict> beanChangeVo) {
+        List<ExpFundItemDict> newUpdateDict = new ArrayList<>();
+        List<ExpFundItemDict> inserted = beanChangeVo.getInserted();
+        List<ExpFundItemDict> updated = beanChangeVo.getUpdated();
+        List<ExpFundItemDict> deleted = beanChangeVo.getDeleted();
+        for (ExpFundItemDict dict : inserted) {
+            ExpFundItemDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
 
-        if(updateData.size()>0){
-            for (ExpFundItemDict dict:updateData){
-                ExpFundItemDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-
-            }
+        for (ExpFundItemDict dict : updated) {
+            ExpFundItemDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
 
-        if(deleteData.size()>0){
-            List<String> ids = new ArrayList<>();
-            for (ExpFundItemDict dict:deleteData){
-                ids.add(dict.getId()) ;
-            }
-            super.removeByStringIds(ExpFundItemDict.class,ids);
-            newUpdateDict.addAll(deleteData) ;
+        List<String> ids = new ArrayList<>();
+
+        for (ExpFundItemDict dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
         }
+        this.removeByStringIds(ExpFundItemDict.class, ids);
         return newUpdateDict;
     }
 
