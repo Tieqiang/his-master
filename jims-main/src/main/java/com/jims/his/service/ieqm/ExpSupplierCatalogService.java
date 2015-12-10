@@ -1,6 +1,7 @@
 package com.jims.his.service.ieqm;
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpSupplierCatalog;
 import com.jims.his.domain.ieqm.facade.ExpSupplierCatalogFacade;
 import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
@@ -9,6 +10,7 @@ import com.jims.his.domain.ieqm.vo.ExpSupplierVo;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,51 +50,33 @@ public class ExpSupplierCatalogService {
         List<ExpSupplierCatalog> expSupplierCatalogList = expSupplierCatalogFacade.listByInputCodeQ(q);
         return expSupplierCatalogList;
     }
+
+    /**
+     * 保存增删改
+     *
+     * @param beanChangeVo
+     * @return
+     */
     @POST
-    @Path("add")
-    public Response saveExpSupplierCatalog(List<ExpSupplierCatalog> insertDate){
+    @Path("merge")
+    public Response save(BeanChangeVo<ExpSupplierCatalog> beanChangeVo) {
         try {
-            List<ExpSupplierCatalog> expSupplierCatalogList = expSupplierCatalogFacade.saveExpSupplierCatalog(insertDate);
-            return Response.status(Response.Status.OK).entity(expSupplierCatalogList).build();
-        }catch (Exception e){
+            List<ExpSupplierCatalog> newUpdateDict = new ArrayList<>();
+            newUpdateDict = expSupplierCatalogFacade.save(beanChangeVo);
+            return Response.status(Response.Status.OK).entity(newUpdateDict).build();
+        } catch (Exception e) {
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
                 errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
-    }
-    @POST
-    @Path("update")
-    public Response updateExpSupplierCatalog(List<ExpSupplierCatalog> updateDate){
-        try {
-            List<ExpSupplierCatalog> expSupplierCatalogList = expSupplierCatalogFacade.updateExpSupplierCatalog(updateDate);
-            return Response.status(Response.Status.OK).entity(expSupplierCatalogList).build();
-        } catch (Exception e){
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
-                errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
-    }
-    @POST
-    @Path("delete")
-    public Response deleteExpSupplierCatalog(List<ExpSupplierCatalog> deleteDate){
-        try {
-            List<ExpSupplierCatalog> expSupplierCatalogList = expSupplierCatalogFacade.deleteExpSupplierCatalog(deleteDate);
-            return Response.status(Response.Status.OK).entity(expSupplierCatalogList).build();
-        }catch (Exception e){
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
+
     }
 
     @GET
