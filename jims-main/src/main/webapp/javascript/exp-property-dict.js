@@ -26,19 +26,19 @@ $(function(){
             title:"属性代码",
             field:"toxiCode",
             width:"20%",
-            editor:{type:"validatebox",options:{
+            editor:{type:"text",options:{
                 required:true,validType:'length[0,2]',missingMessage:'请输入两个字符',invalidMessage:'输入值不在范围'}
             }
         },{
             title:"属性名称",
             field:"toxiProperty",
             width:"20%",
-            editor:{type:'validatebox',options:{required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字',invalidMessage:'输入值不在范围'}}
+            editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字',invalidMessage:'输入值不在范围'}}
         },{
             title:"拼音码",
             field:"inputCode",
             width:"20%",
-            editor:{type:'validatebox',options:{required:true,validType:'length[0,8]',missingMessage:'请输入‘属性名称’对应大写首字母',invalidMessage:'输入值不在范围'}}
+            editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入‘属性名称’对应大写首字母',invalidMessage:'输入值不在范围'}}
         }]],
         onClickRow: function (index, row) {
             stopEdit();
