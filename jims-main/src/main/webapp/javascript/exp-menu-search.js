@@ -79,6 +79,13 @@ $(function () {
                 $.messager.alert("提示", "数据库暂无数据", "info");
                 $("#dg").datagrid("loadData", {rows: []});
             } else {
+                $.each(data, function (index, item) {
+                    if(item.expIndicator==1){
+                        item.expIndicator ="全院产品";
+                    }else{
+                        item.expIndicator = "普通产品";
+                    }
+                });
                 $("#dg").datagrid("loadData", data);
             }
         });

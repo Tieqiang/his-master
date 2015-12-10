@@ -177,15 +177,15 @@ $(function () {
         }, {
             title: '代码',
             field: 'expCode',
-            width: "10%"
+            width: "15%"
         }, {
             title: '物品名称',
             field: 'expName',
-            width: "9%"
+            width: "15%"
         }, {
             title: '厂家',
             field: 'firmId',
-            width: "7%"
+            width: "9%"
         }, {
             title: '包装规格',
             field: 'expSpec',
@@ -215,6 +215,7 @@ $(function () {
             title: '计划金额',
             field: 'planNumber',
             width: "7%",
+            hidden: true,
             editor: {
                 type: 'numberbox',
                 options: {
@@ -227,7 +228,7 @@ $(function () {
         }, {
             title: '类型',
             field: 'expForm',
-            width: "7%"
+            width: "9%"
         }, {
             title: '仓管员',
             field: 'storer',
@@ -262,6 +263,7 @@ $(function () {
             title: '零售价',
             field: 'retailPrice',
             width: "5%",
+            hidden: true,
             editor: {
                 type: 'numberbox',
                 options: {
@@ -491,24 +493,24 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].planNumber == undefined || rows[i].planNumber <= 0) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行:计划金额不能小于0 请重新填写", 'error');
-                $("#right").datagrid('selectRow', i);
-                //$("#right").datagrid('beginEdit', i);
-                return false;
-            }
+            //if (rows[i].planNumber == undefined || rows[i].planNumber <= 0) {
+            //    $.messager.alert("系统提示", "第" + (i + 1) + "行:计划金额不能小于0 请重新填写", 'error');
+            //    $("#right").datagrid('selectRow', i);
+            //    //$("#right").datagrid('beginEdit', i);
+            //    return false;
+            //}
             if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <= 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:消耗量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].retailPrice == undefined || rows[i].retailPrice <= 0) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行:零售价不能小于0 请重新填写", 'error');
-                $("#right").datagrid('selectRow', i);
-                //$("#right").datagrid('beginEdit', i);
-                return false;
-            }
+            //if (rows[i].retailPrice == undefined || rows[i].retailPrice <= 0) {
+            //    $.messager.alert("系统提示", "第" + (i + 1) + "行:零售价不能小于0 请重新填写", 'error');
+            //    $("#right").datagrid('selectRow', i);
+            //    //$("#right").datagrid('beginEdit', i);
+            //    return false;
+            //}
         }
         return true;
     }
@@ -537,6 +539,9 @@ $(function () {
             $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
                 $.messager.alert("系统提示", "暂存成功", "info");
                 $("#right").datagrid('loadData', {total: 0, rows: []});
+                $.get("/api/buy-exp-plan/get-buy-id", function (data) {
+                    newBuyId = data;
+                });
                 //采购单号数据加载
                 $('#buyId').combobox({
                     panelHeight: 'auto',
@@ -587,6 +592,9 @@ $(function () {
             $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
                 $("#right").datagrid('loadData', {total: 0, rows: []});
+                $.get("/api/buy-exp-plan/get-buy-id", function (data) {
+                    newBuyId = data;
+                });
                 //采购单号数据加载
                 $('#buyId').combobox({
                     panelHeight: 'auto',

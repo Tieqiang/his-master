@@ -108,6 +108,7 @@ $(function () {
             title: '采购金额',
             field: 'planNumber',
             width: "7%",
+            hidden:true,
             editor: {
                 type: 'numberbox',
                 options: {
@@ -248,12 +249,12 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].planNumber == undefined || rows[i].planNumber <= 0) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行:采购金额不能小于0 请重新填写", 'error');
-                $("#right").datagrid('selectRow', i);
-                //$("#right").datagrid('beginEdit', i);
-                return false;
-            }
+            //if (rows[i].planNumber == undefined || rows[i].planNumber <= 0) {
+            //    $.messager.alert("系统提示", "第" + (i + 1) + "行:采购金额不能小于0 请重新填写", 'error');
+            //    $("#right").datagrid('selectRow', i);
+            //    //$("#right").datagrid('beginEdit', i);
+            //    return false;
+            //}
             if (!rows[i].stockSupplier) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:采购供应商不能为空 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
