@@ -52,9 +52,16 @@ public class RoleDictService {
             List<RoleDict> dicts = roleDictFacade.saveRoleDict(roleDicts, new ArrayList<RoleDict>(), new ArrayList<RoleDict>());
             return Response.status(Response.Status.OK).entity(dicts).build() ;
         }catch (Exception e){
-            ErrorException errorException = new ErrorException() ;
+            ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
+                errorException.setErrorMessage("输入数据超过长度！");
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
+                errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
 
@@ -69,9 +76,16 @@ public class RoleDictService {
 
             return Response.status(Response.Status.OK).entity(menuId).build() ;
         }catch (Exception e){
-            ErrorException errorException = new ErrorException() ;
+            ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
+                errorException.setErrorMessage("输入数据超过长度！");
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
+                errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
 
@@ -83,9 +97,16 @@ public class RoleDictService {
             List<RoleDict> dicts = roleDictFacade.saveRoleDict(new ArrayList<RoleDict>(), new ArrayList<RoleDict>(), roleDicts);
             return Response.status(Response.Status.OK).entity(dicts).build() ;
         }catch (Exception e){
-            ErrorException errorException = new ErrorException() ;
+            ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
+                errorException.setErrorMessage("输入数据超过长度！");
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
+                errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
 }

@@ -62,9 +62,16 @@ public class StaffDictService {
             StaffDict staffDict1 = staffDictFacade.saveStaffDict(staffDict);
             return Response.status(Response.Status.OK).entity(staffDict1).build();
         }catch (Exception e){
-            ErrorException errorException = new ErrorException() ;
+            ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
+                errorException.setErrorMessage("输入数据超过长度！");
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
+                errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
 
