@@ -26,11 +26,11 @@ public class ExpSupplierCatalogService {
         this.expSupplierCatalogFacade = expSupplierCatalogFacade;
     }
 
-    @GET
-    @Path("list")
-    public List<ExpSupplierCatalog> getExpPriceList() {
-        return expSupplierCatalogFacade.listExpSupplierCatalog();
-    }
+    //@GET
+    //@Path("list")
+    //public List<ExpSupplierCatalog> getExpPriceList() {
+    //    return expSupplierCatalogFacade.listExpSupplierCatalog();
+    //}
 
     @GET
     @Path("find-supplier")
