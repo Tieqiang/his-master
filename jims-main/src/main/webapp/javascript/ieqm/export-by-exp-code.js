@@ -74,7 +74,7 @@ $(function () {
     $('#expCode').combogrid({
         panelWidth: 500,
         idField: 'expCode',
-        textField: 'expName',
+        textField: 'expCode',
         loadMsg: '数据正在加载',
         url: "/api/exp-name-dict/list-exp-name-by-input",
         mode: 'remote',
