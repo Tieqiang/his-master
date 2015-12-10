@@ -49,23 +49,12 @@ public class ExpProvideApplicationService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
-
-    //@POST
-    //@Path("update")
-    //public Response updateExpProvideApplication(List<ExpProvideApplicationVo> updateData, @QueryParam("applicationStorage") String applicationStorage) {
-    //    try {
-    //        List<ExpProvideApplicationVo> expProvideApplicationVos = expProvideApplicationFacade.updateExpProvideApplication(updateData, applicationStorage);
-    //        return Response.status(Response.Status.OK).entity(expProvideApplicationVos).build();
-    //    } catch (Exception e) {
-    //        ErrorException errorException = new ErrorException();
-    //        errorException.setMessage(e);
-    //        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-    //    }
-    //}
 
     /**
      * 作废
@@ -85,6 +74,8 @@ public class ExpProvideApplicationService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("操作失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
@@ -116,6 +107,8 @@ public class ExpProvideApplicationService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("操作失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
