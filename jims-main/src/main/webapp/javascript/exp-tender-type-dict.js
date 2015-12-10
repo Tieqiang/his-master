@@ -22,18 +22,18 @@ $(function(){
             title:"招标方式代码",
             field:"tenderTypeCode",
             width:"20%",
-            editor:{type:'validatebox',options:{required:true,validType:'length[0,2]',missingMessage:'请输入两字符以内的招标代码',invalidMessage:'输入值不在范围'}}
+            editor:{type:'text',options:{required:true,validType:'length[0,2]',missingMessage:'请输入两字符以内的招标代码',invalidMessage:'输入值不在范围'}}
 
         },{
             title:"招标方式名称",
             field:"tenderTypeName",
             width:"20%",
-            editor:{type:'validatebox',options:{required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字',invalidMessage:'输入值不在范围'}}
+            editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字',invalidMessage:'输入值不在范围'}}
         },{
             title:"拼音码",
             field:"inputCode",
             width:"20%",
-            editor:{type:'validatebox',options:{required:true,validType:'length[0,8]',missingMessage:'请输入相应的拼音码',invalidMessage:'输入值不在范围'}}
+            editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入相应的拼音码',invalidMessage:'输入值不在范围'}}
         }]],
         onClickRow: function (index, row) {
             stopEdit();
