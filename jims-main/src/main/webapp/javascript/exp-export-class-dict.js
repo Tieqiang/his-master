@@ -25,7 +25,7 @@ $(function(){
             title:'类别名称',
             field:'exportClass',
             width:"50%",
-            editor:{type:'validatebox',options:{
+            editor:{type:'text',options:{
                 required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字'}
             }}]],
         onClickRow: function (index, row) {
