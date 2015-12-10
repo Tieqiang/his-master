@@ -25,21 +25,18 @@ $(function () {
             title: '编码级别',
             field: 'codeLevel',
             width: "30%",
-            editor: {type:'numberbox',options:{required: true,min:0,
-                max:9,validType: 'length[0,1]', missingMessage:'请输入0-9的数字'}
-            }
+            editor: 'numberbox'
         }, {
             title: '编码级长度',
             field: 'levelWidth',
             width: "30%",
-            editor: {type:'numberbox', options: {required: true,validType: 'length[0,2]',min:0, max:19, missingMessage:'请输入0-99的数字'}
-            }
+            editor: 'numberbox'
         }, {
             title: '编码级名称',
             field: 'className',
             width: "40%",
             editor: {
-                type: 'validatebox', options: {
+                type: 'text', options: {
                     required: true, validType: 'length[0,8]', missingMessage:'请输入四个以内的汉字'}
             }
         }]],
