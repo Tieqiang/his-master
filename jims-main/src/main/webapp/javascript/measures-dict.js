@@ -26,7 +26,7 @@ $(function(){
             title:"单位名称",
             field:"measuresName",
             width:"20%",
-            editor:{type:'validatebox',options:{
+            editor:{type:'text',options:{
                 required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字'}
             }
 
