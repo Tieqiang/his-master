@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.xml.crypto.Data;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -712,5 +713,105 @@ public class ExpStockFacade extends BaseFacade {
         }
 
 
+    }
+
+    /**
+     * 判断本月份是否已经存在月结记录
+     * @param storageCode
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public int countStockBalance(String storageCode, String startDate, String endDate) {
+        String sql = "select nvl(count(distinct(year_month)),0) from exp_stock_balance "
+                + " where storage ='" + storageCode +"'"
+                + " and stop_date>to_date('" + startDate + "','YYYY-MM-DD HH24:MI:SS') "
+                + " and stop_date <=to_date('" + endDate + "','YYYY-MM-DD HH24:MI:SS')";
+        List result = super.createNativeQuery(sql).getResultList();
+        return ((BigDecimal) result.get(0)).intValue();
+    }
+
+    /**
+     * 本月内存在月结记录，（是）查看 （月结最大时间，最小时间）
+     * @param storageCode
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public List<ExpStockBalanceVo> getAllBalance(String storageCode, String startDate, String endDate) {
+        String minSql = "select min(distinct(year_month)) from  exp_stock_balance\n" +
+                " where stop_date > to_date('" + startDate + "','YYYY-MM-DD HH24:MI:SS') "+
+                " and stop_date <=to_date('" + endDate + "','YYYY-MM-DD HH24:MI:SS')" +
+                " and  storage = '" + storageCode + "'";
+        String maxSql = "select max(start_date) start_date ,max(stop_date) stop_date from exp_stock_balance  where year_month = ("+minSql+")" +
+                " and storage ='" + storageCode + "'";
+        List<ExpStockBalance> result = super.createNativeQuery(maxSql, new ArrayList < Object > (), ExpStockBalance.class);
+        if (null != result && result.size() > 0) {
+            startDate = ((ExpStockBalance) result.get(0)).getStartDate().toString().substring(0,19);
+            endDate = ((ExpStockBalance) result.get(0)).getStopDate().toString().substring(0, 19);
+        }
+        return getCurrentBalance(storageCode, startDate, endDate);
+    }
+
+    /**
+     * 本月内存在月结记录，（否）查看 （月结最大时间，最小时间）
+     * @param storageCode
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public List<ExpStockBalanceVo> getLastBalance(String storageCode, String startDate, String endDate) {
+        String maxSql = "select max(distinct(year_month)) from  exp_stock_balance " +
+                " where stop_date > to_date('" + startDate + "','YYYY-MM-DD HH24:MI:SS')" +
+                " and stop_date <=  to_date('" + endDate + "','YYYY-MM-DD HH24:MI:SS')" +
+                " and  storage = '" + storageCode + "'";
+        String lastSql = "select max(start_date) start_date ,max(stop_date) stop_date from exp_stock_balance where  year_month = ("+maxSql+")" +
+                " and  storage = '" + storageCode + "'";
+        List<ExpStockBalance> result = super.createNativeQuery(lastSql, new ArrayList<Object>(), ExpStockBalance.class);
+
+        if(null != result && result.size() > 0){
+            startDate = ((ExpStockBalance) result.get(0)).getStartDate().toString().substring(0, 19);
+            endDate = ((ExpStockBalance) result.get(0)).getStopDate().toString().substring(0, 19);
+        }
+        return getCurrentBalance(storageCode, startDate, endDate);
+    }
+
+    /**
+     * 开始时间，结束时间查询月结记录
+     * @param storageCode
+     * @param startDate
+     * @param stopDate
+     * @return
+     */
+    public List<ExpStockBalanceVo> getCurrentBalance(String storageCode, String startDate, String stopDate){
+        String sql = "SELECT DISTINCT \"EXP_DICT\".\"EXP_NAME\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"STORAGE\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"EXP_CODE\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"EXP_SPEC\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"FIRM_ID\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"PACKAGE_SPEC\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"PACKAGE_UNITS\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"INITIAL_QUANTITY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"INITIAL_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"IMPORT_QUANTITY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"IMPORT_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"EXPORT_QUANTITY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"EXPORT_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"INVENTORY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"INVENTORY_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"PROFIT\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"REAL_INITIAL_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"REAL_IMPORT_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"REAL_EXPORT_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"REAL_INVENTORY_MONEY\",   \n" +
+                "         \"EXP_STOCK_BALANCE\".\"REAL_PROFIT\"  \n" +
+                "    FROM \"EXP_DICT\",   \n" +
+                "         \"EXP_STOCK_BALANCE\"  \n" +
+                "   WHERE ( EXP_STOCK_BALANCE.EXP_CODE = EXP_DICT.EXP_CODE(+) ) AND  \n" +
+                "         ( EXP_STOCK_BALANCE.STORAGE = '"+ storageCode+"' ) AND  \n" +
+                "         ( EXP_STOCK_BALANCE.YEAR_MONTH >= to_date('" + startDate + "','YYYY-MM-DD HH24:MI:SS') ) AND  \n" +
+                "         ( EXP_STOCK_BALANCE.YEAR_MONTH <= to_date('" + stopDate + "','YYYY-MM-DD HH24:MI:SS') )  ";
+        List<ExpStockBalanceVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStockBalanceVo.class);
+        return nativeQuery;
     }
 }
