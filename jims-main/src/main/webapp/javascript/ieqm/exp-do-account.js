@@ -313,6 +313,43 @@ $(function () {
     $("#searchBtn").on('click', function () {
         loadDict();
     })
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var imClass = $("#importClass").combobox("getText");
+            var startBill = $("#startBill").textbox("getText");
+            var stopBill = $("#stopBill").textbox("getText");
+            var billRadio = $("#detailForm input[name='radioTwo']:checked").val();
+            if($("#dateTime:checked").val()){
+                var startDate = $("#startDate").datetimebox("getText");
+                var stopDate = $("#stopDate").datetimebox("getText");
+            }else{
+                $("#startDate").datetimebox("clear");
+                $("#stopDate").datetimebox("clear");
+                 startDate = $("#startDate").datetimebox("getText");
+                 stopDate = $("#stopDate").datetimebox("getText");
+            }
+            var supplier = $("#supplier").combogrid("getText");
+            var expCode = $("#searchInput").combogrid("getValue");
+            var hospitalId = parent.config.hospitalId;
+            var storage = parent.config.storageCode;
+            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-do-account.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&imClass="+imClass+"&startBill="+startBill+"&stopBill="+stopBill+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&billRadio="+billRadio+"&expCode="+expCode+"&loginId="+parent.config.loginId);
+        }
+    })
+    $("#printBtn").on('click',function(){
+        var printData = $("#importMaster").datagrid('getRows');
+        if(printData.length<=0){
+            $.messager.alert('系统提示','请先查询数据','info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
     var loadDict = function(){
         masterDataVo.imClass = $("#importClass").combobox("getText");
         masterDataVo.startBill = $("#startBill").textbox("getText");

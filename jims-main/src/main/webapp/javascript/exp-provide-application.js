@@ -148,7 +148,7 @@ $(document).ready(function () {
     $("#searchBtn").on("click", function () {
         var applicationStorage = $("#storage").combobox("getValue");
         var applicantNo = $("#applicantNo").textbox("getValue");
-        $.get("/api/exp-provide-application/find-dict-application?applyStorage=" + applicationStorage+"&applyNo="+applicantNo+"&hospitalId="+parent.config.hospitalId, function (data) {
+        $.get("/api/exp-provide-application/find-dict-application?applyStorage=" + applicationStorage+"&applyNo="+applicantNo+"&storageCode="+parent.config.storageCode, function (data) {
                 if (data.length == 0) {
                     $.messager.alert("提示", "未查询到数据", "info");
                     $("#dg").datagrid("loadData", {rows: []});
@@ -228,11 +228,6 @@ $(document).ready(function () {
 
         //var expProvideApplicationVo = {};
        // expProvideApplicationVo.changeVo= changeVo;
-        console.log(insertData);
-        console.log(updateData);
-        console.log(deleteData);
-        console.log(changeVo);
-
 
         if (changeVo) {
             $.postJSON("/api/exp-provide-application/save", changeVo, function (data) {
@@ -250,9 +245,29 @@ $(document).ready(function () {
         $("#dg").datagrid("loadData",{rows:[]});
         editRowIndex = undefined;
     });
-
     //打印
-    $("#printBtn").on("click", function () {
-        alert("print");
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var applicationStorage = $("#storage").combobox("getValue");
+            var applicantNo = $("#applicantNo").textbox("getValue");
+            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-provide-application.cpt&storage="+parent.config.storageCode+"&applicantNo="+applicantNo+"&applicationStorage="+applicationStorage);
+        }
     })
+    $("#printBtn").on('click',function(){
+        var printData = $("#dg").datagrid('getRows');
+        if(printData.length<=0){
+            $.messager.alert('系统提示','请先查询数据','info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
+
+
 });

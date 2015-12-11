@@ -111,7 +111,7 @@ public class ExpImportService {
     @Path("exp-pay-search")
     @GET
     @Consumes("application/json")
-    public List<ExpImportDetailVo> searchPayDataDict(@QueryParam("documentNo") String documentNo,@QueryParam("payRadio") String payRadio,@QueryParam("startDate") Date startDate,@QueryParam("stopDate") Date stopDate,@QueryParam("supplier") String supplier,@QueryParam("searchInput") String searchInput,@QueryParam("hospitalId") String hospitalId,@QueryParam("storage") String storage){
+    public List<ExpImportDetailVo> searchPayDataDict(@QueryParam("documentNo") String documentNo,@QueryParam("radio") String payRadio,@QueryParam("startDate") Date startDate,@QueryParam("stopDate") Date stopDate,@QueryParam("supplier") String supplier,@QueryParam("searchInput") String searchInput,@QueryParam("hospitalId") String hospitalId,@QueryParam("storage") String storage){
         List<ExpImportDetailVo> dicts = expImportMasterFacade.searchImportPayMasterDict(documentNo,searchInput,startDate,stopDate,storage,supplier,hospitalId,payRadio) ;
         return dicts ;
     }
