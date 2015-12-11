@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.common.util.PinYin2Abbreviation;
 import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpDict;
 import com.jims.his.domain.ieqm.entity.ExpNameDict;
@@ -86,12 +87,14 @@ public class ExpNameDictFacade extends BaseFacade {
 
             if (insertNameDicts != null && insertNameDicts.size() > 0) {
                 for (ExpNameDict nameDict : insertNameDicts) {
+                    nameDict.setInputCode(PinYin2Abbreviation.cn2py(nameDict.getExpName()));
                     ExpNameDict merge = merge(nameDict);
                     newUpdateDict.add(merge);
                 }
             }
             if (updateNameDicts != null && updateNameDicts.size() > 0) {
                 for (ExpNameDict dict : updateNameDicts) {
+                    dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getExpName()));
                     ExpNameDict merge = merge(dict);
                     newUpdateDict.add(merge);
                 }
@@ -113,11 +116,13 @@ public class ExpNameDictFacade extends BaseFacade {
 
             if (insertDicts != null && insertDicts.size() > 0) {
                 for (ExpDict expDict : insertDicts) {
+                    expDict.setInputCode(PinYin2Abbreviation.cn2py(expDict.getExpName()));
                     merge(expDict);
                 }
             }
             if (updateDicts != null && updateDicts.size() > 0) {
                 for (ExpDict dict : updateDicts) {
+                    dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getExpName()));
                     merge(dict);
                 }
             }
