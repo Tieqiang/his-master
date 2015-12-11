@@ -51,7 +51,7 @@ public class ExpProvideApplicationService {
                 errorException.setErrorMessage("数据已存在，提交失败！");
             }else{
                 errorException.setErrorMessage("操作失败！");
-            }
+            } 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
@@ -136,8 +136,8 @@ public class ExpProvideApplicationService {
      */
     @GET
     @Path("find-dict-application")
-    public List<ExpProvideApplicationVo> findExportApplyDict(@QueryParam("storageCode") String storageCode,  @QueryParam("applyStorage") String applyStorage, @QueryParam("applyNo") String applyNo){
-        return expProvideApplicationFacade.findExportApplyDict(storageCode,applyStorage,applyNo);
+    public List<ExpProvideApplicationVo> findExportApplyDict(@QueryParam("storageCode") String storageCode, @QueryParam("hospitalId") String hospitalId, @QueryParam("applyStorage") String applyStorage, @QueryParam("applyNo") String applyNo){
+        return expProvideApplicationFacade.findExportApplyDict(storageCode,hospitalId,applyStorage,applyNo);
     }
 
 }

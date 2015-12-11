@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>产品月结</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div class="easyui-layout" id="dg">
+    <div region="north" title="产品月结" border="false">
+        <table id="top" class="easyui-datagrid" style="width:100%;"></table>
+    </div>
+    <div region="south" border="false">
+        <table id="bottom" class="easyui-datagrid" style="width:100%"></table>
+    </div>
+    <div region="west" border="false" style="width:300px;">
+        <table id="left" class="easyui-datagrid"></table>
+    </div>
+    <div region="center" border="false">
+        <table id="right" class="easyui-datagrid"></table>
+    </div>
+</div>
+<div id="ft">
+    转结月份：<input id="checkMonth" class="easyui-validatebox easyui-datebox"/>
+    产品名称：<input id="expName" class="easyui-searchbox" prompt="请输入产品名称" style="width:250px"/>
+</div>
+<div id="tb">
+    <a href="#" id="search" class="easyui-linkbutton" iconCls="icon-search">提取</a>
+    <a href="#" id="statistic" class="easyui-linkbutton" iconCls="">统计</a>
+    <a href="#" id="print" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+</div>
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-balance.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

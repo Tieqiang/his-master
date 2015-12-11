@@ -2,6 +2,8 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.common.util.PinYin2Abbreviation;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpAssignDict;
 import com.jims.his.domain.ieqm.entity.ExpImportClassDict;
 import com.jims.his.domain.ieqm.entity.ExpAssignDict;
@@ -26,48 +28,37 @@ public class ExpAssignDictFacade extends BaseFacade {
         List<ExpAssignDict> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpAssignDict.class);
         return nativeQuery;
     }
+
     /**
-     * 保存内容
-     * @param insertData
-     * @return
+     * 保存增删改
+     *
+     * @param beanChangeVo
      */
     @Transactional
-    public List<ExpAssignDict> saveAssignDict(List<ExpAssignDict> insertData) {
-
-        List<ExpAssignDict> newUpdateDict = new ArrayList<>() ;
-        if(insertData.size() >0 ){
-            for (ExpAssignDict dict:insertData){
-                ExpAssignDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-            }
+    public List<ExpAssignDict> save(BeanChangeVo<ExpAssignDict> beanChangeVo) {
+        List<ExpAssignDict> newUpdateDict = new ArrayList<>();
+        List<ExpAssignDict> inserted = beanChangeVo.getInserted();
+        List<ExpAssignDict> updated = beanChangeVo.getUpdated();
+        List<ExpAssignDict> deleted = beanChangeVo.getDeleted();
+        for (ExpAssignDict dict : inserted) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getAssignName()));
+            ExpAssignDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return newUpdateDict;
-    }
-    @Transactional
-    public List<ExpAssignDict> updateAssignDict( List<ExpAssignDict> updateData) {
 
-        List<ExpAssignDict> newUpdateDict = new ArrayList<>() ;
-        if(updateData.size()>0){
-            for (ExpAssignDict dict:updateData){
-                ExpAssignDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-
-            }
+        for (ExpAssignDict dict : updated) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getAssignName()));
+            ExpAssignDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return newUpdateDict;
-    }
-    @Transactional
-    public List<ExpAssignDict> deleteAssignDict(List<ExpAssignDict> deleteData) {
 
-        List<ExpAssignDict> newUpdateDict = new ArrayList<>() ;
-        if(deleteData.size()>0){
-            List<String> ids = new ArrayList<>();
-            for (ExpAssignDict dict:deleteData){
-                ids.add(dict.getId()) ;
-            }
-            super.removeByStringIds(ExpAssignDict.class,ids);
-            newUpdateDict.addAll(deleteData) ;
+        List<String> ids = new ArrayList<>();
+
+        for (ExpAssignDict dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
         }
+        this.removeByStringIds(ExpAssignDict.class, ids);
         return newUpdateDict;
     }
 }

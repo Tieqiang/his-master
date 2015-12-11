@@ -3,6 +3,7 @@ package com.jims.his.domain.ieqm.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.common.util.PinYin2Abbreviation;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpFormDict;
 
 import java.util.ArrayList;
@@ -24,43 +25,37 @@ public class ExpFormDictFacade extends BaseFacade {
         }
         return entityManager.createQuery(hql).getResultList();
     }
+
     /**
-     * 保存、新增、删除、修改的内容
-     * @param insertData
-     * @param updateData
-     * @param deleteData
-     * @return
+     * 保存增删改
+     *
+     * @param beanChangeVo
      */
     @Transactional
-    public List<ExpFormDict> saveExpFormDict(List<ExpFormDict> insertData, List<ExpFormDict> updateData, List<ExpFormDict> deleteData) {
-
-        List<ExpFormDict> newUpdateDict = new ArrayList<>() ;
-        if(insertData.size() >0 ){
-            for (ExpFormDict dict:insertData){
-                dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getFormName()));
-                ExpFormDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-            }
+    public List<ExpFormDict> save(BeanChangeVo<ExpFormDict> beanChangeVo) {
+        List<ExpFormDict> newUpdateDict = new ArrayList<>();
+        List<ExpFormDict> inserted = beanChangeVo.getInserted();
+        List<ExpFormDict> updated = beanChangeVo.getUpdated();
+        List<ExpFormDict> deleted = beanChangeVo.getDeleted();
+        for (ExpFormDict dict : inserted) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getFormName()));
+            ExpFormDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
 
-        if(updateData.size()>0){
-            for (ExpFormDict dict:updateData){
-                dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getFormName()));
-                ExpFormDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-
-            }
+        for (ExpFormDict dict : updated) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getFormName()));
+            ExpFormDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
 
-        if(deleteData.size()>0){
-            List<String> ids = new ArrayList<>();
-            for (ExpFormDict dict:deleteData){
-                ids.add(dict.getId()) ;
-            }
-            super.removeByStringIds(ExpFormDict.class,ids);
-            newUpdateDict.addAll(deleteData) ;
+        List<String> ids = new ArrayList<>();
+
+        for (ExpFormDict dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
         }
+        this.removeByStringIds(ExpFormDict.class, ids);
         return newUpdateDict;
     }
-
 }

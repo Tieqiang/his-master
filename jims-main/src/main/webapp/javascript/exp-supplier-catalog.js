@@ -7,9 +7,9 @@
 
 //供应商类别 拼音二选一
 function checkRadio(){
-    console.log($("#supplierType").attr("checked")==true);
     if ($("#supplierType:checked").val() != null){
         $("#searchInputCode").textbox("disable");
+        $("#searchInputCode").combogrid("clear");
         $("#supplierSelect").textbox("enable");
     }else {
         $("#searchInputCode").combobox("enable");
@@ -369,37 +369,29 @@ $(document).ready(function () {
 
     //保存
     $("#saveBtn").on("click", function () {
-        if(editRowIndex != undefined){
-            $("#dg").datagrid("endEdit",editRowIndex);
-            editRowIndex = undefined;
+        if (editRowIndex || editRowIndex == 0) {
+            $("#dg").datagrid("endEdit", editRowIndex);
         }
-        var insertDate = $("#dg").datagrid("getChanges","inserted");
-        var updateDate = $("#dg").datagrid("getChanges","updated");
-        var deleteDate = $("#dg").datagrid("getChanges","deleted");
 
-        if (insertDate && insertDate.length > 0){
-            $.postJSON("/api/exp-supplier-catalog/add",insertDate, function (data) {
-                $.messager.alert("提示","保存成功","info");
+        var insertData = $("#dg").datagrid("getChanges", "inserted");
+        var updateDate = $("#dg").datagrid("getChanges", "updated");
+        var deleteDate = $("#dg").datagrid("getChanges", "deleted");
+
+        var beanChangeVo = {};
+        beanChangeVo.inserted = insertData;
+        beanChangeVo.deleted = deleteDate;
+        beanChangeVo.updated = updateDate;
+
+
+        if (beanChangeVo) {
+            $.postJSON("/api/exp-supplier-catalog/merge", beanChangeVo, function (data, status) {
+                $.messager.alert("系统提示", "保存成功", "info");
+
             }, function (data) {
-                $.messager.alert("提示",data.responseJSON.errorMessage,"error");
+                $.messager.alert('提示', data.responseJSON.errorMessage, "error");
             })
         }
 
-        if (updateDate && updateDate.length > 0){
-            $.postJSON("/api/exp-supplier-catalog/update",updateDate, function (data) {
-                $.messager.alert("提示","修改成功","info");
-            }, function (data) {
-                $.messager.alert("提示",data.responseJSON.errorMessage,"error");
-            })
-        }
-
-        if(deleteDate && deleteDate.length > 0){
-            $.postJSON("/api/exp-supplier-catalog/delete" ,deleteDate, function (data) {
-                $.messager.alert("提示","删除成功","info");
-            }, function (data) {
-                $.messager.alert("提示",data.responseJSON.errorMessage,"error");
-            })
-        }
     });
     
     $("#clearBtn").on("click", function () {

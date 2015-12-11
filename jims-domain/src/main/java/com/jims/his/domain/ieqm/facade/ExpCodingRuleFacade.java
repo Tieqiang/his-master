@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpCodingRule;
 
 import java.util.ArrayList;
@@ -23,40 +24,35 @@ public class ExpCodingRuleFacade extends BaseFacade {
         }
         return entityManager.createQuery(hql).getResultList();
     }
+
     /**
-     * 保存、新增、删除、修改的内容
-     * @param insertData
-     * @param updateData
-     * @param deleteData
-     * @return
+     * 保存增删改
+     *
+     * @param beanChangeVo
      */
     @Transactional
-    public List<ExpCodingRule> saveExpCodingRule(List<ExpCodingRule> insertData, List<ExpCodingRule> updateData, List<ExpCodingRule> deleteData) {
-
-        List<ExpCodingRule> newUpdateDict = new ArrayList<>() ;
-        if(insertData.size() >0 ){
-            for (ExpCodingRule dict:insertData){
-                ExpCodingRule merge = merge(dict);
-                newUpdateDict.add(merge) ;
-            }
+    public List<ExpCodingRule> save(BeanChangeVo<ExpCodingRule> beanChangeVo) {
+        List<ExpCodingRule> newUpdateDict = new ArrayList<>();
+        List<ExpCodingRule> inserted = beanChangeVo.getInserted();
+        List<ExpCodingRule> updated = beanChangeVo.getUpdated();
+        List<ExpCodingRule> deleted = beanChangeVo.getDeleted();
+        for (ExpCodingRule dict : inserted) {
+            ExpCodingRule merge = merge(dict);
+            newUpdateDict.add(merge);
         }
 
-        if(updateData.size()>0){
-            for (ExpCodingRule dict:updateData){
-                ExpCodingRule merge = merge(dict);
-                newUpdateDict.add(merge) ;
-
-            }
+        for (ExpCodingRule dict : updated) {
+            ExpCodingRule merge = merge(dict);
+            newUpdateDict.add(merge);
         }
 
-        if(deleteData.size()>0){
-            List<String> ids = new ArrayList<>();
-            for (ExpCodingRule dict:deleteData){
-                ids.add(dict.getId()) ;
-            }
-            super.removeByStringIds(ExpCodingRule.class,ids);
-            newUpdateDict.addAll(deleteData) ;
+        List<String> ids = new ArrayList<>();
+
+        for (ExpCodingRule dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
         }
+        this.removeByStringIds(ExpCodingRule.class, ids);
         return newUpdateDict;
     }
 

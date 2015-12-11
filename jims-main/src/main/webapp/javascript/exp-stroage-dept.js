@@ -6,9 +6,13 @@
  * 库房字典维护
  */
 $(function(){
-
-
-    var editIndex ;
+    var editIndex;
+    var stopEdit = function () {
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid('endEdit', editIndex);
+            editIndex = undefined;
+        }
+    }
     //初始化表单
     var data =[] ;
 
@@ -25,6 +29,10 @@ $(function(){
             method:'GET',
             footer:'#tb',
             columns:[[{
+                title: 'id',
+                field: 'id',
+                hidden:true
+            },{
                 title:'库房代码',
                 field:'storageCode',
                 width:"20%",
@@ -106,17 +114,22 @@ $(function(){
                 title:'付款单前缀',
                 field:'disburseNoPrefix',
                 width:"20%",
-                editor:{type:'validatebox',options:{required:true,validType:'length[0,6]',missingMessage:'请输入六字符以内的相应的前缀',invalidMessage:'输入值不在范围'}}
+                editor:{type:'text',options:{required:true,validType:'length[0,6]',missingMessage:'请输入六字符以内的相应的前缀',invalidMessage:'输入值不在范围'}}
             },{
                 title:'当前付款单号',
                 field:'disburseNoAva',
                 width:"20%",
-                editor:{type:'numberbox',options:{required:true,validType:'length[0,4]',missingMessage:'请输入0-9999之内的数字',invalidMessage:'输入值不在范围'}}
+                editor:'numberbox'
             },{
                 title:"医院编号",
                 field:'hospitalId',
                 hidden:true
-            }]]
+            }]],
+            onClickRow: function (index, row) {
+                stopEdit();
+                $(this).datagrid('beginEdit', index);
+                editIndex = index;
+            }
         }) ;
     })
 
@@ -150,89 +163,66 @@ $(function(){
      * 进行保存操作
      */
     $("#saveBtn").on('click',function(){
-
-        if(editIndex){
-            $("#dg").datagrid('endEdit',editIndex) ;
-            editIndex = undefined ;
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid("endEdit", editIndex);
         }
 
-        var insertFlag=false ;
-        var updateFlag =false;
-        var deleteFlag =false;
-        var insertData = $("#dg").datagrid("getChanges","inserted") ;
-        var updateData = $("#dg").datagrid('getChanges',"updated") ;
-        var deleteData = $("#dg").datagrid('getChanges','deleted') ;
+        var insertData = $("#dg").datagrid("getChanges", "inserted");
+        var updateDate = $("#dg").datagrid("getChanges", "updated");
+        var deleteDate = $("#dg").datagrid("getChanges", "deleted");
 
-        if(insertData.length >0){
-            //插入数据进行保存
-            $.postJSON("/api/exp-storage-dept/merge",insertData,function(data){
-                insertFlag = true ;
-                $.messager.alert("系统提示","插入数据成功","info") ;
-            },function(data){
-                console.log(data) ;
-                $.messager.alert("系统提示",data.responseJSON.errorMessage,"error");
+        var beanChangeVo = {};
+        beanChangeVo.inserted = insertData;
+        beanChangeVo.deleted = deleteDate;
+        beanChangeVo.updated = updateDate;
+
+
+        if (beanChangeVo) {
+            $.postJSON("/api/exp-storage-dept/merge", beanChangeVo, function (data, status) {
+                $.messager.alert("系统提示", "保存成功", "info");
+
+                var name = $("#name").textbox("getValue");
+                $.get('/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId + '&name=' + name, function (data) {
+                    $("#dg").datagrid('loadData', data);
+                });
+            }, function (data) {
+                $.messager.alert('提示', data.responseJSON.errorMessage, "error");
             })
         }
-
-        if(updateData.length>0){
-            //更新数据进行保存
-            $.postJSON("/api/exp-storage-dept/merge",updateData,function(data){
-                updateFlag = true ;
-                $.messager.alert("系统提示","更新数据成功","info") ;
-            },function(data){
-                $.messager.alert("系统提示",data.responseJSON.errorMessage,"error");
-            })
-        }
-        if(deleteData.length >0 ){
-            //删除数据进行保存
-            $.postJSON("/api/exp-storage-dept/delete",deleteData,function(data){
-                deleteFlag = true ;
-                $.messager.alert("系统提示","删除数据成功","info") ;
-            },function(data){
-                $.messager.alert("系统提示",data.responseJSON.errorMessage,"error");
-            })
-        }
-
-        $("#dg").datagrid('acceptChanges') ;
-
-        if(insertFlag || updateFlag || deleteFlag){
-            $.messager.alert("系统提示","数据保存成功","info") ;
-        }
-
     }) ;
 
 
     $("#delBtn").on('click',function(){
-        if(editIndex){
-            $("#dg").datagrid('endEdit',editIndex) ;
-            editIndex = undefined ;
+        var row = $("#dg").datagrid('getSelected');
+        if (row) {
+            var rowIndex = $("#dg").datagrid('getRowIndex', row);
+            $("#dg").datagrid('deleteRow', rowIndex);
+            if (editIndex == rowIndex) {
+                editIndex = undefined;
+            }
+        } else {
+            $.messager.alert('系统提示', "请选择要删除的行", 'info');
         }
-        var row = $("#dg").datagrid('getSelected') ;
-        if(!row){
-            $.messager.alert("系统提示","请选择要删除的行","info") ;
-            return ;
-        }
-        var rowIndex = $("#dg").datagrid('getRowIndex',row) ;
-        $("#dg").datagrid('deleteRow',rowIndex) ;
     }) ;
 
 
 
     $("#editBtn").on('click',function(){
-        var row = $("#dg").datagrid('getSelected') ;
-        if(!row){
-            $.messager.alert("系统提示","请选择要删除的行","info") ;
-            return ;
-        }
-        var rowIndex = $("#dg").datagrid('getRowIndex',row) ;
+        var row = $("#dg").datagrid("getSelected");
+        var index = $("#dg").datagrid("getRowIndex", row);
 
-        if(editIndex){
-            $("#dg").datagrid("endEdit",editIndex) ;
-            editIndex = rowIndex ;
-            $("#dg").datagrid('beginEdit',rowIndex) ;
-        }else{
-            $("#dg").datagrid('beginEdit',rowIndex) ;
-            editIndex = rowIndex ;
+        if (index == -1) {
+            $.messager.alert("提示", "请选择要修改的行！", "info");
+            return;
+        }
+
+        if (editIndex == undefined) {
+            $("#dg").datagrid("beginEdit", index);
+            editIndex = index;
+        } else {
+            $("#dg").datagrid("endEdit", editIndex);
+            $("#dg").datagrid("beginEdit", index);
+            editIndex = index;
         }
     })
 })
