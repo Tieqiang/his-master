@@ -25,6 +25,7 @@ public class AcctDeptCost implements java.io.Serializable {
 	private String memo;
     private String yearMonth ;
     private String hospitalId ;
+    private String fetchWay ;//获取方式
 
 	// Constructors
 
@@ -34,7 +35,7 @@ public class AcctDeptCost implements java.io.Serializable {
 
 	/** full constructor */
 	public AcctDeptCost(String acctDeptId, String costItemId, Double cost,
-                        Double minusCost, String memo, String yearMonth, String hospitalId) {
+                        Double minusCost, String memo, String yearMonth, String hospitalId, String fetchWay) {
 		this.acctDeptId = acctDeptId;
 		this.costItemId = costItemId;
 		this.cost = cost;
@@ -42,6 +43,7 @@ public class AcctDeptCost implements java.io.Serializable {
 		this.memo = memo;
         this.yearMonth = yearMonth;
         this.hospitalId = hospitalId;
+        this.fetchWay = fetchWay;
     }
 
 	// Property accessors
@@ -118,5 +120,15 @@ public class AcctDeptCost implements java.io.Serializable {
 
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    @Column(name="fetch_way")
+    public String getFetchWay() {
+
+        return fetchWay;
+    }
+
+    public void setFetchWay(String fetchWay) {
+        this.fetchWay = fetchWay;
     }
 }

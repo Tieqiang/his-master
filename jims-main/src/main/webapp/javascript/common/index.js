@@ -38,6 +38,24 @@ $(function(){
         location.href="/views/his/common/module-select.html"
     })
     $("#cc").layout() ;
+    $("#mainContent").tabs({
+        onContextMenu:function(e, title,index){
+            e.preventDefault();
+            if(index>0){
+                $('#mm').menu('show', {
+                    left: e.pageX,
+                    top: e.pageY
+                }).data("tabTitle", title);
+            }
+        }
+    })
+
+    $("#mm").menu({
+        onClick : function (item) {
+            //closeTab(this, item.name);
+            console.log(item) ;
+        }
+    }) ;
 
     //所定窗口
     //$("#logwindow").window({
@@ -119,6 +137,8 @@ $(function(){
             $("#menuTree").tree('collapseAll')//默认折叠所有的选项
         }) ;
     })
+
+
 
 }) ;
 

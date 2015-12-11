@@ -106,12 +106,12 @@ $(function(){
     $("#costType").combobox({
         method:'GET',
         url:'/api/cost-item/list-item?hospitalId='+parent.config.hospitalId ,
-        valueField:'costItemCode',
+        valueField:'id',
         textField:'costItemName',
         onLoadSuccess:function(data){
             var data =$(this).combobox('getData') ;
             if(data.length){
-                $(this).combobox('setValue',data[0].costItemCode) ;
+                $(this).combobox('setValue',data[0].id) ;
             }
         }
     }) ;

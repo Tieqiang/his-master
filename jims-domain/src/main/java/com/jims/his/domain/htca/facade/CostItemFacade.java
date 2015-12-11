@@ -29,6 +29,8 @@ public class CostItemFacade extends BaseFacade {
 
     @Transactional
     public CostItemDict deleteCostItemById(String id) {
+        String hql = "update AcctReckItemClassDict as dict set dict.costId='' where dict.costId='"+id+"'" ;
+        int update = update(hql);
         CostItemDict dict = get(CostItemDict.class, id);
         remove(dict);
         return dict;

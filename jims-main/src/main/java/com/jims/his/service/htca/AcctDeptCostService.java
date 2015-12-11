@@ -42,7 +42,7 @@ public class AcctDeptCostService {
     public Response saveAcctDeptCost(List<AcctDeptCost> acctDeptCosts) {
 
         try {
-            acctDeptCostFacade.saveOrUpdate(acctDeptCosts);
+            acctDeptCostFacade.saveDeriectWrite(acctDeptCosts);
             return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,17 +97,44 @@ public class AcctDeptCostService {
 
     @GET
     @Path("fetch-cost")
-    @Produces("text/plain")
-    public Response fetchCostData(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
+    public Response fetchCostData(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth,
+                                  @QueryParam("fetchTypeId")String fetchTypeId ){
         try {
-            acctDeptCostFacade.fetchCostData(hospitalId,yearMonth);
-            return Response.status(Response.Status.OK).entity("Ok").build();
+            List<AcctDeptCost> acctDeptCosts = acctDeptCostFacade.fetchCostData(hospitalId, yearMonth, fetchTypeId);
+            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
         } catch (Exception e) {
             e.printStackTrace();
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
+    }
+
+
+    @GET
+    @Path("list-collection")
+    public List<AcctDeptCost> listCollectionDeptCost(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
+
+        String sql = "select \n" +
+                "                 '' id,\n" +
+                "                 '' memo,\n" +
+                "                 '' fetch_way,\n" +
+                "                 acct_dept_id,\n" +
+                "                 cost_item_id,\n" +
+                "                 sum(cost) cost,\n" +
+                "                 sum(minus_cost) minus_cost,\n" +
+                "                 year_month,\n" +
+                "                 hospital_id\n" +
+                "            from htca.acct_dept_cost\n" +
+                "          where hospital_id ='"+hospitalId+"'\n" +
+                "          and year_month = '"+yearMonth+"'\n" +
+                "          group by acct_dept_id,\n" +
+                "                 cost_item_id,\n" +
+                "                 year_month,\n" +
+                "                 hospital_id" +
+                "         order by acct_dept_id" ;
+
+        return acctDeptCostFacade.createNativeQuery(sql,new ArrayList<Object>(),AcctDeptCost.class) ;
     }
 
 }

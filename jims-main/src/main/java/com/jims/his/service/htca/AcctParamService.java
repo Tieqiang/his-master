@@ -58,4 +58,10 @@ public class AcctParamService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
         }
     }
+
+    @GET
+    @Path("list-by-type")
+    public List<AcctParam> listAcctParamByType(@QueryParam("hospitalId")String hospitalId,@QueryParam("fetchType")String fetchType){
+        return acctParamFacade.listAcctByType(hospitalId,fetchType) ;
+    }
 }

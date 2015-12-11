@@ -45,10 +45,6 @@ public class AcctDeptDict implements java.io.Serializable {
     private String endDept ;//是否末级科室
     private String parentId ;//父级科室代码
 
-
-	private Set<HospitalIncomeRecord> hospitalIncomeRecords = new HashSet<HospitalIncomeRecord>(
-			0);
-
 	// Constructors
 
 	/** default constructor */
@@ -61,7 +57,7 @@ public class AcctDeptDict implements java.io.Serializable {
                         String deptLocation, String deptOther, String deptStopFlag,
                         String hospitalId, String costAppInd, String costAppLevel,
                         String deptType,
-                        String deptClass, String endDept, String parentId, Set<HospitalIncomeRecord> hospitalIncomeRecords) {
+                        String deptClass, String endDept, String parentId) {
 		this.deptCode = deptCode;
 		this.deptName = deptName;
 		this.deptAttr = deptAttr;
@@ -78,7 +74,6 @@ public class AcctDeptDict implements java.io.Serializable {
         this.deptClass = deptClass;
         this.endDept = endDept;
         this.parentId = parentId;
-        this.hospitalIncomeRecords = hospitalIncomeRecords;
 	}
 
 	// Property accessors
@@ -211,17 +206,6 @@ public class AcctDeptDict implements java.io.Serializable {
 		this.deptType = deptType;
 	}
 
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "acctDeptDict")
-    @JsonIgnore
-	public Set<HospitalIncomeRecord> getHospitalIncomeRecords() {
-		return this.hospitalIncomeRecords;
-	}
-
-	public void setHospitalIncomeRecords(
-			Set<HospitalIncomeRecord> hospitalIncomeRecords) {
-		this.hospitalIncomeRecords = hospitalIncomeRecords;
-	}
 
     @Column(name="dept_class")
     public String getDeptClass() {

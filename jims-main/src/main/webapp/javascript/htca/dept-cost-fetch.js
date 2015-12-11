@@ -8,6 +8,11 @@ $(function(){
         acctDeptDict = data ;
     }) ;
 
+    var costItems = [] ;
+    $.get("/api/cost-item/list-item?hospitalId="+parent.config.hospitalId,function(data){
+        costItems = data ;
+    })
+
     var editRow = undefined ;
     var p = $('#fetchDate').datebox('panel');//日期选择对象
     var tds = false; //日期选择对象中月份
@@ -55,6 +60,8 @@ $(function(){
         singleSelect: false,
         toolbar: '#ft',
         method: 'GET',
+        pageSize:100,
+        pageList: [50,100, 200, 300],
         pagination: true,
         loadMsg:'数据正在加载，请稍后......',
         columns:[[{
@@ -76,7 +83,15 @@ $(function(){
         },{
             title:'成本类型',
             field:'costItemId',
-            width:'10%'
+            width:'10%',
+            formatter:function(value,row,index){
+                for(var i = 0 ;i<costItems.length;i++){
+                    if(value ==costItems[i].id){
+                        return costItems[i].costItemName ;
+                    }
+                }
+                return value ;
+            }
         },{
             title:'成本金额',
             field:'cost',
@@ -102,7 +117,7 @@ $(function(){
     var p1 = $('#deptCostTable').datagrid('getPager');
     $(p1).pagination({
         pageSize: 100,//每页显示的记录条数，默认为10
-        pageList: [100, 200, 300, 500],//可以设置每页记录条数的列表
+        pageList: [50,100, 200, 300],//可以设置每页记录条数的列表
         beforePageText: '第',//页数文本框前显示的汉字
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
@@ -117,16 +132,44 @@ $(function(){
             return ;
         }
 
+        var fetchTypeId = $("#fetchType").combobox('getValue') ;
         $.messager.progress({
             title:'正在提取成本',
             text:'数据高效提取中，请稍后....'
         }) ;
-        $.get("/api/acct-dept-cost/fetch-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth,function(data){
+        $.get("/api/acct-dept-cost/fetch-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&fetchTypeId="+fetchTypeId,function(data){
             var options = $("#deptCostTable").datagrid('options') ;
             options.url = "/api/acct-dept-cost/list-all?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
             $("#deptCostTable").datagrid('reload')  ;
             $.messager.progress('close') ;
         })
+    }) ;
+
+    $("#fetchType").combobox({
+        textField:'paramName',
+        valueField:'id',
+        method:'GET',
+        url:'/api/acct-param/list-by-type?hospitalId='+parent.config.hospitalId+"&fetchType=cost_fetch_type",
+        onLoadSuccess:function(){
+            var data = $(this).combobox('getData') ;
+            if(data.length>0){
+                $(this).combobox('setValue',data[0].id)
+            }
+        }
+    })  ;
+
+
+    //查看汇总信息
+    $("#queryCollectionBtn").on('click',function(){
+        var yearMonth = $("#fetchDate").datebox('getValue') ;
+        if(!yearMonth){
+            $.messager.alert('系统提示','获取日期失败','info') ;
+            return ;
+        }
+
+        var options = $("#deptCostTable").datagrid('options') ;
+        options.url = "/api/acct-dept-cost/list-collection?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
+        $("#deptCostTable").datagrid('reload')  ;
     }) ;
 
 });

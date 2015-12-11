@@ -679,12 +679,7 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="dataSourceStorageLocal">
-    <data-source name="JIMSSERVER" uuid="4f1e5104-d578-404f-bd1b-2a6a937d9d58">
-      <secret-storage>master_key</secret-storage>
-      <user-name>jims</user-name>
-      <schema-pattern>*.JIMS *.SYS *.SYSTEM</schema-pattern>
-      <default-schemas>*.JIMS *.SYS *.SYSTEM</default-schemas>
-    </data-source>
+    <data-source name="JIMSSERVER" uuid="4f1e5104-d578-404f-bd1b-2a6a937d9d58" />
   </component>
   <component name="libraryTable">
     <library name="Maven: ant:ant:1.6.5">

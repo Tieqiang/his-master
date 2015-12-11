@@ -207,9 +207,16 @@ $(function () {
                 var yearMonth = $("#fetchDate").datebox('getValue');
                 if (!yearMonth) {
                     $.messager.alert('系统提示', '请选择提取的月份', 'error');
+                    $.messager.progress('close') ;
                     return;
                 }
-                $.post("/api/fetch-data/fetch-from-his?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth, function (data) {
+                var fetchTypeId=$("#fetchType").combobox('getValue') ;
+                if(!fetchTypeId){
+                    $.messager.alert('系统提示','获取提取数据方式出错，请刷新页面','info') ;
+                    $.messager.progress('close') ;
+                    return ;
+                }
+                $.post("/api/fetch-data/fetch-from-his?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth+"&fetchTypeId="+fetchTypeId, function (data) {
                     $.messager.progress('close') ;
                     $("#fetchItemBtn").click();
                 })
@@ -286,5 +293,19 @@ $(function () {
         //devideIncome(currentPage) ;
     })
 
-
+    $("#fetchType").combobox({
+        textField:'paramName',
+        valueField:'id',
+        method:'GET',
+        url:'/api/acct-param/list-by-type?hospitalId='+parent.config.hospitalId+"&fetchType=income_fetch_type",
+        onLoadSuccess:function(){
+            var data = $(this).combobox('getData') ;
+            for(var i = 0 ;i<data.length;i++){
+                if(data[i].paramName=='实时发生制'){
+                    $(this).combobox('setValue',data[i].id) ;
+                    break ;
+                }
+            }
+        }
+    })  ;
 });

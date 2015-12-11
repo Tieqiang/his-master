@@ -19,9 +19,13 @@ $(function(){
             field:'paramName',
             width:'20%'
         },{
+            title:'参数类型',
+            field:'paramType',
+            width:'20%'
+        },{
             title:'SQL',
             field:'paramSql',
-            width:'80%'
+            width:'60%'
         }]]
     }) ;
 
@@ -47,6 +51,7 @@ $(function(){
         obj.id = $("#id").textbox('getValue') ;
         obj.paramName =$("#paramName").textbox('getValue') ;
         obj.paramSql = $("#paramSql").val() ;
+        obj.paramType = $("#paramType").textbox('getValue') ;
         obj.hospitalId = parent.config.hospitalId ;
         $.postJSON("/api/acct-param/save",obj,function(data){
             $.messager.alert("系统提示",'保存成功','info') ;
@@ -71,6 +76,7 @@ $(function(){
 
         $("#id").textbox('setValue',row.id) ;
         $("#paramName").textbox('setValue',row.paramName) ;
+        $("#paramType").textbox('setValue',row.paramType) ;
         $("#paramSql").val(row.paramSql) ;
         $("#paramWin").window('open');
 

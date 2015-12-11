@@ -117,7 +117,7 @@ $(function () {
         }, {
             title: '科室名称',
             field: 'deptName',
-            width: '10%'
+            width: '30%'
         }, {
             title: '门诊住院',
             field: 'deptOutpInp',
