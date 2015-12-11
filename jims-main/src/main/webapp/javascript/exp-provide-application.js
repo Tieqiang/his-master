@@ -121,6 +121,7 @@ $(document).ready(function () {
             title:"申请人",
             field:"applicationMan",
             width:"10%",
+            hidden:true,
             editor:{
                 type:"textbox",
                 options: {
@@ -130,6 +131,7 @@ $(document).ready(function () {
             title:"申请科室",
             field:"provideStorage",
             width:"10%",
+            hidden:true,
             editor:{
                 type:"textbox",
                 options: {
@@ -166,7 +168,7 @@ $(document).ready(function () {
             return ;
         }
         var applicationStorage = $("#storage").combobox("getValue");
-        $("#dg").datagrid("appendRow",{applicantStorage: applicationStorage,applicationMan:parent.config.loginName,provideStorage:parent.config.storage});
+        $("#dg").datagrid("appendRow",{applicantStorage: applicationStorage,applicationMan:parent.config.loginName,provideStorage:parent.config.storageCode});
 
         //var rows = $("#dg").datagrid("getRows");
         //var row_index=0;
