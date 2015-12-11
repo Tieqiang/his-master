@@ -36,11 +36,6 @@ $(function () {
             field: 'expName',
             width: "30%",
             editor: {type: 'text', options: {required: true}}
-        }, {
-            title: '拼音码',
-            field: 'inputCode',
-            width: "30%",
-            editor: 'text'
         }
         ]],
         onClickRow: function (index, row) {
@@ -131,8 +126,12 @@ $(function () {
                 }
             }
         }, {
-            title: '标志',
+            title: 'storageCode',
             field: 'storageCode',
+            hidden:true
+        },{
+            title: '标志',
+            field: 'singleGroupIndicator',
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -156,11 +155,6 @@ $(function () {
                     data: [{'code': '1', 'name': '是'}, {'code': '2', 'name': '否'}]
                 }
             }
-        }, {
-            title: '输入码',
-            field: 'inputCode',
-            width: "5%",
-            editor: 'text'
         }
         ]],
         onClickRow: function (index, row) {
@@ -400,7 +394,7 @@ $(function () {
         if (allRows.length > 0) {
             var code = $('#expNameDict').datagrid('getData').rows[allRows.length - 1].expCode;
             $('#expNameDict').datagrid('appendRow', {
-                expCode: code, expName: '', inputCode: ''
+                expCode: code, expName: ''
             });
             var addRowIndex = $("#expNameDict").datagrid('getRowIndex', allRows[allRows.length - 1]);
             editIndex = addRowIndex;
@@ -413,7 +407,7 @@ $(function () {
                 getMax.done(function () {
                     if (newCode != '') {
                         $('#expNameDict').datagrid('appendRow', {
-                            expCode: newCode, expName: '', inputCode: ''
+                            expCode: newCode, expName: ''
                         });
                         var rows = $("#expNameDict").datagrid("getRows");
                         var addRowIndex = $("#expNameDict").datagrid('getRowIndex', rows[rows.length - 1]);
@@ -465,7 +459,7 @@ $(function () {
             }
             $('#expDict').datagrid('appendRow', {
                 expCode: code, expName: name, expSpec: '', units: '', expForm: '', toxiProperty: '', dosePerUnit: '',
-                doseUnits: '', storageCode: '', expIndicator: '', inputCode: ''
+                doseUnits: '', storageCode: parent.config.storageCode, expIndicator: ''
             });
 
             var rows = $("#expDict").datagrid("getRows");
