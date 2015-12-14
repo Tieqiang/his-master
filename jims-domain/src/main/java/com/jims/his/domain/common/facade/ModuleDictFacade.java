@@ -3,9 +3,7 @@ package com.jims.his.domain.common.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.common.util.PinYin2Abbreviation;
-import com.jims.his.domain.common.entity.MenuDict;
-import com.jims.his.domain.common.entity.ModulDict;
-import com.jims.his.domain.common.entity.ModuleVsMenu;
+import com.jims.his.domain.common.entity.*;
 import com.jims.his.domain.common.vo.BeanChangeVo;
 
 import javax.persistence.Query;
@@ -114,6 +112,39 @@ public class ModuleDictFacade extends BaseFacade {
         modulDict.setModuleVsMenus(moduleVsMenuSet);
         merge(modulDict) ;
         return moduleVsMenus;
+    }
+
+    /**
+     * 保存模块与staff的对照关系表
+     * @param moduleId
+     * @param staffIds
+     * @return
+     */
+    @Transactional
+    public List<StaffVsModule> saveStaffVsModule(String moduleId, List<String> staffIds) {
+        ModulDict modulDict = get(ModulDict.class, moduleId);
+        List<StaffVsModule> staffVsModules = new ArrayList<>();
+
+        //先删除已经分配的菜单
+        Set<StaffVsModule> staffVsModule1 = modulDict.getStaffVsModules();
+        List<String> ids = new ArrayList<>();
+        for (StaffVsModule staffVsModule : staffVsModule1) {
+            remove(staffVsModule);
+        }
+
+        Set<StaffVsModule> staffVsModuleSet = new HashSet<>();
+        for (String staffId : staffIds) {
+            StaffVsModule staffVsModule = new StaffVsModule();
+            StaffDict staffDict = get(StaffDict.class, staffId);
+            staffVsModule.setModulDict(modulDict);
+            staffVsModule.setStaffDict(staffDict);
+
+            staffVsModuleSet.add(staffVsModule);
+            staffVsModules.add(staffVsModule);
+        }
+        modulDict.setStaffVsModules(staffVsModuleSet);
+        merge(modulDict);
+        return staffVsModules;
     }
 
     /**
