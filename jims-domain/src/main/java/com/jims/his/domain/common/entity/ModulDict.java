@@ -22,6 +22,8 @@ public class ModulDict implements java.io.Serializable {
 	private Set<ModuleVsMenu> moduleVsMenus = new HashSet<ModuleVsMenu>(0);
     private String menuIds ;
     private String hospitalId;
+    private Set<StaffVsModule> staffVsModules = new HashSet<StaffVsModule>(0);
+    private String staffIds;
 
 	// Constructors
 
@@ -31,12 +33,14 @@ public class ModulDict implements java.io.Serializable {
 
 	/** full constructor */
 	public ModulDict(String moduleName, String inputCode,
-                     Set<ModuleVsMenu> moduleVsMenus, String menuIds, String hospitalId) {
+                     Set<ModuleVsMenu> moduleVsMenus, String menuIds, String hospitalId, Set<StaffVsModule> staffVsModules, String staffIds) {
 		this.moduleName = moduleName;
 		this.inputCode = inputCode;
 		this.moduleVsMenus = moduleVsMenus;
         this.menuIds = menuIds;
         this.hospitalId = hospitalId;
+        this.staffVsModules = staffVsModules;
+        this.staffIds = staffIds;
     }
 
 	// Property accessors
@@ -103,5 +107,31 @@ public class ModulDict implements java.io.Serializable {
 
     public void setMenuIds(String menuIds) {
         this.menuIds  = menuIds ;
+    }
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "modulDict")
+    public Set<StaffVsModule> getStaffVsModules() {
+        return staffVsModules;
+    }
+
+    public void setStaffVsModules(Set<StaffVsModule> staffVsModules) {
+        this.staffVsModules = staffVsModules;
+    }
+
+    @Transient
+    public String getStaffIds() {
+        Set<StaffVsModule> moduleVsStaff = this.getStaffVsModules();
+        StringBuffer buffer = new StringBuffer();
+        for (StaffVsModule staffVsModule : moduleVsStaff) {
+            buffer.append(staffVsModule.getStaffDict().getId());
+            buffer.append(",");
+        }
+        this.staffIds = buffer.toString();
+        return staffIds;
+    }
+
+    public void setStaffIds(String staffIds) {
+        this.staffIds = staffIds;
     }
 }
