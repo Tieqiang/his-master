@@ -282,6 +282,7 @@ public class LoginService {
         config.setLoginName((String)session.getAttribute("loginName"));
         config.setStorageCode((String) session.getAttribute("storageCode"));
         config.setStorageName((String) session.getAttribute("storageName"));
+        config.setDefaultReportPath("http://192.168.6.68:8080/webReport/ReportServer?reportlet=");
         return config ;
     }
 }

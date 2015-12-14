@@ -4,6 +4,7 @@ import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.common.entity.DeptDict;
 import com.jims.his.domain.common.facade.DeptDictFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpSupplierCatalog;
 import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
 import com.jims.his.domain.ieqm.vo.ExpSupplierVo;
@@ -27,12 +28,12 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         this.deptDictFacade = deptDictFacade;
     }
 
-    public List<ExpSupplierCatalog> listExpSupplierCatalog() {
-        String hql = "from ExpSupplierCatalog as dict where dict.supplierClass='生产商'";
-        Query query = entityManager.createQuery(hql);
-        List resultList = query.getResultList();
-        return resultList;
-    }
+    //public List<ExpSupplierCatalog> listExpSupplierCatalog() {
+    //    String hql = "from ExpSupplierCatalog as dict where dict.supplierClass='生产商'";
+    //    Query query = entityManager.createQuery(hql);
+    //    List resultList = query.getResultList();
+    //    return resultList;
+    //}
     //查询供应商
     public List<ExpSupplierCatalog> findSupplierBySupplierClass(String supplierClass){
         String hql = "from ExpSupplierCatalog a where a.supplierClass = '"+supplierClass+"'";
@@ -43,43 +44,36 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         String hql = "from ExpSupplierCatalog a where a.supplier =  '"+inputCode+"'  ";
         return entityManager.createQuery(hql).getResultList();
     }
-    //保存
+
+    /**
+     * 保存增删改
+     *
+     * @param beanChangeVo
+     */
     @Transactional
-    public List<ExpSupplierCatalog> saveExpSupplierCatalog(List<ExpSupplierCatalog> insertDate){
-        List<ExpSupplierCatalog> expSupplierCatalogList =  new ArrayList<>();
-        if (insertDate.size() > 0){
-            for (ExpSupplierCatalog expSupplierCatalog : insertDate){
-                ExpSupplierCatalog result = merge(expSupplierCatalog);
-                expSupplierCatalogList.add(result);
-            }
+    public List<ExpSupplierCatalog> save(BeanChangeVo<ExpSupplierCatalog> beanChangeVo) {
+        List<ExpSupplierCatalog> newUpdateDict = new ArrayList<>();
+        List<ExpSupplierCatalog> inserted = beanChangeVo.getInserted();
+        List<ExpSupplierCatalog> updated = beanChangeVo.getUpdated();
+        List<ExpSupplierCatalog> deleted = beanChangeVo.getDeleted();
+        for (ExpSupplierCatalog dict : inserted) {
+            ExpSupplierCatalog merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return expSupplierCatalogList;
-    }
-    //修改
-    @Transactional
-    public List<ExpSupplierCatalog> updateExpSupplierCatalog(List<ExpSupplierCatalog> updateDate){
-        List<ExpSupplierCatalog> expSupplierCatalogList = new ArrayList<>();
-        if (updateDate.size() > 0){
-            for (ExpSupplierCatalog expSupplierCatalog : updateDate){
-                ExpSupplierCatalog result = merge(expSupplierCatalog);
-                expSupplierCatalogList.add(result);
-            }
+
+        for (ExpSupplierCatalog dict : updated) {
+            ExpSupplierCatalog merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return expSupplierCatalogList;
-    }
-    //删除
-    @Transactional
-    public List<ExpSupplierCatalog> deleteExpSupplierCatalog(List<ExpSupplierCatalog> deleteDate){
-        List<ExpSupplierCatalog> expSupplierCatalogList = new ArrayList<>();
-        if (deleteDate.size() > 0){
-            List<String> ids = new ArrayList<>();
-            for (ExpSupplierCatalog expSupplierCatalog : deleteDate){
-                ids.add(expSupplierCatalog.getId());
-            }
-            removeByStringIds(ExpSupplierCatalog.class,ids);
-            expSupplierCatalogList.addAll(deleteDate);
+
+        List<String> ids = new ArrayList<>();
+
+        for (ExpSupplierCatalog dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
         }
-        return expSupplierCatalogList;
+        this.removeByStringIds(ExpSupplierCatalog.class, ids);
+        return newUpdateDict;
     }
 
     /**

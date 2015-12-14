@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpImportClassDict;
 import com.jims.his.domain.ieqm.entity.ExpTenderTypeDict;
 import com.jims.his.domain.ieqm.entity.ExpTenderTypeDict;
@@ -22,48 +23,35 @@ public class ExpTenderTypeDictFacade extends BaseFacade {
         List<ExpTenderTypeDict> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpTenderTypeDict.class);
         return nativeQuery;
     }
+
     /**
-     * 保存内容
-     * @param insertData
-     * @return
+     * 保存增删改
+     *
+     * @param beanChangeVo
      */
     @Transactional
-    public List<ExpTenderTypeDict> saveTenderTypeDict(List<ExpTenderTypeDict> insertData) {
-
-        List<ExpTenderTypeDict> newUpdateDict = new ArrayList<>() ;
-        if(insertData.size() >0 ){
-            for (ExpTenderTypeDict dict:insertData){
-                ExpTenderTypeDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-            }
+    public List<ExpTenderTypeDict> save(BeanChangeVo<ExpTenderTypeDict> beanChangeVo) {
+        List<ExpTenderTypeDict> newUpdateDict = new ArrayList<>();
+        List<ExpTenderTypeDict> inserted = beanChangeVo.getInserted();
+        List<ExpTenderTypeDict> updated = beanChangeVo.getUpdated();
+        List<ExpTenderTypeDict> deleted = beanChangeVo.getDeleted();
+        for (ExpTenderTypeDict dict : inserted) {
+            ExpTenderTypeDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return newUpdateDict;
-    }
-    @Transactional
-    public List<ExpTenderTypeDict> updateTenderTypeDict( List<ExpTenderTypeDict> updateData) {
 
-        List<ExpTenderTypeDict> newUpdateDict = new ArrayList<>() ;
-        if(updateData.size()>0){
-            for (ExpTenderTypeDict dict:updateData){
-                ExpTenderTypeDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-
-            }
+        for (ExpTenderTypeDict dict : updated) {
+            ExpTenderTypeDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return newUpdateDict;
-    }
-    @Transactional
-    public List<ExpTenderTypeDict> deleteTenderTypeDict(List<ExpTenderTypeDict> deleteData) {
 
-        List<ExpTenderTypeDict> newUpdateDict = new ArrayList<>() ;
-        if(deleteData.size()>0){
-            List<String> ids = new ArrayList<>();
-            for (ExpTenderTypeDict dict:deleteData){
-                ids.add(dict.getId()) ;
-            }
-            super.removeByStringIds(ExpTenderTypeDict.class,ids);
-            newUpdateDict.addAll(deleteData) ;
+        List<String> ids = new ArrayList<>();
+
+        for (ExpTenderTypeDict dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
         }
+        this.removeByStringIds(ExpTenderTypeDict.class, ids);
         return newUpdateDict;
     }
 }

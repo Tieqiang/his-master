@@ -34,8 +34,8 @@ $(function () {
             field: 'buyId',
             width: "55%"
         }, {
-            title: '仓管员',
-            field: 'storer',
+            title: '审核人',
+            field: 'checker',
             width: "45%"
         }]],
         onClickRow: function (index, row) {

@@ -1,6 +1,7 @@
 package com.jims.his.service.ieqm;
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.facade.ExpStorageDeptFacade;
 import org.jboss.logging.Param;
@@ -8,6 +9,7 @@ import org.jboss.logging.Param;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,11 +47,11 @@ public class ExpStorageDeptService {
 
     @POST
     @Path("merge")
-    public Response mergerExpStorageDept(List<ExpStorageDept> expStorageDepts){
+    public Response mergerExpStorageDept(BeanChangeVo<ExpStorageDept> beanChangeVo){
         try{
-
-            expStorageDeptFacade.mergeExpStorageDept(expStorageDepts) ;
-            return Response.status(Response.Status.OK).entity(expStorageDepts).build();
+            List<ExpStorageDept> newUpdateDict = new ArrayList<>();
+            newUpdateDict = expStorageDeptFacade.mergeExpStorageDept(beanChangeVo) ;
+            return Response.status(Response.Status.OK).entity(newUpdateDict).build();
         }catch (Exception e){
             ErrorException errorException = new ErrorException() ;
             errorException.setMessage(e);
@@ -57,20 +59,9 @@ public class ExpStorageDeptService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
-        }
-    }
-
-    @POST
-    @Path("delete")
-    public Response deleteExpStorageDept(List<ExpStorageDept> expStorageDepts){
-        try{
-            expStorageDeptFacade.deleteExpStorageDept(expStorageDepts) ;
-            return Response.status(Response.Status.OK).entity(expStorageDepts).build();
-        }catch (Exception e){
-            ErrorException errorException = new ErrorException() ;
-            errorException.setMessage(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
     }

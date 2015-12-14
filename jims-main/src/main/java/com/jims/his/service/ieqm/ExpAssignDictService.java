@@ -2,12 +2,14 @@ package com.jims.his.service.ieqm;
 
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpAssignDict;
 import com.jims.his.domain.ieqm.facade.ExpAssignDictFacade;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,55 +31,32 @@ public class ExpAssignDictService {
         return expAssignDictFacade.findAll(name);
     }
 
+    /**
+     * 保存增删改
+     *
+     * @param beanChangeVo
+     * @return
+     */
     @POST
-    @Path("add")
-    public Response addExpAssignDict(List<ExpAssignDict> expAssignDicts) {
-        List<ExpAssignDict> dicts = null;
+    @Path("merge")
+    public Response save(BeanChangeVo<ExpAssignDict> beanChangeVo) {
         try {
-            dicts = expAssignDictFacade.saveAssignDict(expAssignDicts);
-            return Response.status(Response.Status.OK).entity(dicts).build();
+            List<ExpAssignDict> newUpdateDict = new ArrayList<>();
+            newUpdateDict = expAssignDictFacade.save(beanChangeVo);
+            return Response.status(Response.Status.OK).entity(newUpdateDict).build();
         } catch (Exception e) {
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
                 errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
+
     }
 
-    @POST
-    @Path("update")
-    public Response updateExpAssignDict(List<ExpAssignDict> expAssignDicts) {
-        List<ExpAssignDict> dicts = null;
-        try {
-            dicts = expAssignDictFacade.updateAssignDict(expAssignDicts);
-            return Response.status(Response.Status.OK).entity(dicts).build();
-        } catch (Exception e) {
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
-                errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
-    }
-
-    @POST
-    @Path("delete")
-    public Response deleteExpAssignDict(List<ExpAssignDict> expAssignDicts) {
-        List<ExpAssignDict> dicts = null;
-        try {
-            dicts = expAssignDictFacade.deleteAssignDict(expAssignDicts);
-            return Response.status(Response.Status.OK).entity(dicts).build();
-        } catch (Exception e) {
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
-    }
 }

@@ -2,7 +2,7 @@ package com.jims.his.service.ieqm;
 
 
 import com.jims.his.common.expection.ErrorException;
-import com.jims.his.domain.ieqm.entity.ExpImportClassDict;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpPropertyDict;
 import com.jims.his.domain.ieqm.facade.ExpPropertyDictFacade;
 
@@ -30,51 +30,32 @@ public class ExpPropertyDictService {
     public List<ExpPropertyDict> expPropertyDictList(@QueryParam("name") String name){
         return expPropertyDictFacade.findAll(name);
     }
+
+    /**
+     * 保存增删改
+     * @param beanChangeVo
+     * @return
+     */
     @POST
-    @Path("add")
-    public Response addExpPropertyDict(List<ExpPropertyDict> expPropertyDicts){
+    @Path("merge")
+    public Response save(BeanChangeVo<ExpPropertyDict> beanChangeVo) {
         try {
-            List<ExpPropertyDict> dicts = expPropertyDictFacade.savePropertyDict(expPropertyDicts);
-            return Response.status(Response.Status.OK).entity(dicts).build();
-        } catch (Exception e){
+            List<ExpPropertyDict> newUpdateDict = new ArrayList<>();
+            newUpdateDict = expPropertyDictFacade.save(beanChangeVo);
+            return Response.status(Response.Status.OK).entity(newUpdateDict).build();
+        } catch (Exception e) {
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
                 errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
 
     }
-    @POST
-    @Path("update")
-    public Response updateExpPropertyDict(List<ExpPropertyDict> expPropertyDicts){
-        try {
-            List<ExpPropertyDict> dicts = expPropertyDictFacade.updatePropertyDict(expPropertyDicts);
-            return Response.status(Response.Status.OK).entity(dicts).build();
-        } catch (Exception e){
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
-                errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
-    }
-    @POST
-    @Path("delete")
-    public Response saveExpPropertyDict(List<ExpPropertyDict> expPropertyDicts){
-        try {
-            List<ExpPropertyDict> dicts = expPropertyDictFacade.deletePropertyDict(expPropertyDicts);
-            return Response.status(Response.Status.OK).entity(dicts).build();
-        } catch (Exception e){
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
-    }
+
 }

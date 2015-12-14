@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 
 import javax.inject.Inject;
@@ -38,29 +39,36 @@ public class ExpStorageDeptFacade extends BaseFacade {
     }
 
     /**
-     * 保存修改的科室字典
-     * @param expStorageDepts
+     * 保存增删改
+     * @param beanChangeVo
+     * @return
      */
     @Transactional
-    public void mergeExpStorageDept(List<ExpStorageDept> expStorageDepts) {
-
-        for (ExpStorageDept dept :expStorageDepts){
-            super.merge(dept) ;
+    public List<ExpStorageDept> mergeExpStorageDept(BeanChangeVo<ExpStorageDept> beanChangeVo) {
+        List<ExpStorageDept> newUpdateDict = new ArrayList<>();
+        List<ExpStorageDept> inserted = beanChangeVo.getInserted();
+        List<ExpStorageDept> updated = beanChangeVo.getUpdated();
+        List<ExpStorageDept> deleted = beanChangeVo.getDeleted();
+        for (ExpStorageDept dict : inserted) {
+            ExpStorageDept merge = merge(dict);
+            newUpdateDict.add(merge);
         }
+
+        for (ExpStorageDept dict : updated) {
+            ExpStorageDept merge = merge(dict);
+            newUpdateDict.add(merge);
+        }
+
+        List<String> ids = new ArrayList<>();
+
+        for (ExpStorageDept dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
+        }
+        this.removeByStringIds(ExpStorageDept.class, ids);
+        return newUpdateDict;
     }
 
-    /**
-     * 删除库房科室字典
-     * @param expStorageDepts
-     */
-    @Transactional
-    public void deleteExpStorageDept(List<ExpStorageDept> expStorageDepts) {
-        List<String> ids = new ArrayList<>() ;
-        for(ExpStorageDept dept:expStorageDepts){
-            ids.add(dept.getId()) ;
-        }
-        super.removeByStringIds(ExpStorageDept.class,ids);
-    }
 
     /**
      * 通过库房代码、医院Id查找前后缀

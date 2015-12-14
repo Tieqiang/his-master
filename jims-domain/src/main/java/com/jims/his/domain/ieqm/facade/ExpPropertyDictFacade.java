@@ -2,7 +2,8 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
-import com.jims.his.domain.ieqm.entity.ExpFormDict;
+import com.jims.his.common.util.PinYin2Abbreviation;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpImportClassDict;
 import com.jims.his.domain.ieqm.entity.ExpPropertyDict;
 
@@ -25,48 +26,36 @@ public class ExpPropertyDictFacade extends BaseFacade {
         }
         return entityManager.createQuery(hql).getResultList();
     }
+
     /**
-     * 保存内容
-     * @param insertData
-     * @return
+     * 保存增删改
+     * @param beanChangeVo
      */
     @Transactional
-    public List<ExpPropertyDict> savePropertyDict(List<ExpPropertyDict> insertData) {
-
-        List<ExpPropertyDict> newUpdateDict = new ArrayList<>() ;
-        if(insertData.size() >0 ){
-            for (ExpPropertyDict dict:insertData){
-                ExpPropertyDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-            }
+    public List<ExpPropertyDict> save(BeanChangeVo<ExpPropertyDict> beanChangeVo) {
+        List<ExpPropertyDict> newUpdateDict = new ArrayList<>();
+        List<ExpPropertyDict> inserted = beanChangeVo.getInserted();
+        List<ExpPropertyDict> updated = beanChangeVo.getUpdated();
+        List<ExpPropertyDict> deleted = beanChangeVo.getDeleted();
+        for (ExpPropertyDict dict : inserted) {
+            //dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getToxiProperty()));
+            ExpPropertyDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return newUpdateDict;
-    }
-    @Transactional
-    public List<ExpPropertyDict> updatePropertyDict( List<ExpPropertyDict> updateData) {
 
-        List<ExpPropertyDict> newUpdateDict = new ArrayList<>() ;
-        if(updateData.size()>0){
-            for (ExpPropertyDict dict:updateData){
-                ExpPropertyDict merge = merge(dict);
-                newUpdateDict.add(merge) ;
-
-            }
+        for (ExpPropertyDict dict : updated) {
+            //dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getToxiProperty()));
+            ExpPropertyDict merge = merge(dict);
+            newUpdateDict.add(merge);
         }
-        return newUpdateDict;
-    }
-    @Transactional
-    public List<ExpPropertyDict> deletePropertyDict(List<ExpPropertyDict> deleteData) {
 
-        List<ExpPropertyDict> newUpdateDict = new ArrayList<>() ;
-        if(deleteData.size()>0){
-            List<String> ids = new ArrayList<>();
-            for (ExpPropertyDict dict:deleteData){
-                ids.add(dict.getId()) ;
-            }
-            super.removeByStringIds(ExpImportClassDict.class,ids);
-            newUpdateDict.addAll(deleteData) ;
+        List<String> ids = new ArrayList<>();
+
+        for (ExpPropertyDict dict : deleted) {
+            ids.add(dict.getId());
+            newUpdateDict.add(dict);
         }
+        this.removeByStringIds(ExpPropertyDict.class, ids);
         return newUpdateDict;
     }
 }

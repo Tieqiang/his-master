@@ -118,7 +118,7 @@ $(function () {
             field: 'storage'
         }]],onClickRow: function (rowIndex,rowData) {
             $("#importMasterAcc").datagrid('loadData',[]);
-            var loadDict = function(){
+            var loadDicts = function(){
                 var  dis = {};
                 dis.disburseRecNo = rowData.disburseRecNo;
                 dis.hospitalId = parent.config.hospitalId;
@@ -137,7 +137,7 @@ $(function () {
                     $("#importMasterAcc").datagrid('loadData',disData);
                 })
             }
-            loadDict();
+            loadDicts();
         }
 
     });
@@ -148,12 +148,12 @@ $(function () {
         columns: [[{
             title: '入库单号',
             field: 'documentNo',
-            width: '5%',
+            width: '7%',
             editor: {type: 'textbox'}
         },{
             title: '代码',
             field: 'expCode',
-            width: '5%',
+            width: '7%',
             editor: {type: 'textbox'}
         },{
             title: '产品名称',
@@ -215,7 +215,7 @@ $(function () {
             field: 'invoiceNo'
         }, {
             title: '发票日期',
-            width: '5%',
+            width: '7%',
             field: 'invoiceDate',
             formatter:formatterDate
         }, {
@@ -322,6 +322,56 @@ $(function () {
         return promise;
 
     }
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var disburseRecNo = $("#startBill").textbox("getText");
+            var startDate = $("#startDate").datebox("getText");
+            var stopDate = $("#stopDate").datebox("getText");
+            var supplier = $("#supplier").combogrid("getText");
+            var hospitalId = parent.config.hospitalId;
+            var storage = parent.config.storageCode;
+            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-document-print-approving.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier);
+        }
+    })
+    $("#printAccBtn").on('click',function(){
+        var printData = $("#importMasterDoc").datagrid('getRows');
+        if(printData.length<=0){
+            $.messager.alert('系统提示','请先查询数据','info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
+    $("#printDivs").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var printData = $("#importMasterAcc").datagrid('getRows');
+            var disburseRecNo = printData[0].disburseRecNo;
+            var hospitalId = parent.config.hospitalId;
+            var storage = parent.config.storageCode;
+            $("#reports").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-document-print-appro.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo);
+        }
+    })
+    $("#printDocBtn").on('click',function(){
+        var printData = $("#importMasterAcc").datagrid('getRows');
+        if(printData.length<=0){
+            $.messager.alert('系统提示','请先查询付款单数据','info');
+            return;
+        }
+        $("#printDivs").dialog('open');
+
+    })
     //格式化日期函数
     function formatterDate(val, row) {
         if (val != null) {

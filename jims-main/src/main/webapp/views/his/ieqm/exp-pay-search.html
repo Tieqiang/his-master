@@ -32,7 +32,7 @@
             <input type="radio" id="allPay" name="radioOne" value="2"/>已全付
             <input type="radio" id="somePay" name="radioOne"  value="1" />部分付
             <input type="radio" id="noPay" name="radioOne"  value="0" />未付
-            <input type="radio" id="all" name="radioOne" checked value="0" />全部
+            <input type="radio" id="all" name="radioOne" checked value="" />全部
 
         </div>
         <div class="row">
@@ -51,7 +51,10 @@
     <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'" id="printBtn">打印</a>
     <!--<a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'" id="outBtn">退出</a>-->
 </div>
-
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px"  id="report">
+    </iframe>
+</div>
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
