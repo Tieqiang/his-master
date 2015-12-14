@@ -148,12 +148,12 @@ $(function () {
         columns: [[{
             title: '入库单号',
             field: 'documentNo',
-            width: '5%',
+            width: '7%',
             editor: {type: 'textbox'}
         },{
             title: '代码',
             field: 'expCode',
-            width: '5%',
+            width: '7%',
             editor: {type: 'textbox'}
         },{
             title: '产品名称',
@@ -215,7 +215,7 @@ $(function () {
             field: 'invoiceNo'
         }, {
             title: '发票日期',
-            width: '5%',
+            width: '7%',
             field: 'invoiceDate',
             formatter:formatterDate
         }, {
@@ -325,7 +325,7 @@ $(function () {
     $("#printDiv").dialog({
         title: '打印预览',
         width: 1000,
-        height: 800,
+        height: 520,
         catch: false,
         modal: true,
         closed: true,
@@ -341,12 +341,35 @@ $(function () {
     })
     $("#printAccBtn").on('click',function(){
         var printData = $("#importMasterDoc").datagrid('getRows');
-        console.log(printData.length);
         if(printData.length<=0){
             $.messager.alert('系统提示','请先查询数据','info');
             return;
         }
         $("#printDiv").dialog('open');
+
+    })
+    $("#printDivs").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var printData = $("#importMasterAcc").datagrid('getRows');
+            var disburseRecNo = printData[0].disburseRecNo;
+            var hospitalId = parent.config.hospitalId;
+            var storage = parent.config.storageCode;
+            $("#reports").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-document-print-appro.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo);
+        }
+    })
+    $("#printDocBtn").on('click',function(){
+        var printData = $("#importMasterAcc").datagrid('getRows');
+        if(printData.length<=0){
+            $.messager.alert('系统提示','请先查询付款单数据','info');
+            return;
+        }
+        $("#printDivs").dialog('open');
 
     })
     //格式化日期函数

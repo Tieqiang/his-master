@@ -186,6 +186,34 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var promiseDetail = loadDict();
     })
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var stopDate = $("#stopDate").datebox("getText");
+            var startDate =$("#startDate").datebox("getText");
+            var supplier = $("#supplier").combogrid("getText");
+            var documentNo = $("#documentNo").textbox("getValue");
+            var searchInput = $("#searchInput").textbox("getValue");
+            var radio = $("#detailForm input[name='radioOne']:checked").val();
+            var hospitalId = parent.config.hospitalId;
+            var storage = parent.config.storageCode;
+            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-search.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&documentNo="+documentNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&radio="+radio+"&searchInput="+searchInput+"&loginId="+parent.config.loginId);
+        }
+    })
+    $("#printBtn").on('click',function(){
+        var printData = $("#importDetail").datagrid('getRows');
+        if(printData.length<=0){
+            $.messager.alert('系统提示','请先查询数据','info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
     var importDetailDataVO = {};//传递vo
     var detailsData = [];//信息
     var loadDict = function(){

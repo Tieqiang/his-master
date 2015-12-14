@@ -139,9 +139,18 @@ public class ExpImportMasterFacade extends BaseFacade {
                 "          AND D.exp_code = A.exp_code   \n" +
                 "          AND D.package_units = A.units   " ;
 
-//        if (payRadio != null && payRadio.trim().length() > 0) {
-//            sql += " and dict.account_Indicator='" + payRadio + "'";
-//        }
+        if (payRadio != null && payRadio.trim().length() > 0) {
+            if(payRadio.trim().equals("0")){
+                sql += " and Nvl(D.DISBURSE_COUNT,0)='" + 0 + "'";
+            }
+            if(payRadio.trim().equals("1")){
+                sql += " and D.disburse_Count>0 and D.disburse_Count< D.QUANTITY ";
+            }
+            if(payRadio.trim().equals("2")){
+                sql += " and D.disburse_Count=D.quantity";
+            }
+
+        }
         if (documentNo != null && documentNo.trim().length() > 0) {
             sql += " and M.document_No='" + documentNo + "'";
         }

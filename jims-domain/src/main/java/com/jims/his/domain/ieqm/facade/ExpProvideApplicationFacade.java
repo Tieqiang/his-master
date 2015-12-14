@@ -165,13 +165,12 @@ public class ExpProvideApplicationFacade extends BaseFacade {
 
     /**
      * 出库申请：查询出库申请物品信息列表
-     * @param storage
-     * @param hospitalId
+     * @param storageCode
      * @param applyStorage
      * @param appNo
      * @return
      */
-    public List<ExpProvideApplicationVo> findExportApplyDict(String storage, String hospitalId, String applyStorage, String appNo){
+    public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String applyStorage, String appNo){
         String sql = "SELECT EXP_PROVIDE_APPLICATION.ITEM_NO,   \n" +
                 "         EXP_PROVIDE_APPLICATION.EXP_CODE,   \n" +
                 "         EXP_PROVIDE_APPLICATION.ID APPLICATION_ID,   \n" +
@@ -185,22 +184,22 @@ public class ExpProvideApplicationFacade extends BaseFacade {
                 "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG,   \n" +
                 "         EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE,   \n" +
                 "         EXP_PROVIDE_APPLICATION.APPLICATION_MAN,   \n" +
-                "         EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE,   \n" +
+                "         EXP_STORAGE_DEPT.STORAGE_NAME PROVIDE_STORAGE,   \n" +
                 "         EXP_DICT.EXP_FORM,\n" +
                 "         EXP_PROVIDE_APPLICATION.AUDITING_OPERATOR,\n" +
                 "         EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY   \n" +
                 "    FROM EXP_PROVIDE_APPLICATION,   \n" +
-                "         EXP_DICT WHERE  EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE  and  \n" +
+                "         EXP_DICT,EXP_STORAGE_DEPT WHERE EXP_STORAGE_DEPT.STORAGE_CODE = EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE  AND EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE  and  \n" +
                 "         EXP_PROVIDE_APPLICATION.EXP_SPEC = EXP_DICT.EXP_SPEC and  \n" +
                 "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG <> '1'";
-        if (null != storage && !storage.trim().equals("")) {
-            sql += " and  EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE = '" + storage + "' \n";
+        if (null != storageCode && !storageCode.trim().equals("")) {
+            sql += " and  EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE = '" + storageCode + "' \n";
         }
         if (null != applyStorage && !applyStorage.trim().equals("")) {
             sql += " and  EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE ='" + applyStorage + "' \n";
         }
         if (null != appNo && !appNo.trim().equals("")) {
-            sql += " and  APPLICANT_NO in (" + appNo + ") \n";
+            sql += " and  APPLICANT_NO = '" + appNo + "' \n";
         }
         sql += " ORDER BY EXP_PROVIDE_APPLICATION.ITEM_NO ASC ";
         List<ExpProvideApplicationVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpProvideApplicationVo.class);
