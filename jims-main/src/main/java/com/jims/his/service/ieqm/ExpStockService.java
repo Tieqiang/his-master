@@ -9,7 +9,9 @@ import com.jims.his.domain.ieqm.vo.*;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -115,6 +117,8 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
@@ -136,6 +140,8 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("操作失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
@@ -159,6 +165,8 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("操作失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
@@ -243,10 +251,85 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("操作失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
 
     }
 
+    /**
+     * 根据月结开始时间获得月结结束时间
+     * @param startDate
+     * @return
+     */
+    public String getStopDate(String startDate){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        try {
+            cal.setTime(sdf.parse(startDate));
+            cal.add(Calendar.MONTH, 1);
+            String stopDate = sdf.format(cal.getTime()) + " 00:00:00";
+            return stopDate;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return sdf.format(new Date());
+        }
+    }
+    /**
+     * 产品月结，根据月结月份查询月结记录数目
+     * @param storageCode
+     * @param checkMonth
+     * @return
+     */
+    @GET
+    @Path("count-balance")
+    public int countStockBalance(@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth) {
+        String startDate = checkMonth + "-01 00:00:00";
+        String stopDate = getStopDate(startDate);
+        return expStockFacade.countStockBalance(storageCode, startDate, stopDate);
+    }
+
+    /**
+     * 本月内存在月结记录，（是）查看 （月结最大时间，最小时间）
+     * @param storageCode
+     * @param checkMonth
+     * @return
+     */
+    @GET
+    @Path("get-all-balance")
+    public List<ExpStockBalanceVo> getAllBalance(@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth){
+        String startDate = checkMonth + "-01 00:00:00";
+        String stopDate = getStopDate(startDate);
+        return expStockFacade.getAllBalance(storageCode, startDate, stopDate);
+    }
+
+    /**
+     * 本月内存在月结记录，（否）查看 （月结最大时间，最小时间）
+     * @param storageCode
+     * @param checkMonth
+     * @return
+     */
+    @GET
+    @Path("get-last-balance")
+    public List<ExpStockBalanceVo> getLastBalance(@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth) {
+        String startDate = checkMonth + "-01 00:00:00";
+        String stopDate = getStopDate(startDate);
+        return expStockFacade.getLastBalance(storageCode, startDate, stopDate);
+    }
+
+    /**
+     * 本月份内不存在月结记录，则使用本月份的开始时间，本月份的结束时间
+     * @param storageCode
+     * @param checkMonth
+     * @return
+     */
+    @GET
+    @Path("get-current-balance")
+    public List<ExpStockBalanceVo> getCurrentBalance(@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth) {
+        String startDate = checkMonth + "-01 00:00:00";
+        String stopDate = getStopDate(startDate);
+        return expStockFacade.getCurrentBalance(storageCode, startDate, stopDate);
+    }
 }

@@ -184,96 +184,73 @@ $(function () {
     $("#dg").layout({
         fit: true
     });
+
+    var showData = function(data){
+        $("#left").datagrid("loadData", data);
+        var sumInitialMoney = 0.00;
+        var sumImportMoney = 0.00;
+        var sumExportMoney = 0.00;
+        var sumInventoryMoney = 0.00;
+        var sumProfit = 0.00;
+
+
+        $.each(data, function (index, item) {
+            sumInitialMoney += item.initialMoney;
+            sumImportMoney += item.importMoney;
+            sumExportMoney += item.exportMoney;
+            sumInventoryMoney + item.inventoryMoney;
+            sumProfit += item.profit;
+        });
+        $("#right").datagrid("loadData", data);
+        $('#right').datagrid('appendRow', {
+            expCode: '总计',
+            initialMoney: sumInitialMoney,
+            importMoney: sumImportMoney,
+            exportMoney: sumExportMoney,
+            inventoryMoney: sumInventoryMoney,
+            profit: sumProfit
+        });
+    }
+
     //提取按钮
     $("#search").on('click', function () {
         var checkMonth = $("#checkMonth").datetimebox('getText');
         var storageCode = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
-        $.get("/api/exp-stock/count-balance?storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&checkMonth=" + checkMonth, function (data) {
+        $.get("/api/exp-stock/count-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
             if(data>0){
                 $.messager.confirm("提示信息", "本月内存在月结记录，是否查看？", function (r) {
                     if (r) {
-                        $.get("/api/exp-stock/?storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate, function (data) {
-                            $("#left").datagrid("loadData", data);
-                            var sumInitialMoney = 0.00;
-                            var sumImportMoney = 0.00;
-                            var sumExportMoney = 0.00;
-                            var sumInventoryMoney = 0.00;
-                            var sumProfit = 0.00;
-
-
-                            $.each(data, function (index, item) {
-                                sumInitialMoney += item.initialMoney;
-                                sumImportMoney += item.importMoney;
-                                sumExportMoney += item.exportMoney;
-                                sumInventoryMoney + item.inventoryMoney;
-                                sumProfit += item.profit;
-                            });
-                            $("#right").datagrid("loadData", data);
-                            $('#right').datagrid('appendRow', {
-                                expCode: '总计',
-                                initialMoney: sumInitialMoney,
-                                importMoney: sumImportMoney,
-                                exportMoney: sumExportMoney,
-                                inventoryMoney: sumInventoryMoney,
-                                profit: sumProfit
-                            });
+                        $.get("/api/exp-stock/get-all-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
+                            if (data.length > 0) {
+                                showData(data);
+                            } else {
+                                $.messager.alert("提示", "未查询到数据！", "info");
+                                $("#left").datagrid("loadData", []);
+                                $("#right").datagrid("loadData", []);
+                            }
                         });
                     }else{
-                        $.get("/api/exp-stock/?storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate, function (data) {
-                            $("#left").datagrid("loadData", data);
-                            var sumInitialMoney = 0.00;
-                            var sumImportMoney = 0.00;
-                            var sumExportMoney = 0.00;
-                            var sumInventoryMoney = 0.00;
-                            var sumProfit = 0.00;
-
-
-                            $.each(data, function (index, item) {
-                                sumInitialMoney += item.initialMoney;
-                                sumImportMoney += item.importMoney;
-                                sumExportMoney += item.exportMoney;
-                                sumInventoryMoney + item.inventoryMoney;
-                                sumProfit += item.profit;
-                            });
-                            $("#right").datagrid("loadData", data);
-                            $('#right').datagrid('appendRow', {
-                                expCode: '总计',
-                                initialMoney: sumInitialMoney,
-                                importMoney: sumImportMoney,
-                                exportMoney: sumExportMoney,
-                                inventoryMoney: sumInventoryMoney,
-                                profit: sumProfit
-                            });
+                        $.get("/api/exp-stock/get-last-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
+                            if (data.length > 0) {
+                                showData(data);
+                            } else {
+                                $.messager.alert("提示", "未查询到数据！", "info");
+                                $("#left").datagrid("loadData", []);
+                                $("#right").datagrid("loadData", []);
+                            }
                         });
                     }
                 });
             }else{
-                $.get("/api/exp-stock/get-current-balance?storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate, function (data) {
-                    $("#left").datagrid("loadData", data);
-                    var sumInitialMoney = 0.00;
-                    var sumImportMoney = 0.00;
-                    var sumExportMoney = 0.00;
-                    var sumInventoryMoney = 0.00;
-                    var sumProfit = 0.00;
-
-
-                    $.each(data, function (index, item) {
-                        sumInitialMoney += item.initialMoney;
-                        sumImportMoney += item.importMoney;
-                        sumExportMoney += item.exportMoney;
-                        sumInventoryMoney + item.inventoryMoney;
-                        sumProfit += item.profit;
-                    });
-                    $("#right").datagrid("loadData", data);
-                    $('#right').datagrid('appendRow', {
-                        expCode: '总计',
-                        initialMoney: sumInitialMoney,
-                        importMoney: sumImportMoney,
-                        exportMoney: sumExportMoney,
-                        inventoryMoney: sumInventoryMoney,
-                        profit: sumProfit
-                    });
+                $.get("/api/exp-stock/get-current-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
+                    if (data.length > 0) {
+                        showData(data);
+                    } else {
+                        $.messager.alert("提示", "未查询到数据！", "info");
+                        $("#left").datagrid("loadData", []);
+                        $("#right").datagrid("loadData", []);
+                    }
                 });
             }
 

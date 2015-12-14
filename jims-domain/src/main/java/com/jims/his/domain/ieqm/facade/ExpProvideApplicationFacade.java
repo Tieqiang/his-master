@@ -170,7 +170,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
      * @param appNo
      * @return
      */
-    public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String applyStorage, String appNo){
+    public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String hospitalId, String applyStorage, String appNo){
         String sql = "SELECT EXP_PROVIDE_APPLICATION.ITEM_NO,   \n" +
                 "         EXP_PROVIDE_APPLICATION.EXP_CODE,   \n" +
                 "         EXP_PROVIDE_APPLICATION.ID APPLICATION_ID,   \n" +
@@ -194,6 +194,10 @@ public class ExpProvideApplicationFacade extends BaseFacade {
                 "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG <> '1'";
         if (null != storageCode && !storageCode.trim().equals("")) {
             sql += " and  EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE = '" + storageCode + "' \n";
+        }
+
+        if (null != hospitalId && !hospitalId.trim().equals("")) {
+            sql += " and  EXP_STORAGE_DEPT.HOSPITAL_ID = '" + hospitalId + "' \n";
         }
         if (null != applyStorage && !applyStorage.trim().equals("")) {
             sql += " and  EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE ='" + applyStorage + "' \n";
