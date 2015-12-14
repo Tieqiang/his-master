@@ -287,7 +287,7 @@ $(function () {
         rowStyler: rowStyler,
         columns: [[{
             title: '库存单位',
-            field: 'storage',
+            field: 'storageName',
             width: "7%"
         },{
             title: '代码',
@@ -524,7 +524,7 @@ $(function () {
                     }
                 });
                 $("#tab2").datagrid('loadData', data);
-                $("#tab2").datagrid("autoMergeCells", ['storage', 'expCode','expName', 'expSpec','units','firmId']);
+                $("#tab2").datagrid("autoMergeCells", ['storageName', 'expCode','expName', 'expSpec','units','firmId']);
             }
         });
     }
