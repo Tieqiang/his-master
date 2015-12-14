@@ -1,14 +1,8 @@
 package com.jims.his.domain.ieqm.entity;
 
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -37,7 +31,8 @@ public class ExpPriceModifyProfit implements java.io.Serializable {
 	private Date actualEfficientDate;
 	private String expName;
     private String hospitalId ;
-
+    @Transient
+    private String storageName;
 	// Constructors
 
 	/** default constructor */
@@ -215,5 +210,14 @@ public class ExpPriceModifyProfit implements java.io.Serializable {
 
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    @Transient
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
     }
 }
