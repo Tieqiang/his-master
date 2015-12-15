@@ -372,7 +372,15 @@ $(function () {
                     maxlength: 8,
                     precision: 2
                 }
+            },
+            formatter: function(value,row,index){
+                if (row.retailPriceProfit){
+                    return row.retailPriceProfit.toFixed(2);
+                } else {
+                    return value;
+                }
             }
+
         }, {
             title: '执行时间',
             field: 'actualEfficientDate',

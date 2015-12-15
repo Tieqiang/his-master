@@ -13,13 +13,13 @@ function checkRadio(){
         $("#stopBill").textbox({disabled:true});
     }
     if($("#dateTime:checked").val()){
-        $("#startDate").datebox("enable");
-        $("#stopDate").datebox("enable");
+        $("#startDate").datetimebox("enable");
+        $("#stopDate").datetimebox("enable");
     }else{
-        $("#startDate").datebox("clear");
-        $("#stopDate").datebox("clear");
-        $("#startDate").datebox({disabled:true});
-        $("#stopDate").datebox({disabled:true});
+        $("#startDate").datetimebox("clear");
+        $("#stopDate").datetimebox("clear");
+        $("#startDate").datetimebox({disabled:true});
+        $("#stopDate").datetimebox({disabled:true});
     }
     if($("#expName:checked").val()){
         $("#searchInput").combogrid("enable");
@@ -40,15 +40,18 @@ function checkRadio(){
         $("#importClass").combobox({disabled:true});
     }
 }
-function myFormatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth()+1;
-    var d = date.getDate();
-    var h = date.getHours();
-    var min = date.getMinutes();
-    var sec = date.getSeconds();
-    var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
-    return str;
+function myFormatter2(val,row) {
+    if(val!=null){
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth()+1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+        var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
+        return str;
+    }
 }
 function w3(s) {
     if (!s) return new Date();
@@ -65,21 +68,6 @@ function w3(s) {
     }
 }
 $(function () {
-    //格式化日期函数
-    function formatterDate(val, row) {
-        if (val != null) {
-            var date = new Date(val);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var h = date.getHours();
-            var mm = date.getMinutes();
-            var s = date.getSeconds();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
-                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-            return dateTime
-        }
-    }
     var stopEdit = function () {
         if (editRowIndex != undefined) {
             $("#importMaster").datagrid('endEdit', editRowIndex);
@@ -128,7 +116,7 @@ $(function () {
             title: '入库日期',
             field: 'importDate',
             width: '7%',
-            formatter: formatterDate
+            formatter: myFormatter2
         },  {
             title: '供货商',
             field: 'supplier',
@@ -181,7 +169,7 @@ $(function () {
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
+                    formatter: myFormatter2,
                     parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importMaster").datagrid('getEditor', {
@@ -221,6 +209,12 @@ $(function () {
                 $(this).datagrid("beginEdit",rowIndex);
                 editRowIndex = rowIndex;
             }
+        },onUncheck:function(rowIndex,rowData){
+            rowData.accountIndicator='未记账'
+            $(this).datagrid("refreshRow",rowIndex);
+        },onCheck:function(rowIndex,rowData){
+            rowData.accountIndicator='已记账'
+            $(this).datagrid("refreshRow",rowIndex);
         }
     });
     //设置时间
@@ -381,7 +375,7 @@ $(function () {
                 if(data[i].accountIndicator=='0'|| data[i].accountIndicator==null ){
                     data[i].accountIndicator='未记账';
                 }
-                data[i].invoiceDate=formatterDate(data[i].invoiceDate);
+                data[i].invoiceDate=myFormatter2(data[i].invoiceDate);
             }
             masters =data ;
         },'json');
@@ -404,7 +398,7 @@ $(function () {
             $('#importMaster').datagrid('refreshRow',editRowIndex);
             editRowIndex = undefined;
         }
-        var checkedItems = $('#importMaster').datagrid('getChecked');
+        var checkedItems = $('#importMaster').datagrid('getRows');
         //console.log(checkedItems);
         var importVo = {};
         var expImportMasterBeanChangeVo = {};
@@ -414,21 +408,31 @@ $(function () {
         importVo.expImportMasterBeanChangeVo = expImportMasterBeanChangeVo;
         importVo.expImportDetailBeanChangeVo = expImportDetailBeanChangeVo;
         for(var i =0; i<checkedItems.length;i++){
-            if(checkedItems[i].accountIndicator=='未记账'){
-                var saveVo = {};
-                var detailVo={};
-                //detailVo.storage = parent.config.storageCode;
-                detailVo.hospitalId = parent.config.hospitalId;
-                saveVo.storage = parent.config.storageCode;
-                saveVo.hospitalId = parent.config.hospitalId;
-                detailVo.invoiceNo = checkedItems[i].invoiceNo;
-                detailVo.invoiceDate=w3(checkedItems[i].invoiceDate);
-                detailVo.itemNo = checkedItems[i].itemNo;
-                detailVo.id = checkedItems[i].detailId;
-                saveVo.id = checkedItems[i].id;
-                expImportMasterBeanChangeVo.updated.push(saveVo);
-                expImportDetailBeanChangeVo.updated.push(detailVo);
+            for(var j =0; j<checkedItems.length;j++){
+                if(checkedItems[i].documentNo==checkedItems[j].documentNo&&checkedItems[i].accountIndicator!=checkedItems[j].accountIndicator){
+                    $.messager.alert('系统提示','同一账单的上账状态必须一致','info');
+                    return;
+                }
             }
+            var saveVo = {};
+            var detailVo={};
+            //detailVo.storage = parent.config.storageCode;
+            detailVo.hospitalId = parent.config.hospitalId;
+            saveVo.storage = parent.config.storageCode;
+            saveVo.hospitalId = parent.config.hospitalId;
+            detailVo.invoiceNo = checkedItems[i].invoiceNo;
+            detailVo.invoiceDate=w3(checkedItems[i].invoiceDate);
+            detailVo.itemNo = checkedItems[i].itemNo;
+            detailVo.id = checkedItems[i].detailId;
+            saveVo.id = checkedItems[i].id;
+            if(checkedItems[i].accountIndicator=='已记账'){
+                saveVo.accountIndicator=1;
+            }
+            if(checkedItems[i].accountIndicator=='未记账'){
+                saveVo.accountIndicator=0;
+            }
+            expImportMasterBeanChangeVo.updated.push(saveVo);
+            expImportDetailBeanChangeVo.updated.push(detailVo);
         }
         //return;
         if(importVo.length<=0){

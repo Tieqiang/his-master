@@ -211,8 +211,8 @@ public class ExpPriceModifyProfit implements java.io.Serializable {
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;
     }
-
     @Transient
+
     public String getStorageName() {
         return storageName;
     }
