@@ -51,6 +51,16 @@ $(document).ready(function () {
             field: "expSpec",
             width: "10%",
             hidden: true
+        }, {
+            title: "申请单号",
+            field: "applicantNo",
+            width: "10%",
+            editor: {
+                type: "textbox",
+                options: {
+                    disabled: true
+                }
+            }
         },{
             title:"代码",
             field:"expCode",
@@ -131,7 +141,6 @@ $(document).ready(function () {
             title:"申请科室",
             field:"provideStorage",
             width:"10%",
-            hidden:true,
             editor:{
                 type:"textbox",
                 options: {
