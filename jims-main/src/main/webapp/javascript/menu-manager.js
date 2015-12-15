@@ -16,7 +16,11 @@ $(function () {
         }, {
             title: '路径',
             field: 'href',
-            width: "80%"
+            width: "70%"
+        }, {
+            title: '层级',
+            field: 'position',
+            width: "10%"
         }]],
         onLoadSuccess:function(node,data){
             //$(this).tree('collapseAll') ;
@@ -37,6 +41,7 @@ $(function () {
                 menu.id = item.id ;
                 menu.menuName = item.menuName ;
                 menu.href = item.href ;
+                menu.position = item.position;
                 menu.parentId = item.parentId ;
                 menu.children=[] ;
                 menus.push(menu) ;
@@ -79,6 +84,7 @@ $(function () {
             menuDict.menuName = $("#menuName").textbox('getValue');
             menuDict.href = $("#href").textbox('getValue');
             menuDict.parentId = $("#parentId").textbox('getValue');
+            menuDict.position = $("#position").textbox('getValue');
             menuDict.id = $("#id").val();
 
             var title = $("#dlg").dialog('options').title;
@@ -106,6 +112,7 @@ $(function () {
             //$('#fm').form('clear');
             $("#parentName").textbox('setValue', node.menuName);
             $("#parentId").textbox('setValue', node._parentId);
+            $("#position").textbox('setValue', node.position);
         }
     });
 
@@ -123,6 +130,7 @@ $(function () {
             //$('#fm').form('clear');
             $("#parentName").textbox('setValue', node.menuName);
             $("#parentId").textbox('setValue', node.id);
+            $("#position").textbox('setValue', node.position);
         }
     })
 
@@ -169,6 +177,7 @@ $(function () {
         $("#href").textbox('setValue', node.href);
         $("#parentName").textbox('setValue', node.menuName);
         $("#parentId").textbox('setValue', node._parentId);
+        $("#position").textbox('setValue', node.position);
         $("#id").val(node.id);
 
     });
