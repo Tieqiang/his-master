@@ -35,7 +35,7 @@ public class MenuDictService {
     @Path("list")
     public List<MenuDict> findAllMenuDict(){
 
-        List<MenuDict> all = menuDictFacade.findAll(MenuDict.class);
+        List<MenuDict> all = menuDictFacade.findAllByPosition();
         return all ;
     }
 
