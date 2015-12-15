@@ -76,6 +76,7 @@ $(function(){
                 menu.state = "open" ;
                 menu.attributes.url = item.href ;
                 menu.attributes.parentId = item.parentId ;
+                menu.attributes.index = item.position;
                 menu.children=[] ;
                 menus.push(menu) ;
             })
@@ -96,8 +97,16 @@ $(function(){
                 }
             }
 
+            menus.sort(function(a,b){
+                return a.attributes.index- b.attributes.index;
+            });
+            console.log("asc menus:"+menus);
         }) ;
 
+        menuTreeData.sort(function (a, b) {
+            return a[0].attributes.index - b[0].attributes.index;
+        });
+        console.log("asc menuTreeData:" + menuTreeData);
         //$("#menuTree").accordion({
         //    fit:true
         //}) ;
