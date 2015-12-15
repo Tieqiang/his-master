@@ -408,7 +408,12 @@ $(function () {
         importVo.expImportMasterBeanChangeVo = expImportMasterBeanChangeVo;
         importVo.expImportDetailBeanChangeVo = expImportDetailBeanChangeVo;
         for(var i =0; i<checkedItems.length;i++){
-
+            for(var j =0; j<checkedItems.length;j++){
+                if(checkedItems[i].documentNo==checkedItems[j].documentNo&&checkedItems[i].accountIndicator!=checkedItems[j].accountIndicator){
+                    $.messager.alert('系统提示','同一账单的上账状态必须一致','info');
+                    return;
+                }
+            }
             var saveVo = {};
             var detailVo={};
             //detailVo.storage = parent.config.storageCode;
