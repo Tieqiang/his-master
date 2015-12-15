@@ -18,11 +18,24 @@
 
     </ul>
 </div>
+<div id="staffDg" class="easyui-dialog" style="width:450px;height:350px;padding:10px 20px"
+     closed="true" buttons="#staff-buttons" data-options="modal:true">
+    <ul id="staff" class="easyui-tree">
+
+    </ul>
+</div>
 <div id="dlg-buttons">
     <a href="javascript:void(0)" id="selectAllMenuBtn" class="easyui-linkbutton c6" iconCls="icon-ok"  style="width:90px" >全选</a>
     <a href="javascript:void(0)" id="selectNoMenuBtn" class="easyui-linkbutton c6" iconCls="icon-clear"  style="width:90px">全不选</a>
     <a href="javascript:void(0)" id="saveMenuBtn" class="easyui-linkbutton c6" iconCls="icon-save"  style="width:90px">保存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">关闭</a>
+</div>
+
+<div id="staff-buttons">
+    <a href="javascript:void(0)" id="selectAllStaffBtn" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">全选1</a>
+    <a href="javascript:void(0)" id="selectNoStaffBtn" class="easyui-linkbutton c6" iconCls="icon-clear" style="width:90px">全不选1</a>
+    <a href="javascript:void(0)" id="saveStaffBtn" class="easyui-linkbutton c6" iconCls="icon-save" style="width:90px">保存1</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#staffDg').dialog('close')" style="width:90px">关闭1</a>
 </div>
 
 <div id="tb" style="padding:2px 5px;">
@@ -33,6 +46,7 @@
     <a href="#" id="delBtn" class="easyui-linkbutton" iconCls="icon-remove">删除模块</a>
     <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>
     <a href="#" id="menuAddBtn" class="easyui-linkbutton" iconCls="icon-edit">分配模块菜单</a>
+    <a href="#" id="staffAddBtn" class="easyui-linkbutton" iconCls="icon-edit">分配用户权限</a>
 </div>
 <div id="ft" style="padding:2px 5px;">
 

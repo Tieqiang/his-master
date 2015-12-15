@@ -8,6 +8,8 @@ $(function () {
     var editRowIndex;
     var menus = [];//菜单数组
     var menuTreeData = [];//菜单树对象
+    var staffs = [];//staff数组
+    var staffTreeData = [];//staff树对象
     $("#dg").datagrid({
         title: '模块名称维护',
         fit: true,//让#dg数据创铺满父类容器
@@ -213,7 +215,7 @@ $(function () {
     $("#menuAddBtn").on('click', function () {
         var row=$("#dg").datagrid('getSelected');
         if(!row){
-            $.messager.alert('系统提示','请选择模块，然后在分配权限','error');
+            $.messager.alert('系统提示','请选择模块，然后再分配权限','error');
             return ;
         }
         $("#dlg").dialog('open').dialog('setTitle', '分配权限');
@@ -227,7 +229,7 @@ $(function () {
 
             var node=  $("#tt").tree('find',arr[i]) ;
             if(node !=null){
-                var children = $("#tt").tree('getChildren',node.target); ;
+                var children = $("#tt").tree('getChildren',node.target);
                 if(children.length > 0){
                     continue ;
                 }
@@ -266,7 +268,7 @@ $(function () {
         var data = {} ;
         var row=$("#dg").datagrid('getSelected');
         if(!row.id){
-            $.messager.alert("系统提示","请先保存模块然后在分配菜单","info") ;
+            $.messager.alert("系统提示","请先保存模块然后再分配菜单","info") ;
             return ;
         }
         data.moduleId =row.id ;
@@ -286,5 +288,106 @@ $(function () {
             $.messager.alert('系统提示','菜单分配失败','error');
         })
 
-    })
+    });
+
+    //树定义
+    $("#staff").tree({
+        cascadeCheck: true,
+        checkbox: true
+    });
+    var loadStaffData = function () {
+        var promise = $.get("/api/staff-dict/list", function (data) {
+            $.each(data, function (index, item) {
+                var staff = {};
+                staff.id = item.id;
+                staff.text = item.name;
+                staff.state = "open";
+
+                staffs.push(staff);
+            })
+
+            for (var i = 0; i < staffs.length; i++) {
+                staffTreeData.push(staffs[i]);
+            }
+        });
+
+        promise.done(function () {
+            $("#staff").tree('loadData', staffTreeData);
+        })
+    }
+    //加载staff树数据
+    loadStaffData();
+
+    $("#staffAddBtn").on('click', function () {
+        var row = $("#dg").datagrid('getSelected');
+        if (!row) {
+            $.messager.alert('系统提示', '请选择模块，然后再分配权限', 'error');
+            return;
+        }
+        $("#staffDg").dialog('open').dialog('setTitle', '分配用户权限');
+        var staffIds = row.staffIds;
+        if (!staffIds) {
+            return;
+        }
+        var arr = new Array;
+        arr = staffIds.split(",");
+        for (i = 0; i < arr.length; i++) {
+            var node = $("#staff").tree('find', arr[i]);
+            if (node) {
+                $('#staff').tree('check', node.target);//将得到的节点选中
+            }
+        }
+    });
+
+    //全选
+    $("#selectAllStaffBtn").on('click', function () {
+        clearStaffBtn();
+        var nodes = $('#staff').tree('getChecked', "unchecked");
+        var flag = nodes.checked ? "uncheck" : "check";
+        for (var i = 0; i < nodes.length; i++) {
+            $('#staff').tree(flag, nodes[i].target);//将得到的节点选中
+        }
+    });
+    //全不选
+    $("#selectNoStaffBtn").on('click', function () {
+        clearStaffBtn();
+    });
+    //清空选项
+    var clearStaffBtn = function () {
+        var nodes = $('#staff').tree('getChecked', ['checked', 'indeterminate', 'unchecked']);
+        var flag = nodes.checked ? "check" : "uncheck";
+        for (var i = 0; i < nodes.length; i++) {
+            $('#staff').tree(flag, nodes[i].target);//将得到的节点清空
+        }
+    }
+    //保存分配的权限
+    $("#saveStaffBtn").on('click', function () {
+
+        var nodes = $("#staff").tree('getChecked', ['checked', 'indeterminate']);
+        console.log(nodes);
+        var data = {};
+        var row = $("#dg").datagrid('getSelected');
+        if (!row.id) {
+            $.messager.alert("系统提示", "请先保存模块然后再分配用户权限", "info");
+            return;
+        }
+        data.moduleId = row.id;
+        data.staffId = [];
+        $.each(nodes, function (index, item) {
+            data.staffId.push(item.id);
+        })
+
+        $.postJSON("/api/module-dict/add-module-staff/" + data.moduleId, data.staffId, function () {
+            $.messager.alert('系统提示', '分配用户权限成功', 'info');
+            $("#staffDg").dialog('close');
+            $.each(nodes, function (index, item) {
+                $("#staff").tree('uncheck', item.target);
+            })
+            loadDict();
+        }, function () {
+            $.messager.alert('系统提示', '分配用户权限失败', 'error');
+        })
+
+    });
+
 })

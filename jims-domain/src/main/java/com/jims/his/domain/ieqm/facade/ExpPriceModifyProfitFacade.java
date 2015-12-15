@@ -3,6 +3,7 @@ package com.jims.his.domain.ieqm.facade;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.ieqm.entity.ExpPriceModify;
 import com.jims.his.domain.ieqm.entity.ExpPriceModifyProfit;
+import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.vo.ExpStorageProfileVo;
 
 
@@ -92,19 +93,19 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
 
     /**
      * 根据传入的调价确认对象及其stockageCode，quantity计算其盈亏
-     * @param stockageCode
+     * @param storageCode
      * @param quantity
      * @param expPriceModify
      * @return
      */
-    public ExpPriceModifyProfit calcExpPriceModifyPriceProfit(String stockageCode,  Double quantity, ExpPriceModify expPriceModify) {
+    public ExpPriceModifyProfit calcExpPriceModifyPriceProfit(String storageCode,  Double quantity, ExpPriceModify expPriceModify) {
 
         ExpPriceModifyProfit priceModifyProfit;
         if (expPriceModify != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String acString = sdf.format(expPriceModify.getActualEfficientDate());
 
-            priceModifyProfit = this.getPriceModifyProfit(stockageCode, expPriceModify.getExpCode(), expPriceModify.getExpSpec(), expPriceModify.getFirmId(), acString, expPriceModify.getHospitalId());
+            priceModifyProfit = this.getPriceModifyProfit(storageCode, expPriceModify.getExpCode(), expPriceModify.getExpSpec(), expPriceModify.getFirmId(), acString, expPriceModify.getHospitalId());
             if (priceModifyProfit == null) {
                 priceModifyProfit = new ExpPriceModifyProfit();
             }
@@ -126,8 +127,16 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
             } else {
                 priceModifyProfit.setRetailPriceProfit(retailPriceProfit);
             }
+            String hql = "from ExpStorageDept where storageCode='"+ storageCode+"'";
+            List storageList = this.entityManager.createQuery(hql).getResultList();
+            if (storageList.size() > 0) {
+                ExpStorageDept storageDept = (ExpStorageDept) storageList.get(0);
+                priceModifyProfit.setStorageName(storageDept.getStorageName());
+            } else {
+                priceModifyProfit.setStorageName("");
+            }
             priceModifyProfit.setExpName(expPriceModify.getExpName());
-            priceModifyProfit.setStorage(stockageCode);
+            priceModifyProfit.setStorage(storageCode);
             priceModifyProfit.setExpSpec(expPriceModify.getExpSpec());
             priceModifyProfit.setFirmId(expPriceModify.getFirmId());
             priceModifyProfit.setExpCode(expPriceModify.getExpCode());
@@ -177,7 +186,7 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
     private ExpPriceModifyProfit getPriceModifyProfit(String stockageCode, String expCode, String expSpec, String firmId, String actualEfficientDate, String hospitalId) {
         String hql = "from ExpPriceModifyProfit pro where pro.storage = '" + stockageCode + "' and pro.expCode = '" + expCode + "' and " +
                 "pro.expSpec = '" + expSpec + "' and pro.hospitalId = '" + hospitalId + "' and  pro.actualEfficientDate = to_date('" + actualEfficientDate+"' ,'yyyy/mm/dd hh24:mi:ss')";
-        System.out.println(hql);
+
         List resultList = this.entityManager.createQuery(hql).getResultList();
         if (resultList.size() > 0) {
             return (ExpPriceModifyProfit) resultList.get(0);
