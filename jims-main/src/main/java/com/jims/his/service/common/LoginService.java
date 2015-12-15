@@ -86,6 +86,7 @@ public class LoginService {
             }else{
                 HttpSession session = request.getSession() ;
                 session.setAttribute("loginName",staffDict.getLoginName());
+                session.setAttribute("staffName", staffDict.getName());
                 session.setAttribute("loginId",staffDict.getId());
                 return Response.status(Response.Status.OK).entity(staffDict).build() ;
             }
@@ -280,6 +281,7 @@ public class LoginService {
         config.setModuleId((String)session.getAttribute("moduleId"));
         config.setLoginId((String)session.getAttribute("loginId"));
         config.setLoginName((String)session.getAttribute("loginName"));
+        config.setStaffName((String) session.getAttribute("staffName"));
         config.setStorageCode((String) session.getAttribute("storageCode"));
         config.setStorageName((String) session.getAttribute("storageName"));
         config.setDefaultReportPath("http://192.168.6.68:8080/webReport/ReportServer?reportlet=");
