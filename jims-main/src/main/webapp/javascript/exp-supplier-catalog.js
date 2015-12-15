@@ -91,11 +91,20 @@ $(document).ready(function () {
                     data:[{
                         key:"1",
                         value:"全院产品"
-                    },{
+                     },{
                         key:"2",
                         value:"普通产品"
                     }]
-                }}
+                    }
+                },formatter: function(value,row,index){
+                if (row.suppbound='1'){
+                    return row.value='全院产品';
+                } else if(row.suppbound='2'){
+                    return row.value='普通产品';
+                }else{
+                    return value;
+                }
+            }
             },{
                 title:"输入码",
                 field:"inputCode",
