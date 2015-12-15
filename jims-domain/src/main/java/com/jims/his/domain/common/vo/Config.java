@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class Config implements Serializable {
 
     private String loginName ;
+    private String staffName;
     private String hospitalId ;
     private String hospitalName ;
     private String storageCode ;
@@ -28,8 +29,9 @@ public class Config implements Serializable {
     public Config() {
     }
 
-    public Config(String loginName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath) {
+    public Config(String loginName, String staffName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath) {
         this.loginName = loginName;
+        this.staffName = staffName;
         this.hospitalId = hospitalId;
         this.hospitalName = hospitalName;
         this.storageCode = storageCode;
@@ -168,6 +170,14 @@ public class Config implements Serializable {
 
     public void setStorageName(String storageName) {
         this.storageName = storageName;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
     }
 }
 
