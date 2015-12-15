@@ -151,14 +151,10 @@ public class ExpProvideApplicationFacade extends BaseFacade {
     }
     //查阅本库房所提的申请
     public List<ExpProvideApplicationVo> findCurStorageApplication(String startTime,String endTime,String isSure,String applicationStorage){
-        String sql = "select s1.storage_name provide_name,s2.storage_name applicant_name," +
-                " info.applicant_storage,info.provide_storage,info.item_no,info.exp_code,info.exp_spec,info.package_spec," +
-                " info.quantity,info.package_units,info.enter_date_time,info.applicant_no,info.application_man,info.provide_flag,info.exp_name"+
-                " from exp_storage_dept s1,exp_storage_dept s2,"+
-                " (select a.applicant_storage,a.provide_storage,a.item_no,a.exp_code,a.exp_spec,a.package_spec," +
+        String sql = "select s1.storage_name provide_name,s2.storage_name applicant_name, a.applicant_storage,a.provide_storage,a.item_no,a.exp_code,a.exp_spec,a.package_spec," +
                 " a.quantity,a.package_units,a.enter_date_time,a.applicant_no,a.application_man,a.provide_flag,b.exp_name " +
-                " from EXP_PROVIDE_APPLICATION a , EXP_DICT b " +
-                " where a.exp_code = b.exp_code and a.package_spec = b.exp_spec";
+                " from exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION a , EXP_DICT b " +
+                " where s1.storage_code=a.PROVIDE_STORAGE and s2.storage_code=a.APPLICANT_STORAGE and a.exp_code = b.exp_code and a.package_spec = b.exp_spec";
         if(null != startTime && !startTime.trim().equals("")){
             sql += " and a.enter_date_time >= to_date('" + startTime + "' , 'yyyy/mm/dd') ";
         }
@@ -171,7 +167,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
         if (null != applicationStorage && !applicationStorage.trim().equals("")) {
             sql += " and a.applicant_storage = '" + applicationStorage + "'";
         }
-        sql += " ) info where s1.storage_code=info.PROVIDE_STORAGE and s2.storage_code=info.applicant_storage";
+
         List<ExpProvideApplicationVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpProvideApplicationVo.class);
         return result;
     }
@@ -184,39 +180,43 @@ public class ExpProvideApplicationFacade extends BaseFacade {
      * @return
      */
     public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String hospitalId, String applyStorage, String appNo){
-        String sql = "SELECT EXP_PROVIDE_APPLICATION.ITEM_NO,   \n" +
-                "         EXP_PROVIDE_APPLICATION.EXP_CODE,   \n" +
-                "         EXP_PROVIDE_APPLICATION.ID APPLICATION_ID,   \n" +
-                "         EXP_DICT.EXP_NAME,   \n" +
-                "         EXP_PROVIDE_APPLICATION.EXP_SPEC,   \n" +
-                "         EXP_PROVIDE_APPLICATION.PACKAGE_SPEC,   \n" +
-                "         EXP_PROVIDE_APPLICATION.QUANTITY,   \n" +
-                "         EXP_PROVIDE_APPLICATION.PACKAGE_UNITS,   \n" +
-                "         EXP_PROVIDE_APPLICATION.ENTER_DATE_TIME,   \n" +
-                "         EXP_PROVIDE_APPLICATION.APPLICANT_NO,   \n" +
-                "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG,   \n" +
-                "         EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE,   \n" +
-                "         EXP_PROVIDE_APPLICATION.APPLICATION_MAN,   \n" +
-                "         EXP_STORAGE_DEPT.STORAGE_NAME PROVIDE_STORAGE,   \n" +
-                "         EXP_DICT.EXP_FORM,\n" +
-                "         EXP_PROVIDE_APPLICATION.AUDITING_OPERATOR,\n" +
-                "         EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY   \n" +
-                "    FROM EXP_PROVIDE_APPLICATION,   \n" +
-                "         EXP_DICT,EXP_STORAGE_DEPT WHERE EXP_STORAGE_DEPT.STORAGE_CODE = EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE  AND EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE  and  \n" +
-                "         EXP_PROVIDE_APPLICATION.EXP_SPEC = EXP_DICT.EXP_SPEC and  \n" +
+        String sql = "SELECT s1.storage_name provide_name," +
+                "         s2.storage_name applicant_name," +
+                "         EXP_PROVIDE_APPLICATION.ITEM_NO," +
+                "         EXP_PROVIDE_APPLICATION.EXP_CODE," +
+                "         EXP_PROVIDE_APPLICATION.ID APPLICATION_ID," +
+                "         EXP_DICT.EXP_NAME," +
+                "         EXP_PROVIDE_APPLICATION.EXP_SPEC," +
+                "         EXP_PROVIDE_APPLICATION.PACKAGE_SPEC," +
+                "         EXP_PROVIDE_APPLICATION.QUANTITY," +
+                "         EXP_PROVIDE_APPLICATION.PACKAGE_UNITS," +
+                "         EXP_PROVIDE_APPLICATION.ENTER_DATE_TIME," +
+                "         EXP_PROVIDE_APPLICATION.APPLICANT_NO," +
+                "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG," +
+                "         EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE," +
+                "         EXP_PROVIDE_APPLICATION.APPLICATION_MAN," +
+                "         EXP_DICT.EXP_FORM," +
+                "         EXP_PROVIDE_APPLICATION.AUDITING_OPERATOR," +
+                "         EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY" +
+                "    FROM exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION,EXP_DICT " +
+                "         WHERE s1.storage_code=EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE" +
+                "         and s2.storage_code=EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE" +
+                "         AND EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE  and" +
+                "         EXP_PROVIDE_APPLICATION.EXP_SPEC = EXP_DICT.EXP_SPEC and " +
                 "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG <> '1'";
         if (null != storageCode && !storageCode.trim().equals("")) {
             sql += " and  EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE = '" + storageCode + "' \n";
         }
 
         if (null != hospitalId && !hospitalId.trim().equals("")) {
-            sql += " and  EXP_STORAGE_DEPT.HOSPITAL_ID = '" + hospitalId + "' \n";
+            sql += " and  s1.HOSPITAL_ID = '" + hospitalId + "' \n";
+            sql += " and  s2.HOSPITAL_ID = '" + hospitalId + "' \n";
         }
         if (null != applyStorage && !applyStorage.trim().equals("")) {
             sql += " and  EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE ='" + applyStorage + "' \n";
         }
         if (null != appNo && !appNo.trim().equals("")) {
-            sql += " and  APPLICANT_NO = '" + appNo + "' \n";
+            sql += " and  EXP_PROVIDE_APPLICATION.APPLICANT_NO = '" + appNo + "' \n";
         }
         sql += " ORDER BY EXP_PROVIDE_APPLICATION.ITEM_NO ASC ";
         List<ExpProvideApplicationVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpProvideApplicationVo.class);
