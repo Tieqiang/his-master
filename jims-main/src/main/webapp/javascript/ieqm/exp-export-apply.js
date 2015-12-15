@@ -887,7 +887,7 @@ $(function () {
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.exportClass = $("#exportClass").combobox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
-        exportMaster.accountIndicator = 1;
+        exportMaster.accountIndicator = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
         exportMaster.operator = parent.config.loginName;

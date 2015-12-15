@@ -668,8 +668,17 @@ $(function () {
         }
 
     });
+    /**
+     * 查询
+     */
     $("#searchBtn").on('click',function(){
-        parent.addTab('出库单据查询', '/his/ieqm/exp-import-document-search');
+        parent.addTab('入库单据查询', '/his/ieqm/exp-import-document-search');
+    })
+    /**
+     * 定义新供应商
+     */
+    $("#newSupplier").on('click',function(){
+        parent.addTab('产品供应商目录维护', '/his/ieqm/exp-supplier-catalog');
     })
     /**
      * 删除按钮
@@ -734,7 +743,7 @@ $(function () {
         importMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         importMaster.importClass = $("#importClass").combobox('getValue');
         importMaster.subStorage = $("#subStorage").combobox('getValue');
-        importMaster.accountIndicator = 1;
+        importMaster.accountIndicator = 0;
         importMaster.memos = $('#memos').textbox('getValue');
         importMaster.operator = parent.config.loginId;
         importMaster.principal = $("#principal").combogrid('getValue');
