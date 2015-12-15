@@ -151,16 +151,29 @@ public class ExpProvideApplicationFacade extends BaseFacade {
     }
     //查阅本库房所提的申请
     public List<ExpProvideApplicationVo> findCurStorageApplication(String startTime,String endTime,String isSure,String applicationStorage){
-        String sql = "select c.storage_name,a.applicant_storage,a.provide_storage,a.item_no,a.exp_code,a.exp_spec,a.package_spec,a.quantity,a.package_units," +
-                "a.enter_date_time,a.applicant_no,a.application_man,a.provide_flag,b.exp_name " +
-                "from EXP_PROVIDE_APPLICATION a , EXP_DICT b ,exp_storage_dept c " +
-                "where a.exp_code = b.exp_code and a.package_spec = b.exp_spec and " + //包装规格 和 消耗品规格相等？
-                "a.enter_date_time >= to_date('" + startTime + "' , 'yyyy/mm/dd') and " +
-                "a.applicant_storage = c.STORAGE_CODE and "+
-                "a.enter_date_time <= to_date('" + endTime + "' , 'yyyy/mm/dd') and " +
-                "a.provide_flag = '" + isSure + "' and " +
-                "a.applicant_storage = '" + applicationStorage + "'";
-        return entityManager.createNativeQuery(sql).getResultList();
+        String sql = "select s1.storage_name provide_name,s2.storage_name applicant_name," +
+                " info.applicant_storage,info.provide_storage,info.item_no,info.exp_code,info.exp_spec,info.package_spec," +
+                " info.quantity,info.package_units,info.enter_date_time,info.applicant_no,info.application_man,info.provide_flag,info.exp_name"+
+                " from exp_storage_dept s1,exp_storage_dept s2,"+
+                " (select a.applicant_storage,a.provide_storage,a.item_no,a.exp_code,a.exp_spec,a.package_spec," +
+                " a.quantity,a.package_units,a.enter_date_time,a.applicant_no,a.application_man,a.provide_flag,b.exp_name " +
+                " from EXP_PROVIDE_APPLICATION a , EXP_DICT b " +
+                " where a.exp_code = b.exp_code and a.package_spec = b.exp_spec";
+        if(null != startTime && !startTime.trim().equals("")){
+            sql += " and a.enter_date_time >= to_date('" + startTime + "' , 'yyyy/mm/dd') ";
+        }
+        if (null != endTime && !endTime.trim().equals("")) {
+            sql += " and a.enter_date_time <= to_date('" + endTime + "' , 'yyyy/mm/dd') ";
+        }
+        if (null != endTime && !endTime.trim().equals("")) {
+             sql += " and a.provide_flag = '" + isSure + "'";
+        }
+        if (null != applicationStorage && !applicationStorage.trim().equals("")) {
+            sql += " and a.applicant_storage = '" + applicationStorage + "'";
+        }
+        sql += " ) info where s1.storage_code=info.PROVIDE_STORAGE and s2.storage_code=info.applicant_storage";
+        List<ExpProvideApplicationVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpProvideApplicationVo.class);
+        return result;
     }
 
     /**
