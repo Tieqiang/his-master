@@ -31,6 +31,7 @@ public class MenuDict implements java.io.Serializable {
     private String href;
     private String icon;
     private String showFlag;
+    private Integer position;
     private Set<ModuleVsMenu> moduleVsMenus = new HashSet<ModuleVsMenu>(0);
     private Set<RoleVsMenu> roleVsMenus = new HashSet<RoleVsMenu>(0);
 
@@ -42,7 +43,7 @@ public class MenuDict implements java.io.Serializable {
 
     /** full constructor */
     public MenuDict(String parentId, String parentIds, String menuName,
-                    String href, String icon, String showFlag,
+                    String href, String icon, String showFlag, Integer position,
                     Set<ModuleVsMenu> moduleVsMenus, Set<RoleVsMenu> roleVsMenus) {
         this.parentId = parentId;
         this.parentIds = parentIds;
@@ -50,6 +51,7 @@ public class MenuDict implements java.io.Serializable {
         this.href = href;
         this.icon = icon;
         this.showFlag = showFlag;
+        this.position = position;
         this.moduleVsMenus = moduleVsMenus;
         this.roleVsMenus = roleVsMenus;
     }
@@ -141,4 +143,12 @@ public class MenuDict implements java.io.Serializable {
         this.roleVsMenus = roleVsMenus;
     }
 
+    @Column(name = "POSITION", precision = 4, scale = 0)
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 }
