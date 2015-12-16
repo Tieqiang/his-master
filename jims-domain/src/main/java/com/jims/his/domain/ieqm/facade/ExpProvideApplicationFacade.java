@@ -216,7 +216,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
             sql += " and  EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE ='" + applyStorage + "' \n";
         }
         if (null != appNo && !appNo.trim().equals("")) {
-            sql += " and  EXP_PROVIDE_APPLICATION.APPLICANT_NO in '" + appNo + "' \n";
+            sql += " and  EXP_PROVIDE_APPLICATION.APPLICANT_NO in (" + appNo + ") \n";
         }
         sql += " ORDER BY EXP_PROVIDE_APPLICATION.ITEM_NO ASC ";
         List<ExpProvideApplicationVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpProvideApplicationVo.class);
