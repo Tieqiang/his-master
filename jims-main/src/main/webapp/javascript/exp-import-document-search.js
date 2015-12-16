@@ -83,17 +83,17 @@ $(function () {
             title: '库房',
             field: 'storage',
             width: '9%',
+            hidden:true,
             editor: {type: 'textbox'}
-        }, {
-            title: '入库日期',
-            field: 'importDate',
-            width: '9%'
-
         }, {
             title: '入库单号',
             field: 'documentNo',
             width: '9%',
             editor: {type: 'textbox'}
+        }, {
+            title: '入库日期',
+            field: 'importDate',
+            width: '9%'
         }, {
             title: '供货商',
             field: 'supplier',
