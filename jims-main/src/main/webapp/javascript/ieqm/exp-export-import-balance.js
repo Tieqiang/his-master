@@ -1134,9 +1134,9 @@ $(function () {
                     exportImportVo.importVo= importVo;
 
                     $.postJSON("/api/exp-stock/exp-export-import", exportImportVo, function (data) {
-                        $.messager.alert("系统提示", "数据保存成功", "info");
-
-                        $("#clear").click();
+                        $.messager.alert("系统提示", "数据保存成功", "info", function () {
+                            parent.updateTab('对消入出库', '/his/ieqm/exp-export-import-balance');
+                        });
                     }, function (data) {
                         $.messager.alert('提示', data.responseJSON.errorMessage, "error");
                     });
@@ -1151,148 +1151,6 @@ $(function () {
     });
     //清屏按钮操作
     $("#clear").on('click', function () {
-        //入库日期
-        $('#importDate').datebox({
-            required: true,
-            showSeconds: true,
-            value: 'dateTime',
-            formatter: formatterDate,
-            onSelect: function (date) {
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                var d = date.getDate();
-
-                var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-                $('#importDate').datetimebox('setText', dateTime);
-                $('#importDate').datetimebox('hidePanel');
-            }
-        });
-        //出库日期
-        $('#exportDate').datebox({
-            required: true,
-            showSeconds: true,
-            value: 'dateTime',
-            formatter: formatterDate,
-            onSelect: function (date) {
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                var d = date.getDate();
-
-                var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-                $('#exportDate').datetimebox('setText', dateTime);
-                $('#exportDate').datetimebox('hidePanel');
-            }
-        });
-        //入库分类字典
-        $("#importClass").combobox({
-            url: '/api/exp-import-class-dict/list',
-            valueField: 'importClass',
-            textField: 'importClass',
-            method: 'GET',
-            onLoadSuccess: function () {
-                var data = $(this).combobox('getData');
-                $(this).combobox('select', data[0].importClass);
-            }
-        });
-        //招标方式数据加载
-        $("#tenderType").combobox({
-            url: '/api/exp-tender-type-dict/list',
-            valueField: 'tenderTypeCode',
-            textField: 'tenderTypeName',
-            method: 'GET',
-            onLoadSuccess: function () {
-                var data = $(this).combobox('getData');
-                if (data.length > 0) {
-                    $(this).combobox('select', data[0].tenderTypeCode);
-                }
-            }
-        });
-        promise.done(function () {
-            //入库子库房数据加载
-            $('#subStorageIn').combobox({
-                panelHeight: 'auto',
-                data: subStorageDicts,
-                valueField: 'subStorage',
-                textField: 'subStorage',
-                onLoadSuccess: function () {
-                    var data = $(this).combobox('getData');
-                    if (data.length > 0) {
-                        $(this).combobox('select', data[0].subStorage);
-                    }
-                },
-                onChange: function (newValue, oldValue) {
-                    var no = createNewDocument(newValue, "in");
-                    $("#documentNoIn").textbox('setValue', no);
-                }
-            });
-
-            //出库子库房数据加载
-            $('#subStorage').combobox({
-                panelHeight: 'auto',
-                data: subStorageDicts,
-                valueField: 'subStorage',
-                textField: 'subStorage',
-                onLoadSuccess: function () {
-                    var data = $(this).combobox('getData');
-                    if (data.length > 0) {
-                        $(this).combobox('select', data[0].subStorage);
-                    }
-                },
-                onChange: function (newValue, oldValue) {
-                    var no = createNewDocument(newValue, "out");
-                    $("#documentNo").textbox('setValue', no);
-                }
-            });
-        });
-        //开支类别数据加载
-        $('#fundItem').combobox({
-            panelHeight: 'auto',
-            url: '/api/exp-fund-item-dict/list',
-            method: 'GET',
-            valueField: 'fundItem',
-            textField: 'fundItem',
-            onLoadSuccess: function () {
-                var data = $(this).combobox('getData');
-                if (data.length > 0) {
-                    $(this).combobox('select', data[0].serialNo);
-                }
-            }
-        });
-
-        //出库类别数据加载
-        $('#exportClass').combobox({
-            panelHeight: 'auto',
-            url: '/api/exp-export-class-dict/list',
-            method: 'GET',
-            valueField: 'exportClass',
-            textField: 'exportClass',
-            onLoadSuccess: function () {
-                var data = $(this).combobox('getData');
-                if (data.length > 0) {
-                    $(this).combobox('select', data[0].exportClass);
-                }
-            }
-        });
-        $("#supplier").combogrid("clear");
-        $("#checkMan").combogrid("clear");
-        $("#buyerIn").combogrid("clear");
-        $("#storekeeperIn").combogrid("clear");
-        $("#principalIn").combogrid("clear");
-        $("#tenderNo").textbox("clear");
-        $("#memosIn").textbox("clear");
-        $("#accountPayedIn").textbox("setValue","0.00");
-        $("#accountReceivableIn").textbox("setValue", "0.00");
-        $("#additionalFeeIn").textbox("setValue", "0.00");
-        $("#accountReceivable").textbox("setValue", "0.00");
-        $("#accountPayed").textbox("setValue", "0.00");
-        $("#additionalFee").textbox("setValue", "0.00");
-        $("#receiver").combogrid("clear");
-        $("#checkMan").combogrid("clear");
-        $("#buyer").combogrid("clear");
-        $("#storekeeper").combogrid("clear");
-        $("#principal").combogrid("clear");
-        $("#memos").textbox("clear");
-
-        $("#dg").datagrid('loadData', {total: 0, rows: []});
+        parent.updateTab('对消入出库', '/his/ieqm/exp-export-import-balance');
     });
 });
