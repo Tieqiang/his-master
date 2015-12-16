@@ -207,6 +207,10 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var promiseMaster = loadDict();
         promiseMaster.done(function(){
+            if(masters.length<=0){
+                $.messager.alert('系统提示','数据库暂无数据','info');
+                return;
+            }
             $("#importMaster").datagrid('loadData',masters);
         })
     })
