@@ -751,31 +751,17 @@ $(function(){
                 $.messager.alert('系统提示', '出库成功', 'success',function(){
                     parent.updateTab('出库处理', '/his/ieqm/exp-export');
                 });
-                //newDocument() ;
-
             }, function (data) {
                 $.messager.alert("系统提示", data.errorMessage, 'error');
             })
         }
     });
-    var newDocument = function () {
-        //点击按钮调用的方法
-        var subStorage = $("#subStorage").textbox('getValue');
-        if(subStorage){
-            var promise = createNewDocument(subStorage) ;
-            promise.done(function(){
-                $("#documentNo").textbox('setValue',documentNo);
-            })
-        }
-        $("#exportDetail").datagrid('loadData',[]) ;
 
-    }
 
     /**
      * 新单
      */
     $("#newBtn").on('click',function(){
-        //newDocument() ;
         parent.updateTab('出库处理', '/his/ieqm/exp-export');
     })
 })
