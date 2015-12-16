@@ -396,7 +396,7 @@ $(document).ready(function () {
         if (beanChangeVo) {
             $.postJSON("/api/exp-supplier-catalog/merge", beanChangeVo, function (data, status) {
                 $.messager.alert("系统提示", "保存成功", "info");
-
+                $("#searchBtn").click();
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
             })
