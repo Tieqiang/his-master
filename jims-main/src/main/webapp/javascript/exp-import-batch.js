@@ -530,10 +530,10 @@ $(function () {
         importMaster.accountIndicator = 0;
         importMaster.memos = $('#memos').textbox('getValue');
         importMaster.operator = parent.config.loginId;
-        importMaster.principal = $("#principal").combogrid('getValue');
-        importMaster.storekeeper = $("#storekeeper").combogrid('getValue');
-        importMaster.buyer = $("#buyer").combogrid('getValue');
-        importMaster.checkman = $("#checkMan").combogrid('getValue');
+        importMaster.principal = $("#principal").combogrid('getText');
+        importMaster.storekeeper = $("#storekeeper").combogrid('getText');
+        importMaster.buyer = $("#buyer").combogrid('getText');
+        importMaster.checkman = $("#checkMan").combogrid('getText');
         importMaster.tenderNo = $("#tenderNo").textbox('getValue');
         importMaster.tenderType = $("#tenderType").combobox('getValue');
         importMaster.hospitalId = parent.config.hospitalId;

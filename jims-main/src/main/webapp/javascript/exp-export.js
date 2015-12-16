@@ -652,16 +652,15 @@ $(function(){
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
         exportMaster.operator = parent.config.loginName;
-        exportMaster.principal = $("#principal").combogrid('getValue');
-        exportMaster.storekeeper = $("#storekeeper").combogrid('getValue');
+        exportMaster.principal = $("#principal").combogrid('getText');
+        exportMaster.storekeeper = $("#storekeeper").combogrid('getText');
         exportMaster.acctoperator = parent.config.loginName;
         exportMaster.acctdate =new Date();
-        exportMaster.principal = $("#principal").combogrid('getValue');
-        exportMaster.storekeeper = $("#storekeeper").textbox('getValue');
+        exportMaster.principal = $("#principal").combogrid('getText');
         exportMaster.docStatus = 0;
         //exportMaster.auditor = $("#auditor").combobox('getValue');
         //exportMaster.rcptNo = $("#rcptNo").combobox('getValue');
-        exportMaster.buyer = $("#acctoperator").combobox('getValue');
+        exportMaster.buyer = $("#acctoperator").combobox('getText');
         exportMaster.hospitalId = parent.config.hospitalId;
         expExportMasterBeanChangeVo.inserted.push(exportMaster);
 

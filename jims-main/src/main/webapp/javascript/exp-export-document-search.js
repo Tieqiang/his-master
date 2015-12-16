@@ -87,7 +87,7 @@ $(function () {
             width: '9%',
             editor: {type: 'textbox'}
         }, {
-            title: '出库库日期',
+            title: '出库日期',
             field: 'exportDate',
             width: '9%'
 
