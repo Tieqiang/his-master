@@ -645,6 +645,12 @@ $(function () {
                 }
             }
         }]],
+        onLoadSuccess:function(data){
+            if(data.total==0){
+                $.messager.alert("系统提示","未查询到数据！","info");
+                $("#applyDialog").dialog('close');
+            }
+        },
         onClickCell: function (index, field, row) {
             if (index != editIndex) {
                 $(this).datagrid('endEdit', editIndex);
@@ -835,10 +841,10 @@ $(function () {
             $.messager.alert("提示", "请选择出库申请单", "info");
         }else{
             $.each(rows, function (index, item) {
-                nos+=item.applicantNo+",";
+                nos+="'"+item.applicantNo+"',";
             })
             nos = nos.substr(0,nos.length-1);
-            applyNo = nos;alert(applyNo);
+            applyNo = nos;
             $("#applyDialog").dialog('open');
         }
 
