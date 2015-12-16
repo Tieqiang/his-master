@@ -78,24 +78,24 @@ $(function () {
         singleSelect: true,
         showFooter: true,
         rownumbers: true,
-        title: "消耗品出库单信息",
+        title: "本库房出库单据查询",
         footer: '#ft',
         toolbar:'#expExportDetail',
         columns: [[{
             title: '库房',
             field: 'storage',
+            hidden:true,
             width: '9%',
             editor: {type: 'textbox'}
-        }, {
-            title: '出库库日期',
-            field: 'exportDate',
-            width: '9%'
-
         }, {
             title: '出库单号',
             field: 'documentNo',
             width: '9%',
             editor: {type: 'textbox'}
+        }, {
+            title: '出库日期',
+            field: 'exportDate',
+            width: '9%'
         }, {
             title: '收货方',
             field: 'receiver',
@@ -259,7 +259,7 @@ $(function () {
     }
     $("#retailDialog").dialog({
         title: '消耗品出库明细',
-        width: "80%",
+        width: "50%",
         height: 300,
         closed: false,
         inline: true,
