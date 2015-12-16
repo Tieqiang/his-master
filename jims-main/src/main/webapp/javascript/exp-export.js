@@ -542,6 +542,7 @@ $(function(){
                     rowDetail.expCode = row.expCode;
                     rowDetail.packageSpec = row.expSpec;
                     rowDetail.packageUnits = row.units;
+                    rowDetail.units = row.minUnits;
                     rowDetail.disNum = row.quantity;
                     rowDetail.purchasePrice = row.purchasePrice;
                     rowDetail.amount = 0;
@@ -651,10 +652,10 @@ $(function(){
         exportMaster.accountIndicator = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
-        exportMaster.operator = parent.config.loginName;
+        exportMaster.operator = parent.config.staffName;
         exportMaster.principal = $("#principal").combogrid('getValue');
         exportMaster.storekeeper = $("#storekeeper").combogrid('getValue');
-        exportMaster.acctoperator = parent.config.loginName;
+        exportMaster.acctoperator = parent.config.staffName;
         exportMaster.acctdate =new Date();
         exportMaster.principal = $("#principal").combogrid('getValue');
         exportMaster.storekeeper = $("#storekeeper").textbox('getValue');
@@ -684,7 +685,7 @@ $(function(){
             detail.retailPrice = rows[i].retailPrice;
             detail.tradePrice = rows[i].retailPrice;
             detail.packageSpec = rows[i].packageSpec;
-            detail.packageUnits = rows[i].units;
+            detail.packageUnits = rows[i].packageUnits;
             detail.quantity = rows[i].quantity;
             detail.subPackage1 = rows[i].subPackage1;
             detail.subPackageUnits1 = rows[i].subPackageUnits1;
