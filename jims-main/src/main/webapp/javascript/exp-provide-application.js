@@ -169,6 +169,9 @@ $(document).ready(function () {
     $("#searchBtn").on("click", function () {
         var provideStorage = $("#storage").combobox("getValue");
         var applicantNo = $("#applicantNo").textbox("getValue");
+        if($.trim(applicantNo)!=""){
+            applicantNo = "'" + applicantNo + "'";
+        }
         $.get("/api/exp-provide-application/find-dict-application?applyStorage=" + parent.config.storageCode+"&applyNo="+applicantNo+"&storageCode="+ provideStorage, function (data) {
                 if (data.length == 0) {
                     $.messager.alert("提示", "未查询到数据", "info");
