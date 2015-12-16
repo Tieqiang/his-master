@@ -886,7 +886,7 @@ $(function () {
 
     //计价按钮功能
     $("#price").on('click', function () {
-        $.messager.alert("提示", "price", "info");
+        $.messager.alert("提示", "计价", "info");
     });
 
     //新增按钮功能
@@ -971,9 +971,9 @@ $(function () {
         exportMaster.operator = parent.config.staffName;
         exportMaster.acctoperator = parent.config.staffName;
         exportMaster.acctdate = new Date();
-        exportMaster.principal = $("#principal").combogrid('getValue');
-        exportMaster.storekeeper = $("#storekeeper").combogrid('getValue');
-        exportMaster.buyer = $("#buyer").combogrid('getValue');
+        exportMaster.principal = $("#principal").combogrid('getText');
+        exportMaster.storekeeper = $("#storekeeper").combogrid('getText');
+        exportMaster.buyer = $("#buyer").combogrid('getText');
         exportMaster.docStatus = 0;
         exportMaster.hospitalId = parent.config.hospitalId;
 
