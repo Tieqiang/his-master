@@ -799,9 +799,9 @@ $(function () {
         var startDate = $("#startDate").datetimebox('getText');
         var endDate = $("#endDate").datetimebox('getText');
         var applyStorage = $("#storage").combobox("getValue");
-        var storageCode = parent.config.storageCode;
+        var provideStorage = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
-        $.get('/api/exp-export/export-apply?storageCode=' + storageCode + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
+        $.get('/api/exp-export/export-apply?storage=' + provideStorage + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
             if (data.length <= 0) {
                 $.messager.alert("系统提示", "没有记录", "info");
             } else {
@@ -835,10 +835,10 @@ $(function () {
             $.messager.alert("提示", "请选择出库申请单", "info");
         }else{
             $.each(rows, function (index, item) {
-                nos+="'"+item.applicantNo+"',";
+                nos+=item.applicantNo+",";
             })
             nos = nos.substr(0,nos.length-1);
-            applyNo = nos;
+            applyNo = nos;alert(applyNo);
             $("#applyDialog").dialog('open');
         }
 
