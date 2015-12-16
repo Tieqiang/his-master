@@ -29,6 +29,27 @@ window.addTab = function (title, href) {
         });
     }
 }
+
+window.updateTab = function (title, href) {
+    var content = undefined;
+    if ($.startWith(href, 'http')) {
+        content = '<iframe scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>';
+    } else {
+        content = '<iframe scrolling="auto" frameborder="0"  src="views' + href + '.html" style="width:100%;height:100%;"></iframe>'
+    }
+    if ($("#mainContent").tabs('exists', title)) {
+        $("#mainContent").tabs('select', title);
+        var tab = $("#mainContent").tabs('getSelected');
+        $("#mainContent").tabs('update', {
+            tab: tab,
+            options: {
+                title: title,
+                content: content,
+                closable: true
+            }
+        });
+    }
+};
 $(function(){
 
     $("#reLogin").on('click',function(){
