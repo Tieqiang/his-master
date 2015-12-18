@@ -5,6 +5,16 @@
  * 零库存管理
  */
 $(function () {
+    $("#expName").searchbox({
+        searcher: function (value, name) {
+            var rows = $("#dg").datagrid("getRows");
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].expName == value) {
+                    $("#dg").datagrid('selectRow', i);
+                }
+            }
+        }
+    });
     $("#dg").datagrid({
         title: '零库存管理',
         fit: true,//让#dg数据创铺满父类容器
@@ -14,6 +24,10 @@ $(function () {
         singleSelect: false,
         ctrlSelect:true,
         columns: [[{
+            title: 'id',
+            field: 'id',
+            hidden: true
+        },{
             title: '库房',
             field: 'subStorage',
             width: "8%"
@@ -113,35 +127,21 @@ $(function () {
     $("#searchBtn").on('click',function(){
         loadDict();
     })
-    $('#expName').combogrid({
-        panelWidth: 200,
-        idField: 'expCode',
-        textField: 'expName',
-        url: '/api/exp-name-dict/list-exp-name-by-input',
-        method: 'GET',
-        mode: 'remote',
-        columns: [[
-            //{field: 'expCode', title: '消耗品代码', width: 100},
-            {field: 'expName', title: '消耗品名称', width: 100}
-        ]],
-        pagination: false,
-        fitColumns: true,
-        rowNumber: true,
-        autoRowHeight: false,
-        pageSize: 50,
-        pageNumber: 1
-    });
 
     //删除全部
     $("#deleteBtnAll").on('click',function(){
         var selectRows = $("#dg").datagrid('selectAll');
         var rows = $("#dg").datagrid('getSelections',selectRows) ;
         if(rows) {
-            $.messager.alert("系统提醒", "您确定要删除全部吗？", "info");
-            for(var i= 0;i<rows.length;i++){
-                var index = $("#dg").datagrid('getRowIndex',rows[i]) ;
-                $("#dg").datagrid('deleteRow',index) ;
-            }
+            $.messager.confirm("系统提醒", "您确定要删除全部吗？", function (data) {
+                if (data) {
+                    for (var i = 0; i < rows.length; i++) {
+                        var index = $("#dg").datagrid('getRowIndex', rows[i]);
+                        $("#dg").datagrid('deleteRow', index);
+                    }
+                }
+            });
+
         }
     })
     //删除本行
@@ -154,17 +154,7 @@ $(function () {
         var index = $("#dg").datagrid('getRowIndex',row) ;
         $("#dg").datagrid('deleteRow',index) ;
     })
-    $("#locationBtn").on('click',function(){
-        var rowData = $("#dg").datagrid('getRows');
-        var expName = $("#expName").combogrid("getText");
-        for(var i=0;i<rowData.length;i++){
-            if(rowData[i].expName==expName){
-                var index = $("#dg").datagrid('getRowIndex',rowData[i]) ;
-                var selectRow = $("#dg").datagrid('selectRow',index)
-                $("#dg").datagrid('scrollTo',index) ;
-            }
-        }
-    });
+
     $("#saveBtn").on('click',function(){
         var deleteData = $("#dg").datagrid('getChanges','deleted') ;
         if(deleteData&&deleteData.length > 0 ){
@@ -172,8 +162,7 @@ $(function () {
                 $.messager.alert('系统提示','删除成功',"info");
                 loadDict() ;
             },function(data){
-                console.log(data) ;
-                $.messager.alert("系统提示",'删除失败',"error");
+                $.messager.alert("提示", data.responseJSON.errorMessage, "error");
             }) ;
         }
     });

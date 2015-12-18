@@ -76,7 +76,7 @@ $(function () {
         singleSelect: true,
         showFooter:true,
         rownumbers:true,
-        title: "消耗品入库单信息",
+        title: "本库房入库单据查询",
         footer: '#ft',
         toolbar:'#expImportDetail',
         columns: [[{
@@ -256,7 +256,7 @@ $(function () {
     }
     $("#retailDialog").dialog({
         title: '消耗品入库明细',
-        width: "80%",
+        width: "60%",
         height: 300,
         closed: false,
         inline:true,
@@ -274,15 +274,15 @@ $(function () {
         fitColumns: true,
         url: '/api/exp-import/exp-import-document-detail-search/',
         method: 'GET',
-        columns: [[{
-            title: '付价',
-            field: 'accountReceivable'
-        }, {
+        columns: [[ {
             title: '产品名称',
             field: 'expName'
         }, {
             title: '数量',
             field: 'quantity'
+        }, {
+            title: '应付款',
+            field: 'accountReceivable'
         }, {
             title: '规格',
             field: 'expSpec'

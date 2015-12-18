@@ -2,17 +2,16 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>医院管理</title>
+    <title>产品库存定义</title>
     <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="/assert/easyui/themes/color.css">
     <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
     <link rel="stylesheet" href="/style/common.css">
 </head>
 <body>
-<div id="topBar" style="height: 60px">
+<div id="topBar">
     <input type="radio" id="productType" name="radioOne" checked  onclick="checkRadio()" />产品类别
     <select id="productTypeSelect" class="easyui-combobox" style="width: 200px"></select>
-    <br>
     <input type="radio" id="productName" name="radioOne" onclick="checkRadio()" />产品名称
     <input type="text" id="inputCode" class="easyui-combogrid" disabled style="width: 200px">
 </div>
@@ -22,11 +21,11 @@
 
 
 <div id="tb" style="padding:2px 5px;">
-    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
-    <a href="#" id="addBtn" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
-    <!--<a href="#" id="editBtn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>-->
-    <a href="#" id="delBtn" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
-    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save" plain="true">保存</a>
+    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+    <a href="#" id="addBtn" class="easyui-linkbutton" iconCls="icon-add">添加</a>
+    <!--<a href="#" id="editBtn" class="easyui-linkbutton" iconCls="icon-edit">修改</a>-->
+    <a href="#" id="delBtn" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>
 </div>
 
 

@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>医院管理</title>
+    <title>根据消耗量定库存量</title>
     <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="/assert/easyui/themes/color.css">
     <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
@@ -14,14 +14,14 @@
 
 
 <div id="tb" style="padding:2px 5px;">
-    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">统计</a>&nbsp;
-    <a href="#" id="locationBtn" class="easyui-linkbutton" iconCls="icon-search">定位</a>&nbsp;
-    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>&nbsp;
-    <a href="#" id="printBtn" class="easyui-linkbutton" iconCls="icon-print" plain="true">打印</a>
+    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">提取</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+    <a href="#" id="printBtn" class="easyui-linkbutton" iconCls="icon-print">打印</a>
 </div>
 <div id="ft" style="padding:2px 5px;">
-    统计区间：<input id="startDate" class="easyui-datebox"  data-options="formatter:myformatter,parser:w3"/>&nbsp;&nbsp;到&nbsp;&nbsp;
-    <input id="stopDate" class="easyui-datebox" data-options="formatter:myformatter2,parser:w3"/>&nbsp;定位&nbsp;<input id="expName" type="text" class="easyui-combogrid"/>
+    产品名称：<input id="expName" class="easyui-searchbox" prompt="请输入查询内容" style="width:250px"/>&nbsp;
+    统计区间：<input id="startDate" class="easyui-datebox"/>&nbsp;到&nbsp;
+    <input id="stopDate" class="easyui-datebox"/>
 </div>
 
 

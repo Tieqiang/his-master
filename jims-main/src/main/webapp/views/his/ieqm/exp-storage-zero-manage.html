@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>医院管理</title>
+    <title>零库存管理</title>
     <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="/assert/easyui/themes/color.css">
     <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
@@ -15,14 +15,13 @@
 
 <div id="tb" style="padding:2px 5px;">
     <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">提取</a>
-    <a href="#" id="locationBtn" class="easyui-linkbutton" iconCls="icon-search">定位</a>
-    <a href="#" id="deleteBtnAll" class="easyui-linkbutton" iconCls="icon-delete">删除全部</a>
-    <a href="#" id="deleteBtn" class="easyui-linkbutton" iconCls="icon-delete">删除</a>
+    <a href="#" id="deleteBtnAll" class="easyui-linkbutton" iconCls="icon-remove">删除全部</a>
+    <a href="#" id="deleteBtn" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
     <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>
-    <a href="#" id="printBtn" class="easyui-linkbutton" iconCls="icon-print" plain="true">打印</a>
+    <a href="#" id="printBtn" class="easyui-linkbutton" iconCls="icon-print">打印</a>
 </div>
 <div id="ft" style="padding:2px 5px;">
-    物品定位:&nbsp;<input id="expName" type="text" class="easyui-combogrid"/>
+    产品名称：<input id="expName" class="easyui-searchbox" prompt="请输入查询内容" style="width:250px"/>
 </div>
 
 

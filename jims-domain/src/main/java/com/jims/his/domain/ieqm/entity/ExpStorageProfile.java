@@ -1,11 +1,7 @@
 package com.jims.his.domain.ieqm.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -29,7 +25,10 @@ public class ExpStorageProfile implements java.io.Serializable {
 	private Integer lowLevel;
 	private String location;
 	private String supplier;
-
+    @Transient
+    private String expName;
+    @Transient
+    private String expForm;
 	// Constructors
 
 	/** default constructor */
@@ -156,4 +155,21 @@ public class ExpStorageProfile implements java.io.Serializable {
 		this.supplier = supplier;
 	}
 
+    @Transient
+    public String getExpName() {
+        return expName;
+    }
+
+    public void setExpName(String expName) {
+        this.expName = expName;
+    }
+
+    @Transient
+    public String getExpForm() {
+        return expForm;
+    }
+
+    public void setExpForm(String expForm) {
+        this.expForm = expForm;
+    }
 }
