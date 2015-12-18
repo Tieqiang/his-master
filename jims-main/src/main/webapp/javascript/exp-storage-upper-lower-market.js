@@ -28,6 +28,73 @@ function w3(s) {
     }
 }
 $(function () {
+    //格式化日期函数
+    function formatterDate(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            return dateTime
+        }
+    }
+
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+            return new Date(y, m - 1, d);
+        } else {
+            return new Date();
+        }
+    }
+    $("#expName").searchbox({
+        searcher: function (value, name) {
+            var rows = $("#dg").datagrid("getRows");
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].expName == value) {
+                    $("#dg").datagrid('selectRow', i);
+                }
+            }
+        }
+    });
+    //开始日期
+    $('#startDate').datebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            $('#startDate').datetimebox('setText', dateTime);
+            $('#startDate').datetimebox('hidePanel');
+        }
+    });
+    //结束日期
+    $('#stopDate').datebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            $('#stopDate').datetimebox('setText', dateTime);
+            $('#stopDate').datetimebox('hidePanel');
+        }
+    });
     var editRowIndex;
     $("#dg").datagrid({
         title: '根据消耗量定义库存量',
@@ -38,32 +105,32 @@ $(function () {
         singleSelect: true,
         columns: [[{
             title: '代码',
-            field: 'storage',
-            width: "8%"
+            field: 'expCode',
+            width: "10%"
         }, {
             title: '产品名称',
             field: 'expName',
-            width: "8%"
+            width: "20%"
         }, {
             title: '包装规格',
             field: 'expSpec',
-            width: "8%"
+            width: "10%"
         }, {
             title: '单位',
             field: 'units',
-            width: "5%"
+            width: "7%"
         }, {
             title: '每包装含量',
             field: 'amountPerPackage',
-            width: "8%"
+            width: "7%"
         }, {
             title: '包装单位',
             field: 'packageUnits',
-            width: "8%"
+            width: "10%"
         }, {
             title: '高位水平',
             field: 'upperLevel',
-            width: "8%",
+            width: "10%",
             editor: {
                 type: 'validatebox', options: {
                     precision: 2
@@ -72,7 +139,7 @@ $(function () {
         }, {
             title: '低位水平',
             field: 'lowLevel',
-            width: "8%",
+            width: "10%",
             editor: {
                 type: 'validatebox', options: {
                     precision: 2
@@ -81,7 +148,7 @@ $(function () {
         }, {
             title: '统计区间消耗',
             field: 'stockQuantity',
-            width: "8%"
+            width: "10%"
         }
         ]],onClickRow: function (rowIndex,rowData) {
             if (editRowIndex || editRowIndex == 0){
@@ -97,24 +164,7 @@ $(function () {
     var curr_time = new Date();
     $("#startDate").datebox("setValue", myformatter(curr_time));
     $("#stopDate").datebox("setValue", myformatter2(curr_time));
-    $('#expName').combogrid({
-        panelWidth: 200,
-        idField: 'expCode',
-        textField: 'expName',
-        url: '/api/exp-name-dict/list-exp-name-by-input',
-        method: 'GET',
-        mode: 'remote',
-        columns: [[
-            //{field: 'expCode', title: '消耗品代码', width: 100},
-            {field: 'expName', title: '消耗品名称', width: 100}
-        ]],
-        pagination: false,
-        fitColumns: true,
-        rowNumber: true,
-        autoRowHeight: false,
-        pageSize: 50,
-        pageNumber: 1
-    });
+
     var prices = [];
     $("#searchBtn").on('click', function () {
          loadDict();
@@ -164,26 +214,7 @@ $(function () {
         prices.splice(0,prices.length);
 
     }
-    $("#locationBtn").on('click',function(){
-        var rowData = $("#dg").datagrid('getRows');
-        var expName = $("#expName").combogrid("getText");
-        var index;
-        for(var i=0;i<rowData.length;i++){
-            if(rowData[i].expName==expName){
-                index = $("#dg").datagrid('getRowIndex',rowData[i]) ;
-                var selectRow = $("#dg").datagrid('selectRow',index)
-                $("#dg").datagrid('scrollTo',index) ;
-            }
-        }
-        if(editRowIndex ==undefined){
-            $("#dg").datagrid("beginEdit",index) ;
-            editRowIndex = index ;
-        }else{
-            $("#dg").datagrid('endEdit',editRowIndex) ;
-            $("#dg").datagrid('beginEdit',index) ;
-            editRowIndex = index ;
-        }
-    });
+
     $("#saveBtn").on('click', function () {
         if (editRowIndex) {
             $("#dg").datagrid('endEdit', editRowIndex);
