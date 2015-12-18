@@ -31,10 +31,7 @@ public class ExpStorageUpperLowerMarketFacade extends BaseFacade {
      * @param stopTime
      * @return
      */
-    public List<ExpStorageProfileVo> findAll(String storageCode,Date startTime,Date stopTime,String hospitalId){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
-        String startTime1 = formatter.format(startTime.getTime());
-        String stopTime1 = formatter.format(stopTime.getTime());
+    public List<ExpStorageProfileVo> findAll(String storageCode,String startTime,String stopTime,String hospitalId){
         String sql = "SELECT EXP_STORAGE_PROFILE.STORAGE ,   \n" +
                 "         EXP_STORAGE_PROFILE.ID,   \n" +
                 "         EXP_STORAGE_PROFILE.LOCATION,   \n" +
@@ -55,8 +52,8 @@ public class ExpStorageUpperLowerMarketFacade extends BaseFacade {
                 "                AND exp_export_master.storage ='"+storageCode+"' \n" +
                 "                AND exp_export_detail.exp_code =exp_storage_profile.exp_code \n" +
                 "                AND exp_export_detail.exp_spec =exp_storage_profile.exp_spec \n" +
-                "                AND export_date >= to_date ( '"+startTime1+"' , 'yyyy-MM-dd HH24:MI:SS' ) \n" +
-                "                AND export_date < to_date ( '"+stopTime1+"' , 'yyyy-MM-dd HH24:MI:SS' ) \n " +
+                "                AND export_date >= to_date ( '"+startTime+"' , 'yyyy-MM-dd HH24:MI:SS' ) \n" +
+                "                AND export_date < to_date ( '"+stopTime+"' , 'yyyy-MM-dd HH24:MI:SS' ) \n " +
                 "                AND exp_export_master.hospital_id='"+hospitalId+"' )  stock_quantity     \n" +
 
                 "    FROM EXP_DICT,   \n" +
