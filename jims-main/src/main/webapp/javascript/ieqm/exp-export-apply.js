@@ -330,6 +330,10 @@ $(function () {
         fit: true,
         fitColumns: true,
         columns: [[{
+            title: 'id',
+            field: 'applicationId',
+            width: "10%"
+        },{
             title: '产品代码',
             field: 'expCode',
             width: "10%",
@@ -579,6 +583,10 @@ $(function () {
             field: 'itemNo',
             width: "7%"
         }, {
+            title: 'id',
+            field: 'applicationId',
+            width: "7%"
+        }, {
             title: '消耗品',
             field: 'expName',
             width: "10%"
@@ -740,7 +748,7 @@ $(function () {
         }, {
             title: '名称',
             field: 'expName'
-        }, {
+        },{
             title: '数量',
             field: 'quantity'
         }, {
@@ -972,10 +980,17 @@ $(function () {
                 if (r) {
                     var exportVo = getCommitData();
                     $.postJSON("/api/exp-stock/exp-export-manage", exportVo, function (data) {
-                        $.messager.alert("系统提示", "出库数据保存成功", "info");
-                        //刷新左侧列表
-                        $("#search").click();
-                        $("#clear").click();
+                        var rows = $("#right").datagrid('getRows');
+                        $.postJSON("/api/exp-provide-application/abandon", rows, function (data) {
+                            $.messager.alert('系统提示', '出库成功', 'success',function(){
+                                parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
+                            });
+                            //刷新左侧列表
+                            $("#search").click();
+                            $("#clear").click();
+                        }, function (data) {
+                            $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+                        });
                     }, function (data) {
                         $.messager.alert('提示', data.responseJSON.errorMessage, "error");
                     });
