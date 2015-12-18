@@ -619,9 +619,30 @@ $(function () {
 
     });
     //打印按钮操作
-    $("#print").on('click', function () {
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
 
-    });
+            //var hospitalId = parent.config.hospitalId;
+            //var storage = parent.config.storageCode;
+            //$("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-do-account.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&imClass="+imClass+"&startBill="+startBill+"&stopBill="+stopBill+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&billRadio="+billRadio+"&expCode="+expCode+"&loginId="+parent.config.loginId);
+        }
+    })
+    $("#print").on('click',function(){
+        var printData = $("#right").datagrid('getRows');
+        if(printData.length<=0){
+            $.messager.alert('系统提示','请先查询数据','info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
+
 
 
 

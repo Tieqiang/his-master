@@ -122,36 +122,86 @@ $(function () {
             title: '已结数量',
             width: '5%',
             field: 'disburseCount',
-            type:'numberbox'
+            type:'numberbox',
+            formatter: function(value,row,index){
+                if (row.disburseCount){
+                    return row.disburseCount.toFixed(2);
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '入库价',
             width: '5%',
             field: 'purchasePrice',
-            type:'numberbox'
+            type:'numberbox',
+            formatter: function(value,row,index){
+                if (row.purchasePrice){
+                    return row.purchasePrice.toFixed(2);
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '入库金额',
             width: '5%',
             field: 'purchaseAllPrice',
-            type:'numberbox'
+            type:'numberbox',
+            formatter: function(value,row,index){
+                if (row.purchaseAllPrice){
+                    return row.purchaseAllPrice.toFixed(2);
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '待结金额',
             width: '5%',
             field: 'needPrice',
-            type:'numberbox'
+            type:'numberbox',
+            formatter: function(value,row,index){
+                if (row.needPrice){
+                    return row.needPrice.toFixed(2);
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '已结金额',
-            width: '5%',
+            width: '6%',
             field: 'disbursePrice',
-            type:'numberbox'
+            type:'numberbox',
+            formatter: function(value,row,index){
+                if (row.disbursePrice){
+                    return row.disbursePrice.toFixed(2);
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '批发价',
             width: '5%',
             field: 'tradePrice',
-            type:'numberbox'
+            type:'numberbox',
+            formatter: function(value,row,index){
+                if (row.tradePrice){
+                    return row.tradePrice.toFixed(2);
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '零售价',
             width: '5%',
-            field: 'retailPrice'
+            field: 'retailPrice',
+            type:'numberbox',
+            formatter: function(value,row,index){
+                if (row.retailPrice){
+                    return row.retailPrice.toFixed(2);
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '顺序号',
             width: '5%',

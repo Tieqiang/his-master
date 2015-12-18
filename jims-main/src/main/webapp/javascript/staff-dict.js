@@ -3,6 +3,16 @@
  */
 
 $(function(){
+    $("#staffName").searchbox({
+        searcher: function (value, name) {
+            var rows = $("#dg").datagrid("getRows");
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].name == value) {
+                    $("#dg").datagrid('selectRow', i);
+                }
+            }
+        }
+    });
     //设置列
     $("#dg").datagrid({
         fit: true,

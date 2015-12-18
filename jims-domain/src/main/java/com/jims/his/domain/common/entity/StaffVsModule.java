@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+
 /**
  * StaffVsModule entity. @author MyEclipse Persistence Tools
  */
@@ -43,7 +44,7 @@ public class StaffVsModule implements java.io.Serializable {
 	}
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "MODULE_id")
+    @JoinColumn(name = "MODULE_ID")
     public ModulDict getModulDict() {
         return modulDict;
     }

@@ -91,16 +91,27 @@ $(document).ready(function () {
                     data:[{
                         key:"1",
                         value:"全院产品"
-                    },{
+                     },{
                         key:"2",
                         value:"普通产品"
                     }]
-                }}
+                    }
+                },formatter: function(value,row,index){
+                if (row.suppbound='1'){
+                    return '全院产品';
+                }else{
+                    return '普通产品';
+                }
+            }
             },{
                 title:"输入码",
                 field:"inputCode",
                 width:"10%",
-                editor:{type:"validatebox"}
+                editor:{type:"textbox",
+                    options:{
+                        editable: false,
+                        disabled: true}
+                }
             },{
                 title:"备注",
                 field:"memo",
@@ -382,11 +393,10 @@ $(document).ready(function () {
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
-
         if (beanChangeVo) {
             $.postJSON("/api/exp-supplier-catalog/merge", beanChangeVo, function (data, status) {
                 $.messager.alert("系统提示", "保存成功", "info");
-
+                $("#searchBtn").click();
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
             })

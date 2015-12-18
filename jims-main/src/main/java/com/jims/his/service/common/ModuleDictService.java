@@ -3,6 +3,7 @@ package com.jims.his.service.common;
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.common.entity.ModulDict;
 import com.jims.his.domain.common.entity.ModuleVsMenu;
+import com.jims.his.domain.common.entity.StaffVsModule;
 import com.jims.his.domain.common.facade.ModuleDictFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
 
@@ -97,5 +98,31 @@ public class ModuleDictService {
         }
     }
 
+    /**
+     * 保存模块菜单
+     *
+     * @param moduleId 模块ID
+     * @param staffIds  staffID
+     * @return
+     */
+    @Path("add-module-staff/{moduleId}")
+    @POST
+    public Response saveStaffVsModule(@PathParam("moduleId") String moduleId, List<String> staffIds) {
+        try {
+            List<StaffVsModule> staffVsModules = moduleDictFacade.saveStaffVsModule(moduleId, staffIds);
+            return Response.status(Response.Status.OK).entity(staffVsModules).build();
+        } catch (Exception e) {
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
+                errorException.setErrorMessage("输入数据超过长度！");
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
+                errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
 
 }

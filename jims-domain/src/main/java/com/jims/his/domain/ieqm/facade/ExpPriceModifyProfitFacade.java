@@ -3,6 +3,7 @@ package com.jims.his.domain.ieqm.facade;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.ieqm.entity.ExpPriceModify;
 import com.jims.his.domain.ieqm.entity.ExpPriceModifyProfit;
+import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.vo.ExpStorageProfileVo;
 
 
@@ -37,13 +38,13 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
      * @return
      */
     public List<ExpPriceModifyProfit> findCountAll(String longStartTime, String longStopTime,String hospitalId) {
-        String sql ="select exp_name,storage,exp_code,exp_spec,units,firm_id,quantity," +
+        String sql ="select exp_name,storage,exp_storage_dept.storage_name,exp_code,exp_spec,units,firm_id,quantity," +
                 "original_trade_price,trade_price_profit,current_trade_price,original_retail_price,\n" +
                 "current_retail_price,retail_price_profit,actual_efficient_date \n" +
-                "from exp_price_modify_profit\n" +
-                "where actual_efficient_date >= to_date('"+ longStartTime+"','YYYY-MM-DD HH24:MI:SS') and " +
+                "from exp_price_modify_profit,exp_storage_dept\n" +
+                "where exp_storage_dept.storage_code =exp_price_modify_profit.storage and actual_efficient_date >= to_date('"+ longStartTime+"','YYYY-MM-DD HH24:MI:SS') and " +
                 "actual_efficient_date <= to_date('"+ longStopTime+"','YYYY-MM-DD HH24:MI:SS')       and " +
-                "hospital_id = '"+hospitalId+"'";
+                "exp_price_modify_profit.hospital_id = '"+hospitalId+"'";
         List<ExpPriceModifyProfit> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceModifyProfit.class);
         System.out.println("nativeQuery");
         return nativeQuery;
@@ -92,19 +93,19 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
 
     /**
      * 根据传入的调价确认对象及其stockageCode，quantity计算其盈亏
-     * @param stockageCode
+     * @param storageCode
      * @param quantity
      * @param expPriceModify
      * @return
      */
-    public ExpPriceModifyProfit calcExpPriceModifyPriceProfit(String stockageCode,  Double quantity, ExpPriceModify expPriceModify) {
+    public ExpPriceModifyProfit calcExpPriceModifyPriceProfit(String storageCode,  Double quantity, ExpPriceModify expPriceModify) {
 
         ExpPriceModifyProfit priceModifyProfit;
         if (expPriceModify != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String acString = sdf.format(expPriceModify.getActualEfficientDate());
 
-            priceModifyProfit = this.getPriceModifyProfit(stockageCode, expPriceModify.getExpCode(), expPriceModify.getExpSpec(), expPriceModify.getFirmId(), acString, expPriceModify.getHospitalId());
+            priceModifyProfit = this.getPriceModifyProfit(storageCode, expPriceModify.getExpCode(), expPriceModify.getExpSpec(), expPriceModify.getFirmId(), acString, expPriceModify.getHospitalId());
             if (priceModifyProfit == null) {
                 priceModifyProfit = new ExpPriceModifyProfit();
             }
@@ -126,8 +127,16 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
             } else {
                 priceModifyProfit.setRetailPriceProfit(retailPriceProfit);
             }
+            String hql = "from ExpStorageDept where storageCode='"+ storageCode+"'";
+            List storageList = this.entityManager.createQuery(hql).getResultList();
+            if (storageList.size() > 0) {
+                ExpStorageDept storageDept = (ExpStorageDept) storageList.get(0);
+                priceModifyProfit.setStorageName(storageDept.getStorageName());
+            } else {
+                priceModifyProfit.setStorageName("");
+            }
             priceModifyProfit.setExpName(expPriceModify.getExpName());
-            priceModifyProfit.setStorage(stockageCode);
+            priceModifyProfit.setStorage(storageCode);
             priceModifyProfit.setExpSpec(expPriceModify.getExpSpec());
             priceModifyProfit.setFirmId(expPriceModify.getFirmId());
             priceModifyProfit.setExpCode(expPriceModify.getExpCode());
@@ -177,7 +186,7 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
     private ExpPriceModifyProfit getPriceModifyProfit(String stockageCode, String expCode, String expSpec, String firmId, String actualEfficientDate, String hospitalId) {
         String hql = "from ExpPriceModifyProfit pro where pro.storage = '" + stockageCode + "' and pro.expCode = '" + expCode + "' and " +
                 "pro.expSpec = '" + expSpec + "' and pro.hospitalId = '" + hospitalId + "' and  pro.actualEfficientDate = to_date('" + actualEfficientDate+"' ,'yyyy/mm/dd hh24:mi:ss')";
-        System.out.println(hql);
+
         List resultList = this.entityManager.createQuery(hql).getResultList();
         if (resultList.size() > 0) {
             return (ExpPriceModifyProfit) resultList.get(0);

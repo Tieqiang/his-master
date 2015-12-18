@@ -168,7 +168,7 @@ $(function () {
                     valueField: 'supplierId',
                     textField: 'supplier',
                     method: 'get',
-                    url: '/api/exp-supplier-catalog/list'
+                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '供应商'
                 }
             }
         }, {

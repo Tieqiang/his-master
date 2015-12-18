@@ -72,7 +72,7 @@ $(function () {
 
     //定义expName
     $('#expCode').combogrid({
-        panelWidth: 500,
+        panelWidth: 250,
         idField: 'expCode',
         textField: 'expCode',
         loadMsg: '数据正在加载',

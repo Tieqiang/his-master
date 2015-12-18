@@ -17,8 +17,9 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
     private String applicationId;
     private String expName;
     private String applicantStorage;
-    private String storageName;
+    private String applicantName;
     private String provideStorage;
+    private String provideName;
     private Short itemNo;
     private String expCode;
     private String expSpec;
@@ -43,17 +44,14 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
     private String deptId;
     private String expForm;
 
-
-    public ExpProvideApplicationVo() {
-    }
-
-    public ExpProvideApplicationVo(BeanChangeVo<ExpProvideApplication> changeVo, String applicationId, String expName, String applicantStorage, String storageName, String provideStorage, Short itemNo, String expCode, String expSpec, String packageSpec, Double quantity, String packageUnits, Date enterDateTime, String provideFlag, String exportDocumentNo, String applicantNo, String applicationMan, String patientId, Byte visitId, Boolean retflag, Date retdate, String retoperator, String auditingOperator, Double auditingQuantity, String enterDate, String deptName, String deptId, String expForm) {
+    public ExpProvideApplicationVo(BeanChangeVo<ExpProvideApplication> changeVo, String applicationId, String expName, String applicantStorage, String applicantName, String provideStorage, String provideName, Short itemNo, String expCode, String expSpec, String packageSpec, Double quantity, String packageUnits, Date enterDateTime, String provideFlag, String exportDocumentNo, String applicantNo, String applicationMan, String patientId, Byte visitId, Boolean retflag, Date retdate, String retoperator, String auditingOperator, Double auditingQuantity, String enterDate, String deptName, String deptId, String expForm) {
         this.changeVo = changeVo;
         this.applicationId = applicationId;
         this.expName = expName;
         this.applicantStorage = applicantStorage;
-        this.storageName = storageName;
+        this.applicantName = applicantName;
         this.provideStorage = provideStorage;
+        this.provideName = provideName;
         this.itemNo = itemNo;
         this.expCode = expCode;
         this.expSpec = expSpec;
@@ -76,6 +74,25 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
         this.deptName = deptName;
         this.deptId = deptId;
         this.expForm = expForm;
+    }
+
+    public ExpProvideApplicationVo() {
+    }
+
+    public String getApplicantName() {
+        return applicantName;
+    }
+
+    public void setApplicantName(String applicantName) {
+        this.applicantName = applicantName;
+    }
+
+    public String getProvideName() {
+        return provideName;
+    }
+
+    public void setProvideName(String provideName) {
+        this.provideName = provideName;
     }
 
     public BeanChangeVo<ExpProvideApplication> getChangeVo() {
@@ -108,14 +125,6 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
 
     public void setApplicantStorage(String applicantStorage) {
         this.applicantStorage = applicantStorage;
-    }
-
-    public String getStorageName() {
-        return storageName;
-    }
-
-    public void setStorageName(String storageName) {
-        this.storageName = storageName;
     }
 
     public String getProvideStorage() {

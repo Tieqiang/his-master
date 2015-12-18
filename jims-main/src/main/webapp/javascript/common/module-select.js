@@ -75,7 +75,24 @@ $(function(){
         }
     }) ;
 
-
+    var validateSelect=function(){
+        var hospitalId = $("#hospital").combobox('getValue');
+        var moduleId = $("#modual").combobox('getValue');
+        var storageCode = $("#stock").combobox('getValue');
+        if($.trim(hospitalId)==""){
+            $.messager.alert("警告","请选择医院！","error");
+            return false;
+        }
+        if ($.trim(moduleId) == "") {
+            $.messager.alert("警告", "请选择模块！", "error");
+            return false;
+        }
+        if ($.trim(storageCode) == "") {
+            $.messager.alert("警告", "请选择库房！", "error");
+            return false;
+        }
+        return true;
+    }
 
 
     $("#saveItemBtn").on('click',function(){
@@ -87,13 +104,13 @@ $(function(){
         config.hospitalId = hospitalId ;
         config.moduleId = moduleId ;
         config.storageCode = storageCode;
+        if(validateSelect()){
+            $.postJSON("/api/login/add-login-info", config, function (data) {
+                //登录成功跳转至index.html
+                location.href = "/index.html"
+            }, function (data) {
 
-        $.postJSON("/api/login/add-login-info",config,function(data){
-            //登录成功跳转至index.html
-            location.href="/index.html"
-        },function(data){
-
-        })
-
+            })
+        }
     })
 })

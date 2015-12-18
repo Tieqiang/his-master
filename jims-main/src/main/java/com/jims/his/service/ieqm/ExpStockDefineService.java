@@ -1,7 +1,9 @@
 package com.jims.his.service.ieqm;
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpFormDict;
+import com.jims.his.domain.ieqm.entity.ExpStorageProfile;
 import com.jims.his.domain.ieqm.entity.MeasuresDict;
 import com.jims.his.domain.ieqm.facade.ExpFormDictFacade;
 import com.jims.his.domain.ieqm.facade.ExpStorageProfileFacade;
@@ -28,17 +30,17 @@ public class ExpStockDefineService {
 
     @GET
     @Path("find-stock-define")
-    public List<ExpStockDefineVo> findStockDefine(@QueryParam("expForm") String expForm,@QueryParam("expCode")String expCode,@QueryParam("storage")String storage ){
-        List<ExpStockDefineVo> list = expStorageProfileFacade.findExpStockDefine(expForm,expCode,storage);
+    public List<ExpStorageProfile> findStockDefine(@QueryParam("expForm") String expForm,@QueryParam("expCode")String expCode,@QueryParam("storage")String storage ){
+        List<ExpStorageProfile> list = expStorageProfileFacade.findExpStockDefine(expForm,expCode,storage);
         return list;
     }
 
     @POST
     @Path("save")
-    public Response saveFindStockDefine(List<ExpStockDefineVo> insertData){
+    public Response saveFindStockDefine(BeanChangeVo<ExpStorageProfile> beanChangeVo){
         try {
-            List<ExpStockDefineVo> expStockDefineVoList = expStorageProfileFacade.saveExpStockDefine(insertData);
-            return Response.status(Response.Status.OK).entity(expStockDefineVoList).build();
+            List<ExpStorageProfile> expStockDefineList = expStorageProfileFacade.saveExpStockDefine(beanChangeVo);
+            return Response.status(Response.Status.OK).entity(expStockDefineList).build();
         }catch (Exception e){
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);

@@ -23,7 +23,7 @@ $(function () {
         singleSelect: true,
         columns: [[{
             title: '代码',
-            field: 'storage',
+            field: 'expCode',
             width: "8%"
         }, {
             title: '产品名称',
@@ -54,8 +54,12 @@ $(function () {
             field: 'supplyIndicator',
             width: "8%",
             editor: {
-                type: 'validatebox', options: {
-                    precision: 2
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'code',
+                    textField: 'name',
+                    data: [{'code': '1', 'name': '可供应'}, {'code': '0', 'name': '不可供'}]
                 }
             }
         }

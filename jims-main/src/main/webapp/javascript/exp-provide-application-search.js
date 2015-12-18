@@ -46,20 +46,12 @@ $(document).ready(function () {
         rownumbers: true,
         columns: [[{
             title: "申请单号",
-            field: "applicationNo",
+            field: "applicantNo",
             width: "10%"
         }, {
             title: "向哪个库房申请",
-            field: "applicationStorage",
+            field: "provideName",
             width: "10%"
-            //,
-            //editor: {
-            //    type: "combobox", options: {
-            //        data: storageDict,
-            //        valueField: "storageCode",
-            //        textField: "storageName"
-            //    }
-            //}
         }, {
             title: "代码",
             field: "expCode",
@@ -89,21 +81,6 @@ $(document).ready(function () {
             field: "applicationMan",
             width: "10%"
         }]]
-        //,
-        //onClickRow: function (rowIndex, rowData) {
-        //    if (editRowIndex || editRowIndex == 0) {
-        //        $(this).datagrid("endEdit", editRowIndex);
-        //    }
-        //    $(this).datagrid("beginEdit", rowIndex);
-        //    var packageSpec = $("#dg").datagrid("getEditor", {index: rowIndex, field: "packageSpec"});
-        //    var packageUnits = $("#dg").datagrid("getEditor", {index: rowIndex, field: "packageUnits"});
-        //    var applicationMan = $("#dg").datagrid("getEditor", {index: rowIndex, field: "applicationMan"});
-        //
-        //    packageSpec.target.prop("disabled", true);
-        //    packageUnits.target.prop("disabled", true);
-        //    applicationMan.target.prop("disabled", true);
-        //    editRowIndex = rowIndex;
-        //}
     });
     //查询
     $("#searchBtn").on("click", function () {
@@ -127,33 +104,7 @@ $(document).ready(function () {
                     $("#dg").datagrid("loadData", {rows: []});
                     return ;
                 } else {
-                    $.each(data, function (index,item) {
-                        //console.log(item);
-                        var options ={};
-                        options.applicationStorage = item[0];
-                        //options.provideStorage = item[1];
-                        options.itemNo = item[3];
-                        options.expCode = item[4];
-                        //options.expSpec = item[4];
-                        options.packageSpec = item[6];
-                        options.quantity = item[7];
-                        options.packageUnits = item[8];
-                        //options.enterDateTime = item[8];
-                        options.applicationNo = item[10];
-                        options.applicationMan = item[11];
-                        //options.provideFlag = item[11];
-                        options.expName = item[13];
-                        expProvideApplicationObjs.push(options);
-                    });
-
-                    $.each(storageDict, function (index,item) {
-                        $.each(expProvideApplicationObjs, function (index,item1) {
-                            if (item.storageCode == item1.applicationStorage){
-                                item1.applicationStorage = item.storageName;
-                            }
-                        });
-                    });
-                    $("#dg").datagrid("loadData", expProvideApplicationObjs);
+                    $("#dg").datagrid("loadData", data);
                 }
             }
         );

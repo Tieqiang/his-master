@@ -648,20 +648,19 @@ $(function(){
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
-        exportMaster.accountIndicator = 1;
+        exportMaster.accountIndicator = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
         exportMaster.operator = parent.config.loginName;
-        exportMaster.principal = $("#principal").combogrid('getValue');
-        exportMaster.storekeeper = $("#storekeeper").combogrid('getValue');
-        exportMaster.acctoperator = parent.config.loginName;
+        exportMaster.principal = $("#principal").combogrid('getText');
+        exportMaster.storekeeper = $("#storekeeper").combogrid('getText');
+        exportMaster.acctoperator = parent.config.staffName;
         exportMaster.acctdate =new Date();
-        exportMaster.principal = $("#principal").combogrid('getValue');
-        exportMaster.storekeeper = $("#storekeeper").textbox('getValue');
+        exportMaster.principal = $("#principal").combogrid('getText');
         exportMaster.docStatus = 0;
         //exportMaster.auditor = $("#auditor").combobox('getValue');
         //exportMaster.rcptNo = $("#rcptNo").combobox('getValue');
-        exportMaster.buyer = $("#acctoperator").combobox('getValue');
+        exportMaster.buyer = $("#acctoperator").combobox('getText');
         exportMaster.hospitalId = parent.config.hospitalId;
         expExportMasterBeanChangeVo.inserted.push(exportMaster);
 
@@ -684,7 +683,7 @@ $(function(){
             detail.retailPrice = rows[i].retailPrice;
             detail.tradePrice = rows[i].retailPrice;
             detail.packageSpec = rows[i].packageSpec;
-            detail.packageUnits = rows[i].units;
+            detail.packageUnits = rows[i].packageUnits;
             detail.quantity = rows[i].quantity;
             detail.subPackage1 = rows[i].subPackage1;
             detail.subPackageUnits1 = rows[i].subPackageUnits1;
@@ -747,30 +746,20 @@ $(function(){
             var importVo = getCommitData() ;
             console.log(importVo);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
-                $.messager.alert('系统提示', '出库成功', 'success');
-                newDocument() ;
+                $.messager.alert('系统提示', '出库成功', 'success',function(){
+                    parent.updateTab('出库处理', '/his/ieqm/exp-export');
+                });
             }, function (data) {
                 $.messager.alert("系统提示", data.errorMessage, 'error');
             })
         }
     });
-    var newDocument = function () {
-        //点击按钮调用的方法
-        var subStorage = $("#subStorage").textbox('getValue');
-        if(subStorage){
-            var promise = createNewDocument(subStorage) ;
-            promise.done(function(){
-                $("#documentNo").textbox('setValue',documentNo);
-            })
-        }
-        $("#exportDetail").datagrid('loadData',[]) ;
 
-    }
 
     /**
      * 新单
      */
     $("#newBtn").on('click',function(){
-        newDocument() ;
+        parent.updateTab('出库处理', '/his/ieqm/exp-export');
     })
 })

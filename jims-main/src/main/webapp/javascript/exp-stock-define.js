@@ -17,7 +17,13 @@ function checkRadio(){
 }
 $(document).ready(function () {
     var currentExpCode;
-    var editRowIndex;
+    var editIndex;
+    var stopEdit = function () {
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid('endEdit', editIndex);
+            editIndex = undefined;
+        }
+    }
     var easyFormDicts = [];//产品类别
     var packageUnits = [];//包装单位
 
@@ -30,6 +36,10 @@ $(document).ready(function () {
             //+ "(" + item.formCode + ")";
             easyFormDicts.push(easyFormDict);
         })
+        var all = {};
+        all.formCode = '';
+        all.formName = '全部';
+        easyFormDicts.unshift(all);
         $("#productTypeSelect").combobox({
             data:easyFormDicts,
             valueField:"formCode",
@@ -71,9 +81,21 @@ $(document).ready(function () {
         singleSelect:true,
         rownumbers:true,
         columns:[[{
+            title: 'id',
+            field: 'id',
+            hidden: true
+        }, {
+            title: "库房代码",
+            field: "storage",
+            hidden: true
+        }, {
+            title: "消耗品代码",
+            field: "expCode",
+            hidden: true
+        },{
             title:"品名",
             field:"expName",
-            width:"10%",
+            width:"20%",
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
@@ -102,12 +124,13 @@ $(document).ready(function () {
                         width: "30%"
                     }]],
                     onClickRow: function (index, row) {
-                        $('#dg').datagrid('endEdit',editRowIndex);
+                        $('#dg').datagrid('endEdit',editIndex);
                         $('#dg').datagrid('updateRow',{
-                            index: editRowIndex,
+                            index: editIndex,
                             row: {
                                 expSpec: row.expSpec,
                                 expName: row.expName,
+                                expForm: row.expForm,
                                 upperLevel: 0,
                                 lowLevel: 0,
                                 amountPerPackage: 0,
@@ -118,7 +141,7 @@ $(document).ready(function () {
                             }
                         });
 
-                        $('#dg').datagrid('beginEdit',editRowIndex);
+                        $('#dg').datagrid('beginEdit',editIndex);
                         //$(this).combogrid('hidePanel');
                         //currentExpCode = row.expCode;
                         //$("#stockRecordDialog").dialog('open');
@@ -127,13 +150,14 @@ $(document).ready(function () {
                         enter: function (e) {
                             var row = $(this).combogrid('grid').datagrid('getSelected');
                             $(this).combogrid('hidePanel');
-                            $('#dg').datagrid('endEdit',editRowIndex);
+                            $('#dg').datagrid('endEdit',editIndex);
                             if (row) {
                                 $('#dg').datagrid('updateRow',{
-                                    index: editRowIndex,
+                                    index: editIndex,
                                     row: {
                                         expSpec: row.expSpec,
                                         expName: row.expName,
+                                        expForm: row.expForm,
                                         upperLevel: 0,
                                         lowLevel: 0,
                                         amountPerPackage: 0,
@@ -146,13 +170,17 @@ $(document).ready(function () {
                                 //currentExpCode = row.expCode;
                                 //$("#stockRecordDialog").dialog('open');
                             }
-                            $('#dg').datagrid('beginEdit',editRowIndex);
+                            $('#dg').datagrid('beginEdit',editIndex);
 
                         }
                     })
                 }
             },
             width:"7%"
+        }, {
+            title: "类别",
+            field: "expForm",
+            width: "10%"
         },{
             title:"规格",
             field:"expSpec",
@@ -186,18 +214,15 @@ $(document).ready(function () {
             width:"10%",
             editor:{type:"validatebox"}
         },{
-            title:"库房代码",
-            field:"storage",
-            hidden:true
-        },{
-            title:"消耗品代码",
-            field:"expCode",
-            hidden:true
-        },{
             title:"位置",
             field:"location",
             hidden:true
-        }]]
+        }]],
+        onClickRow: function (index, row) {
+            stopEdit();
+            $(this).datagrid('beginEdit', index);
+            editIndex = index;
+        }
     });
     var define = {};
     //查询
@@ -209,7 +234,6 @@ $(document).ready(function () {
         var expCode = $("#inputCode").combogrid('getValue');
         var expForm = $("#productTypeSelect").combogrid('getText');
        var promise =  $.get("/api/exp-stock-define/find-stock-define?expCode="+expCode+"&expForm="+expForm+"&storage="+parent.config.storageCode, function (data) {
-            console.log(data);
             define = data;
             if(define.length==0){
                 $.messager.alert('系统提示','数据库暂无数据','info');
@@ -228,59 +252,46 @@ $(document).ready(function () {
 
     //添加
     $("#addBtn").on("click", function () {
-        $('#dg').datagrid('endEdit',editRowIndex);
-        $("#dg").datagrid("appendRow",{});
-        var rows = $("#dg").datagrid("getRows");
-        var row = rows[rows.length - 1];
-
-        var index = $("#dg").datagrid("getRowIndex",row);
-
-        if(editRowIndex == undefined){
-            $("#dg").datagrid("beginEdit",index);
-            editRowIndex =index;
-        }
-
-        if(editRowIndex == index -1){
-            $("#dg").datagrid("endEdit",editRowIndex);
-            $("#dg").datagrid("beginEdit",index);
-            editRowIndex = index;
-
-        }
+        stopEdit();
+        $("#dg").datagrid('appendRow', {storage:parent.config.storageCode});
+        var rows = $("#dg").datagrid('getRows');
+        var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+        editIndex = addRowIndex;
+        $("#dg").datagrid('selectRow', editIndex);
+        $("#dg").datagrid('beginEdit', editIndex);
     });
     // 删除
     $("#delBtn").on("click", function () {
-        var selectedRow = $("#dg").datagrid("getSelected");
-        var row_index = $("#dg").datagrid("getRowIndex",selectedRow);
-
-        if(row_index == -1){
-            if  (editRowIndex == undefined){
-                $.messager.alert("提示","请选择要删除的行","info");
-                return ;
-            }else {
-                $("#dg").datagrid("deleteRow",editRowIndex);
-                editRowIndex = undefined;
+        var row = $("#dg").datagrid('getSelected');
+        if (row) {
+            var rowIndex = $("#dg").datagrid('getRowIndex', row);
+            $("#dg").datagrid('deleteRow', rowIndex);
+            if (editIndex == rowIndex) {
+                editIndex = undefined;
             }
-        }else {
-            $("#dg").datagrid("endEdit",editRowIndex);
-            $("#dg").datagrid("deleteRow",row_index);
-            editRowIndex = undefined
+        } else {
+            $.messager.alert('系统提示', "请选择要删除的行", 'info');
         }
     });
 
     //保存
     $("#saveBtn").on("click", function () {
-        if (editRowIndex != undefined){
-            $("#dg").datagrid("endEdit",editRowIndex);
-            editRowIndex = undefined;
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid("endEdit", editIndex);
         }
         var insertData = $("#dg").datagrid("getChanges","inserted");
         var updateData = $("#dg").datagrid("getChanges","updated");
         var deleteData = $("#dg").datagrid("getChanges","deleted");
 
-        if(insertData && insertData.length > 0){
-            $.postJSON("/api/exp-stock-define/save",insertData, function (data) {
+        var beanChangeVo = {};
+        beanChangeVo.inserted = insertData;
+        beanChangeVo.deleted = deleteData;
+        beanChangeVo.updated = updateData;
+
+        if(beanChangeVo){
+            $.postJSON("/api/exp-stock-define/save", beanChangeVo, function (data) {
                 $.messager.alert("提示","保存成功","info");
-                $('#dg').datagrid('loadData',[]);
+                $("#searchBtn").click();
             }, function (data) {
                 $.messager.alert("提示",data.responseJSON.errorMessage,"error");
             })

@@ -85,8 +85,19 @@ public class MenuDictFacade extends BaseFacade {
                 "   and f.menu_id = e.id\n" +
                 "   and f.role_id = b.role_id\n" +
                 "   and d.module_id = '" + moduleId + "'" +
-                " order by e.id asc ";
+                " order by e.parent_id,position asc ";
         List<MenuDict> nativeQuery = createNativeQuery(sql, new ArrayList<Object>(), MenuDict.class);
         return nativeQuery;
+    }
+
+    /**
+     * 根据父ID,POSITION排序查询
+     * @return
+     */
+    public List<MenuDict> findAllByPosition() {
+        String hql = "from MenuDict as dict order by dict.parentId,dict.position";
+        Query query = entityManager.createQuery(hql);
+        List resultList = query.getResultList();
+        return resultList;
     }
 }

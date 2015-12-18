@@ -284,7 +284,7 @@ public class ExpImportDetailFacade extends BaseFacade {
         for(ExpImportMaster master :masters){
             String id  =  master.getId();
             ExpImportMaster master1 = get(ExpImportMaster.class,id);
-            master1.setAccountIndicator((Integer)(1));
+            master1.setAccountIndicator((Integer)(master.getAccountIndicator()));
             merge(master1);
         }
         for(ExpImportDetail detail :details){

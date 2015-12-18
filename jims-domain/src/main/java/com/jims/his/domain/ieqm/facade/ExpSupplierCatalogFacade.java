@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.common.util.PinYin2Abbreviation;
 import com.jims.his.domain.common.entity.DeptDict;
 import com.jims.his.domain.common.facade.DeptDictFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
@@ -57,11 +58,13 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         List<ExpSupplierCatalog> updated = beanChangeVo.getUpdated();
         List<ExpSupplierCatalog> deleted = beanChangeVo.getDeleted();
         for (ExpSupplierCatalog dict : inserted) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getSupplier().substring(0, dict.getSupplier().length() >= 8 ? 8 : dict.getSupplier().length())));
             ExpSupplierCatalog merge = merge(dict);
             newUpdateDict.add(merge);
         }
 
         for (ExpSupplierCatalog dict : updated) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getSupplier().substring(0, dict.getSupplier().length() >= 8 ? 8 : dict.getSupplier().length())));
             ExpSupplierCatalog merge = merge(dict);
             newUpdateDict.add(merge);
         }

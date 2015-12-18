@@ -287,7 +287,7 @@ $(function () {
         rowStyler: rowStyler,
         columns: [[{
             title: '库存单位',
-            field: 'storage',
+            field: 'storageName',
             width: "7%"
         },{
             title: '代码',
@@ -372,7 +372,15 @@ $(function () {
                     maxlength: 8,
                     precision: 2
                 }
+            },
+            formatter: function(value,row,index){
+                if (row.retailPriceProfit){
+                    return row.retailPriceProfit.toFixed(2);
+                } else {
+                    return value;
+                }
             }
+
         }, {
             title: '执行时间',
             field: 'actualEfficientDate',
@@ -524,7 +532,7 @@ $(function () {
                     }
                 });
                 $("#tab2").datagrid('loadData', data);
-                $("#tab2").datagrid("autoMergeCells", ['storage', 'expCode','expName', 'expSpec','units','firmId']);
+                $("#tab2").datagrid("autoMergeCells", ['storageName', 'expCode','expName', 'expSpec','units','firmId']);
             }
         });
     }

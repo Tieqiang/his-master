@@ -51,6 +51,16 @@ $(document).ready(function () {
             field: "expSpec",
             width: "10%",
             hidden: true
+        }, {
+            title: "申请单号",
+            field: "applicantNo",
+            width: "10%",
+            editor: {
+                type: "textbox",
+                options: {
+                    disabled: true
+                }
+            }
         },{
             title:"代码",
             field:"expCode",
@@ -128,15 +138,24 @@ $(document).ready(function () {
                     disabled: true
                 }}
         },{
-            title:"申请科室",
-            field:"provideStorage",
+            title:"被申请科室",
+            field:"provideName",
             width:"10%",
-            hidden:true,
             editor:{
                 type:"textbox",
                 options: {
                     disabled: true
                 }}
+        }, {
+            title: "申请科室",
+            field: "applicantName",
+            width: "10%",
+            editor: {
+                type: "textbox",
+                options: {
+                    disabled: true
+                }
+            }
         }]],
         onClickRow: function (rowIndex,rowData) {
             if (editRowIndex || editRowIndex == 0){
@@ -148,9 +167,12 @@ $(document).ready(function () {
     });
     //查询
     $("#searchBtn").on("click", function () {
-        var applicationStorage = $("#storage").combobox("getValue");
+        var provideStorage = $("#storage").combobox("getValue");
         var applicantNo = $("#applicantNo").textbox("getValue");
-        $.get("/api/exp-provide-application/find-dict-application?applyStorage=" + applicationStorage+"&applyNo="+applicantNo+"&storageCode="+parent.config.storageCode, function (data) {
+        if($.trim(applicantNo)!=""){
+            applicantNo = "'" + applicantNo + "'";
+        }
+        $.get("/api/exp-provide-application/find-dict-application?applyStorage=" + parent.config.storageCode+"&applyNo="+applicantNo+"&storageCode="+ provideStorage, function (data) {
                 if (data.length == 0) {
                     $.messager.alert("提示", "未查询到数据", "info");
                     $("#dg").datagrid("loadData", {rows: []});
@@ -168,26 +190,7 @@ $(document).ready(function () {
             return ;
         }
         var applicationStorage = $("#storage").combobox("getValue");
-        $("#dg").datagrid("appendRow",{applicantStorage: applicationStorage,applicationMan:parent.config.loginName,provideStorage:parent.config.storageCode});
-
-        //var rows = $("#dg").datagrid("getRows");
-        //var row_index=0;
-        //if(rows.length > 0){
-        //    var row = rows[rows.length - 1];
-        //    row_index=$("#dg").datagrid("getRowIndex", row);
-        //}
-        //
-        //
-        //if (editRowIndex == undefined){
-        //    $("#dg").datagrid("beginEdit",row_index);
-        //    editRowIndex = row_index;
-        //}
-        //
-        //if(editRowIndex == row_index - 1  || editRowIndex != undefined){
-        //    $("#dg").datagrid("endEdit",editRowIndex);
-        //    editRowIndex = row_index;
-        //    $("#dg").datagrid("beginEdit",editRowIndex);
-        //}
+        $("#dg").datagrid("appendRow",{provideStorage: applicationStorage,applicationMan:parent.config.staffName, applicantStorage:parent.config.storageCode});
     });
     //删除
     $("#delBtn").on("click", function () {
@@ -227,9 +230,6 @@ $(document).ready(function () {
         changeVo.inserted = insertData;
         changeVo.updated = updateData;
         changeVo.deleted = deleteData;
-
-        //var expProvideApplicationVo = {};
-       // expProvideApplicationVo.changeVo= changeVo;
 
         if (changeVo) {
             $.postJSON("/api/exp-provide-application/save", changeVo, function (data) {

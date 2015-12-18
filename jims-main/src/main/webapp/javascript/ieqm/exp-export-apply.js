@@ -645,6 +645,12 @@ $(function () {
                 }
             }
         }]],
+        onLoadSuccess:function(data){
+            if(data.total==0){
+                $.messager.alert("系统提示","未查询到数据！","info");
+                $("#applyDialog").dialog('close');
+            }
+        },
         onClickCell: function (index, field, row) {
             if (index != editIndex) {
                 $(this).datagrid('endEdit', editIndex);
@@ -799,9 +805,9 @@ $(function () {
         var startDate = $("#startDate").datetimebox('getText');
         var endDate = $("#endDate").datetimebox('getText');
         var applyStorage = $("#storage").combobox("getValue");
-        var storageCode = parent.config.storageCode;
+        var provideStorage = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
-        $.get('/api/exp-export/export-apply?storageCode=' + storageCode + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
+        $.get('/api/exp-export/export-apply?storage=' + provideStorage + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
             if (data.length <= 0) {
                 $.messager.alert("系统提示", "没有记录", "info");
             } else {
@@ -887,7 +893,7 @@ $(function () {
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.exportClass = $("#exportClass").combobox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
-        exportMaster.accountIndicator = 1;
+        exportMaster.accountIndicator = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
         exportMaster.operator = parent.config.loginName;

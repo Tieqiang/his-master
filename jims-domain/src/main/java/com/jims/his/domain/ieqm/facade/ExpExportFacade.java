@@ -106,7 +106,7 @@ public class ExpExportFacade extends BaseFacade {
             s1 = formatter.format(startDate.getTime());
             s2 = formatter.format(stopDate.getTime());
         }
-        String hql = "select distinct dict from ExpExportMaster as dict,ExpExportDetail where 1=1 ";
+        String hql = "select distinct dict from ExpExportMaster as dict,ExpExportDetail as dc where 1=1 ";
         if (billRadio != null) {
             hql += " and dict.docStatus='" + billRadio + "'";
         }
@@ -132,8 +132,8 @@ public class ExpExportFacade extends BaseFacade {
             hql += " and dict.receiver='" + receiver + "'";
         }
         if (searchInput != null && searchInput.trim().length() > 0) {
-            hql += " and ExpExportDetail.expCode='" + searchInput + "' \n" +
-                    "  and dict.documentNo=ExpExportDetail.documentNo";
+            hql += " and dc.expCode='" + searchInput + "' \n" +
+                    "  and dict.documentNo=dc.documentNo";
         }
 
         if (hospitalId != null && hospitalId.trim().length() > 0) {

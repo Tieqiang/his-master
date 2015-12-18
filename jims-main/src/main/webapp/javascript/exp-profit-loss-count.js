@@ -188,7 +188,7 @@ $(function () {
                 $.each(data,function(index,item){
                     var price ={};
                     price.quantity = item.quantity;
-                    price.storageName = $("#storageName").combogrid("getText");
+                    price.storageName = item.storageName;
                     price.expName = item.expName;
                     price.expSpec = item.expSpec;
                     price.units = item.units;

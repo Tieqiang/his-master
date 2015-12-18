@@ -94,6 +94,7 @@ $(function () {
         }, {
             title: "数量",
             field: 'quantity',
+            width:'5%',
             editor: {
                 type: 'numberbox', options: {
                     onChange: function (newValue, oldValue) {
@@ -149,6 +150,7 @@ $(function () {
         }, {
             title: '有效日期',
             field: 'expireDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -187,6 +189,7 @@ $(function () {
         }, {
             title: '发票日期',
             field: 'invoiceDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -213,6 +216,7 @@ $(function () {
         }, {
             title: '生产日期',
             field: 'produceDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -235,6 +239,7 @@ $(function () {
         }, {
             title: '消毒日期',
             field: 'disinfectDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -501,6 +506,14 @@ $(function () {
             }
         })
     });
+    var setDefaultDate = function () {
+        var date = new Date();
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        return m + '/' + d + '/' + y
+    }
+    $("#importDate").datebox('setValue', setDefaultDate())
 
     //追加
 
@@ -518,6 +531,155 @@ $(function () {
 
     })
 
+    $("#stockRecordDialog").dialog({
+        title: '选择规格',
+        width: 700,
+        height: 300,
+        closed: false,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#stockRecordDatagrid").datagrid('load', {
+                storageCode: parent.config.storageCode,
+                expCode: currentExpCode,
+                hospitalId: parent.config.hospitalId
+            });
+            $("#stockRecordDatagrid").datagrid('selectRow', 0)
+        }
+    });
+
+    $("#stockRecordDatagrid").datagrid({
+        singleSelect: true,
+        fit: true,
+        fitColumns: true,
+        url: '/api/exp-stock/stock-record/',
+        method: 'GET',
+        columns: [[{
+            title: '代码',
+            field: 'expCode'
+        }, {
+            title: '名称',
+            field: 'expName'
+        }, {
+            title: '数量',
+            field: 'quantity'
+        }, {
+            title: '规格',
+            field: 'expSpec'
+        }, {
+            title: '最小规格',
+            field: 'minSpec'
+        }, {
+            title: '单位',
+            field: 'units'
+        }, {
+            title: '最小单位',
+            field: 'minUnits'
+        }, {
+            title: '厂家',
+            field: 'firmId'
+        }, {
+            title: '批发价',
+            field: 'tradePrice'
+        }, {
+            title: '零售价',
+            field: 'retailPrice'
+        }, {
+            title: '注册证号',
+            field: 'registerNo'
+        }, {
+            title: '许可证号',
+            field: 'permitNo'
+        }]],
+        onLoadSuccess:function(data){
+            flag = flag+1;
+            if(flag==1){
+                if(data.total==0 && editIndex!=undefined){
+                    //$("#exportDetail").datagrid('endEdit', editIndex);
+                    $.messager.alert('系统提示','库房暂无该产品,请重置产品名称','info');
+                    $("#stockRecordDialog").dialog('close');
+                    //$("#exportDetail").datagrid('beginEdit', editIndex);
+                }
+                flag=0;
+            }
+        },
+        onClickRow: function (index, row) {
+            var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+            $(expCodeEdit.target).textbox('setValue', row.expCode);
+
+            var expNameEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expName'});
+            $(expNameEd.target).textbox('setValue', row.expName);
+
+            var packageSpecEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'packageSpec'});
+            $(packageSpecEd.target).textbox('setValue', row.expSpec);
+
+            var packageUnitsEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'packageUnits'});
+            $(packageUnitsEd.target).textbox('setValue', row.units);
+
+            var SpecEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
+            $(SpecEd.target).textbox('setValue', row.minSpec);
+
+            var unitsEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'units'});
+            $(unitsEd.target).textbox('setValue', row.minUnits);
+
+
+            var quantityEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'quantity'});
+            $(quantityEd.target).textbox('setValue', 0);
+            $(quantityEd.target).focus();
+
+            var batchNoEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'batchNo'});
+            $(batchNoEd.target).textbox('setValue', 'X');
+
+            var purchasePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'purchasePrice'});
+            $(purchasePriceEd.target).textbox('setValue', row.tradePrice);
+
+            var amountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
+            $(amountEd.target).textbox('setValue', 0);
+
+            var expFormEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expForm'});
+            $(expFormEd.target).textbox('setValue', '消耗材料');
+
+            var firmIdEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'firmId'});
+            $(firmIdEd.target).textbox('setValue', row.firmId);
+            var inventoryEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'inventory'});
+            $(inventoryEd.target).textbox('setValue', row.quantity);
+
+            var expImportDetailRegistNoEd = $("#importDetail").datagrid('getEditor', {
+                index: editIndex,
+                field: 'expImportDetailRegistNo'
+            });
+            $(expImportDetailRegistNoEd.target).textbox('setValue', row.registerNo);
+
+            var expImportDetailLicencenoEd = $("#importDetail").datagrid('getEditor', {
+                index: editIndex,
+                field: 'expImportDetailLicenceno'
+            });
+            $(expImportDetailLicencenoEd.target).textbox('setValue', row.permitNo);
+
+            var invoiceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'invoiceDate'});
+            $(invoiceDateEd.target).textbox('setValue', setDefaultDate());
+            var produceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'produceDate'});
+            $(produceDateEd.target).textbox('setValue', setDefaultDate());
+            var disinfectDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'disinfectDate'});
+            $(disinfectDateEd.target).textbox('setValue', setDefaultDate());
+
+            var discountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'discount'});
+            $(discountEd.target).textbox('setValue', '100');
+
+            var orderBatchEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'orderBatch'});
+            $(orderBatchEd.target).textbox('setValue', 'x');
+
+            var retailedEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
+            $(retailedEd.target).numberbox('setValue', 'x');
+
+            var tradePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'tradePrice'});
+            $(tradePriceEd.target).numberbox('setValue', 'x');
+
+            $("#stockRecordDialog").dialog('close');
+        }
+
+    });
 
     //stockRecord
 
@@ -632,6 +794,8 @@ $(function () {
 
             var firmIdEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'firmId'});
             $(firmIdEd.target).textbox('setValue', row.firmId);
+            var inventoryEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'inventory'});
+            $(inventoryEd.target).textbox('setValue', row.quantity);
 
             var expImportDetailRegistNoEd = $("#importDetail").datagrid('getEditor', {
                 index: editIndex,
@@ -668,8 +832,17 @@ $(function () {
         }
 
     });
+    /**
+     * 查询
+     */
     $("#searchBtn").on('click',function(){
-        parent.addTab('出库单据查询', '/his/ieqm/exp-import-document-search');
+        parent.addTab('入库单据查询', '/his/ieqm/exp-import-document-search');
+    })
+    /**
+     * 定义新供应商
+     */
+    $("#newSupplier").on('click',function(){
+        parent.addTab('产品供应商目录维护', '/his/ieqm/exp-supplier-catalog');
     })
     /**
      * 删除按钮
@@ -734,13 +907,13 @@ $(function () {
         importMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         importMaster.importClass = $("#importClass").combobox('getValue');
         importMaster.subStorage = $("#subStorage").combobox('getValue');
-        importMaster.accountIndicator = 1;
+        importMaster.accountIndicator = 0;
         importMaster.memos = $('#memos').textbox('getValue');
         importMaster.operator = parent.config.loginId;
-        importMaster.principal = $("#principal").combogrid('getValue');
-        importMaster.storekeeper = $("#storekeeper").combogrid('getValue');
-        importMaster.buyer = $("#buyer").combogrid('getValue');
-        importMaster.checkman = $("#checkMan").combogrid('getValue');
+        importMaster.principal = $("#principal").combogrid('getText');
+        importMaster.storekeeper = $("#storekeeper").combogrid('getText');
+        importMaster.buyer = $("#buyer").combogrid('getText');
+        importMaster.checkman = $("#checkMan").combogrid('getText');
         importMaster.tenderNo = $("#tenderNo").textbox('getValue');
         importMaster.tenderType = $("#tenderType").combobox('getValue');
         importMaster.hospitalId = parent.config.hospitalId;

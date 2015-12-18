@@ -3,9 +3,18 @@
  * Created by heren on 2015/10/19.
  */
 $(function () {
-
+    var editIndex;
     var depts=[] ;
+    var flag;
+    var staffs = [];//员工信息
     var rows=[] ;//选中记录
+    var setDefaultDate = function () {
+        var date = new Date();
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        return m + '/' + d + '/' + y
+    }
     var deptPromse = $.get("/api/dept-dict/list?hospitalId="+parent.config.hospitalId,function(data){
         for(var i = 0 ;i<data.length ;i++){
             var dept={} ;
@@ -16,53 +25,184 @@ $(function () {
         }
     }) ;
     deptPromse.done(function(){
-        $("#supplier").combogrid('grid').datagrid('loadData',depts) ;
-        console.log(depts) ;
+        $("#supplier").combogrid({
+            idField: 'supplierName',
+            textField: 'supplierName',
+            data: depts,
+            panelWidth: 200,
+            columns: [[{
+                title: '供应商名称',
+                field: 'supplierName'
+            }, {
+                title: '供应商代码',
+                field: 'supplierCode'
+            }, {
+                title: '输入码',
+                field: 'inputCode'
+            }]],
+            filter: function (q, row) {
+                return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+            }
+        })
     }) ;
 
+//入库分类字典
+    $("#importClass").combobox({
+        url: '/api/exp-import-class-dict/list',
+        valueField: 'importClass',
+        textField: 'importClass',
+        method: 'GET',
+        onLoadSuccess: function () {
+            var data = $(this).combobox('getData');
+            $(this).combobox('select', data[0].importClass);
+        }
+    });
 
+    $("#documentNo").textbox({
+        disabled: true
+    });//设置入库单号不能进行编辑
+
+    /**
+     * 创建新的入库单号
+     * @param subStorageCode
+     * @returns {*}
+     */
+    var createNewDocument = function (subStorageCode) {
+        var storage;
+        var promise = $.get('/api/exp-sub-storage-dict/list-by-storage?storageCode=' + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId, function (data) {
+            $.each(data, function (index, item) {
+                if (item.subStorage == subStorageCode) {
+                    storage = item;
+                }
+            });
+
+            if (storage) {
+                if (storage.importNoPrefix.length <= 4) {
+                    documentNo = storage.importNoPrefix + '000000'.substring((storage.importNoAva + "").length) + storage.importNoAva;
+                } else if (storage.importNoPrefix.length = 5) {
+                    documentNo = storage.importNoPrefix + '00000'.substring((storage.importNoAva + "").length) + storage.importNoAva;
+                } else if (storage.importNoPrefix.length = 6) {
+                    documentNo = storage.importNoPrefix + '0000'.substring((storage.importNoAva + "").length) + storage.importNoAva;
+                }
+            }
+        });
+
+        return promise;
+    }
+
+    $("#subStorage").combobox({
+        url: '/api/exp-sub-storage-dict/list-by-storage?storageCode=' + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId,
+        valueField: 'subStorage',
+        textField: 'subStorage',
+        method: 'GET',
+        onLoadSuccess: function () {
+            var data = $(this).combobox('getData');
+            if (data.length > 0) {
+                $(this).combobox('select', data[0].subStorage);
+            }
+        },
+        onChange: function (newValue, oldValue) {
+            var promise = createNewDocument(newValue);
+            promise.done(function () {
+                $("#documentNo").textbox('setValue', documentNo);
+            })
+        }
+    });
+
+
+    $("#tenderType").combobox({
+        url: '/api/exp-tender-type-dict/list',
+        valueField: 'tenderTypeCode',
+        textField: 'tenderTypeName',
+        method: 'GET',
+        onLoadSuccess: function () {
+            var data = $(this).combobox('getData');
+            if (data.length > 0) {
+                $(this).combobox('select', data[0].tenderTypeCode);
+            }
+        }
+    })
+
+    $("#importDate").datebox({
+        currentText: '选择入库日期',
+        okText: '确定',
+        closeText: '关闭',
+        formatter: function (date) {
+            if (date) {
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                return y + "-" + m + "-" + d
+            }
+
+        },
+        parser: function (date) {
+            if (date) {
+                return new Date(Date.parse(date.replace(/-/g, "/")));
+            }
+            return null;
+        }
+    });
+
+    var staffPromise = $.get('/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId, function (data) {
+        staffs = data;
+    });
+
+    /**
+     * 初始化人员行管
+     */
+    staffPromise.done(function () {
+        var staffSetting = {
+            idField: 'loginName',
+            textField: 'name',
+            model: 'remote',
+            data: staffs,
+            columns: [[{
+                title: '登陆名',
+                field: 'loginName'
+            }, {
+                title: '名字',
+                field: 'name'
+            }, {
+                title: '职称',
+                field: 'title'
+            }, {
+                title: '科室',
+                field: 'deptDict',
+                formatter: function (value, row, index) {
+                    if (row.deptDict) {
+                        return row.deptDict.deptName;
+                    } else {
+                        return value;
+                    }
+                }
+            }]]
+        };
+
+        /**
+         * 负责人下拉框
+         */
+        $("#principal").combogrid(staffSetting)
+
+        /**
+         * 保管人下拉框
+         */
+        $("#storekeeper").combogrid(staffSetting)
+
+        /**
+         * 采购人下拉框
+         */
+        $("#buyer").combogrid(staffSetting)
+
+        /**
+         * 验收人下拉框
+         */
+        $("#checkMan").combogrid(staffSetting)
+    })
     //提取按钮
     $("#fetchBtn").on('click',function(){
         $("#expExportDialog").dialog('open') ;
     }) ;
-
-    /**
-     * 出库记录弹出框
-     */
-    $("#expExportDialog").dialog({
-        title: '出库记录',
-        width: 900,
-        height: 300,
-        closed: false,
-        catch: false,
-        modal: true,
-        closed: true,
-        left:30,
-        top:30,
-
-        onBeforeOpen: function () {
-            var storageCode ;
-            var supplierName = $("#supplier").combogrid('getValue') ;
-            if(!supplierName){
-                $.messager.alert("系统提示","请选择供货单位",'error');
-                return  false;
-            }else{
-                for(var i = 0 ;i<depts.length;i++){
-                    if(depts[i].supplierName==supplierName){
-                        storageCode = depts[i].supplierCode ;
-                    }
-                }
-            }
-
-            if(!storageCode){
-                $.messager.alert("系统提示","获取供货单位代码失败！","error");
-                return false;
-            }
-            $("#expExportDatagrid").datagrid('load', {storageCode:storageCode,stockName:parent.config.storage,expClass:parent.config.exportClass,hospitalId:parent.config.hospitalId});
-            $("#expExportDatagrid").datagrid('selectRow', 0)
-        }
-    });
-
     /**
      * 定义明细信息表格
      */
@@ -137,6 +277,7 @@ $(function () {
         }, {
             title: "数量",
             field: 'quantity',
+            width:'5%',
             editor: {
                 type: 'numberbox', options: {
                     onChange: function (newValue, oldValue) {
@@ -192,6 +333,7 @@ $(function () {
         }, {
             title: '有效日期',
             field: 'expireDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -230,6 +372,7 @@ $(function () {
         }, {
             title: '发票日期',
             field: 'invoiceDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -256,6 +399,7 @@ $(function () {
         }, {
             title: '生产日期',
             field: 'produceDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -278,6 +422,7 @@ $(function () {
         }, {
             title: '消毒日期',
             field: 'disinfectDate',
+            width:'7%',
             editor: {
                 type: 'datebox', options: {
                     formatter: function (date) {
@@ -351,6 +496,41 @@ $(function () {
 
             var ed = $(this).datagrid('getEditor', {index: index, field: field});
             $(ed.target).focus();
+        }
+    });
+    /**
+     * 出库记录弹出框
+     */
+    $("#expExportDialog").dialog({
+        title: '消耗品接受',
+        width: 900,
+        height: 300,
+        catch: false,
+        modal: true,
+        closed: true,
+        left:30,
+        top:30,
+
+        onBeforeOpen: function () {
+            var storageCode ;
+            var supplierName = $("#supplier").combogrid('getValue') ;
+            if(!supplierName){
+                $.messager.alert("系统提示","请选择供货单位",'error');
+                return  false;
+            }else{
+                for(var i = 0 ;i<depts.length;i++){
+                    if(depts[i].supplierName==supplierName){
+                        storageCode = depts[i].supplierCode ;
+                    }
+                }
+            }
+
+            if(!storageCode){
+                $.messager.alert("系统提示","获取供货单位代码失败！","error");
+                return false;
+            }
+            $("#expExportDatagrid").datagrid('load', {storageCode:storageCode,stockName:parent.config.storage,expClass:parent.config.exportClass,hospitalId:parent.config.hospitalId});
+            $("#expExportDatagrid").datagrid('selectRow', 0)
         }
     });
     $("#expExportDatagrid").datagrid({
@@ -454,6 +634,155 @@ $(function () {
             hidden:true
         }]]
     }) ;
+    $("#stockRecordDialog").dialog({
+        title: '选择规格',
+        width: 700,
+        height: 300,
+        closed: false,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#stockRecordDatagrid").datagrid('load', {
+                storageCode: parent.config.storageCode,
+                expCode: currentExpCode,
+                hospitalId: parent.config.hospitalId
+            });
+            $("#stockRecordDatagrid").datagrid('selectRow', 0)
+        }
+    });
+
+    $("#stockRecordDatagrid").datagrid({
+        singleSelect: true,
+        fit: true,
+        fitColumns: true,
+        url: '/api/exp-stock/stock-record/',
+        method: 'GET',
+        columns: [[{
+            title: '代码',
+            field: 'expCode'
+        }, {
+            title: '名称',
+            field: 'expName'
+        }, {
+            title: '数量',
+            field: 'quantity'
+        }, {
+            title: '规格',
+            field: 'expSpec'
+        }, {
+            title: '最小规格',
+            field: 'minSpec'
+        }, {
+            title: '单位',
+            field: 'units'
+        }, {
+            title: '最小单位',
+            field: 'minUnits'
+        }, {
+            title: '厂家',
+            field: 'firmId'
+        }, {
+            title: '批发价',
+            field: 'tradePrice'
+        }, {
+            title: '零售价',
+            field: 'retailPrice'
+        }, {
+            title: '注册证号',
+            field: 'registerNo'
+        }, {
+            title: '许可证号',
+            field: 'permitNo'
+        }]],
+        onLoadSuccess:function(data){
+            flag = flag+1;
+            if(flag==1){
+                if(data.total==0 && editIndex!=undefined){
+                    //$("#exportDetail").datagrid('endEdit', editIndex);
+                    $.messager.alert('系统提示','库房暂无该产品,请重置产品名称','info');
+                    $("#stockRecordDialog").dialog('close');
+                    //$("#exportDetail").datagrid('beginEdit', editIndex);
+                }
+                flag=0;
+            }
+        },
+        onClickRow: function (index, row) {
+            var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+            $(expCodeEdit.target).textbox('setValue', row.expCode);
+
+            var expNameEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expName'});
+            $(expNameEd.target).textbox('setValue', row.expName);
+
+            var packageSpecEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'packageSpec'});
+            $(packageSpecEd.target).textbox('setValue', row.expSpec);
+
+            var packageUnitsEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'packageUnits'});
+            $(packageUnitsEd.target).textbox('setValue', row.units);
+
+            var SpecEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
+            $(SpecEd.target).textbox('setValue', row.minSpec);
+
+            var unitsEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'units'});
+            $(unitsEd.target).textbox('setValue', row.minUnits);
+
+
+            var quantityEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'quantity'});
+            $(quantityEd.target).textbox('setValue', 0);
+            $(quantityEd.target).focus();
+
+            var batchNoEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'batchNo'});
+            $(batchNoEd.target).textbox('setValue', 'X');
+
+            var purchasePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'purchasePrice'});
+            $(purchasePriceEd.target).textbox('setValue', row.tradePrice);
+
+            var amountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
+            $(amountEd.target).textbox('setValue', 0);
+
+            var expFormEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expForm'});
+            $(expFormEd.target).textbox('setValue', '消耗材料');
+
+            var firmIdEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'firmId'});
+            $(firmIdEd.target).textbox('setValue', row.firmId);
+            var inventoryEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'inventory'});
+            $(inventoryEd.target).textbox('setValue', row.quantity);
+
+            var expImportDetailRegistNoEd = $("#importDetail").datagrid('getEditor', {
+                index: editIndex,
+                field: 'expImportDetailRegistNo'
+            });
+            $(expImportDetailRegistNoEd.target).textbox('setValue', row.registerNo);
+
+            var expImportDetailLicencenoEd = $("#importDetail").datagrid('getEditor', {
+                index: editIndex,
+                field: 'expImportDetailLicenceno'
+            });
+            $(expImportDetailLicencenoEd.target).textbox('setValue', row.permitNo);
+
+            var invoiceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'invoiceDate'});
+            $(invoiceDateEd.target).textbox('setValue', setDefaultDate());
+            var produceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'produceDate'});
+            $(produceDateEd.target).textbox('setValue', setDefaultDate());
+            var disinfectDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'disinfectDate'});
+            $(disinfectDateEd.target).textbox('setValue', setDefaultDate());
+
+            var discountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'discount'});
+            $(discountEd.target).textbox('setValue', '100');
+
+            var orderBatchEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'orderBatch'});
+            $(orderBatchEd.target).textbox('setValue', 'x');
+
+            var retailedEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
+            $(retailedEd.target).numberbox('setValue', 'x');
+
+            var tradePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'tradePrice'});
+            $(tradePriceEd.target).numberbox('setValue', 'x');
+
+            $("#stockRecordDialog").dialog('close');
+        }
+
+    });
 
     /***
      * 全选按钮
@@ -493,21 +822,55 @@ $(function () {
         $("#expExportDialog").dialog('close') ;
     })
 
+    /**
+     * 进行数据校验
+     */
+    var dataValid = function () {
+        var rows = $("#importDetail").datagrid('getRows');
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].quantity == 0) {
+                $.messager.alert("系统提示", "第" + i + "行入库数量为0 请重新填写", 'error');
+                return false;
+            }
+        }
+
+        if (rows.length == 0) {
+            $.messager.alert("系统提示", "明细记录为空，不允许保存", 'error');
+            return false;
+        }
+
+        //判断供货商是否为空
+        var supplier = $("#supplier").combogrid('getValue');
+        if (!supplier) {
+            $.messager.alert("系统提示", "产品入库，供货商不能为空", 'error');
+            return false;
+        }
+
+        var importDate = $("#importDate").datebox('calendar').calendar('options').current;
+        if (!importDate) {
+            $.messager.alert("系统提示", "产品入库，入库时间不能为空", 'error');
+            return false;
+        }
+        return true;
+    }
 
     $("#saveBatchBtn").on('click',function(){
-        var expImpVo = getCommitData() ;
-        expImpVo.expExportDetialVoBeanChangeVo={} ;
-        expImpVo.expExportDetialVoBeanChangeVo.updated=rows ;
+        if (editIndex || editIndex == 0) {
+            $("#importDetail").datagrid('endEdit',editIndex);
+        }
+        if (dataValid()) {
 
-        console.log(expImpVo) ;
-
-        $.postJSON("/api/exp-stock/imp-batch", expImpVo, function (data) {
-            $.messager.alert('系统提示', '入库成功', 'success');
-            newDocument() ;
-        }, function (data) {
-            console.log(data) ;
-            $.messager.alert("系统提示", data.responseJSON.errorMessage, 'error');
-        })
+            var expImpVo = getCommitData() ;
+            expImpVo.expExportDetialVoBeanChangeVo={} ;
+            expImpVo.expExportDetialVoBeanChangeVo.updated=rows ;
+            $.postJSON("/api/exp-stock/imp-batch", expImpVo, function (data) {
+                $.messager.alert('系统提示', '入库成功', 'success',function(){
+                    parent.updateTab('批量入库', '/his/ieqm/exp-import-batch');
+                });
+            }, function (data) {
+                $.messager.alert("系统提示", data.responseJSON.errorMessage, 'error');
+            })
+        }
 
     })
 
@@ -527,13 +890,13 @@ $(function () {
         importMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         importMaster.importClass = $("#importClass").combobox('getValue');
         importMaster.subStorage = $("#subStorage").combobox('getValue');
-        importMaster.accountIndicator = 1;
+        importMaster.accountIndicator = 0;
         importMaster.memos = $('#memos').textbox('getValue');
         importMaster.operator = parent.config.loginId;
-        importMaster.principal = $("#principal").combogrid('getValue');
-        importMaster.storekeeper = $("#storekeeper").combogrid('getValue');
-        importMaster.buyer = $("#buyer").combogrid('getValue');
-        importMaster.checkman = $("#checkMan").combogrid('getValue');
+        importMaster.principal = $("#principal").combogrid('getText');
+        importMaster.storekeeper = $("#storekeeper").combogrid('getText');
+        importMaster.buyer = $("#buyer").combogrid('getText');
+        importMaster.checkman = $("#checkMan").combogrid('getText');
         importMaster.tenderNo = $("#tenderNo").textbox('getValue');
         importMaster.tenderType = $("#tenderType").combobox('getValue');
         importMaster.hospitalId = parent.config.hospitalId;
@@ -542,15 +905,12 @@ $(function () {
         //明细记录
         var expImportDetailBeanChangeVo = {};
         expImportDetailBeanChangeVo.inserted = [];
-
         var rows = $("#importDetail").datagrid('getRows');
-
         for (var i = 0; i < rows.length; i++) {
             var detail = {};
             detail.documentNo = importMaster.documentNo;
             detail.itemNo = i;
             var rowIndex = $("#importDetail").datagrid('getRowIndex', rows[i]);
-
             detail.expCode = rows[i].expCode;
             detail.expSpec = rows[i].expSpec;
             detail.units = rows[i].units;
@@ -598,5 +958,52 @@ $(function () {
         $("#importDetail").datagrid('loadData',[]) ;
 
     }
+    /**
+     * 查询
+     */
+    $("#searchBtn").on('click',function(){
+        parent.addTab('入库单据查询', '/his/ieqm/exp-import-document-search');
+    })
+    /**
+     * 定义新供应商
+     */
+    $("#newSupplier").on('click',function(){
+        parent.addTab('产品供应商目录维护', '/his/ieqm/exp-supplier-catalog');
+    })
+//追加
 
+    $("#addRow").on('click', function () {
+        flag=0;
+        $("#importDetail").datagrid('appendRow', {});
+        var rows = $("#importDetail").datagrid('getRows');
+        var appendRowIndex = $("#importDetail").datagrid('getRowIndex', rows[rows.length - 1]);
+
+        if (editIndex || editIndex == 0) {
+            $("#importDetail").datagrid('endEdit', editIndex);
+        }
+        editIndex = appendRowIndex;
+        $("#importDetail").datagrid('beginEdit', editIndex);
+
+    })
+    /**
+     * 新单
+     */
+    $("#newBtn").on('click',function(){
+        newDocument() ;
+    })
+    /**
+     * 删除按钮
+     */
+    $("#delRow").on('click', function () {
+        var row = $("#importDetail").datagrid('getSelected');
+        if (row) {
+            var index = $("#importDetail").datagrid('getRowIndex', row);
+            $("#importDetail").datagrid('deleteRow', index);
+            if (editIndex == index) {
+                editIndex = undefined;
+            }
+        } else {
+            $.messager.alert("系统提示", "请选择要删除的行", 'info');
+        }
+    });
 })
