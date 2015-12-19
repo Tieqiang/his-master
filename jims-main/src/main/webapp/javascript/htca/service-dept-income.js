@@ -44,28 +44,19 @@ $(function () {
                 month = 12;
                 year = year - 1;
             }
+            if(month<10){
+                return year + '-0' + month;
+            }
             return year + '-' + month;
 
         }//配置formatter，只返回年月
     });
 
-    //获取方式
-    $("#fetchWay").combobox({
-        method: 'GET',
-        url: '/api/acct-param/list-by-type?hospitalId=' + parent.config.hospitalId + "&fetchType=second_level_dept_income",
-        textField: 'paramName',
-        valueField: 'id',
-        onLoadSuccess: function () {
-            var data = $(this).combobox('getData');
-            if (data.length) {
-                $(this).combobox('setValue', data[0].id)
-            }
-        }
-    });
+
     //二级科室选择
     $("#secondLevelDept").combobox({
         method: 'GET',
-        url: '/api/acct-dept-dict/list-second-level-dept?hospitalId=' + parent.config.hospitalId,
+        url: '/api/acct-dept-dict/list-end-dept?hospitalId=' + parent.config.hospitalId,
         textField: 'deptName',
         valueField: 'id',
         onLoadSuccess: function () {
@@ -134,50 +125,24 @@ $(function () {
                 }
                 return value ;
             }
+        },{
+            title:'是否本院',
+            field:'outFlag',
+            width:'20%',
+            formatter:function(value,row,index){
+                if(value=='0'){
+                    return "院外"
+                }
+
+                if(value=='1'){
+                    return "院内"
+                }
+                return value ;
+            }
         }]]
     });
 
 
-    //收入提取
-    $("#searchBtn").on('click',function(){
-        var yearMonth = $("#synDate").datebox('getValue') ;
-        if(!yearMonth){
-            $.messager.alert('系统提示','请选择要提取的月份','info') ;
-            return ;
-        }
-        var paramId = $("#fetchWay").combobox('getValue') ;
-        if(!paramId){
-            $.messager.alert("系统提示",'请选择提取标准','info') ;
-            return ;
-        }
-        var deptId = $("#secondLevelDept").combobox('getValue')
-        if(!deptId){
-            $.messager.alert("系统提示",'请选择提取科室','info') ;
-            return ;
-        }
-
-        $.get("/api/service-dept-income/list-by-dept?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&deptId="+deptId,function(data){
-            for(var i = 0 ;i<data.length ;i++){
-                if(data[i].incomeTypeId=="按比例提取"){
-                    $.messager.confirm("系统提示","本月的分本科室的收入已经计算，重新计算将删除以往的计算记录，是否继续？",function(r){
-                        if(r){
-                            var options = $("#serviceDeptIncomeTable").datagrid('options') ;
-                            options.url = "/api/service-dept-income/fetch-service-income?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&paramId="+paramId+"&deptId="+deptId
-                            $("#serviceDeptIncomeTable").datagrid('reload') ;
-                        }else{
-                            $("#queryBtn").trigger('click') ;
-                        }
-                    }) ;
-                    return ;
-                }
-            }
-            var options = $("#serviceDeptIncomeTable").datagrid('options') ;
-            options.url = "/api/service-dept-income/fetch-service-income?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&paramId="+paramId+"&deptId="+deptId
-            $("#serviceDeptIncomeTable").datagrid('reload') ;
-        }) ;
-
-
-    })
 
     //保存
     $("#saveBtn").on('click',function(){
@@ -185,15 +150,15 @@ $(function () {
         var rows = $("#serviceDeptIncomeTable").datagrid('getRows') ;
         for(var i = 0 ;i<rows.length ;i++){
             rows[i].hospitalId = parent.config.hospitalId ;
+            rows[i].operator = parent.config.loginId
+            rows[i].operatorDate = new Date() ;
         }
-
         if(rows.length>0){
             $.postJSON("/api/service-dept-income/merge",rows,function(data){
                 $.messager.alert("系统提示","保存成功","info") ;
                 $("#queryBtn").trigger('click') ;
             },function(data){})
         }
-
     }) ;
 
     //查询某一个二线核算单元的收入
@@ -238,10 +203,10 @@ $(function () {
     }) ;
 
     $("#incomeTypeId").combobox({
-        textField:'reckItemName',
+        textField:'serviceTypeName',
         valueField:'id',
         method:'GET',
-        url:'/api/acct-reck/list?hospitalId='+parent.config.hospitalId,
+        url:'/api/service-income-type/list-all?hospitalId='+parent.config.hospitalId,
         onLoadSuccess:function(){
             var data = $(this).combobox('getData') ;
             if(data.length>0){
@@ -296,6 +261,9 @@ $(function () {
             obj.totalIncome = $("#totalIncome").val() ;
             obj.serviceForDeptId = $("#serviceForDeptId").combobox('getValue')
             obj.incomeTypeId = $("#incomeTypeId").combobox('getValue') ;
+            obj.outFlag = $("#outFlag").combobox('getValue') ;
+            obj.operator = parent.config.loginId ;
+            obj.operatorDate = new Date() ;
 
             $("#serviceDeptIncomeTable").datagrid('appendRow',obj) ;
             $("#itemWin").window('close');
@@ -322,6 +290,43 @@ $(function () {
                 $.messager.alert('系统提示','删除成功','info') ;
                 $("#queryBtn").trigger('click');
             },function(data){})
+        }
+    });
+
+    $("#delAllBtn").on('click',function(){
+        var rows = $("#serviceDeptIncomeTable").datagrid('getSelections')
+        if(rows.length<=0){
+            $.messager.alert("系统提示","请选择要删除的记录","error") ;
+            return ;
+        }
+        $.postJSON("/api/service-dept-income/del-service-incomes",rows,function(data){
+            $.messager.alert('系统提示','删除成功','info') ;
+            $("#queryBtn").trigger('click');
+        },function(data){})
+    });
+
+    $("#outFlag").combobox({
+        textField:"text",
+        valueField:"value",
+        data:[{
+            text:'院内',
+            value:'1',
+            selected:true
+        },{
+            text:'院外',
+            value:'0'
+        }],
+        onSelect:function(record){
+            if(record.value=="0"){
+                $("#serviceForDeptId").combobox('clear') ;
+                $("#serviceForDeptId").combobox('disable') ;
+            }else{
+                $("#serviceForDeptId").combobox('enable')
+                var data = $("#serviceForDeptId").combobox('getData') ;
+                if(data.length>0){
+                    $("#serviceForDeptId").combobox('setValue',data[0].id) ;
+                }
+            }
         }
     })
 })

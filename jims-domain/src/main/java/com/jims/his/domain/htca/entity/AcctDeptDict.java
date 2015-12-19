@@ -45,6 +45,8 @@ public class AcctDeptDict implements java.io.Serializable {
     private String endDept ;//是否末级科室
     private String parentId ;//父级科室代码
 
+    private Double buildArea ;//使用面积
+    private Double staffNum ;//在编人数
 	// Constructors
 
 	/** default constructor */
@@ -57,7 +59,7 @@ public class AcctDeptDict implements java.io.Serializable {
                         String deptLocation, String deptOther, String deptStopFlag,
                         String hospitalId, String costAppInd, String costAppLevel,
                         String deptType,
-                        String deptClass, String endDept, String parentId) {
+                        String deptClass, String endDept, String parentId, Double buildArea, Double staffNum) {
 		this.deptCode = deptCode;
 		this.deptName = deptName;
 		this.deptAttr = deptAttr;
@@ -74,7 +76,9 @@ public class AcctDeptDict implements java.io.Serializable {
         this.deptClass = deptClass;
         this.endDept = endDept;
         this.parentId = parentId;
-	}
+        this.buildArea = buildArea;
+        this.staffNum = staffNum;
+    }
 
 	// Property accessors
 	@GenericGenerator(name = "generator", strategy = "uuid.hex")
@@ -232,5 +236,23 @@ public class AcctDeptDict implements java.io.Serializable {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    @Column(name="build_area")
+    public Double getBuildArea() {
+        return buildArea;
+    }
+
+    public void setBuildArea(Double buildArea) {
+        this.buildArea = buildArea;
+    }
+
+    @Column(name="staff_num")
+    public Double getStaffNum() {
+        return staffNum;
+    }
+
+    public void setStaffNum(Double staffNum) {
+        this.staffNum = staffNum;
     }
 }

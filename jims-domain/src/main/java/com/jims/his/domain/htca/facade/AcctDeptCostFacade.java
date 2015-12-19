@@ -3,13 +3,11 @@ package com.jims.his.domain.htca.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.common.vo.PageEntity;
-import com.jims.his.domain.htca.entity.AcctDeptCost;
-import com.jims.his.domain.htca.entity.AcctParam;
-import com.jims.his.domain.htca.entity.AcctReckItemClassDict;
-import com.jims.his.domain.htca.entity.CostItemDict;
+import com.jims.his.domain.htca.entity.*;
 
 import javax.persistence.TypedQuery;
 import javax.swing.plaf.basic.BasicEditorPaneUI;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,14 +99,21 @@ public class AcctDeptCostFacade extends BaseFacade {
     public List<AcctDeptCost> fetchCostData(String hospitalId, String yearMonth,String fetchTypeId ) {
 
         String deleteHql = "delete from AcctDeptCost as cost where cost.hospitalId='"+hospitalId+"' and " +
-                "cost.yearMonth = '"+yearMonth+"' and cost.fetchWay='折算'" ;
+                "cost.yearMonth = '"+yearMonth+"' and cost.fetchWay in ('折算','买服务计入')" ;
 
         this.getEntityManager().createQuery(deleteHql).executeUpdate() ;
 
+        //折算成本
         AcctParam acctParam = get(AcctParam.class, fetchTypeId);
         String sql = acctParam.getParamSql().replace("${yearMonth}",yearMonth).replace("${hospitalId}",hospitalId) ;
         List<Object[]> resultList = createNativeQuery(sql).getResultList();
         List<AcctDeptCost> acctDeptCosts = new ArrayList<>();
+        double inpOrder =0;
+        double inpPerform =0;
+        double ward=0;
+        double outpOrder;
+        Double outpPerformRate;
+        Double outpWardRate;
         for (Object[] objects : resultList) {
             String hql = "select cost from CostItemDict as cost,AcctReckItemClassDict as income " +
                     "where cost.id=income.costId" +
@@ -139,9 +144,9 @@ public class AcctDeptCostFacade extends BaseFacade {
                 }
                 String inpOrOutp = (String) objects[5];
                 if ("1".equals(inpOrOutp)) {
-                    double inpOrder = itemDict.getInpOrderRate() / 100;
-                    double inpPerform = itemDict.getInpPerformRate() / 100;
-                    double ward = itemDict.getInpWardRate() / 100;
+                    inpOrder = (itemDict.getInpOrderRate()==null?0:itemDict.getInpOrderRate()) / 100;
+                    inpPerform = (itemDict.getInpPerformRate()==null?0:itemDict.getInpPerformRate()) / 100;
+                    ward = (itemDict.getInpWardRate()==null?0:itemDict.getInpWardRate()) / 100;
 
                     if (inpOrder != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
@@ -151,6 +156,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setMinusCost(0.0);
                         cost.setCostItemId(itemDict.getId());
                         cost.setYearMonth(yearMonth);
+                        cost.setFetchWay("折算");
                         acctDeptCosts.add(cost);
                     }
                     if (inpPerform != 0) {
@@ -161,6 +167,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCost(totalCost * inpPerform);
                         cost.setMinusCost(0.0);
                         cost.setYearMonth(yearMonth);
+                        cost.setFetchWay("折算");
                         acctDeptCosts.add(cost);
                     }
 
@@ -172,12 +179,13 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCost(totalCost * inpPerform);
                         cost.setMinusCost(0.0);
                         cost.setYearMonth(yearMonth);
+                        cost.setFetchWay("折算");
                         acctDeptCosts.add(cost);
                     }
                 } else {
-                    double outpOrder = itemDict.getOutpOrderRate()/100;
-                    Double outpPerformRate = itemDict.getOutpPerformRate()/100;
-                    Double outpWardRate = itemDict.getOutpWardRate()/100;
+                    outpOrder = (itemDict.getOutpOrderRate()==null?0:itemDict.getOutpOrderRate())/100;
+                    outpPerformRate = (itemDict.getOutpPerformRate()==null?0:itemDict.getOutpPerformRate())/100;
+                    outpWardRate = (itemDict.getOutpWardRate()==null?0:itemDict.getOutpWardRate())/100;
                     if (outpOrder != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
                         cost.setHospitalId(hospitalId);
@@ -186,6 +194,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCost(totalCost * outpOrder);
                         cost.setMinusCost(0.0);
                         cost.setYearMonth(yearMonth);
+                        cost.setFetchWay("折算");
                         acctDeptCosts.add(cost);
                     }
                     if (outpPerformRate != 0) {
@@ -196,6 +205,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCost(totalCost * outpPerformRate);
                         cost.setMinusCost(0.0);
                         cost.setYearMonth(yearMonth);
+                        cost.setFetchWay("折算");
                         acctDeptCosts.add(cost);
                     }
 
@@ -207,7 +217,9 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCost(totalCost * outpWardRate);
                         cost.setMinusCost(0.0);
                         cost.setYearMonth(yearMonth);
+                        cost.setFetchWay("折算");
                         acctDeptCosts.add(cost);
+
                     }
                 }
 
@@ -216,10 +228,144 @@ public class AcctDeptCostFacade extends BaseFacade {
             }
         }
 
+        //获取二线科室的服务成本
+        String hql = "from ServiceDeptIncome as income where income.hospitalId='"+hospitalId+"' and " +
+                "income.yearMonth='"+yearMonth+"'" ;
+        List<ServiceDeptIncome> serviceDeptIncomes = createQuery(ServiceDeptIncome.class, hql, new ArrayList<Object>()).getResultList();
+        for(ServiceDeptIncome income :serviceDeptIncomes){
+            if(null==income.getServiceForDeptId()){
+                continue;
+            }
+            AcctDeptCost cost = new AcctDeptCost();
+            cost.setHospitalId(hospitalId);
+            String inId = income.getIncomeTypeId();
+            if(!(null==inId)){
+
+                cost.setCostItemId(inId);
+
+            }
+            cost.setAcctDeptId(income.getServiceForDeptId());
+            cost.setCost(income.getTotalIncome());
+            cost.setMinusCost(0.0);
+            cost.setYearMonth(yearMonth);
+            cost.setFetchWay("买服务计入");
+            acctDeptCosts.add(cost);
+
+        }
         for(AcctDeptCost cost:acctDeptCosts){
-            cost.setFetchWay("折算");
             merge(cost) ;
         }
         return acctDeptCosts ;
+    }
+
+    /**
+     * 计算分摊方法
+     * @param hospitalId
+     * @param yearMonth
+     * @param devideWay
+     * @param costItemId
+     * @param totalMoney
+     * @return
+     */
+    public List<AcctDeptCost> devideAcctDeptCost(String hospitalId, String yearMonth, String devideWay, String costItemId, Double totalMoney) {
+
+        if("0".equals(devideWay)){//人员分摊法
+            return devideByPerson(hospitalId,yearMonth,costItemId,totalMoney) ;
+        }
+
+        if("1".equals(devideWay)){//科室面积分摊方法
+            return devideByBuildArea(hospitalId,yearMonth,costItemId,totalMoney) ;
+        }
+        return null;
+    }
+
+    /**
+     * 使用面积分摊方法
+     * @param hospitalId
+     * @param yearMonth
+     * @param costItemId
+     * @param totalMoney
+     * @return
+     */
+    private List<AcctDeptCost> devideByBuildArea(String hospitalId, String yearMonth, String costItemId, Double totalMoney) {
+
+        String hql = "select sum(dept.buildArea) From AcctDeptDict as dept where dept.hospitalId='"+hospitalId+"'" ;
+        Double totalAreas = createQuery(Double.class, hql, new ArrayList<Object>()).getSingleResult();//科室总面积
+        String deptHql = "select dept From AcctDeptDict as dept ,CostItemDevideDept vsDept where " +
+                "dept.id=vsDept.deptId and vsDept.costItemId = '"+costItemId+"'" ;
+        List<AcctDeptDict> depts = createQuery(AcctDeptDict.class,deptHql,new ArrayList<Object>()).getResultList() ;
+        List<AcctDeptCost> costs = new ArrayList<>() ;
+        for(AcctDeptDict deptDict :depts){
+            AcctDeptCost cost = new AcctDeptCost();
+            cost.setAcctDeptId(deptDict.getId());
+            cost.setFetchWay("分摊");
+            cost.setHospitalId(hospitalId);
+            cost.setCostItemId(costItemId);
+            cost.setMinusCost(0.0);
+            cost.setYearMonth(yearMonth);
+            double area = 0.0 ;
+            if(deptDict.getBuildArea() !=null){
+                area = deptDict.getBuildArea() ;
+            }
+            cost.setCost(totalMoney * (area/totalAreas));
+            if(cost.getCost()!=0){
+                costs.add(cost) ;
+            }
+        }
+        return costs;
+    }
+
+    /**
+     * 人员分摊法
+     * @param hospitalId
+     * @param yearMonth
+     * @param costItemId
+     * @param totalMoney
+     * @return
+     */
+    private List<AcctDeptCost> devideByPerson(String hospitalId, String yearMonth, String costItemId, Double totalMoney) {
+        String hql = "select sum(dept.staffNum) From AcctDeptDict as dept where dept.hospitalId='"+hospitalId+"'" ;
+        Double staffNums = createQuery(Double.class, hql, new ArrayList<Object>()).getSingleResult();//科室总面积
+        String deptHql = "select dept From AcctDeptDict as dept ,CostItemDevideDept vsDept where " +
+                "dept.id=vsDept.deptId and vsDept.costItemId = '"+costItemId+"'" ;
+        List<AcctDeptDict> depts = createQuery(AcctDeptDict.class,deptHql,new ArrayList<Object>()).getResultList() ;
+        List<AcctDeptCost> costs = new ArrayList<>() ;
+        for(AcctDeptDict deptDict :depts){
+            AcctDeptCost cost = new AcctDeptCost();
+            cost.setAcctDeptId(deptDict.getId());
+            cost.setFetchWay("分摊");
+            cost.setHospitalId(hospitalId);
+            cost.setCostItemId(costItemId);
+            cost.setMinusCost(0.0);
+            cost.setYearMonth(yearMonth);
+            double v = 0.0 ;
+            if(deptDict.getStaffNum() !=null){
+                v = deptDict.getStaffNum() ;
+            }
+            cost.setCost(totalMoney * (v/staffNums));
+            if(cost.getCost()!=0){
+
+                costs.add(cost) ;
+            }
+        }
+        return costs;
+    }
+
+    @Transactional
+    public void saveDevideDeriectWrite(List<AcctDeptCost> acctDeptCosts) {
+        if(acctDeptCosts.size()>0){
+            String costItemId = acctDeptCosts.get(0).getCostItemId();
+            String yearMonth = acctDeptCosts.get(0).getYearMonth() ;
+            String hospitalId= acctDeptCosts.get(0).getHospitalId() ;
+
+            String hql ="delete AcctDeptCost as cost where cost.yearMonth ='"+yearMonth+"' " +
+                    "and cost.hospitalId='"+hospitalId+"' and cost.costItemId='"+costItemId+"' " +
+                    "and cost.fetchWay='分摊'" ;
+            getEntityManager().createQuery(hql).executeUpdate() ;
+
+            for(AcctDeptCost cost: acctDeptCosts){
+                merge(cost) ;
+            }
+        }
     }
 }

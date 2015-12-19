@@ -96,6 +96,7 @@
         <class>com.jims.his.domain.htca.entity.HospitalIncomeRecord</class>
         <class>com.jims.his.domain.htca.entity.IncomeItemDict</class>
         <class>com.jims.his.domain.htca.entity.IncomeTypeDict</class>
+        <class>com.jims.his.domain.htca.entity.ServiceDeptIncomeRule</class>
 
         <!-- 提供商——Hibernate -->
         <properties>

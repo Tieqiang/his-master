@@ -2,6 +2,7 @@ package com.jims.his.service.htca;
 
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.htca.entity.CostItemClassDict;
+import com.jims.his.domain.htca.entity.CostItemDevideDept;
 import com.jims.his.domain.htca.entity.CostItemDict;
 import com.jims.his.domain.htca.facade.CostItemFacade;
 
@@ -106,6 +107,37 @@ public class CostItemService {
             errorException.setMessage(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
+    }
+
+    @GET
+    @Path("cost-devide")
+    public List<CostItemDevideDept> getCostItemDevide(@QueryParam("costId")String costId){
+        String hql = "from CostItemDevideDept as devide where devide.costItemId='"+costId+"'" ;
+        return costItemFacade.createQuery(CostItemDevideDept.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+
+
+    @POST
+    @Path("save-devide")
+    public Response saveCostDevide(List<CostItemDevideDept> costItemDevideDepts){
+        try {
+            costItemFacade.saveCostDevide(costItemDevideDepts);
+            return Response.status(Response.Status.OK).entity(costItemDevideDepts).build() ;
+        }catch (Exception e){
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+        }
+    }
+
+    @GET
+    @Path("list-item-dict-by-get-way")
+    public List<CostItemDict> listCostItemDictByGetWay(@QueryParam("hospitalId")String hospitalId,@QueryParam("getWay")String getWay){
+        String hql ="from CostItemDict as dict where dict.hospitalId='"+hospitalId+"' and " +
+                "dict.getWay='"+getWay+"'" ;
+
+        return costItemFacade.createQuery(CostItemDict.class,hql,new ArrayList<Object>()).getResultList() ;
     }
 
 

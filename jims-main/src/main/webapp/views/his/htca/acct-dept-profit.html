@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>科室收益查询</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+
+<div id="mainPanel" data-options="region:'center'">
+    <table id="acctDeptProfitDg"></table>
+</div>
+
+<div id="ft" style="margin:5px;">
+    时间：<input type="text" id="fetchDate"  class="easyui-datebox" >
+    <a href="#" id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询当月情况</a>
+    <a href="#" id="calcBtn" class="easyui-linkbutton" data-options="iconCls:'icon-reload'">计算效益</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存修改</a>
+    <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/acct-dept-profit.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

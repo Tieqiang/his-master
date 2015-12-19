@@ -487,8 +487,8 @@ $(function () {
 
         var row = $("#costItemDictGrid").datagrid('getSelected');
 
-        if(!row){
-            $.messager.alert('系统提示','请选择要设置的成本项目') ;
+        if(!row||row.getWay !='HQFS03'){
+            $.messager.alert('系统提示','请选择获取方式为折算的项目','error') ;
             return ;
         }
         var options = $("#incomeTypeSelectdDg").datagrid('options') ;
@@ -644,5 +644,83 @@ $(function () {
         }else{
             $.messager.alert('系统提示','没有保存的项目','info') ;
         }
+    }) ;
+
+
+    //设置分摊项目的对照科室
+    $("#acctDeptWin").window({
+        title:'分摊项目设置',
+        width:'500',
+        height:'500',
+        modal:true,
+        closed:true,
+        onOpen:function(){
+            $(this).window('center');
+            var row = $('#costItemDictGrid').datagrid('getSelected');
+            console.log(row) ;
+            $.get("/api/cost-item/cost-devide?costId="+row.id,function(data){
+                for(var i = 0 ;i<data.length ;i++){
+                    var deptId = data[i].deptId ;
+                    var rows =$("#acctDeptTable").datagrid('getRows') ;
+                    for(var j=0 ;j<rows.length;j++){
+                        if(rows[j].id==deptId){
+                            var rowIndex = $("#acctDeptTable").datagrid('getRowIndex',rows[j]) ;
+                            $("#acctDeptTable").datagrid('checkRow',rowIndex) ;
+                        }
+                    }
+                }
+            })
+        }
+    }) ;
+
+    $("#acctDeptTable").datagrid({
+        method:'GET',
+        fit:true,
+        fitColumns:true,
+        url:'/api/acct-dept-dict/acct-list?hospitalId='+parent.config.hospitalId,
+        columns:[[{
+            title:"编号",
+            field:'id',
+            checkbox:true
+        },{
+            title:'科室名称',
+            field:'deptName',
+            width:'50%'
+        },{
+            title:'科室代码',
+            field:'deptCode',
+            width:'50%'
+        }]]
+    }) ;
+
+    $("#setDevideBtn").on('click',function(){
+        var row = $('#costItemDictGrid').datagrid('getSelected')
+        if(!row||row.getWay!='HQFS04'){//如果没有选择或者不是获取方式不是分摊的话
+            $.messager.alert('系统提示','没有选择项目，或者选择项目非分摊类型的数据','error')
+            return ;
+        }
+        $("#acctDeptWin").window('open') ;
+    }) ;
+
+    $("#saveAcctDeptBtn").on('click',function(){
+        var row = $('#costItemDictGrid').datagrid('getSelected')
+        var rows = $("#acctDeptTable").datagrid('getSelections') ;
+        var costDevide=[] ;
+
+        for(var i=0 ;i<rows.length;i++){
+            var cs = {};
+            cs.costItemId = row.id ;
+            cs.deptId=rows[i].id ;
+            costDevide.push(cs) ;
+        }
+
+        $.postJSON("/api/cost-item/save-devide",costDevide,function(data){
+            $.messager.alert('系统提示','保存成功','info') ;
+            $("#acctDeptWin").window('close') ;
+        },function(data){})
+    })
+
+    $("#cancelAcctDeptBtn").on('click',function(e){
+        $("#acctDeptWin").window('close') ;
     }) ;
 })

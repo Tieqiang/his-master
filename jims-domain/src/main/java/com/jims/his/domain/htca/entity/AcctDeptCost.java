@@ -1,6 +1,7 @@
 package com.jims.his.domain.htca.entity;
 
 import java.lang.Double;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,8 @@ public class AcctDeptCost implements java.io.Serializable {
     private String yearMonth ;
     private String hospitalId ;
     private String fetchWay ;//获取方式
-
+    private String operator ;
+    private Date   operatorDate ;
 	// Constructors
 
 	/** default constructor */
@@ -35,7 +37,7 @@ public class AcctDeptCost implements java.io.Serializable {
 
 	/** full constructor */
 	public AcctDeptCost(String acctDeptId, String costItemId, Double cost,
-                        Double minusCost, String memo, String yearMonth, String hospitalId, String fetchWay) {
+                        Double minusCost, String memo, String yearMonth, String hospitalId, String fetchWay, String operator, Date operatorDate) {
 		this.acctDeptId = acctDeptId;
 		this.costItemId = costItemId;
 		this.cost = cost;
@@ -44,6 +46,8 @@ public class AcctDeptCost implements java.io.Serializable {
         this.yearMonth = yearMonth;
         this.hospitalId = hospitalId;
         this.fetchWay = fetchWay;
+        this.operator = operator;
+        this.operatorDate = operatorDate;
     }
 
 	// Property accessors
@@ -130,5 +134,23 @@ public class AcctDeptCost implements java.io.Serializable {
 
     public void setFetchWay(String fetchWay) {
         this.fetchWay = fetchWay;
+    }
+
+    @Column(name="operator")
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    @Column(name="operator_date")
+    public Date getOperatorDate() {
+        return operatorDate;
+    }
+
+    public void setOperatorDate(Date operatorDate) {
+        this.operatorDate = operatorDate;
     }
 }

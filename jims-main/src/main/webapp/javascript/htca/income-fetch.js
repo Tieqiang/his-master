@@ -38,6 +38,9 @@ $(function () {
                 month = 12;
                 year = year - 1;
             }
+            if(month<10){
+                return year + '-0' + month;
+            }
             return year + '-' + month;
 
         }//配置formatter，只返回年月

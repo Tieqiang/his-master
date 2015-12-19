@@ -12,9 +12,6 @@ $(function(){
     $.get("/api/cost-item/list-item?hospitalId="+parent.config.hospitalId,function(data){
         costItems = data ;
     })
-    $.get("/api/service-income-type/list-all?hospitalId="+parent.config.hospitalId,function(data){
-        costItems.push(data) ;
-    })
 
     var editRow = undefined ;
     var p = $('#fetchDate').datebox('panel');//日期选择对象
@@ -115,12 +112,12 @@ $(function(){
         },{
             title:'备注信息',
             field:'memo',
-            width:'20%',
+            width:'30%',
             editor:{type:'textbox',options:{}}
         },{
-            title:"获取方式",
+            title:'取得方式',
             field:'fetchWay',
-            width:'20%'
+            width:'10%'
         }]]
     }) ;
     //设置分页
@@ -135,24 +132,13 @@ $(function(){
 
 
     //成本提取
-    $("#searchBtn").on('click',function(){
+    $("#devideSetBtn").on('click',function(){
         var yearMonth = $("#fetchDate").datebox('getValue') ;
         if(!yearMonth){
             $.messager.alert("系统提示","请选择计算成本月份","info") ;
             return ;
         }
-
-        var fetchTypeId = $("#fetchType").combobox('getValue') ;
-        $.messager.progress({
-            title:'正在提取成本',
-            text:'数据高效提取中，请稍后....'
-        }) ;
-        $.get("/api/acct-dept-cost/fetch-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&fetchTypeId="+fetchTypeId,function(data){
-            var options = $("#deptCostTable").datagrid('options') ;
-            options.url = "/api/acct-dept-cost/list-all?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
-            $("#deptCostTable").datagrid('reload')  ;
-            $.messager.progress('close') ;
-        })
+        $("#itemWin").window('open') ;
     }) ;
 
     $("#fetchType").combobox({
@@ -170,17 +156,98 @@ $(function(){
 
 
     //查看汇总信息
-    $("#queryCollectionBtn").on('click',function(){
+    $("#saveDevideBtn").on('click',function(){
+
+
+        //var options = $("#deptCostTable").datagrid('options') ;
+        //options.url = "/api/acct-dept-cost/list-collection?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
+        //$("#deptCostTable").datagrid('reload')  ;
+
+        var rows =$("#deptCostTable").datagrid('getRows') ;
+        if(rows.length==0){
+            $.messager.alert('系统提示','没有要保存的数据....','info') ;
+            return ;
+        }
+        for(var i = 0 ;i<rows.length ;i++){
+            rows[i].hospitalId = parent.config.hospitalId ;
+            rows[i].operator = parent.config.loginId ;
+            rows[i].operatorDate = new Date() ;
+        }
+
+        $.postJSON("/api/acct-dept-cost/save-devide",rows,function(data){
+            $.messager.alert('系统提示','保存成功','info') ;
+        },function(data){})
+        //$.postJSON("")
+    }) ;
+
+
+    $("#costItemId").combobox({
+        textField:'costItemName',
+        valueField:'id',
+        method:'GET',
+        url:'/api/cost-item/list-item-dict-by-get-way?hospitalId='+parent.config.hospitalId+"&getWay=HQFS04",
+        onLoadSuccess:function(){
+            var data =$(this).combobox('getData') ;
+            if(data.length>0){
+                $(this).combobox('setValue',data[0].id) ;
+            }
+        }
+    }) ;
+
+    $("#devideWay").combobox({
+        textField:"name",
+        valueField:"id",
+        data:[{
+            name:'人员分摊法',
+            id:'0',
+            selected:true
+        },{
+            name:'面积分摊法',
+            id:'1'
+        }]
+    }) ;
+
+    $("#itemWin").window({
+        modal:true,
+        closed:true
+    })  ;
+
+    //分摊计算
+    $("#devideBtn").on('click',function(){
         var yearMonth = $("#fetchDate").datebox('getValue') ;
         if(!yearMonth){
             $.messager.alert('系统提示','获取日期失败','info') ;
             return ;
         }
+        var costItemId = $("#costItemId").combobox('getValue')
+        if(!costItemId){
+            $.messager.alert('系统提示','请选择成本项目','error') ;
+            return ;
+        }
 
-        var options = $("#deptCostTable").datagrid('options') ;
-        options.url = "/api/acct-dept-cost/list-collection?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
-        $("#deptCostTable").datagrid('reload')  ;
-    }) ;
+        var devideWay = $("#devideWay").combobox('getValue') ;
+        if(!devideWay){
+            $.messager.alert('系统提示','请选择分摊方法','error') ;
+            return ;
+        }
+        var totalMoney = $("#devideMoney").textbox('getValue') ;
+        if(!totalMoney){
+            $.messager.alert('系统提示','请填写分摊金额','error') ;
+            return ;
+        }
+        $.messager.progress({
+            title:'系统提示',
+            msg:'正在加载中，请稍后....',
+            text:'正在分摊...'
+        }) ;
 
+        $.get("/api/acct-dept-cost/cost-devide?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+
+        "&costItemId="+costItemId+"&devideWay="+devideWay+"&totalMoney="+totalMoney,function(data){
+            $.messager.alert('系统提示','分摊成功','info') ;
+            $("#deptCostTable").datagrid('loadData',data) ;
+            $("#itemWin").window('close') ;
+            $.messager.progress('close');
+        })
+    })
 });
 

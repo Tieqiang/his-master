@@ -75,8 +75,8 @@
         <div class="fitem">
             <label for="costAppInd">是否参与分摊:</label>
             <select id="costAppInd" class="easyui-combobox" style="width:165px;">
-                <option value="0">是</option>
-                <option value="1">否</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
             </select>
         </div>
         <div class="fitem">
@@ -89,9 +89,27 @@
                 <option value="1">未纳入科室</option>
             </select>
         </div>
+        <div class="fitem">
+            <label for="buildArea">建筑面积:</label>
+            <input type="text" id="buildArea" class="easyui-textbox"  />
+        </div>
+        <div class="fitem">
+            <label for="staffNum">在编人数:</label>
+            <input type="text" id="staffNum" class="easyui-textbox"  />
+        </div>
+
+        <input type="hidden" class="easyui-textbox" id="id" />
         <input type="hidden" class="easyui-textbox" id="parentId"/>
     </form>
 </div>
+
+
+<div id="rightMenu" class="easyui-menu" style="width:120px;">
+    <div data-options="iconCls:'icon-reload'" id="modifyDeptMenu">修改核算单元信息</div>
+    <div class="menu-sep"></div>
+    <div data-options="iconCls:'icon-man'" id="modifyDeptVs">设置HIS对照</div>
+</div>
+
 
 <div id="winFt" style="margin:5px;">
     <a href="#" id="clearBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">重置表单</a>

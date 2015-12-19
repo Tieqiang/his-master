@@ -27,6 +27,7 @@
     <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增成本项目</a>
     <a href="#" id="editBtn" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">编辑成本项目</a>
     <a href="#" id="addVsIncomeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-man'">添加收入对照</a>
+    <a href="#" id="setDevideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-more'">设置分摊对照</a>
     <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除成本项目</a>
     <a href="#" id="checkBtn" class="easyui-linkbutton" data-options="iconCls:'icon-reload'">校验数据合法性</a>
 </div>
@@ -48,6 +49,10 @@
             <input class="easyui-validatebox" id="costItemClassName" type="text" data-options="required:true,missingMessage:'请填写成本分类名称'" />
         </div>
     </form>
+</div>
+
+<div id="acctDeptWin" class="easyui-window" data-options="footer:'#acctTb'">
+    <table id="acctDeptTable" class="easyui-datagrid"></table>
 </div>
 
 <!--项目分类-->
@@ -120,6 +125,10 @@
     <a href="#" id="saveItemBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
     <a href="#" id="cancelItemBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
 </div>
+<div style="padding:5px;text-align:right;" id="acctTb">
+    <a href="#" id="saveAcctDeptBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="cancelAcctDeptBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
 
 
 <div id="incomeTypeWindow" class="easyui-window">
@@ -141,11 +150,6 @@
         </div>
     </div>
 </div>
-
-<!--<div style="padding:5px;text-align:right;" id="incomeTypeFt">-->
-    <!--<a href="#" id="saveTypeBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>-->
-    <!--<a href="#" id="cancelTypeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>-->
-<!--</div>-->
 
 
 

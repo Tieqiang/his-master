@@ -53,6 +53,21 @@ public class AcctDeptCostService {
     }
 
     @POST
+    @Path("save-devide")
+    public Response saveDevideAcctDeptCost(List<AcctDeptCost> acctDeptCosts) {
+
+        try {
+            acctDeptCostFacade.saveDevideDeriectWrite(acctDeptCosts);
+            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+    @POST
     @Path("delete-dept-cost")
     public Response deleteAcctDeptCost(List<String> ids) {
 
@@ -135,6 +150,16 @@ public class AcctDeptCostService {
                 "         order by acct_dept_id" ;
 
         return acctDeptCostFacade.createNativeQuery(sql,new ArrayList<Object>(),AcctDeptCost.class) ;
+    }
+
+    //分摊类型成本计算
+    @GET
+    @Path("cost-devide")
+    public List<AcctDeptCost> devideAcctDeptCost(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth,
+                                                 @QueryParam("devideWay")String devideWay,@QueryParam("costItemId")String costItemId,
+                                                 @QueryParam("totalMoney")Double totalMoney){
+
+        return acctDeptCostFacade.devideAcctDeptCost(hospitalId,yearMonth,devideWay,costItemId,totalMoney) ;
     }
 
 }

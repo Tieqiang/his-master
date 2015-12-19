@@ -55,12 +55,25 @@ public class ServiceDeptIncomeService  {
                                                          @QueryParam("deptId")String deptId, @QueryParam("paramId")String paramId){
         return serviceDeptIncomeFacade.fetchServiceDeptIncome(hospitalId,yearMonth,deptId,paramId) ;
     }
+    @GET
+    @Path("fetch-service-income-calc")
+    public List<ServiceDeptIncome> fetchSericeDeptIncomes(@QueryParam("yearMonth")String yearMonth,@QueryParam("hospitalId")String hospitalId){
+        return serviceDeptIncomeFacade.fetchServiceDeptIncomes(hospitalId,yearMonth) ;
+    }
 
     @GET
     @Path("list-by-dept")
     public List<ServiceDeptIncome> listServiceDeptIncome(@QueryParam("hospitalId")String hospitalId,@QueryParam("deptId")String deptId,@QueryParam("yearMonth")String yearMonth){
         String hql ="from ServiceDeptIncome as income where income.acctDeptId='"+deptId+"' and " +
                 "income.hospitalId='"+hospitalId+"' and income.yearMonth = '"+yearMonth+"'"  ;
+
+        return serviceDeptIncomeFacade.createQuery(ServiceDeptIncome.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+    @GET
+    @Path("list-calc")
+    public List<ServiceDeptIncome> listServiceDeptIncome(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
+        String hql ="from ServiceDeptIncome as income where income.hospitalId='"+hospitalId+"' and income.yearMonth = '"+yearMonth+"' and " +
+                "income.getWay='计算计入'"  ;
 
         return serviceDeptIncomeFacade.createQuery(ServiceDeptIncome.class,hql,new ArrayList<Object>()).getResultList() ;
     }
@@ -71,6 +84,19 @@ public class ServiceDeptIncomeService  {
         try{
             serviceDeptIncomeFacade.delServiceIncome(serviceDeptIncome);
             return Response.status(Response.Status.OK).entity(serviceDeptIncome).build() ;
+        }catch (Exception e){
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
+        }
+    }
+
+    @POST
+    @Path("del-service-incomes")
+    public Response delServiceDeptIncomes(List<ServiceDeptIncome> serviceDeptIncomes){
+        try{
+            serviceDeptIncomeFacade.delServiceIncomes(serviceDeptIncomes);
+            return Response.status(Response.Status.OK).entity(serviceDeptIncomes).build() ;
         }catch (Exception e){
             ErrorException errorException = new ErrorException() ;
             errorException.setMessage(e);

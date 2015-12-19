@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.Date;
+
 /**
  * ServiceDeptIncome entity. @author MyEclipse Persistence Tools
  */
@@ -16,7 +18,6 @@ import org.hibernate.annotations.GenericGenerator;
 public class ServiceDeptIncome implements java.io.Serializable {
 
     // Fields
-
     private String id;
     private String acctDeptId;
     private String incomeTypeId;
@@ -24,10 +25,11 @@ public class ServiceDeptIncome implements java.io.Serializable {
     private String hospitalId;
     private String yearMonth ;
     private String serviceForDeptId ;
-
-
+    private String getWay ;
+    private String outFlag ;
+    private String operator ;
+    private Date operatorDate ;
     // Constructors
-
     /**
      * default constructor
      */
@@ -38,13 +40,17 @@ public class ServiceDeptIncome implements java.io.Serializable {
      * full constructor
      */
     public ServiceDeptIncome(String acctDeptId, String incomeTypeId,
-                             Double totalIncome, String hospitalId, String yearMonth, String serviceForDeptId) {
+                             Double totalIncome, String hospitalId, String yearMonth, String serviceForDeptId, String getWay, String outFlag, String operator, Date operatorDate) {
         this.acctDeptId = acctDeptId;
         this.incomeTypeId = incomeTypeId;
         this.totalIncome = totalIncome;
         this.hospitalId = hospitalId;
         this.yearMonth = yearMonth;
         this.serviceForDeptId = serviceForDeptId;
+        this.getWay = getWay;
+        this.outFlag = outFlag;
+        this.operator = operator;
+        this.operatorDate = operatorDate;
     }
 
     // Property accessors
@@ -112,5 +118,41 @@ public class ServiceDeptIncome implements java.io.Serializable {
 
     public void setServiceForDeptId(String serviceForDeptId) {
         this.serviceForDeptId = serviceForDeptId;
+    }
+
+    @Column(name="get_way")
+    public String getGetWay() {
+        return getWay;
+    }
+
+    public void setGetWay(String getWay) {
+        this.getWay = getWay;
+    }
+
+    @Column(name="out_flag")
+    public String getOutFlag() {
+        return outFlag;
+    }
+
+    public void setOutFlag(String outFlag) {
+        this.outFlag = outFlag;
+    }
+
+    @Column(name="operator")
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    @Column(name="operator_date")
+    public Date getOperatorDate() {
+        return operatorDate;
+    }
+
+    public void setOperatorDate(Date operatorDate) {
+        this.operatorDate = operatorDate;
     }
 }

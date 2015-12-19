@@ -31,6 +31,10 @@
         <div style="padding-top:10px;">
             <label for="totalIncome">收入金额：</label>
             <input class="easyui-textbox" id="totalIncome" type="text" />
+            <label for="outFlag">院内院外：</label>
+            <input class="easyui-combobox" id="outFlag"/>
+        </div>
+        <div style="padding-top: 10px;">
             <label for="serviceForDeptId">服务单位：</label>
             <input class="easyui-combobox" id="serviceForDeptId" type="text"  />
         </div>
@@ -45,13 +49,12 @@
 
 <div id="ft" style="text-align: left">
     提取月份：<input type="text" id="synDate" class="easyui-datebox" />
-    提取表准:<input type="text" class="easyui-combobox" id="fetchWay" />
     二线科室：<input type="text" class="easyui-combobox" id="secondLevelDept" />
     <a href="#" id="queryBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询收入</a>
-    <a href="#" id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-reload'">计算收入</a>
     <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增项目</a>
     <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存收入</a>
     <a href="#" id="delBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+    <a href="#" id="delAllBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除多条</a>
 </div>
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>

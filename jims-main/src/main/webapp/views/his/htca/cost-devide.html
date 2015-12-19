@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>成本分摊</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+<div id="main" data-options="region:'center'">
+    <table id="deptCostTable">
+
+    </table>
+</div>
+<div id="ft" style="margin:5px;">
+    时间：<input type="text" id="fetchDate"  class="easyui-datebox" >
+    <a href="#" id="devideSetBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">分摊设置</a>
+    <a href="#" id="saveDevideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存分摊结果</a>
+</div>
+
+
+<!--项目分类-->
+<div id="itemWin" class="easyui-window" data-options="footer:'#itemWinFt',title:'核算类型维护'">
+    <form id="itemForm" data-options="fit:true" style="padding:10px;">
+        <input type="hidden" id="id" />
+        <div style="padding-top: 10px">
+            <label for="costItemId">所属成本：</label>
+            <input class="easyui-combobox" type="text" id="costItemId"/>
+        </div>
+        <div style="padding-top:10px;">
+            <label for="devideWay">分摊方法：</label>
+            <input class="easyui-combobox" id="devideWay" type="text"  />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="devideMoney">分摊金额：</label>
+            <input class="easyui-textbox" id="devideMoney" type="text" />
+        </div>
+    </form>
+</div>
+<div style="padding:5px;text-align:right;" id="itemWinFt">
+    <a href="#" id="devideBtn" class="easyui-linkbutton" icon="icon-ok">分摊</a>
+    <a href="#" id="closeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/cost-devide.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>
