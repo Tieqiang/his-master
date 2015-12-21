@@ -4,6 +4,7 @@ import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.htca.entity.AcctParam;
 
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,5 +24,13 @@ public class AcctParamFacade extends BaseFacade {
         List<String> ids = new ArrayList<>() ;
         ids.add(id) ;
         removeByStringIds(AcctParam.class,ids);
+    }
+
+    public List<AcctParam> listAcctByType(String hospitalId, String fetchType) {
+        String hql = "from AcctParam as ap where ap.hospitalId='"+hospitalId+"' and " +
+                "ap.paramType='"+fetchType+"'" ;
+
+        TypedQuery<AcctParam> query = createQuery(AcctParam.class, hql, new ArrayList<Object>());
+        return query.getResultList();
     }
 }

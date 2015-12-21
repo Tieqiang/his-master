@@ -21,7 +21,7 @@ $(function(){
         fitColumns:true,
         striped:true,
         singleSelect:true,
-        url:'/api/income-item/list?hospitalId='+parent.config.hospitalId,
+        //url:'/api/income-item/list?hospitalId='+parent.config.hospitalId,
         toolbar:'#ft',
         method:'GET',
         loadMsg:'正在加载数据，请稍等......',
@@ -86,7 +86,6 @@ $(function(){
                 left: e.pageX ,
                 top: e.pageY,
                 onClick:function(item){
-
                     if(item.id=='makeAllBtn'){
                         var rows = $("#incomeItemGrid").datagrid('getRows') ;
                     }
@@ -210,5 +209,20 @@ $(function(){
             }
         }) ;
 
+    })
+
+    $("#searchText + .textbox>.textbox-text").on('keydown',function(e){
+
+        if(e.keyCode==13){
+            var newValue = $("#searchText").textbox('getValue');
+            var rows = $("#incomeItemGrid").datagrid('getRows') ;
+            for(var i = 0 ;i<rows.length;i++){
+                if($.startWith(rows[i].inputCode,newValue)){
+                    var index = $("#incomeItemGrid").datagrid('getRowIndex',rows[i]) ;
+                    $("#incomeItemGrid").datagrid('selectRow',index) ;
+                    $("#incomeItemGrid").datagrid('scrollTo',index) ;
+                }
+            }
+        }
     })
 })

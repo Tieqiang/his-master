@@ -15,12 +15,13 @@ public class AcctParam implements java.io.Serializable {
     private String paramName ;
     private String paramSql ;
     private String hospitalId ;
-
-    public AcctParam(String id, String paramName, String paramSql, String hospitalId) {
+    private String paramType ;
+    public AcctParam(String id, String paramName, String paramSql, String hospitalId, String paramType) {
         this.id = id;
         this.paramName = paramName;
         this.paramSql = paramSql;
         this.hospitalId = hospitalId;
+        this.paramType = paramType;
     }
 
     public AcctParam() {
@@ -64,5 +65,14 @@ public class AcctParam implements java.io.Serializable {
 
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    @Column(name="param_type")
+    public String getParamType() {
+        return paramType;
+    }
+
+    public void setParamType(String paramType) {
+        this.paramType = paramType;
     }
 }

@@ -104,13 +104,13 @@ $(function(){
         config.hospitalId = hospitalId ;
         config.moduleId = moduleId ;
         config.storageCode = storageCode;
-        if(validateSelect()){
-            $.postJSON("/api/login/add-login-info", config, function (data) {
-                //登录成功跳转至index.html
-                location.href = "/index.html"
-            }, function (data) {
+        //if(validateSelect()){
+        $.postJSON("/api/login/add-login-info", config, function (data) {
+            //登录成功跳转至index.html
+            location.href = "/index.html"
+        }, function (data) {
 
-            })
-        }
+        })
+        //}
     })
 })

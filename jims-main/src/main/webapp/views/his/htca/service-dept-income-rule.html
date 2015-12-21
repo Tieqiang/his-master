@@ -10,7 +10,7 @@
 </head>
 <body class="easyui-layout">
 <div id="main" data-options="region:'center'">
-    <table id="acctParamTable"></table>
+    <table id="ruleParamTable"></table>
 </div>
 <div id="ft" style="margin:5px;">
     <!--选择月份：<input type="text" id="synDate" class="easyui-datebox" />-->
@@ -18,6 +18,7 @@
     <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增参数</a>
     <a href="#" id="editBtn" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">编辑参数</a>
     <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除参数</a>
+    <a href="#" id="setDeptBtn" class="easyui-linkbutton" data-options="iconCls:'icon-man'">设置核算单元</a>
 </div>
 <div style="padding:5px;text-align:right;" id="winFt">
     <a href="#" id="okBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
@@ -28,23 +29,28 @@
     <form id="itemForm" data-options="fit:true" style="padding:10px;">
         <input type="hidden" class="easyui-textbox" id="id" />
         <div style="padding-top: 5px">
-            <label for="paramName">参数名称：</label>
-            <input class="easyui-textbox" type="text" id="paramName" style="width: 605px"/>
-        </div>
-        <div style="padding-top: 5px">
-            <label for="paramType">参数类型：</label>
-            <input class="easyui-textbox" type="text" id="paramType" style="width: 605px"/>
+            <label for="ruleName">参数名称：</label>
+            <input class="easyui-textbox" type="text" id="ruleName" style="width: 605px"/>
         </div>
         <div style="padding-top:10px;">
-            <label for="paramSql">&nbsp;参数SQ：</label>
-            <textarea id="paramSql" style="width: 600px;height:400px;"></textarea>
+            <label for="ruleSql">&nbsp;参数SQ：</label>
+            <textarea id="ruleSql" style="width: 600px;height:400px;"></textarea>
         </div>
     </form>
+</div>
+
+<div style="padding:5px;text-align:right;" id="deptFt">
+    <a href="#" id="checkBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="unCheckBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+<div id="acctDeptWin" class="easyui-window">
+    <table id="acctDeptDataGrid"></table>
 </div>
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="/javascript/htca/acct-param.js"></script>
+<script type="text/javascript" src="/javascript/htca/service-dept-income-rule.js"></script>
 <script type="text/javascript" src="/javascript/tool.js"></script>
 </body>
 </html>

@@ -89,7 +89,6 @@ public class IncomeItemDictFacade extends BaseFacade {
         pageEntity.setRows(query.getResultList());
         pageEntity.setTotal(super.count(new IncomeItemDict()));
         return pageEntity ;
-
     }
 
 
@@ -101,7 +100,7 @@ public class IncomeItemDictFacade extends BaseFacade {
                 "                a.item_name,\n" +
                 "                a.class_on_reckoning,\n" +
                 "                b.class_name\n" +
-                "  from comm.current_price_list a, COMM.reck_item_class_dict b\n" +
+                "  from comm.price_list a, COMM.reck_item_class_dict b\n" +
                 " where a.class_on_reckoning = b.class_code\n" +
                 "   and a.item_code not in\n" +
                 "       (select NVL(price_item_code, '000000') from htca.income_item_dict where hospital_id='"+hospitalId+"')" ;

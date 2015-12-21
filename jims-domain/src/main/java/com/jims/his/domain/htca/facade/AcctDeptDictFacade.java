@@ -120,6 +120,8 @@ public class AcctDeptDictFacade extends BaseFacade {
     @Transactional
     public AcctDeptDict deleteById(String id) {
         AcctDeptDict dict = get(AcctDeptDict.class, id);
+        String hql = "delete AcctDeptVsDeptDict as vsd where vsd.acctDeptId='"+id+"'" ;
+        this.getEntityManager().createQuery(hql).executeUpdate() ;
         remove(dict);
         return dict ;
     }

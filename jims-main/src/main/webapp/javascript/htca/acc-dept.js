@@ -22,8 +22,8 @@ $(function () {
     $("#acctDeptStaffWindow").window('center');
 
     $("#acctDeptFormWindow").window({
-        width: '300',
-        height: '300',
+        width: '330',
+        height: '350',
         title: '核算单元维护',
         modal: true,
         closed: true,
@@ -63,12 +63,16 @@ $(function () {
                 obj.inputCode = item.inputCode;
                 obj.deptDevideAttr = item.deptDevideAttr;
                 obj.deptLocation = item.deptLocation;
+                obj.costAppInd = item.costAppInd ;
+                obj.costAppLevel = item.costAppLevel ;
                 obj.deptStopFlag = item.deptStopFlag;
                 obj.hospitalId = item.hospitalId;
                 obj.parentId = item.parentId;
                 obj.deptType = item.deptType;
                 obj.deptClass = item.deptClass;
                 obj.endDept = item.endDept;
+                obj.buildArea = item.buildArea ;
+                obj.staffNum = item.staffNum ;
                 obj.children = [];
                 depts.push(obj);
             });
@@ -117,11 +121,20 @@ $(function () {
         }, {
             title: '科室名称',
             field: 'deptName',
-            width: '10%'
+            width: '30%'
         }, {
             title: '门诊住院',
             field: 'deptOutpInp',
-            width: '10%'
+            width: '10%',
+            formatter:function(value,rowIdex,row){
+                if(value=='0'){
+                    return '门诊';
+                }
+                if(value==1){
+                    return '住院'
+                }
+                return value ;
+            }
         }, {
             title: '输入码',
             field: 'inputCode',
@@ -129,7 +142,24 @@ $(function () {
         }, {
             title: '科室类型',
             field: 'deptType',
-            width: '10%'
+            width: '10%',
+            formatter:function(value,rowIndex,row){
+                if(value=='0'){
+                    return '直接医疗类科室'
+                }
+                if(value=='1'){
+                    return '医疗技术类科室'
+                }
+                if(value=='2'){
+                    return '医疗辅助类科室'
+                }
+                if(value=='3'){
+                    return '管理类科室'
+                }
+                if(value=='4'){
+                    return '未纳入科室'
+                }
+            }
         }, {
             title: '科室类别',
             field: 'deptClass',
@@ -137,11 +167,43 @@ $(function () {
         }, {
             title: '是否参与分摊',
             field: 'costAppInd',
-            width: '10%'
+            width: '10%',
+            formatter:function(value,rowIdex,row){
+                if(value=='0'){
+                    return '否';
+                }
+                if(value==1){
+                    return '是'
+                }
+                return value ;
+            }
         }, {
             title: '分摊级别',
             field: 'costAppLevel',
-            width: '10%'
+            width: '10%',
+            formatter:function(value,rowIndex,row){
+                if(value=='5'){
+                    return '直接医疗类科室'
+                }
+                if(value=='4'){
+                    return '医疗技术类科室'
+                }
+                if(value=='3'){
+                    return '医疗辅助类科室'
+                }
+                if(value=='2'){
+                    return '管理类科室'
+                }
+                if(value=='1'){
+                    return '未纳入科室'
+                }
+            }
+        },{
+            title:"使用面积",
+            field:'buildArea'
+        },{
+            title:'在编人数',
+            field:'staffNum'
         }]],
         onDblClickRow: function (row) {
             $("#deptDictTable").datagrid('reload') ;
@@ -153,6 +215,34 @@ $(function () {
             var options = $("#acctVsDatagrid").datagrid('options') ;
             options.url="/api/dept-dict/list-width-recked-by-acct?hospitalId=" + parent.config.hospitalId+"&acctDeptId="+row.id ;
             $("#acctVsDatagrid").datagrid('reload') ;
+        },
+        onContextMenu:function(e,row){
+            e.preventDefault() ;
+            $("#rightMenu").menu('show',{
+                left: e.pageX ,
+                top: e.pageY,
+                onClick:function(item){
+                    if(item.id=='modifyDeptMenu'){
+                        console.log(row) ;
+                        $("#deptName").textbox('setValue',row.deptName);
+                        $("#deptCode").textbox('setValue',row.deptCode);
+                        $("#inpOrOutp").combobox('setValue',row.deptOutpInp);
+                        $("#deptType").combobox('setValue',row.deptType);
+                        $("#costAppInd").combobox('setValue',row.costAppInd);
+                        $("#costAppLevel").combobox('setValue',row.costAppLevel);
+                        $("#parentId").textbox('setValue',row.parentId);
+                        $("#id").textbox('setValue',row.id) ;
+                        $("#buildArea").textbox('setValue',row.buildArea) ;
+                        $("#staffNum").textbox('setValue',row.staffNum);
+                        $("#acctDeptFormWindow").window('open') ;
+                    }
+                    if(item.id=='modifyDeptVs'){
+                        $("#deptDictTable").datagrid('reload') ;
+                        $("#acctDeptStaffWindow").window('open');
+                        rowValue = row;
+                    }
+                }
+            }) ;
         }
     });
 
@@ -192,6 +282,8 @@ $(function () {
             acc.endDept = rows[i].endDept;
             acc.costAppInd = rows[i].costAppInd;
             acc.costAppLevel = rows[i].costAppLevel;
+            acc.buildArea = rows[i].buildArea ;
+            acc.staffNum = rows[i].staffNum ;
             acctDeptDict.push(acc);
         }
         console.log(acctDeptDict);
@@ -233,6 +325,9 @@ $(function () {
         acctDeptDict.costAppLevel = $("#costAppLevel").combobox('getValue');
         acctDeptDict.hospitalId = parent.config.hospitalId;
         acctDeptDict.parentId = $("#parentId").textbox('getValue');
+        acctDeptDict.id =$("#id").textbox('getValue') ;
+        acctDeptDict.buildArea = $("#buildArea").textbox('getValue');
+        acctDeptDict.staffNum= $("#staffNum").textbox('getValue');
 
         if (!acctDeptDict.deptName || !acctDeptDict.deptCode) {
             $.messager.alert("系统提示", "请完善核算单元信息，核算单元名称与编码不允许为空！");

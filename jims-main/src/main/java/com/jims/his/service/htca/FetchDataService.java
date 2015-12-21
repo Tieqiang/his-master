@@ -28,9 +28,10 @@ public class FetchDataService {
 
     @POST
     @Path("fetch-from-his")
-    public Response fetchFromHis(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
+    public Response fetchFromHis(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth,
+                                 @QueryParam("fetchTypeId")String fetchTypeId){
         try {
-            List<CalcIncomeDetail> incomeDetails = fetchDataFacade.fetchFromHis(hospitalId, yearMonth);
+            List<CalcIncomeDetail> incomeDetails = fetchDataFacade.fetchFromHis(hospitalId, yearMonth,fetchTypeId);
             return Response.status(Response.Status.OK).entity(incomeDetails).build() ;
         }catch (Exception e){
             e.printStackTrace();

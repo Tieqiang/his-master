@@ -9,8 +9,10 @@ import com.sun.jersey.core.impl.provider.entity.ReaderProvider;
 import org.jboss.logging.Param;
 
 import javax.inject.Inject;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -145,4 +147,35 @@ public class AcctDeptDictService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
         }
     }
+
+
+    /**
+     * 获取二级服务类科室
+     * @param hospitalId
+     * @return
+     */
+    @GET
+    @Path("list-second-level-dept")
+    public List<AcctDeptDict> listServiceAcctDeptDict(@QueryParam("hospitalId")String hospitalId){
+        String hql = "from AcctDeptDict as dept where dept.hospitalId='"+hospitalId+"' and " +
+                "dept.costAppLevel in ('2','3','4')" ;
+        TypedQuery<AcctDeptDict> query = acctDeptDictFacade.createQuery(AcctDeptDict.class, hql, new ArrayList<Object>());
+        return query.getResultList() ;
+    }
+
+    /**
+     * 获取二级服务类科室
+     * @param hospitalId
+     * @return
+     */
+    @GET
+    @Path("list-end-dept")
+    public List<AcctDeptDict> listServiceAcctDeptDicts(@QueryParam("hospitalId")String hospitalId){
+        String hql = "from AcctDeptDict as dept where dept.hospitalId='"+hospitalId+"' and " +
+                "dept.endDept=1 order by dept.deptCode" ;
+        TypedQuery<AcctDeptDict> query = acctDeptDictFacade.createQuery(AcctDeptDict.class, hql, new ArrayList<Object>());
+        return query.getResultList() ;
+    }
+
+
 }

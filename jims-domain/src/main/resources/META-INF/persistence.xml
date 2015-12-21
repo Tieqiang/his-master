@@ -107,6 +107,8 @@
         <class>com.jims.his.domain.htca.entity.AssumeSolutionItemDict</class>
         <class>com.jims.his.domain.htca.entity.AcctDeptCost</class>
         <class>com.jims.his.domain.htca.entity.AcctParam</class>
+        <class>com.jims.his.domain.htca.entity.ServiceDeptIncomeRule</class>
+
         <!-- 提供商——Hibernate -->
         <properties>
              <!--Oracle Dialect -->
