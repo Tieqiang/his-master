@@ -814,4 +814,19 @@ public class ExpStockFacade extends BaseFacade {
         List<ExpStockBalanceVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStockBalanceVo.class);
         return nativeQuery;
     }
+
+    /**
+     * 根据expCode,expSpec,firmId获取全院库存
+     * @param expCode
+     * @param expSpec
+     * @param firmId
+     * @return
+     */
+    public int getQuantity(String expCode, String expSpec, String firmId) {
+        String sql = "SELECT nvl(SUM(QUANTITY),0) FROM exp_STOCK WHERE exp_code ='" + expCode + "'"
+                + " and package_spec='"+expSpec+"'"
+                + " and FIRM_ID ='"+firmId+"'";
+        List result = super.createNativeQuery(sql).getResultList();
+        return ((BigDecimal) result.get(0)).intValue();
+    }
 }
