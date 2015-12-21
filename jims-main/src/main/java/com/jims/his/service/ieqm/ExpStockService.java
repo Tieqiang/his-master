@@ -332,4 +332,18 @@ public class ExpStockService {
         String stopDate = getStopDate(startDate);
         return expStockFacade.getCurrentBalance(storageCode, startDate, stopDate);
     }
+
+    /**
+     * 根据expCode,expSpec,firmId获取全院库存
+     * @param expCode
+     * @param expSpec
+     * @param firmId
+     * @return
+     */
+    @GET
+    @Path("get-quantity")
+    public int getQuantity(@QueryParam("expCode") String expCode, @QueryParam("expSpec") String expSpec, @QueryParam("firmId") String firmId) {
+        return expStockFacade.getQuantity(expCode, expSpec, firmId);
+    }
+
 }
