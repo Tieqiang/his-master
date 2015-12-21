@@ -110,37 +110,38 @@ $(function () {
         rownumbers:true,
         columns: [[{
             title: '代码',
-            field: 'expCode'
+            field: 'expCode',
+            width:'10%'
         }, {
             title: '产品名称',
             field: 'expName',
-            width: '6%'
+            width: '10%'
         }, {
             title: '规格',
             field: 'packageSpec',
-            width: '5%'
+            width: '10%'
         }, {
             title: "单位",
-            width: '7%',
+            width: '10%',
             field: 'packageUnits'
         }, {
             title: '厂家',
-            width: '5%',
+            width: '10%',
             field: 'firmId',
             type:'textbox'
         }, {
             title: '数量',
-            width: '5%',
+            width: '10%',
             field: 'quantity',
             type:'numberbox'
         }, {
             title: '金额',
-            width: '5%',
+            width: '10%',
             field: 'payAmount',
             type:'numberbox'
         }, {
             title: '实际金额',
-            width: '5%',
+            width: '10%',
             field: 'purchaseAmount',
             type:'numberbox'
         }]]
