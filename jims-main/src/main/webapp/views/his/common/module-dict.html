@@ -15,13 +15,11 @@
 <div id="dlg"  class="easyui-dialog" style="width:450px;height:350px;padding:10px 20px"
      closed="true" buttons="#dlg-buttons" data-options="modal:true">
     <ul id="tt" class="easyui-tree">
-
     </ul>
 </div>
 <div id="staffDg" class="easyui-dialog" style="width:450px;height:350px;padding:10px 20px"
      closed="true" buttons="#staff-buttons" data-options="modal:true">
     <ul id="staff" class="easyui-tree">
-
     </ul>
 </div>
 <div id="dlg-buttons">
@@ -52,8 +50,25 @@
 
 </div>
 
+<div id="waitTb">
+    过滤：<input type="text" class="easyui-textbox" id="inputCode">
+</div>
 
+<div id="checkStaffWin" class="easyui-window">
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'west'" style="height: 500px;width:300px;">
+            <table  id="checkedStaff" class="easyui-datagrid">
+            </table>
+        </div>
+        <div class="easyui-panel" data-options="region:'center',title:'操作'" style="height: 500px;width:100px">
 
+        </div>
+        <div data-options="region:'east'" style="height: 500px;width:300px;">
+            <table id="waitCheckStaff" class="easyui-datagrid" data-options="region:'east'">
+            </table>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
