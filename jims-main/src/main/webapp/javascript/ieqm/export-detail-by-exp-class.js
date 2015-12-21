@@ -91,7 +91,7 @@ $(function () {
         singleSelect: true,
         nowrap: false,
         columns: [[{
-            title: '科室',
+            title: '去向库房',
             field: 'receiver',
             width: "30%"
         }, {
