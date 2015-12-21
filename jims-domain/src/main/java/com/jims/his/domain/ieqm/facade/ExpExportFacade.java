@@ -465,7 +465,7 @@ public class ExpExportFacade extends BaseFacade {
 //                "      EXP_EXPORT_MASTER.SUB_STORAGE like '"+subStorage+"' AND\t\t \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE >= TO_DATE('"+s1+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE <= TO_DATE('"+s2+"','yyyy-MM-dd HH24:MI:SS') )   " ;
-        if (null != formClass && !formClass.trim().equals("")) {
+        if (null != formClass && !formClass.trim().equals("全部")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != subStorage && !subStorage.trim().equals("" ) ) {
