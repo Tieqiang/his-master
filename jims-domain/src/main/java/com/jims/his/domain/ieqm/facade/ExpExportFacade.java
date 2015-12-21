@@ -414,7 +414,7 @@ public class ExpExportFacade extends BaseFacade {
         if (null != expCode && !expCode.trim().equals("")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_CODE='" + expCode + "'\n";
         }
-        if (null != formClass && !formClass.trim().equals("")) {
+        if (null != formClass && !formClass.trim().equals("全部")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != deptAttr && !deptAttr.trim().equals("")) {
