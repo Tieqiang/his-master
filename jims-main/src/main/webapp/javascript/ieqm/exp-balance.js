@@ -259,7 +259,12 @@ $(function () {
 
     //统计操作按钮
     $("#statistic").on('click', function () {
-        alert("saveAs");
+        var checkMonth = $("#checkMonth").datetimebox('getText');
+        var storageCode = parent.config.storageCode;
+        var hospitalId = parent.config.hospitalId;
+        $.get("/api/exp-stock/count-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
+
+        });
     });
     //打印按钮
     $("#print").on('click', function () {
