@@ -49,12 +49,12 @@ public class ExpPriceListService {
     @GET
     @Path("list")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<ExpPriceListVo> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId) {
-        List<ExpPriceListVo> result = expPriceListFacade.findExpPriceList(expCode, hospitalId);
+    public List<ExpPriceList> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId) {
+        List<ExpPriceList> result = expPriceListFacade.findExpPriceList(expCode, hospitalId);
         if(result != null && result.size() > 0){
             Iterator ite = result.iterator();
             while(ite.hasNext()){
-                ExpPriceListVo vo = (ExpPriceListVo)ite.next();
+                ExpPriceList vo = (ExpPriceList)ite.next();
                 vo.setPriceRatio(String.valueOf(vo.getRetailPrice() / vo.getTradePrice()));
                 if(vo.getStopDate()!=null && vo.getStopDate().compareTo(new Date())<0){
                     vo.setStopPrice("on");
