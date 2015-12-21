@@ -385,16 +385,16 @@ public class ExpStockFacade extends BaseFacade {
                 "  and c.stop_date is null \n" +
                 "  and a.storage = '"+storage+"' \n" +
                 "  and a.hospital_id = '"+hospitalId+"'\n";
-        if(subStorageClass != null && subStorageClass.trim().length() > 0){
+        if(subStorageClass != null && !subStorageClass.trim().equals("")){
             sql+=" and a.sub_storage='" + subStorageClass + "'";
         }
-        if(formClass != null && formClass.trim().length() > 0){
+        if(formClass != null && !formClass.trim().equals("全部")){
             sql+=" and b.exp_form='" + formClass + "'";
         }
-        if(supplier != null && supplier.trim().length() > 0){
+        if(supplier != null && !supplier.trim().equals("")){
             sql+=" and a.firm_id='" + supplier + "'";
         }
-        if(expCode != null && expCode.trim().length() > 0){
+        if(expCode != null && !expCode.trim().equals("")){
             sql+=" and a.exp_code='" + expCode + "'";
         }
         List<ExpStorageProfileVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageProfileVo.class);
