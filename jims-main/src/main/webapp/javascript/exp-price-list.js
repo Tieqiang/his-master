@@ -180,7 +180,7 @@ $(function () {
             title: '停价',
             field: 'stopPrice',
             width: "3%",
-            editor: {type: 'checkbox', options: {on: '启用', off: '停用'}}
+            editor: {type: 'checkbox', options: {on: '停用', off: '启用'}}
         }, {
             title: '批发价格',
             field: 'tradePrice',
@@ -435,7 +435,8 @@ $(function () {
             classOnMr: '',
             permitNo: '',
             fdaOrCeNo: '',
-            memos: ''
+            memos: '',
+            hospitalId:parent.config.hospitalId
         });
 
         var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
