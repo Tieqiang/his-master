@@ -42,7 +42,7 @@ public class ExpPriceListFacade extends BaseFacade {
      * @param expCode
      * @return
      */
-    public List<ExpPriceListVo> findExpPriceList(String expCode, String hospitalId) {
+    public List<ExpPriceList> findExpPriceList(String expCode, String hospitalId) {
         String sql = "SELECT DISTINCT a.EXP_CODE, \n" +
                 "         a.MATERIAL_CODE,   \n" +
                 "         a.EXP_SPEC,   \n" +
@@ -87,7 +87,7 @@ public class ExpPriceListFacade extends BaseFacade {
             sql += "     AND    a.HOSPITAL_ID ='" + hospitalId + "'";
         }
 
-        List<ExpPriceListVo> resultList = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceListVo.class);
+        List<ExpPriceList> resultList = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceList.class);
         return resultList;
     }
 
