@@ -2,7 +2,16 @@
  * Created by heren on 2015/9/14.
  */
 $(function () {
-
+    $("#dept").searchbox({
+        searcher: function (value, name) {
+            var rows = $("#tt").treegrid("getRows");
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].deptName == value) {
+                    $("#tt").treegrid('select', i);
+                }
+            }
+        }
+    });
     //设置列
     $("#tt").treegrid({
         fit: true,
