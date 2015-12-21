@@ -487,11 +487,17 @@ $(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
-        var insertNameData = $("#dg").datagrid("getChanges", "inserted");
+        var insertData = $("#dg").datagrid("getChanges", "inserted");
+        var updateData = $("#dg").datagrid("getChanges", "updated");
+        var deleteData = $("#dg").datagrid("getChanges", "deleted");
+        var expDictChangeVo = {};
+        expDictChangeVo.inserted = insertData;
+        expDictChangeVo.updated = updateData;
+        expDictChangeVo.deleted = deleteData;
 
 
-        if (insertNameData) {
-            $.postJSON("/api/exp-price-list/save", insertNameData, function (data) {
+        if (expDictChangeVo) {
+            $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
 
                 var promise = loadDict();//有价格信息
