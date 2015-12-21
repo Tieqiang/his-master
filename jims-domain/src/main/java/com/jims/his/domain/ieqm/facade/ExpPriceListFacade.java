@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpPriceList;
 import com.jims.his.domain.ieqm.vo.ExpPriceListVo;
 
@@ -9,6 +10,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -90,17 +93,92 @@ public class ExpPriceListFacade extends BaseFacade {
 
     /**
      * 保存产品价格
-     * @param insertData
+     * @param beanChangeVo
      * @return
      */
     @Transactional
-    public List<ExpPriceList> saveExpPriceList(List<ExpPriceList> insertData) {
-
+    public List<ExpPriceList> saveExpPriceList(BeanChangeVo<ExpPriceListVo> beanChangeVo) {
         List<ExpPriceList> newUpdateDict = new ArrayList<>();
-        if (insertData.size() > 0) {
-            for (ExpPriceList dict : insertData) {
-                ExpPriceList merge = merge(dict);
-                newUpdateDict.add(merge);
+
+        List<ExpPriceListVo> inserted = beanChangeVo.getInserted();
+        List<ExpPriceListVo> updated = beanChangeVo.getUpdated();
+        List<ExpPriceListVo> deleted = beanChangeVo.getDeleted();
+
+        if (inserted != null && inserted.size() > 0) {
+            Iterator ite = inserted.iterator();
+            ExpPriceList price;
+            while (ite.hasNext()) {
+                ExpPriceListVo vo = (ExpPriceListVo) ite.next();
+                price = new ExpPriceList();
+                price.setExpCode(vo.getExpCode());
+                price.setExpSpec(vo.getExpSpec());
+                price.setFirmId(vo.getFirmId());
+                price.setUnits(vo.getUnits());
+                price.setTradePrice(vo.getTradePrice());
+                price.setRetailPrice(vo.getRetailPrice());
+                price.setAmountPerPackage(vo.getAmountPerPackage());
+                price.setMinSpec(vo.getMinSpec());
+                price.setMinUnits(vo.getMinUnits());
+                price.setClassOnInpRcpt(vo.getClassOnInpRcpt());
+                price.setClassOnOutpRcpt(vo.getClassOnOutpRcpt());
+                price.setClassOnReckoning(vo.getClassOnReckoning());
+                price.setSubjCode(vo.getSubjCode());
+                price.setClassOnMr(vo.getClassOnMr());
+                price.setStartDate(new Date());
+                price.setMemos(vo.getMemos());
+                price.setMaxRetailPrice(vo.getMaxRetailPrice());
+                price.setMaterialCode(vo.getMaterialCode());
+                price.setOperator(vo.getOperator());
+                price.setPermitNo(vo.getPermitNo());
+                price.setPermitDate(new Date());
+                price.setRegisterNo(vo.getRegisterNo());
+                price.setRegisterDate(new Date());
+                price.setFdaOrCeNo(vo.getFdaOrCeNo());
+                price.setFdaOrCeDate(new Date());
+                price.setOtherNo(vo.getOtherNo());
+                price.setOtherDate(new Date());
+                price.setHospitalId(vo.getHospitalId());
+                merge(price);
+                newUpdateDict.add(price);
+            }
+        }
+
+        if (null != updated && updated.size() > 0) {
+            Iterator ite = updated.iterator();
+            ExpPriceList price;
+            while (ite.hasNext()) {
+                ExpPriceListVo vo = (ExpPriceListVo) ite.next();
+                price = new ExpPriceList();
+                price.setExpCode(vo.getExpCode());
+                price.setExpSpec(vo.getExpSpec());
+                price.setFirmId(vo.getFirmId());
+                price.setUnits(vo.getUnits());
+                price.setTradePrice(vo.getTradePrice());
+                price.setRetailPrice(vo.getRetailPrice());
+                price.setAmountPerPackage(vo.getAmountPerPackage());
+                price.setMinSpec(vo.getMinSpec());
+                price.setMinUnits(vo.getMinUnits());
+                price.setClassOnInpRcpt(vo.getClassOnInpRcpt());
+                price.setClassOnOutpRcpt(vo.getClassOnOutpRcpt());
+                price.setClassOnReckoning(vo.getClassOnReckoning());
+                price.setSubjCode(vo.getSubjCode());
+                price.setClassOnMr(vo.getClassOnMr());
+                price.setStartDate(new Date());
+                price.setMemos(vo.getMemos());
+                price.setMaxRetailPrice(vo.getMaxRetailPrice());
+                price.setMaterialCode(vo.getMaterialCode());
+                price.setOperator(vo.getOperator());
+                price.setPermitNo(vo.getPermitNo());
+                price.setPermitDate(new Date());
+                price.setRegisterNo(vo.getRegisterNo());
+                price.setRegisterDate(new Date());
+                price.setFdaOrCeNo(vo.getFdaOrCeNo());
+                price.setFdaOrCeDate(new Date());
+                price.setOtherNo(vo.getOtherNo());
+                price.setOtherDate(new Date());
+                price.setHospitalId(vo.getHospitalId());
+                merge(price);
+                newUpdateDict.add(price);
             }
         }
         return newUpdateDict;
