@@ -1,14 +1,8 @@
 package com.jims.his.domain.ieqm.entity;
 
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -51,7 +45,12 @@ public class ExpPriceList implements java.io.Serializable {
 	private String otherNo;
 	private Date otherDate;
     private String hospitalId;
-
+    @Transient
+    private String expName;
+    @Transient
+    private String priceRatio;
+    @Transient
+    private String stopPrice;
 	// Constructors
 
 	/** default constructor */
@@ -374,4 +373,31 @@ public class ExpPriceList implements java.io.Serializable {
     public String getHospitalId() {return hospitalId;}
 
     public void setHospitalId(String hospitalId) {this.hospitalId = hospitalId;}
+
+    @Transient
+    public String getExpName() {
+        return expName;
+    }
+
+    public void setExpName(String expName) {
+        this.expName = expName;
+    }
+
+    @Transient
+    public String getPriceRatio() {
+        return priceRatio;
+    }
+
+    public void setPriceRatio(String priceRatio) {
+        this.priceRatio = priceRatio;
+    }
+
+    @Transient
+    public String getStopPrice() {
+        return stopPrice;
+    }
+
+    public void setStopPrice(String stopPrice) {
+        this.stopPrice = stopPrice;
+    }
 }
