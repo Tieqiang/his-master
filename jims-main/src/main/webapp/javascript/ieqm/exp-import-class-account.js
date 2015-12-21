@@ -108,22 +108,23 @@ $(function () {
         rownumbers:true,
         columns: [[{
             title: '入库类别',
-            field: 'importClass'
+            field: 'importClass',
+            width: '15%'
         }, {
             title: '供应商',
             field: 'supplier',
-            width: '6%'
+            width: '15%'
         }, {
             title: '品次',
             field: 'accountReceivable',
-            width: '5%'
+            width: '15%'
         }, {
             title: "品种",
-            width: '7%',
+            width: '15%',
             field: 'accountIndicator'
         }, {
             title: '金额',
-            width: '5%',
+            width: '15%',
             field: 'importPrice',
             type:'numberbox'
         }]]
