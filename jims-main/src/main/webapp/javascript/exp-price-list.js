@@ -383,6 +383,11 @@ $(function () {
             field: 'memos',
             width: "7%",
             editor: 'text'
+        }, {
+            title: '医院id',
+            field: 'hospitalId',
+            width: "7%"
+
         }
         ]],
         onClickRow: function (index, row) {
@@ -532,6 +537,7 @@ $(function () {
                 price.amountPerPackage = item.dosePerUnit;
                 price.minSpec = item.expSpec;
                 price.minUnits = item.units;
+                price.hospitalId = parent.config.hospitalId;
                 simplePrice.push(price);
             });
         });
@@ -575,6 +581,7 @@ $(function () {
                 price.startDate = item.startDate;
                 price.stopDate = item.stopDate;
                 price.memos = item.memos;
+                price.hospitalId = parent.config.hospitalId;
                 price.columnProtect = '1';
                 prices.push(price);
             });
