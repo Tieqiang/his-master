@@ -71,7 +71,7 @@ public class ExpStockService {
     @Path("stock-record")
     public List<ExpStockRecord> listExpStockRecord(@QueryParam("storageCode")String storageCode,@QueryParam("expCode")String expCode,
                                                    @QueryParam("hospitalId")String hospitalId){
-        String sql = "SELECT B.EXP_NAME,B.EXP_FORM,\n" +
+        String sql = "SELECT b.EXP_NAME,b.EXP_FORM,\n" +
                 "       c.EXP_CODE,\n" +
                 "       c.EXP_SPEC,\n" +
                 "       c.units,\n" +
@@ -83,8 +83,8 @@ public class ExpStockService {
                 "       nvl(d.quantity, 0)quantity,\n" +
                 "       c.Register_no,\n" +
                 "       c.Permit_no\n" +
-                "  FROM exp_dict B, exp_price_list c, exp_stock d\n" +
-                " WHERE b.EXP_CODE = C.EXP_CODE\n" +
+                "  FROM exp_dict b, exp_price_list c, exp_stock d\n" +
+                " WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "   AND b.exp_spec = c.min_spec\n" +
                 "   and c.EXP_CODE = d.exp_code(+)\n" +
                 "   and c.min_SPEC = d.exp_spec(+)\n" +
@@ -93,7 +93,7 @@ public class ExpStockService {
                 "   AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
                 "   and d.storage(+) like '"+storageCode+"' || '%'\n" +
                 "   AND b.EXP_CODE = '"+expCode+"'" +
-                "   and d.hospital_id = '"+hospitalId+"'" ;
+                "   and c.hospital_id = '"+hospitalId+"'" ;
 
         return expStockFacade.createNativeQuery(sql,new ArrayList<Object>(),ExpStockRecord.class) ;
 
