@@ -17,11 +17,7 @@
     <ul id="tt" class="easyui-tree">
     </ul>
 </div>
-<div id="staffDg" class="easyui-dialog" style="width:450px;height:350px;padding:10px 20px"
-     closed="true" buttons="#staff-buttons" data-options="modal:true">
-    <ul id="staff" class="easyui-tree">
-    </ul>
-</div>
+
 <div id="dlg-buttons">
     <a href="javascript:void(0)" id="selectAllMenuBtn" class="easyui-linkbutton c6" iconCls="icon-ok"  style="width:90px" >全选</a>
     <a href="javascript:void(0)" id="selectNoMenuBtn" class="easyui-linkbutton c6" iconCls="icon-clear"  style="width:90px">全不选</a>
@@ -29,12 +25,6 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">关闭</a>
 </div>
 
-<div id="staff-buttons">
-    <a href="javascript:void(0)" id="selectAllStaffBtn" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">全选1</a>
-    <a href="javascript:void(0)" id="selectNoStaffBtn" class="easyui-linkbutton c6" iconCls="icon-clear" style="width:90px">全不选1</a>
-    <a href="javascript:void(0)" id="saveStaffBtn" class="easyui-linkbutton c6" iconCls="icon-save" style="width:90px">保存1</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#staffDg').dialog('close')" style="width:90px">关闭1</a>
-</div>
 
 <div id="tb" style="padding:2px 5px;">
     模块名称：<input type="text" class="easyui-textbox" id="name">
@@ -51,17 +41,23 @@
 </div>
 
 <div id="waitTb">
-    过滤：<input type="text" class="easyui-textbox" id="inputCode">
+    姓名过滤：<input id="staffName" class="easyui-searchbox" prompt="请输入查询内容" style="width:150px"/>
 </div>
 
-<div id="checkStaffWin" class="easyui-window">
+<div id="checkStaffWin" class="easyui-window" closed="true">
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'west'" style="height: 500px;width:300px;">
             <table  id="checkedStaff" class="easyui-datagrid">
             </table>
         </div>
         <div class="easyui-panel" data-options="region:'center',title:'操作'" style="height: 500px;width:100px">
-
+            <br/><br/><br/><br/><br/><br/>
+            &nbsp;<a href="#" id="selectAllStaffBtn" class="easyui-linkbutton" style="align:center;padding:1px;margin:2px;">添加全部</a><br/>
+            &nbsp;<a href="#" id="addStaffBtn" class="easyui-linkbutton" style="align:center;padding:1px;margin:2px;">添加所选</a><br/>
+            &nbsp;<a href="#" id="delStaffBtn" class="easyui-linkbutton" style="align:center;padding:1px;margin:2px;">删除所选</a><br/>
+            &nbsp;<a href="#" id="selectNoStaffBtn" class="easyui-linkbutton" style="align:center;padding:1px;margin:2px;">删除全部</a><br/>
+            &nbsp;<a href="#" id="saveStaffBtn" class="easyui-linkbutton" iconCls="icon-save"
+                     style="align:center;padding:1px;margin:2px;">保存</a>
         </div>
         <div data-options="region:'east'" style="height: 500px;width:300px;">
             <table id="waitCheckStaff" class="easyui-datagrid" data-options="region:'east'">
