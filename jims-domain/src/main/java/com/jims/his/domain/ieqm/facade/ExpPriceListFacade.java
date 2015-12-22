@@ -43,7 +43,7 @@ public class ExpPriceListFacade extends BaseFacade {
      * @return
      */
     public List<ExpPriceList> findExpPriceList(String expCode, String hospitalId) {
-        String sql = "SELECT DISTINCT a.EXP_CODE, \n" +
+        String sql = "SELECT distinct a.ID,a.EXP_CODE,\n" +
                 "         a.MATERIAL_CODE,   \n" +
                 "         a.EXP_SPEC,   \n" +
                 "         a.FIRM_ID,   \n" +
@@ -64,27 +64,21 @@ public class ExpPriceListFacade extends BaseFacade {
                 "         a.MEMOS,   \n" +
                 "         b.EXP_NAME,\n" +
                 "         a.PERMIT_NO,\n" +
-                "\t\t\ta.PERMIT_DATE,\n" +
-                "\t\t\ta.REGISTER_NO,\n" +
-                "\t\t\ta.REGISTER_DATE,\n" +
-                "\t\t\ta.FDA_OR_CE_NO,\n" +
-                "\t\t\ta.FDA_OR_CE_DATE,\n" +
-                "\t\t\ta.OTHER_NO,\n" +
-                "\t\t\ta.OTHER_DATE   \n" +
-                //"\t\t\ta.OTHER_DATE,   \n" +
-                //"         ''  price_ratio,\n" +
-                //"         ''  stop_price,   \n" +
-                //"         '1' column_protect  \n" +
-                "    FROM EXP_PRICE_LIST a,   \n" +
-                "         EXP_DICT b   \n" +
-                "   WHERE  a.EXP_CODE = b.EXP_CODE \n" +
-                "     and ( a.STOP_DATE >= sysdate OR a.STOP_DATE is null ) \n" +
+                "         a.PERMIT_DATE,\n" +
+                "         a.REGISTER_NO,\n" +
+                "         a.REGISTER_DATE,\n" +
+                "         a.FDA_OR_CE_NO,\n" +
+                "         a.FDA_OR_CE_DATE,\n" +
+                "         a.OTHER_NO,\n" +
+                "         a.OTHER_DATE   \n" +
+                "    FROM EXP_PRICE_LIST a,EXP_DICT b   \n" +
+                "   WHERE  a.EXP_CODE = b.EXP_CODE and ( a.STOP_DATE >= sysdate OR a.STOP_DATE is null ) \n" +
                 "     and  a.START_DATE <= sysdate \n";
         if(null != expCode && !expCode.trim().equals("")){
-            sql += "     AND    a.EXP_CODE ='" + expCode + "'";
+            sql += " AND a.EXP_CODE ='" + expCode + "'";
         }
         if(null != hospitalId && !hospitalId.trim().equals("")){
-            sql += "     AND    a.HOSPITAL_ID ='" + hospitalId + "'";
+            sql += " AND a.HOSPITAL_ID ='" + hospitalId + "'";
         }
 
         List<ExpPriceList> resultList = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceList.class);
@@ -184,6 +178,18 @@ public class ExpPriceListFacade extends BaseFacade {
         return newUpdateDict;
     }
 
+    /**
+     * 停价
+     * @param price
+     * @return
+     */
+    @Transactional
+    public ExpPriceList stopPrice(ExpPriceList price){
+        price = this.get(ExpPriceList.class, price.getId());
+        price.setStopDate(new Date());
+        price = merge(price);
+        return price;
+    }
     /**
      * 对exp_dict , exp_price_list ,exp_stock联合查询，取出产品价格自定义对象ExpPriceListVo结果集
      * @param inputCode
