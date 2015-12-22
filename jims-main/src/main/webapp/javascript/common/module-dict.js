@@ -290,81 +290,189 @@ $(function () {
 
     });
 
-    //树定义
-    $("#staff").tree({
-        cascadeCheck: true,
-        checkbox: true
+    ////树定义
+    //$("#staff").tree({
+    //    cascadeCheck: true,
+    //    checkbox: true
+    //});
+    //var loadStaffData = function () {
+    //    var promise = $.get("/api/staff-dict/list", function (data) {
+    //        $.each(data, function (index, item) {
+    //            var staff = {};
+    //            staff.id = item.id;
+    //            staff.text = item.name;
+    //            staff.state = "open";
+    //
+    //            staffs.push(staff);
+    //        })
+    //
+    //        for (var i = 0; i < staffs.length; i++) {
+    //            staffTreeData.push(staffs[i]);
+    //        }
+    //    });
+    //
+    //    promise.done(function () {
+    //        $("#staff").tree('loadData', staffTreeData);
+    //    })
+    //}
+
+    $("#checkStaffWin").window({
+        title: '设置模块医生',
+        width: 700,
+        height: 500,
+        onOpen: function () {
+            $(this).window('center');
+        }
     });
-    var loadStaffData = function () {
-        var promise = $.get("/api/staff-dict/list", function (data) {
-            $.each(data, function (index, item) {
-                var staff = {};
-                staff.id = item.id;
-                staff.text = item.name;
-                staff.state = "open";
-
-                staffs.push(staff);
-            })
-
-            for (var i = 0; i < staffs.length; i++) {
-                staffTreeData.push(staffs[i]);
+    $("#staffName").searchbox({
+        searcher: function (value, name) {
+            var rows = $("#waitCheckStaff").datagrid("getRows");
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].name == value) {
+                    $("#waitCheckStaff").datagrid('selectRow', i);
+                }
             }
-        });
+        }
+    });
+    $("#waitCheckStaff").datagrid({
+        title: '待选工作人员',
+        fitColumns: true,
+        width: 200,
+        fit: true,
+        toolbar: '#waitTb',
+        columns: [[{
+            title: '编号',
+            field: 'id',
+            checkbox: true
+        }, {
+            title: '登录名',
+            field: 'loginName',
+            width:'40%'
+        }, {
+            title: '姓名',
+            field: 'name',
+            width: '55%'
+        }]]
 
-        promise.done(function () {
-            $("#staff").tree('loadData', staffTreeData);
-        })
-    }
-    //加载staff树数据
-    loadStaffData();
-
+    });
+    $("#checkedStaff").datagrid({
+        title: '已选工作人员',
+        fitColumns: true,
+        width: 200,
+        fit: true,
+        singleSelect: false,
+        columns: [[{
+            title: '编号',
+            field: 'id',
+            checkbox: true
+        }, {
+            title: '登录名',
+            field: 'loginName',
+            width: '40%'
+        }, {
+            title: '姓名',
+            field: 'name',
+            width: '55%'
+        }]]
+    });
+    //var loadStaff = function () {
+    //    var staffs = [];
+    //    var loadPromise = $.get("/api/staff-dict/list", function (data) {
+    //        staffs = data;
+    //    });
+    //    loadPromise.done(function () {
+    //        $("#dg").datagrid('loadData', staffs);
+    //    })
+    //}
     $("#staffAddBtn").on('click', function () {
         var row = $("#dg").datagrid('getSelected');
         if (!row) {
             $.messager.alert('系统提示', '请选择模块，然后再分配权限', 'error');
             return;
         }
-        $("#staffDg").dialog('open').dialog('setTitle', '分配用户权限');
+        $("#checkStaffWin").window('open');
+
         var staffIds = row.staffIds;
         if (!staffIds) {
             return;
         }
-        var arr = new Array;
-        arr = staffIds.split(",");
-        for (i = 0; i < arr.length; i++) {
-            var node = $("#staff").tree('find', arr[i]);
-            if (node) {
-                $('#staff').tree('check', node.target);//将得到的节点选中
-            }
-        }
+
+        var selectStaffs=[];
+        var staffs = [];
+        var loadPromise = $.get("/api/staff-dict/list", function (data) {
+            $.each(data, function (index, row) {
+                if(staffIds.indexOf(row.id)>-1){
+                    selectStaffs.push(row);
+                }else{
+                    staffs.push(row);
+                }
+            });
+        });
+
+        loadPromise.done(function () {
+            $("#waitCheckStaff").datagrid('loadData', staffs);
+            $("#checkedStaff").datagrid('loadData', selectStaffs);
+        })
+
     });
 
-    //全选
+    //添加全部
     $("#selectAllStaffBtn").on('click', function () {
-        clearStaffBtn();
-        var nodes = $('#staff').tree('getChecked', "unchecked");
-        var flag = nodes.checked ? "uncheck" : "check";
-        for (var i = 0; i < nodes.length; i++) {
-            $('#staff').tree(flag, nodes[i].target);//将得到的节点选中
+        var rows = $('#waitCheckStaff').datagrid('getRows');
+        $.messager.confirm("提示信息", "确认添加全部待选人员？", function (r) {
+            if (r) {
+                $.each(rows, function (index, row) {
+                    $('#checkedStaff').datagrid('appendRow', row);
+                });
+                $('#waitCheckStaff').datagrid('loadData', []);
+            }
+        });
+
+    });
+    //添加所选
+    $("#addStaffBtn").on('click', function () {
+        var rows = $('#waitCheckStaff').datagrid('getSelections');
+        if(rows.length==0){
+            $.messager.alert("提示","请选择待选工作人员！","info");
+        }else{
+            $.each(rows, function (index, row) {
+                $('#checkedStaff').datagrid('appendRow', row);
+                var delIndex = $('#waitCheckStaff').datagrid('getRowIndex', row);
+                $('#waitCheckStaff').datagrid('deleteRow', delIndex);
+            });
         }
     });
-    //全不选
+    //删除所选
+    $("#delStaffBtn").on('click', function () {
+        var rows = $('#checkedStaff').datagrid('getSelections');
+        if (rows.length == 0) {
+            $.messager.alert("提示", "请选择已选工作人员！", "info");
+        } else {
+            $.each(rows, function (index, row) {
+                $('#waitCheckStaff').datagrid('appendRow', row);
+                var delIndex = $('#checkedStaff').datagrid('getRowIndex', row);
+                $('#checkedStaff').datagrid('deleteRow', delIndex);
+            });
+        }
+    });
+    //删除全部
     $("#selectNoStaffBtn").on('click', function () {
-        clearStaffBtn();
+        var rows = $('#checkedStaff').datagrid('getRows');
+        $.messager.confirm("提示信息", "确认删除全部已选人员？", function (r) {
+            if (r) {
+                $.each(rows, function (index, row) {
+                    $('#waitCheckStaff').datagrid('appendRow', row);
+                });
+                $('#checkedStaff').datagrid('loadData', []);
+            }
+        });
     });
-    //清空选项
-    var clearStaffBtn = function () {
-        var nodes = $('#staff').tree('getChecked', ['checked', 'indeterminate', 'unchecked']);
-        var flag = nodes.checked ? "check" : "uncheck";
-        for (var i = 0; i < nodes.length; i++) {
-            $('#staff').tree(flag, nodes[i].target);//将得到的节点清空
-        }
-    }
+
     //保存分配的权限
     $("#saveStaffBtn").on('click', function () {
 
-        var nodes = $("#staff").tree('getChecked', ['checked', 'indeterminate']);
-        console.log(nodes);
+        var nodes = $("#checkedStaff").datagrid('getRows');
+
         var data = {};
         var row = $("#dg").datagrid('getSelected');
         if (!row.id) {
@@ -379,10 +487,7 @@ $(function () {
 
         $.postJSON("/api/module-dict/add-module-staff/" + data.moduleId, data.staffId, function () {
             $.messager.alert('系统提示', '分配用户权限成功', 'info');
-            $("#staffDg").dialog('close');
-            $.each(nodes, function (index, item) {
-                $("#staff").tree('uncheck', item.target);
-            })
+            $("#checkStaffWin").window('close');
             loadDict();
         }, function () {
             $.messager.alert('系统提示', '分配用户权限失败', 'error');
@@ -390,46 +495,6 @@ $(function () {
 
     });
 
-    $("#checkStaffWin").window({
-        title:'设置模块医生',
-        width:700,
-        height:500,
-        onOpen:function(){
-            $(this).window('center') ;
-        }
-    }) ;
 
-    $("#waitCheckStaff").datagrid({
-        title:'待选工作人员',
-        fitColumns:true,
-        width:200,
-        fit:true,
-        toolbar:'#waitTb',
-        columns:[[{
-            title:'编号',
-            field:'id',
-            checkbox:true
-        },{
-            title:'登录名',
-            field:'loginName'
-        }]]
-
-    }) ;
-    $("#checkedStaff").datagrid({
-        title:'已选工作人员',
-        fitColumns:true,
-        width:200,
-        fit:true,
-        singleSelect:false,
-        columns:[[{
-            title:'编号',
-            field:'id',
-            checkbox:true
-        },{
-            title:'登录名',
-            field:'loginName'
-        }]]
-
-    }) ;
 
 })
