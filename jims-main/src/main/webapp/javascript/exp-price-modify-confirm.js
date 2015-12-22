@@ -251,6 +251,7 @@ $(function () {
         }, {
             title: '通知生效日期',
             field: 'noticeEfficientDate',
+            formatter:formatterDate,
             width: "15%"
         }, {
             title: '调价依据',
@@ -259,7 +260,8 @@ $(function () {
         }, {
             title: '医院编码',
             field: 'hospitalId',
-            width: "7%"
+            width: "7%",
+            hidden:true
         }
         ]],
         onClickRow: function (index, row) {  console.log(index+"-"+editIndex);
@@ -503,6 +505,7 @@ $(function () {
                 $.each(data, function (index, item) {
                     //格式化日期
                     item.noticeEfficientDate = formatterDate(new Date(item.noticeEfficientDate));
+                    item.actualEfficientDate = formatterDate(new Date(item.actualEfficientDate));
                 });
                 $("#tab1").datagrid('loadData', data);
             } else {
