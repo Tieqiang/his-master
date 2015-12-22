@@ -102,6 +102,10 @@ $(function () {
             field: 'subStorage',
             width: "10%"
         }, {
+            title: '去向',
+            field: 'receiver',
+            width: "10%"
+        }, {
             title: '产品编码',
             field: 'expCode',
             width: "15%"
@@ -120,10 +124,6 @@ $(function () {
         }, {
             title: '厂家',
             field: 'firmId',
-            width: "10%"
-        }, {
-            title: '去向',
-            field: 'receiver',
             width: "10%"
         }, {
             title: '数量',

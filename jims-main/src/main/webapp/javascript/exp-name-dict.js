@@ -328,6 +328,14 @@ $(function () {
         var insertNameData = $("#expNameDict").datagrid("getChanges", "inserted");
         var updateNameData = $("#expNameDict").datagrid('getChanges', "updated");
         var deleteNameData = $("#expNameDict").datagrid('getChanges', "deleted");
+        $.each(insertNameData,function(index,item){
+            item.stdIndicator = 1;
+        });
+        $.each(updateNameData,function(index,item){
+            item.stdIndicator = 1;
+        })
+        console.log(insertData);
+        console.log(updateNameData);
 
         var insertData = $("#expDict").datagrid("getChanges", "inserted");
         var updateData = $("#expDict").datagrid('getChanges', "updated");

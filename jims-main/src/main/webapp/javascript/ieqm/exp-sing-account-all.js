@@ -45,16 +45,17 @@ $(function () {
         footer: '#ft',
         toolbar:'#tb',
         columns: [[{
-            title: '方向',
-            field: 'way'
+            title: '方式',
+            field: 'way',
+            width: '6%'
         }, {
             title: '代码',
             field: 'expCode',
-            width: '6%'
+            width: '10%'
         }, {
             title: '产品名称',
             field: 'expName',
-            width: '6%'
+            width: '10%'
         }, {
             title: '类型',
             field: 'ioClass',
@@ -66,11 +67,11 @@ $(function () {
         }, {
             title: '单位',
             field: 'packageUnits',
-            width: '5%'
+            width: '7%'
         }, {
             title: '厂家',
             field: 'firmId',
-            width: '7%'
+            width: '10%'
         }, {
             title: '批号',
             width: '5%',
@@ -91,27 +92,27 @@ $(function () {
             field: 'inventory'
         }, {
             title: '单价',
-            width: '5%',
+            width: '7%',
             field: 'purchasePrice',
             type:'numberbox'
         }, {
             title: '入库数量',
-            width: '5%',
+            width: '7%',
             field: 'importNum',
             type:'numberbox'
         }, {
             title: '入库金额',
-            width: '5%',
+            width: '7%',
             field: 'importPrice',
             type:'numberbox'
         }, {
             title: '出库数量',
-            width: '5%',
+            width: '7%',
             field: 'exportNum',
             type:'numberbox'
         }, {
             title: '出库金额',
-            width: '5%',
+            width: '7%',
             field: 'exportPrice',
             type:'numberbox'
         }]]

@@ -114,43 +114,43 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
-            width: '6%'
+            width: '10%'
         },{
             title: '产品名称',
             field: 'expName',
-            width: '7%'
+            width: '10%'
         }, {
             title: '规格',
             field: 'packageSpec',
-            width: '4%'
+            width: '7%'
         },  {
             title: '单位',
             field: 'packageUnits',
-            width: '4%'
+            width: '7%'
         }, {
             title: '厂家',
-            width: '8%',
+            width: '10%',
             field: 'firmId'
 
         }, {
             title: "数量",
-            width: '5%',
+            width: '7%',
             field: 'quantity'
         }, {
             title: '进价金额',
             field: 'payAmount',
-            width: '5%'
+            width: '7%'
         }, {
             title: '零售金额',
-            width: '5%',
+            width: '7%',
             field: 'retailAmount'
         }, {
             title: '产品类别',
-            width: '8%',
+            width: '7%',
             field: 'expForm'
         }, {
             title: '出库单号',
-            width: '6%',
+            width: '10%',
             field: 'documentNo',
             editor: {type: 'textbox'}
         }, {
@@ -187,13 +187,27 @@ $(function () {
         $('#subStorage').combobox("select", "全部");
     });
     //类型字典
-    $("#formClass").combobox({
-        url: '/api/exp-form-dict/list',
-        valueField: 'formCode',
-        textField: 'formName',
-        method: 'GET'
-    });
+    var forms = [];
+    var expFormDictPromise = $.get("/api/exp-form-dict/list", function (data) {
+        $.each(data, function (index, item) {
+            var ec = {};
+            ec.formCode = item.formCode;
+            ec.formName = item.formName;
+            forms.push(ec);
+        });
+        var all = {};
+        all.formCode = '';
+        all.formName = '全部';
+        forms.unshift(all);
 
+        $('#formClass').combobox({
+            panelHeight: 'auto',
+            width: 200,
+            data: forms,
+            valueField: 'formCode',
+            textField: 'formName'
+        });
+    });
     //设置时间
     var curr_time = new Date();
     $("#startDate").datetimebox("setValue", myFormatter2(curr_time));

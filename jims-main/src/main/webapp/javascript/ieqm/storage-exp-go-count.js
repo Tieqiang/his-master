@@ -111,41 +111,45 @@ $(function () {
         showFooter:true,
         rownumbers:true,
         columns: [[{
-            title: '去向',
+            title: '去向库房',
             field: 'receiver',
-            width: '6%'
+            width: '10%'
         },{
             title: '代码',
             field: 'expCode',
-            width: '6%'
+            width: '10%'
         },{
             title: '产品名称',
             field: 'expName',
-            width: '7%'
+            width: '15%'
+        }, {
+            title: '产品类别',
+            field: 'expForm',
+            width: '10%'
         }, {
             title: '规格',
             field: 'packageSpec',
-            width: '4%'
+            width: '10%'
         },  {
             title: '单位',
             field: 'packageUnits',
-            width: '4%'
+            width: '10%'
         }, {
             title: '厂家',
-            width: '8%',
+            width: '10%',
             field: 'firmId'
 
         }, {
             title: "数量",
-            width: '5%',
+            width: '10%',
             field: 'quantity'
         },{
             title: '零售金额',
-            width: '5%',
+            width: '10%',
             field: 'retailAmount'
         },{
             title: '批发总价',
-            width: '5%',
+            width: '10%',
             field: 'payAmount'
         }]]
     });
@@ -172,11 +176,26 @@ $(function () {
         $('#subStorage').combobox("select", "全部");
     });
     //类型字典
-    $("#formClass").combobox({
-        url: '/api/exp-form-dict/list',
-        valueField: 'formCode',
-        textField: 'formName',
-        method: 'GET'
+    var forms = [];
+    var expFormDictPromise = $.get("/api/exp-form-dict/list", function (data) {
+        $.each(data, function (index, item) {
+            var ec = {};
+            ec.formCode = item.formCode;
+            ec.formName = item.formName;
+            forms.push(ec);
+        });
+        var all = {};
+        all.formCode = '';
+        all.formName = '全部';
+        forms.unshift(all);
+
+        $('#formClass').combobox({
+            panelHeight: 'auto',
+            width: 200,
+            data: forms,
+            valueField: 'formCode',
+            textField: 'formName'
+        });
     });
 
     //设置时间

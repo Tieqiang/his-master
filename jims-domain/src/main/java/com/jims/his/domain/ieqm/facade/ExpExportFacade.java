@@ -329,13 +329,13 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByExpCode(String storage, String hospitalId, String expCode, String startDate, String endDate){
-        String sql = "SELECT receiver,\n" +
+        String sql = "select exp_dict.exp_name ,a.* from exp_dict,(SELECT receiver,\n" +
                 "package_spec,\n" +
                 "package_units,\n" +
                 "firm_id,\n" +
                 "sum(quantity) quantity,\n" +
                 "sum(purchase_price*quantity) amount ,\n" +
-                "exp_export_detail.exp_code\n" +
+                "exp_export_detail.exp_code \n" +
                 "FROM exp_export_detail,exp_export_master \n" +
                 "WHERE exp_export_detail.document_no = exp_export_master.document_no \n" +
                 "AND account_indicator = 1 \n";
@@ -352,9 +352,9 @@ public class ExpExportFacade extends BaseFacade {
             sql += " AND EXP_EXPORT_MASTER.EXPORT_DATE <= to_date('" + endDate + "','YYYY-MM-DD HH24:MI:SS')\n";
         }
         if (null != expCode && !expCode.trim().equals("")) {
-            sql += " AND EXP_CODE='" + expCode + "'\n";
+            sql += " AND EXP_EXPORT_DETAIL.EXP_CODE='" + expCode + "'\n";
         }
-        sql += "GROUP BY receiver,package_spec,package_units,firm_id ,exp_export_detail.exp_code";
+        sql += "GROUP BY receiver,package_spec,package_units,firm_id ,exp_export_detail.exp_code) a where exp_dict.exp_code=a.exp_code";
         List<ExpExportVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpExportVo.class);
         return result;
     }
@@ -414,7 +414,7 @@ public class ExpExportFacade extends BaseFacade {
         if (null != expCode && !expCode.trim().equals("")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_CODE='" + expCode + "'\n";
         }
-        if (null != formClass && !formClass.trim().equals("")) {
+        if (null != formClass && !formClass.trim().equals("全部")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != deptAttr && !deptAttr.trim().equals("")) {
@@ -465,7 +465,7 @@ public class ExpExportFacade extends BaseFacade {
 //                "      EXP_EXPORT_MASTER.SUB_STORAGE like '"+subStorage+"' AND\t\t \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE >= TO_DATE('"+s1+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE <= TO_DATE('"+s2+"','yyyy-MM-dd HH24:MI:SS') )   " ;
-        if (null != formClass && !formClass.trim().equals("")) {
+        if (null != formClass && !formClass.trim().equals("全部")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != subStorage && !subStorage.trim().equals("" ) ) {
@@ -505,7 +505,7 @@ public class ExpExportFacade extends BaseFacade {
                 "         EXP_EXPORT_MASTER.hospital_id = '"+hospitalId+"' AND \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE >= TO_DATE('"+s1+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE <= TO_DATE('"+s2+"','yyyy-MM-dd HH24:MI:SS') )   " ;
-        if (null != formClass && !formClass.trim().equals("")) {
+        if (null != formClass && !formClass.trim().equals("全部")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != subStorage && !subStorage.trim().equals("" ) ) {

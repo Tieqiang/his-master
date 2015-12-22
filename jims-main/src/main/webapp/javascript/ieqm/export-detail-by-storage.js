@@ -92,19 +92,19 @@ $(function () {
         singleSelect: true,
         nowrap: false,
         columns: [[{
-            title: '科室',
+            title: '去向库房',
             field: 'receiver',
             width: "30%"
         }, {
-            title: ' ',
+            title: '产品类别',
             field: 'expForm',
             width: "25%"
         }, {
-            title: '全部',
+            title: '全部（金额）',
             field: 'importAmount',
             width: "25%"
         }, {
-            title: '小计',
+            title: '小计（金额）',
             field: 'importAmount',
             width: "20%"
         }]]

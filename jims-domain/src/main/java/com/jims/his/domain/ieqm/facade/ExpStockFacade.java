@@ -385,16 +385,16 @@ public class ExpStockFacade extends BaseFacade {
                 "  and c.stop_date is null \n" +
                 "  and a.storage = '"+storage+"' \n" +
                 "  and a.hospital_id = '"+hospitalId+"'\n";
-        if(subStorageClass != null && subStorageClass.trim().length() > 0){
+        if(subStorageClass != null && !subStorageClass.trim().equals("")){
             sql+=" and a.sub_storage='" + subStorageClass + "'";
         }
-        if(formClass != null && formClass.trim().length() > 0){
+        if(formClass != null && !formClass.trim().equals("全部")){
             sql+=" and b.exp_form='" + formClass + "'";
         }
-        if(supplier != null && supplier.trim().length() > 0){
+        if(supplier != null && !supplier.trim().equals("")){
             sql+=" and a.firm_id='" + supplier + "'";
         }
-        if(expCode != null && expCode.trim().length() > 0){
+        if(expCode != null && !expCode.trim().equals("")){
             sql+=" and a.exp_code='" + expCode + "'";
         }
         List<ExpStorageProfileVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageProfileVo.class);
@@ -813,5 +813,20 @@ public class ExpStockFacade extends BaseFacade {
                 "         ( EXP_STOCK_BALANCE.YEAR_MONTH <= to_date('" + stopDate + "','YYYY-MM-DD HH24:MI:SS') )  ";
         List<ExpStockBalanceVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStockBalanceVo.class);
         return nativeQuery;
+    }
+
+    /**
+     * 根据expCode,expSpec,firmId获取全院库存
+     * @param expCode
+     * @param expSpec
+     * @param firmId
+     * @return
+     */
+    public int getQuantity(String expCode, String expSpec, String firmId) {
+        String sql = "SELECT nvl(SUM(QUANTITY),0) FROM exp_STOCK WHERE exp_code ='" + expCode + "'"
+                + " and package_spec='"+expSpec+"'"
+                + " and FIRM_ID ='"+firmId+"'";
+        List result = super.createNativeQuery(sql).getResultList();
+        return ((BigDecimal) result.get(0)).intValue();
     }
 }

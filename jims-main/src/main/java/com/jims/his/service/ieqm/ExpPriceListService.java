@@ -1,6 +1,7 @@
 package com.jims.his.service.ieqm;
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpPriceList;
 import com.jims.his.domain.ieqm.facade.ExpPriceListFacade;
 import com.jims.his.domain.ieqm.vo.ExpPriceListVo;
@@ -48,12 +49,12 @@ public class ExpPriceListService {
     @GET
     @Path("list")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<ExpPriceListVo> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId) {
-        List<ExpPriceListVo> result = expPriceListFacade.findExpPriceList(expCode, hospitalId);
+    public List<ExpPriceList> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId) {
+        List<ExpPriceList> result = expPriceListFacade.findExpPriceList(expCode, hospitalId);
         if(result != null && result.size() > 0){
             Iterator ite = result.iterator();
             while(ite.hasNext()){
-                ExpPriceListVo vo = (ExpPriceListVo)ite.next();
+                ExpPriceList vo = (ExpPriceList)ite.next();
                 vo.setPriceRatio(String.valueOf(vo.getRetailPrice() / vo.getTradePrice()));
                 if(vo.getStopDate()!=null && vo.getStopDate().compareTo(new Date())<0){
                     vo.setStopPrice("on");
@@ -67,54 +68,15 @@ public class ExpPriceListService {
 
     /**
      * 保存产品价格
-     * @param expPriceListVo
+     * @param beanChangeVo
      * @return
      */
     @POST
     @Path("save")
-    public Response saveExpPriceList(List<ExpPriceListVo> expPriceListVo){
-        List<ExpPriceList> dicts = null;
+    public Response saveExpPriceList(BeanChangeVo<ExpPriceListVo> beanChangeVo){
 
         try {
-            if(expPriceListVo != null && expPriceListVo.size() > 0){
-                List<ExpPriceList> addList = new ArrayList<ExpPriceList>();
-                Iterator ite = expPriceListVo.iterator();
-                ExpPriceList price;
-                while(ite.hasNext()){
-                    ExpPriceListVo vo = (ExpPriceListVo)ite.next();
-                    price = new ExpPriceList();
-                    price.setExpCode(vo.getExpCode());
-                    price.setExpSpec(vo.getExpSpec());
-                    price.setFirmId(vo.getFirmId());
-                    price.setUnits(vo.getUnits());
-                    price.setTradePrice(vo.getTradePrice());
-                    price.setRetailPrice(vo.getRetailPrice());
-                    price.setAmountPerPackage(vo.getAmountPerPackage());
-                    price.setMinSpec(vo.getMinSpec());
-                    price.setMinUnits(vo.getMinUnits());
-                    price.setClassOnInpRcpt(vo.getClassOnInpRcpt());
-                    price.setClassOnOutpRcpt(vo.getClassOnOutpRcpt());
-                    price.setClassOnReckoning(vo.getClassOnReckoning());
-                    price.setSubjCode(vo.getSubjCode());
-                    price.setClassOnMr(vo.getClassOnMr());
-                    price.setStartDate(new Date());
-                    price.setMemos(vo.getMemos());
-                    price.setMaxRetailPrice(vo.getMaxRetailPrice());
-                    price.setMaterialCode(vo.getMaterialCode());
-                    price.setOperator(vo.getOperator());
-                    price.setPermitNo(vo.getPermitNo());
-                    price.setPermitDate(new Date());
-                    price.setRegisterNo(vo.getRegisterNo());
-                    price.setRegisterDate(new Date());
-                    price.setFdaOrCeNo(vo.getFdaOrCeNo());
-                    price.setFdaOrCeDate(new Date());
-                    price.setOtherNo(vo.getOtherNo());
-                    price.setOtherDate(new Date());
-                    price.setHospitalId(vo.getHospitalId());
-                    addList.add(price);
-                }
-                dicts = expPriceListFacade.saveExpPriceList(addList);
-            }
+            List<ExpPriceList> dicts = expPriceListFacade.saveExpPriceList(beanChangeVo);
             return Response.status(Response.Status.OK).entity(dicts).build();
         } catch (Exception e) {
             ErrorException errorException = new ErrorException();
@@ -153,6 +115,31 @@ public class ExpPriceListService {
                 errorException.setErrorMessage("操作失败！");
             }
             return  Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+    /**
+     * 停价
+     * @param price
+     * @return
+     */
+    @POST
+    @Path("stop-price")
+    public Response stopPrice(ExpPriceList price) {
+        try {
+            ExpPriceList dict = expPriceListFacade.stopPrice(price);
+            return Response.status(Response.Status.OK).entity(dict).build();
+        } catch (Exception e) {
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
+                errorException.setErrorMessage("输入数据超过长度！");
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
+                errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
 }

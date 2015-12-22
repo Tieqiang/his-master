@@ -85,6 +85,7 @@
         <!--基础对照-->
         <class>com.jims.his.domain.common.entity.ModulDict</class>
         <class>com.jims.his.domain.common.entity.ModuleVsMenu</class>
+        <class>com.jims.his.domain.common.entity.StaffVsModule</class>
 
         <!--全成本核算-->
         <class>com.jims.his.domain.htca.entity.AcctDeptDict</class>
@@ -96,6 +97,16 @@
         <class>com.jims.his.domain.htca.entity.HospitalIncomeRecord</class>
         <class>com.jims.his.domain.htca.entity.IncomeItemDict</class>
         <class>com.jims.his.domain.htca.entity.IncomeTypeDict</class>
+        <class>com.jims.his.domain.htca.entity.AcctDeptVsDeptDict</class>
+        <class>com.jims.his.domain.htca.entity.AcctReckItemClassDict</class>
+        <class>com.jims.his.domain.htca.entity.CalcIncomeDetail</class>
+        <class>com.jims.his.domain.htca.entity.CostAttrDict</class>
+        <class>com.jims.his.domain.htca.entity.CostGetWayDict</class>
+        <class>com.jims.his.domain.htca.entity.AssumeSolutionDict</class>
+        <class>com.jims.his.domain.htca.entity.CostRateDict</class>
+        <class>com.jims.his.domain.htca.entity.AssumeSolutionItemDict</class>
+        <class>com.jims.his.domain.htca.entity.AcctDeptCost</class>
+        <class>com.jims.his.domain.htca.entity.AcctParam</class>
         <class>com.jims.his.domain.htca.entity.ServiceDeptIncomeRule</class>
 
         <!-- 提供商——Hibernate -->

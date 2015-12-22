@@ -227,11 +227,27 @@ $(function () {
         }]]
     });
     //类型字典
-    $("#formClass").combobox({
-        url: '/api/exp-form-dict/list',
-        valueField: 'formCode',
-        textField: 'formName',
-        method: 'GET'
+    var forms = [];
+    //产品类别数据加载
+    var expFormDictPromise = $.get("/api/exp-form-dict/list", function (data) {
+        $.each(data, function (index, item) {
+            var ec = {};
+            ec.formCode = item.formCode;
+            ec.formName = item.formName;
+            forms.push(ec);
+        });
+        var all = {};
+        all.formCode = '';
+        all.formName = '全部';
+        forms.unshift(all);
+
+        $('#formClass').combobox({
+            panelHeight: 'auto',
+            width: 200,
+            data: forms,
+            valueField: 'formCode',
+            textField: 'formName'
+        });
     });
     //科室属性
     $("#exportDeptAttr").combobox({

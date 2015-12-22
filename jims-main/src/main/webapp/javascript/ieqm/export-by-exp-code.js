@@ -74,7 +74,7 @@ $(function () {
     $('#expCode').combogrid({
         panelWidth: 250,
         idField: 'expCode',
-        textField: 'expCode',
+        textField: 'expName',
         loadMsg: '数据正在加载',
         url: "/api/exp-name-dict/list-exp-name-by-input",
         mode: 'remote',
@@ -102,14 +102,18 @@ $(function () {
             title: '产品编码',
             field: 'expCode',
             width: "15%"
+        }, {
+            title: '产品名称',
+            field: 'expName',
+            width: "15%"
         },{
             title: '包装规格',
             field: 'packageSpec',
-            width: "15%"
+            width: "10%"
         }, {
             title: '单位',
             field: 'packageUnits',
-            width: "15%"
+            width: "10%"
         }, {
             title: '厂家',
             field: 'firmId',
@@ -117,15 +121,15 @@ $(function () {
         }, {
             title: '数量',
             field: 'quantity',
-            width: "15%"
+            width: "10%"
         }, {
             title: '金额',
             field: 'amount',
-            width: "15%"
+            width: "10%"
         }, {
             title: '去向库房',
             field: 'receiver',
-            width: "15%"
+            width: "10%"
         }]]
     });
 
