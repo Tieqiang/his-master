@@ -47,11 +47,6 @@ $(document).ready(function () {
             width: "10%",
             hidden: true
         }, {
-            title: "expSpec",
-            field: "expSpec",
-            width: "10%",
-            hidden: true
-        }, {
             title: "申请单号",
             field: "applicantNo",
             width: "10%",
@@ -87,7 +82,7 @@ $(document).ready(function () {
                 columns: [[
                     {field: 'expCode', title: '编码', width: 200, align: 'center'},
                     {field: 'expName', title: '名称', width: 150, align: 'center'},
-                    {field: 'expSpec', title: '规格', width: 50, align: 'center'},
+                    {field: 'minSpec', title: '规格', width: 50, align: 'center'},
                     {field: 'units', title: '单位', width: 50, align: 'center'},
                     {field: 'firmId', title: '厂家', width: 100, align: 'center'},
                     {field: 'inputCode', title: '拼音码', width: 50, align: 'center'},
@@ -96,16 +91,26 @@ $(document).ready(function () {
                     $("#dg").datagrid('endEdit', editRowIndex);
                     var rowDetail = $("#dg").datagrid('getData').rows[editRowIndex];
 
-                    rowDetail.packageSpec = rowData.expSpec;
+                    rowDetail.packageSpec = rowData.minSpec;
                     rowDetail.expCode = rowData.expCode;
                     rowDetail.packageUnits = rowData.units;
-                    rowDetail.expSpec = rowData.expSpec;
+                    rowDetail.expSpec = rowData.minSpec;
                     $("#dg").datagrid('refreshRow', editRowIndex);
                     $("#dg").datagrid('beginEdit', editRowIndex);
                 }
             }}
+        }, {
+            title: "规格",
+            field: "expSpec",
+            width: "10%",
+            editor: {
+                type: "textbox",
+                options: {
+                    disabled: true
+                }
+            }
         },{
-            title:"规格",
+            title:"包装规格",
             field:"packageSpec",
             width:"10%",
             editor:{
