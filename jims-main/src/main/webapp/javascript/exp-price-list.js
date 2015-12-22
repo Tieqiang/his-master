@@ -90,7 +90,7 @@ $(function () {
         columns: [[{
             title: 'id',
             field: 'id',
-            width: "17%"
+            hidden: true
         },{
             title: '代码',
             field: 'expCode',
@@ -180,19 +180,7 @@ $(function () {
             field: 'materialCode',
             width: "7%",
             editor: 'text'
-        },
-        //    {
-        //    title: '停价',
-        //    field: 'stopPrice',
-        //    width: "3%",
-        //    editor: {type: 'checkbox', options: {on: '停用', off: '启用'}},
-        //    onCheck: function (index, field, value) {
-        //        if (field == "stopPrice") {
-        //            alert(value);
-        //        }
-        //    }
-        //},
-            {
+        },{
             title: '批发价格',
             field: 'tradePrice',
             width: "5%",
@@ -544,7 +532,7 @@ $(function () {
     });
 
     $("#print").on('click', function () {
-
+        $.messager.alert('提示', "打印", "info");
     });
 
     var loadSimple = function(){
@@ -579,13 +567,11 @@ $(function () {
                 price.units = item.units;
                 price.firmId = item.firmId;
                 price.materialCode = item.materialCode;
-                //price.stopPrice = item.stopPrice;
                 price.tradePrice = item.tradePrice;
                 price.priceRatio = item.priceRatio;
                 price.retailPrice = item.retailPrice;
                 price.maxRetailPrice = item.maxRetailPrice;
                 price.registerNo = item.registerNo;
-                //price.registerDate = item.registerDate;
                 price.minSpec = item.minSpec;
                 price.minUnits = item.minUnits;
                 price.classOnInpRcpt = item.classOnInpRcpt;
@@ -594,16 +580,18 @@ $(function () {
                 price.subjCode = item.subjCode;
                 price.classOnMr = item.classOnMr;
                 price.permitNo = item.permitNo;
-                //price.permitDate = item.permitDate;
                 price.fdaOrCeNo = item.fdaOrCeNo;
-                //price.fdaOrCeDate = item.fdaOrCeDate;
-                //price.otherNo = item.otherNo;
-                //price.otherDate = item.otherDate;
                 price.startDate = item.startDate;
                 price.stopDate = item.stopDate;
                 price.memos = item.memos;
                 price.hospitalId = parent.config.hospitalId;
                 price.columnProtect = '1';
+                //price.stopPrice = item.stopPrice;
+                //price.registerDate = item.registerDate;
+                //price.permitDate = item.permitDate;
+                //price.fdaOrCeDate = item.fdaOrCeDate;
+                //price.otherNo = item.otherNo;
+                //price.otherDate = item.otherDate;
                 prices.push(price);
             });
         });
