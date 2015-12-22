@@ -528,6 +528,8 @@ $(function () {
 
     //查询按钮操作
     $("#search").on('click', function () {
+        $("#dg").datagrid('loadData', []);
+        $("#priceHis").datagrid('loadData', []);
         var startDate = $('#startDate').datetimebox('getText');
         var stopDate = $('#stopDate').datetimebox('getText');
 
@@ -553,6 +555,11 @@ $(function () {
             item.hospitalId = parent.config.hospitalId;
         });
         $.each(updated, function (index, item) {
+            //格式化日期
+            item.noticeEfficientDate = new Date(item.noticeEfficientDate);
+            item.hospitalId = parent.config.hospitalId;
+        });
+        $.each(deleted, function (index, item) {
             //格式化日期
             item.noticeEfficientDate = new Date(item.noticeEfficientDate);
             item.hospitalId = parent.config.hospitalId;
