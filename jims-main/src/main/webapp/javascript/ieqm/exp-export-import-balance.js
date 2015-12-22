@@ -1050,8 +1050,8 @@ $(function () {
         importMaster.subStorage = $("#subStorageIn").combobox('getValue');
         importMaster.accountIndicator = 0;
         importMaster.memos = $('#memosIn').textbox('getValue');
-        importMaster.operator = parent.config.loginId;
-        importMaster.acctoperator = "";////////// /////////////////////
+        importMaster.operator = parent.config.staffName;
+        importMaster.acctoperator = parent.config.staffName;////////// /////////////////////
         importMaster.acctdate = new Date();
         importMaster.principal = $("#principalIn").combogrid('getValue');
         importMaster.storekeeper = $("#storekeeperIn").combogrid('getValue');
