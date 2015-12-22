@@ -117,4 +117,29 @@ public class ExpPriceListService {
             return  Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
+
+    /**
+     * 停价
+     * @param price
+     * @return
+     */
+    @POST
+    @Path("stop-price")
+    public Response stopPrice(ExpPriceList price) {
+        try {
+            ExpPriceList dict = expPriceListFacade.stopPrice(price);
+            return Response.status(Response.Status.OK).entity(dict).build();
+        } catch (Exception e) {
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
+                errorException.setErrorMessage("输入数据超过长度！");
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
+                errorException.setErrorMessage("数据已存在，提交失败！");
+            } else {
+                errorException.setErrorMessage("提交失败！");
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
 }
