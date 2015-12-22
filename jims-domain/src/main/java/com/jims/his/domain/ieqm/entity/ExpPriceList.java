@@ -51,6 +51,8 @@ public class ExpPriceList implements java.io.Serializable {
     private String priceRatio;
     @Transient
     private String stopPrice;
+    @Transient
+    private String columnProtect;
 	// Constructors
 
 	/** default constructor */
@@ -399,5 +401,14 @@ public class ExpPriceList implements java.io.Serializable {
 
     public void setStopPrice(String stopPrice) {
         this.stopPrice = stopPrice;
+    }
+
+    @Transient
+    public String getColumnProtect() {
+        return columnProtect;
+    }
+
+    public void setColumnProtect(String columnProtect) {
+        this.columnProtect = columnProtect;
     }
 }
