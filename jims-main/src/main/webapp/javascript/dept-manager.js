@@ -2,12 +2,30 @@
  * Created by heren on 2015/9/14.
  */
 $(function () {
+
     $("#dept").searchbox({
         searcher: function (value, name) {
-            var rows = $("#tt").treegrid("getRows");
-            for (var i = 0; i < rows.length; i++) {
-                if (rows[i].deptName == value) {
-                    $("#tt").treegrid('select', i);
+            var children;
+            var roots = $('#tt').treegrid('getRoots'); //得到tree顶级node
+            for (var i = 0; i < roots.length; i++) { //循环顶级 node
+                children = $('#tt').treegrid('getChildren', roots[i].target);//获取顶级node下所有子节点
+                if (children) { //如果有子节点
+                    for (var j = 0; j < children.length; j++) { //循环所有子节点
+                        //console.log("num:"+j);
+                        //console.log(children[j]);
+                        if ($('#tt').treegrid('isLeaf', children[j].target)) { //判断子级是否为叶子节点,即不是父节点
+                            if (children[j].deptName.indexOf(value) >= 0) { //判断节点text是否包含搜索文本
+                                $('#tt').treegrid('select', children[j].target);//设置此节点为选择状态
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    if (roots[i].deptName.indexOf(value) >= 0) {
+                        alert("*"+ roots[i].deptName);
+                        $('#tt').treegrid('select', roots[i].target);//设置此节点为选择状态
+                        break;
+                    }
                 }
             }
         }
@@ -22,6 +40,10 @@ $(function () {
         fitColumns:true,
         title: parent.config.hospitalName + "--科室维护",
         columns: [[{
+            title: 'id',
+            field: 'id',
+            hidden:true
+        }, {
             title: '科室编码',
             field: 'deptCode'
 
