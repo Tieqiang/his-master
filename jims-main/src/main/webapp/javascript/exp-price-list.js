@@ -88,6 +88,10 @@ $(function () {
         footer: '#tb',
         singleSelect: true,
         columns: [[{
+            title: 'id',
+            field: 'id',
+            width: "17%"
+        },{
             title: '代码',
             field: 'expCode',
             width: "7%"
@@ -176,12 +180,19 @@ $(function () {
             field: 'materialCode',
             width: "7%",
             editor: 'text'
-        }, {
-            title: '停价',
-            field: 'stopPrice',
-            width: "3%",
-            editor: {type: 'checkbox', options: {on: '停用', off: '启用'}}
-        }, {
+        },
+        //    {
+        //    title: '停价',
+        //    field: 'stopPrice',
+        //    width: "3%",
+        //    editor: {type: 'checkbox', options: {on: '停用', off: '启用'}},
+        //    onCheck: function (index, field, value) {
+        //        if (field == "stopPrice") {
+        //            alert(value);
+        //        }
+        //    }
+        //},
+            {
             title: '批发价格',
             field: 'tradePrice',
             width: "5%",
@@ -386,8 +397,8 @@ $(function () {
         }, {
             title: '医院id',
             field: 'hospitalId',
-            width: "7%"
-
+            width: "7%",
+            hidden:true
         }
         ]],
         onClickRow: function (index, row) {
@@ -420,27 +431,6 @@ $(function () {
         $('#dg').datagrid('appendRow', {
             expCode: code,
             expName: name,
-            amountPerPackage: '',
-            expSpec: '',
-            units: '',
-            firmId: '',
-            materialCode: '',
-            stopPrice: '',
-            tradePrice: '',
-            priceRatio: '',
-            retailPrice: '',
-            maxRetailPrice: '',
-            registerNo: '',
-            minSpec: '',
-            minUnits: '',
-            classOnInpRcpt: '',
-            classOnOutpRcpt: '',
-            classOnReckoning: '',
-            subjCode: '',
-            classOnMr: '',
-            permitNo: '',
-            fdaOrCeNo: '',
-            memos: '',
             hospitalId:parent.config.hospitalId
         });
 
@@ -462,6 +452,38 @@ $(function () {
             } else {
                 $('#dg').datagrid('deleteRow', index);
                 editIndex = undefined;
+            }
+        }
+    });
+    //停价按钮功能
+    $("#stop").on('click', function () {
+        var row = $('#dg').datagrid('getSelected');
+        var index = $('#dg').datagrid('getRowIndex', row);
+        if (index == -1) {
+            $.messager.alert("提示", "请选择停价的行", "info");
+        } else {
+            if (row.columnProtect == 1) {
+                $.get("/api/exp-stock/get-quantity?expCode="+row.expCode+"&expSpec="+row.expSpec+"&firmId="+row.firmId, function (data) {
+                    if(data>0){
+                        $.messager.alert("提示", "全院库存不为0，不能停价！", "error");
+                    }else{
+                        $.postJSON("/api/exp-price-list/stop-price",row, function (data) {
+                            $.messager.alert("提示", "停价成功", "info");
+                            var promise = loadDict();//有价格信息
+
+                            promise.done(function () {
+                                if (prices.length > 0) {
+                                    $("#dg").datagrid('loadData', prices);
+                                    return;
+                                }
+                            });
+                        }, function (data) {
+                            $.messager.alert("提示", data.responseJSON.errorMessage, "error");
+                        })
+                    }
+                })
+            } else {
+                $.messager.alert("提示", "请先保存价格价格信息！", "info");
             }
         }
     });
@@ -517,7 +539,6 @@ $(function () {
 
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
-                //$.messager.alert("系统提示", "保存失败", "error");
             })
         }
     });
@@ -549,8 +570,8 @@ $(function () {
         prices.splice(0, prices.length);
         var pricePromise = $.get("/api/exp-price-list/list?expCode=" + expCode + "&hospitalId=" + parent.config.hospitalId, function (data) {
             $.each(data, function (index, item) {
-
                 var price = {};
+                price.id=item.id;
                 price.expCode = item.expCode;
                 price.expName = item.expName;
                 price.amountPerPackage = item.amountPerPackage;
@@ -558,7 +579,7 @@ $(function () {
                 price.units = item.units;
                 price.firmId = item.firmId;
                 price.materialCode = item.materialCode;
-                price.stopPrice = item.stopPrice;
+                //price.stopPrice = item.stopPrice;
                 price.tradePrice = item.tradePrice;
                 price.priceRatio = item.priceRatio;
                 price.retailPrice = item.retailPrice;
