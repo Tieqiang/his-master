@@ -122,15 +122,15 @@ $(function () {
                         para.expCode = expCode;
                     },
                     columns: [[{
-                        field: 'expSpec', title: '包装规格', width: "50%"
+                        field: 'dosePerUnit', title: '最小规格', width: "50%"
                     }, {
-                        field: 'units', title: '包装单位', width: "50%"
+                        field: 'doseUnits', title: '最小单位', width: "50%"
                     }]],
                     onClickRow: function (index, row) {
                         var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-                        $(ed.target).combogrid('setValue', row.expSpec);
+                        $(ed.target).combogrid('setValue', row.dosePerUnit);
                         var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'units'});
-                        $(edu.target).combobox('setValue', row.units);
+                        $(edu.target).combobox('setValue', row.doseUnits);
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
                         enter: function (e) {
@@ -138,9 +138,9 @@ $(function () {
                             var row = $(this).combogrid('grid').datagrid('getSelected');
                             if (row) {
                                 var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-                                $(ed.target).combogrid('setValue', row.expSpec);
+                                $(ed.target).combogrid('setValue', row.dosePerUnit);
                                 var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'units'});
-                                $(edu.target).combobox('setValue', row.units);
+                                $(edu.target).combobox('setValue', row.doseUnits);
                             }
                             $(this).combogrid('hidePanel');
                         }
@@ -258,15 +258,15 @@ $(function () {
                         para.expCode = expCode;
                     },
                     columns: [[{
-                        field: 'dosePerUnit', title: '最小规格', width: "50%"
+                        field: 'expSpec', title: '包装规格', width: "50%"
                     }, {
-                        field: 'doseUnits', title: '最小单位', width: "50%"
+                        field: 'units', title: '包装单位', width: "50%"
                     }]],
                     onClickRow: function (index, row) {
                         var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-                        $(ed.target).combogrid('setValue', row.dosePerUnit);
+                        $(ed.target).combogrid('setValue', row.expSpec);
                         var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-                        $(edu.target).combobox('setValue', row.doseUnits);
+                        $(edu.target).combobox('setValue', row.units);
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
                         enter: function (e) {
@@ -274,9 +274,9 @@ $(function () {
                             var row = $(this).combogrid('grid').datagrid('getSelected');
                             if (row) {
                                 var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-                                $(ed.target).combogrid('setValue', row.dosePerUnit);
+                                $(ed.target).combogrid('setValue', row.expSpec);
                                 var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-                                $(edu.target).combobox('setValue', row.doseUnits);
+                                $(edu.target).combobox('setValue', row.units);
                             }
                             $(this).combogrid('hidePanel');
                         }
