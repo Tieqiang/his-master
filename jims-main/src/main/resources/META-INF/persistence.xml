@@ -115,6 +115,8 @@
         <class>com.jims.his.domain.htca.entity.ServiceIncomeType</class>
         <class>com.jims.his.domain.htca.entity.AcctDeptProfit</class>
         <class>com.jims.his.domain.htca.entity.ServiceDeptIncomeRule</class>
+        <class>com.jims.his.domain.htca.entity.AcctSingleRewardDict</class>
+        <class>com.jims.his.domain.htca.entity.AcctSingleRewardRecord</class>
 
         <properties>
              <!--Oracle Dialect -->

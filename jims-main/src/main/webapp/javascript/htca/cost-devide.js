@@ -3,6 +3,9 @@
  */
 //一线科室成本提取
 $(function(){
+
+    var depts = undefined ;
+
     var acctDeptDict=[] ;
     $.get("/api/acct-dept-dict/acct-list?hospitalId="+parent.config.hospitalId,function(data){
         acctDeptDict = data ;
@@ -101,7 +104,10 @@ $(function(){
             width:'10%',
             editor:{type:'validatebox',options:{
                 validType:'number'
-            }}
+            }},
+            formatter:function(value,row,index){
+                return value.toFixed(2) ;
+            }
         },{
             title:'减免成本',
             field:'minusCost',
@@ -204,7 +210,17 @@ $(function(){
         },{
             name:'面积分摊法',
             id:'1'
-        }]
+        },{
+            name:'平均分摊法',
+            id:'2'
+        }],
+        onSelect:function(record){
+            if(record.id=='2'){
+                $("#acctDeptWin").window('open')
+            }else{
+                depts = undefined ;
+            }
+        }
     }) ;
 
     $("#itemWin").window({
@@ -230,6 +246,12 @@ $(function(){
             $.messager.alert('系统提示','请选择分摊方法','error') ;
             return ;
         }
+
+        if(devideWay=='2' && !depts){
+            $.messager.alert('系统提示','平均分摊法需要设置分摊核算单元','error') ;
+            return ;
+        }
+
         var totalMoney = $("#devideMoney").textbox('getValue') ;
         if(!totalMoney){
             $.messager.alert('系统提示','请填写分摊金额','error') ;
@@ -240,14 +262,83 @@ $(function(){
             msg:'正在加载中，请稍后....',
             text:'正在分摊...'
         }) ;
+        if(depts){
+            $.get("/api/acct-dept-cost/cost-devide?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+
+            "&costItemId="+costItemId+"&devideWay="+devideWay+"&totalMoney="+totalMoney+"&depts="+depts,function(data){
+                $.messager.alert('系统提示','分摊成功','info') ;
+                $("#deptCostTable").datagrid('loadData',data) ;
+                $("#itemWin").window('close') ;
+                $.messager.progress('close');
+            })
+        }else{
+            $.get("/api/acct-dept-cost/cost-devide?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+
+            "&costItemId="+costItemId+"&devideWay="+devideWay+"&totalMoney="+totalMoney,function(data){
+                $.messager.alert('系统提示','分摊成功','info') ;
+                $("#deptCostTable").datagrid('loadData',data) ;
+                $("#itemWin").window('close') ;
+                $.messager.progress('close');
+            })
+        }
 
-        $.get("/api/acct-dept-cost/cost-devide?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+
-        "&costItemId="+costItemId+"&devideWay="+devideWay+"&totalMoney="+totalMoney,function(data){
-            $.messager.alert('系统提示','分摊成功','info') ;
-            $("#deptCostTable").datagrid('loadData',data) ;
-            $("#itemWin").window('close') ;
-            $.messager.progress('close');
-        })
+    })
+
+
+    //设置分摊项目的对照科室
+    $("#acctDeptWin").window({
+        title:'分摊项目设置',
+        width:'500',
+        height:'500',
+        modal:true,
+        closed:true,
+        onOpen:function(){
+            $(this).window('center');
+        }
+    }) ;
+
+    $("#acctDeptTable").datagrid({
+        method:'GET',
+        fit:true,
+        fitColumns:true,
+        url:'/api/acct-dept-dict/list-end-dept?hospitalId='+parent.config.hospitalId,
+        columns:[[{
+            title:"编号",
+            field:'id',
+            checkbox:true
+        },{
+            title:'科室名称',
+            field:'deptName',
+            width:'50%'
+        },{
+            title:'科室代码',
+            field:'deptCode',
+            width:'50%'
+        }]]
+    }) ;
+
+
+    //取消按钮
+    $("#cancelAcctDeptBtn").on('click',function(){
+        $("#acctDeptWin").window('close');
+    });
+
+    $("#closeBtn").on('click',function(){
+        $("#itemWin").window('close') ;
+    })
+
+    $("#saveAcctDeptBtn").on('click',function(){
+        var rows = $("#acctDeptTable").datagrid('getSelections') ;
+        if(rows.length>0){
+            for(var i = 0 ;i<rows.length ;i++){
+                if(i==0){
+                    depts = rows[i].id ;
+                }
+                if(i>0){
+                    depts = depts +";"+rows[i].id ;
+                }
+            }
+        }
+        $("#acctDeptWin").window('close') ;
+        console.log(depts) ;
     })
 });
 

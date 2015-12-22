@@ -19,8 +19,6 @@
     <a href="#" id="devideSetBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">分摊设置</a>
     <a href="#" id="saveDevideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存分摊结果</a>
 </div>
-
-
 <!--项目分类-->
 <div id="itemWin" class="easyui-window" data-options="footer:'#itemWinFt',title:'核算类型维护'">
     <form id="itemForm" data-options="fit:true" style="padding:10px;">
@@ -43,6 +41,16 @@
     <a href="#" id="devideBtn" class="easyui-linkbutton" icon="icon-ok">分摊</a>
     <a href="#" id="closeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
 </div>
+
+<div id="acctDeptWin" class="easyui-window" data-options="footer:'#acctTb'">
+    <table id="acctDeptTable" class="easyui-datagrid"></table>
+</div>
+
+<div style="padding:5px;text-align:right;" id="acctTb">
+    <a href="#" id="saveAcctDeptBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="cancelAcctDeptBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
 
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>

@@ -157,9 +157,10 @@ public class AcctDeptCostService {
     @Path("cost-devide")
     public List<AcctDeptCost> devideAcctDeptCost(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth,
                                                  @QueryParam("devideWay")String devideWay,@QueryParam("costItemId")String costItemId,
-                                                 @QueryParam("totalMoney")Double totalMoney){
+                                                 @QueryParam("totalMoney")Double totalMoney,
+                                                 @QueryParam("depts")String depts){
 
-        return acctDeptCostFacade.devideAcctDeptCost(hospitalId,yearMonth,devideWay,costItemId,totalMoney) ;
+        return acctDeptCostFacade.devideAcctDeptCost(hospitalId,yearMonth,devideWay,costItemId,totalMoney,depts) ;
     }
 
 }
