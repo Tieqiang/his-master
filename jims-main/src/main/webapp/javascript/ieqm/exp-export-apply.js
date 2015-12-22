@@ -904,8 +904,8 @@ $(function () {
         exportMaster.accountIndicator = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
-        exportMaster.operator = parent.config.loginName;
-        exportMaster.acctoperator = parent.config.loginName;
+        exportMaster.operator = parent.config.staffName;
+        exportMaster.acctoperator = parent.config.staffName;
         //exportMaster.acctdate = "";
         exportMaster.principal = $("#principal").combogrid('getValue');
         exportMaster.storekeeper = $("#storekeeper").combogrid('getValue');

@@ -649,9 +649,10 @@ $(function(){
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
         exportMaster.accountIndicator = 0;
+        exportMaster.docStatus = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
-        exportMaster.operator = parent.config.loginName;
+        exportMaster.operator = parent.config.staffName;
         exportMaster.principal = $("#principal").combogrid('getText');
         exportMaster.storekeeper = $("#storekeeper").combogrid('getText');
         exportMaster.acctoperator = parent.config.staffName;

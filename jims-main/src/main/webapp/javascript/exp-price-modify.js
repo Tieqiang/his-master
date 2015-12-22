@@ -231,13 +231,13 @@ $(function () {
             $(firmIdEd.target).textbox('setValue', row.firmId);
 
             var originalTradePriceEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'originalTradePrice'});
-            $(originalTradePriceEd.target).numberbox('setValue', '0.00');
+            $(originalTradePriceEd.target).numberbox('setValue',row.tradePrice);
 
             var currentTradePriceEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'currentTradePrice'});
             $(currentTradePriceEd.target).numberbox('setValue', '0.00');
 
             var originalRetailPriceEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'originalRetailPrice'});
-            $(originalRetailPriceEd.target).numberbox('setValue', '0.00');
+            $(originalRetailPriceEd.target).numberbox('setValue', row.retailPrice);
 
             var currentRetailPriceEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'currentRetailPrice'});
             $(currentRetailPriceEd.target).numberbox('setValue', '0.00');
@@ -249,7 +249,7 @@ $(function () {
             $(modifyCredentialEd.target).textbox('setValue', 'x');
 
             var modifyManEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'modifyMan'});
-            $(modifyManEd.target).textbox('setValue', 'x');
+            $(modifyManEd.target).textbox('setValue', parent.config.staffName);
 
             $("#stockRecordDialog").dialog('close');
         }
@@ -528,6 +528,8 @@ $(function () {
 
     //查询按钮操作
     $("#search").on('click', function () {
+        $("#dg").datagrid('loadData', []);
+        $("#priceHis").datagrid('loadData', []);
         var startDate = $('#startDate').datetimebox('getText');
         var stopDate = $('#stopDate').datetimebox('getText');
 
@@ -553,6 +555,11 @@ $(function () {
             item.hospitalId = parent.config.hospitalId;
         });
         $.each(updated, function (index, item) {
+            //格式化日期
+            item.noticeEfficientDate = new Date(item.noticeEfficientDate);
+            item.hospitalId = parent.config.hospitalId;
+        });
+        $.each(deleted, function (index, item) {
             //格式化日期
             item.noticeEfficientDate = new Date(item.noticeEfficientDate);
             item.hospitalId = parent.config.hospitalId;

@@ -908,8 +908,9 @@ $(function () {
         importMaster.importClass = $("#importClass").combobox('getValue');
         importMaster.subStorage = $("#subStorage").combobox('getValue');
         importMaster.accountIndicator = 0;
+        importMaster.docStatus = 0;
         importMaster.memos = $('#memos').textbox('getValue');
-        importMaster.operator = parent.config.loginId;
+        importMaster.operator = parent.config.staffName;
         importMaster.principal = $("#principal").combogrid('getText');
         importMaster.storekeeper = $("#storekeeper").combogrid('getText');
         importMaster.buyer = $("#buyer").combogrid('getText');
