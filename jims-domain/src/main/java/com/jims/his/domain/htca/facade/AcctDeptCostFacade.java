@@ -47,7 +47,8 @@ public class AcctDeptCostFacade extends BaseFacade {
                 "                     and cost_item_id = '" + costItemId + "'" +
                 "                     and fetch_way='录入')\n" +
                 "                       " +
-                "   and hospital_id = '"+hospitalId+"'";
+                "   and hospital_id = '"+hospitalId+"'" +
+                "   and end_dept='1'";
 
         List<AcctDeptCost> acctDeptCosts = createNativeQuery(sql, new ArrayList<Object>(), AcctDeptCost.class);
         return acctDeptCosts;
@@ -267,7 +268,7 @@ public class AcctDeptCostFacade extends BaseFacade {
      * @param totalMoney
      * @return
      */
-    public List<AcctDeptCost> devideAcctDeptCost(String hospitalId, String yearMonth, String devideWay, String costItemId, Double totalMoney) {
+    public List<AcctDeptCost> devideAcctDeptCost(String hospitalId, String yearMonth, String devideWay, String costItemId, Double totalMoney,String depts) {
 
         if("0".equals(devideWay)){//人员分摊法
             return devideByPerson(hospitalId,yearMonth,costItemId,totalMoney) ;
@@ -275,6 +276,42 @@ public class AcctDeptCostFacade extends BaseFacade {
 
         if("1".equals(devideWay)){//科室面积分摊方法
             return devideByBuildArea(hospitalId,yearMonth,costItemId,totalMoney) ;
+        }
+
+        if("2".equals(devideWay)){
+            return devideByEq(hospitalId,yearMonth,costItemId,totalMoney,depts) ;
+        }
+        return null;
+    }
+
+    /**
+     * 平均分摊法
+     * @param hospitalId
+     * @param yearMonth
+     * @param costItemId
+     * @param totalMoney
+     * @param depts
+     * @return
+     */
+    private List<AcctDeptCost> devideByEq(String hospitalId, String yearMonth, String costItemId, Double totalMoney, String depts) {
+        String ids[]=depts.split(";") ;
+        if(ids.length>0){
+            Double perMoney = totalMoney /ids.length ;
+            List<AcctDeptCost> costs = new ArrayList<>() ;
+            for(String id:ids){
+                AcctDeptCost cost = new AcctDeptCost() ;
+                cost.setAcctDeptId(id);
+                cost.setFetchWay("分摊");
+                cost.setHospitalId(hospitalId);
+                cost.setCostItemId(costItemId);
+                cost.setMinusCost(0.0);
+                cost.setYearMonth(yearMonth);
+                cost.setCost(perMoney);
+                if(cost.getCost()!=0){
+                    costs.add(cost) ;
+                }
+            }
+            return costs ;
         }
         return null;
     }

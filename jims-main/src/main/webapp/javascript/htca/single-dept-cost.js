@@ -119,7 +119,7 @@ $(function(){
 
     $("#costDept").combobox({
         method:'GET',
-        url:'/api/acct-dept-dict/acct-list?hospitalId='+parent.config.hospitalId ,
+        url:'/api/acct-dept-dict/list-end-dept?hospitalId='+parent.config.hospitalId ,
         valueField:'id',
         textField:'deptName',
         onLoadSuccess:function(data){

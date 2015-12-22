@@ -390,4 +390,46 @@ $(function () {
 
     });
 
+    $("#checkStaffWin").window({
+        title:'设置模块医生',
+        width:700,
+        height:500,
+        onOpen:function(){
+            $(this).window('center') ;
+        }
+    }) ;
+
+    $("#waitCheckStaff").datagrid({
+        title:'待选工作人员',
+        fitColumns:true,
+        width:200,
+        fit:true,
+        toolbar:'#waitTb',
+        columns:[[{
+            title:'编号',
+            field:'id',
+            checkbox:true
+        },{
+            title:'登录名',
+            field:'loginName'
+        }]]
+
+    }) ;
+    $("#checkedStaff").datagrid({
+        title:'已选工作人员',
+        fitColumns:true,
+        width:200,
+        fit:true,
+        singleSelect:false,
+        columns:[[{
+            title:'编号',
+            field:'id',
+            checkbox:true
+        },{
+            title:'登录名',
+            field:'loginName'
+        }]]
+
+    }) ;
+
 })

@@ -677,7 +677,7 @@ $(function () {
         method:'GET',
         fit:true,
         fitColumns:true,
-        url:'/api/acct-dept-dict/acct-list?hospitalId='+parent.config.hospitalId,
+        url:'/api/acct-dept-dict/list-end-dept?hospitalId='+parent.config.hospitalId,
         columns:[[{
             title:"编号",
             field:'id',

@@ -132,7 +132,7 @@ $(function () {
             $(this).datagrid('updateRow',{
                 index:index,
                 row:rowData
-            })
+            });
         }
     });
 

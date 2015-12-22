@@ -95,6 +95,7 @@ $(function(){
     }
 
 
+    //下一步操作
     $("#saveItemBtn").on('click',function(){
         var hospitalId = $("#hospital").combobox('getValue') ;
         var moduleId = $("#modual").combobox('getValue') ;
@@ -113,4 +114,11 @@ $(function(){
         })
         //}
     })
+
+    //取消登录按钮
+    $("#cancelItemBtn").on('click',function(){
+        location.href="/login1.html" ;
+    }) ;
+
+
 })
