@@ -50,7 +50,7 @@ $(function () {
             width: "10%",
             editor: 'numberbox'
         },{
-            title: '产品类型',
+            title: '产品范围',
             field: 'expIndicator',
             width: "10%"
         }]]
