@@ -136,7 +136,7 @@ public class ExpInBook implements java.io.Serializable {
 		this.invoiceId = invoiceId;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "INVOICE_DATE", length = 7)
 	public Date getInvoiceDate() {
 		return this.invoiceDate;
@@ -254,7 +254,7 @@ public class ExpInBook implements java.io.Serializable {
 		this.batchId = batchId;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EFFECT", length = 7)
 	public Date getEffect() {
 		return this.effect;

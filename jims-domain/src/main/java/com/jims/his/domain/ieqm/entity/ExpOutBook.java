@@ -230,7 +230,7 @@ public class ExpOutBook implements java.io.Serializable {
 		this.batchId = batchId;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EFFECT", length = 7)
 	public Date getEffect() {
 		return this.effect;

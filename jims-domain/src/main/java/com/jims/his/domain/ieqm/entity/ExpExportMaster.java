@@ -113,7 +113,7 @@ public class ExpExportMaster implements java.io.Serializable {
 		this.storage = storage;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXPORT_DATE", length = 7)
 	public Date getExportDate() {
 		return this.exportDate;
@@ -222,7 +222,7 @@ public class ExpExportMaster implements java.io.Serializable {
 		this.acctoperator = acctoperator;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ACCTDATE", length = 7)
 	public Date getAcctdate() {
 		return this.acctdate;

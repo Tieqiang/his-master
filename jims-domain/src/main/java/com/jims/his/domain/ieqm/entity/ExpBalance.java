@@ -75,7 +75,7 @@ public class ExpBalance implements java.io.Serializable {
 		this.storeId = storeId;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "BAL_DATE", length = 7)
 	public Date getBalDate() {
 		return this.balDate;

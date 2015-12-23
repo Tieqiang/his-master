@@ -62,7 +62,7 @@ public class ExpModiPric implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MODI_DATE", length = 7)
 	public Date getModiDate() {
 		return this.modiDate;

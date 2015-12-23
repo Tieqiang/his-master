@@ -104,7 +104,7 @@ public class ExpOutputAccount implements java.io.Serializable {
 		this.receive = receive;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "OUT_DATE", length = 7)
 	public Date getOutDate() {
 		return this.outDate;

@@ -354,7 +354,7 @@ public class ExpPatsUseRec implements java.io.Serializable {
 		this.subPackageSpec2 = subPackageSpec2;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "PROVIDE_DATE", length = 7)
 	public Date getProvideDate() {
 		return this.provideDate;
@@ -382,7 +382,7 @@ public class ExpPatsUseRec implements java.io.Serializable {
 		this.remark = remark;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CALLBACK_DATE", length = 7)
 	public Date getCallbackDate() {
 		return this.callbackDate;

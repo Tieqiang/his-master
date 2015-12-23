@@ -100,7 +100,7 @@ public class ExpOperateConsum implements java.io.Serializable {
 		this.storeId = storeId;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SCHEDULE_DATE", length = 7)
 	public Date getScheduleDate() {
 		return this.scheduleDate;

@@ -99,7 +99,7 @@ public class ExpInventoryCheck implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CHECK_YEAR_MONTH", length = 7)
 	public Date getCheckYearMonth() {
 		return this.checkYearMonth;
