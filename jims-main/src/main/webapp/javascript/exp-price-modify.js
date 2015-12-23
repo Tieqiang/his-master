@@ -202,6 +202,9 @@ $(function () {
             title: '零售价',
             field: 'retailPrice'
         }, {
+            title: '物价编码',
+            field: 'materialCode'
+        }, {
             title: '注册证号',
             field: 'registerNo'
         }, {
@@ -209,11 +212,13 @@ $(function () {
             field: 'permitNo'
         }]],
         onClickRow: function (index, row) {
-            //var expCodeEdit = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expCode'});
-            //$(expCodeEdit.target).textbox('setValue', row.expCode);expCode
+            var expCodeEdit = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+            $(expCodeEdit.target).textbox('setValue', row.expCode);
 
             //var expNameEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expName'});
             //$(expNameEd.target).textbox('setValue', row.expName);
+            var materialCodeEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'materialCode'});
+            $(materialCodeEd.target).textbox('setValue', row.materialCode);
 
             var SpecEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
             $(SpecEd.target).textbox('setValue', row.expSpec);
@@ -266,7 +271,7 @@ $(function () {
             title: '代码',
             field: 'expCode',
             width: "7%",
-            editor: 'text'
+            editor: {type: 'textbox', options: {editable: false}}
         }, {
             title: '产品名称',
             field: 'expName',
@@ -305,32 +310,32 @@ $(function () {
             title: '物价编码',
             field: 'materialCode',
             width: "7%",
-            editor: 'text'
+            editor: {type: 'textbox', options: {editable:false}}
         }, {
             title: '包装规格',
             field: 'expSpec',
             width: "10%",
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {editable: false}}
         }, {
             title: '包装单位',
             field: 'units',
             width: "5%",
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {editable: false}}
         }, {
             title: '最小规格',
             field: 'minSpec',
             width: "7%",
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {editable: false}}
         }, {
             title: '最小单位',
             field: 'minUnits',
             width: "7%",
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {editable: false}}
         }, {
             title: '厂家',
             field: 'firmId',
             width: "7%",
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {editable: false}}
         }, {
             title: '原批发价',
             field: 'originalTradePrice',
@@ -341,7 +346,8 @@ $(function () {
                     max: 99999.99,
                     size: 8,
                     maxlength: 8,
-                    precision: 2
+                    precision: 2,
+                    editable: false
                 }
             }
         }, {
@@ -367,7 +373,8 @@ $(function () {
                     max: 99999.99,
                     size: 8,
                     maxlength: 8,
-                    precision: 2
+                    precision: 2,
+                    editable: false
                 }
             }
         }, {
