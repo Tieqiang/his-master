@@ -951,6 +951,7 @@ $(function () {
             detail.producedate = new Date(rows[i].producedate);
             detail.disinfectdate = new Date(rows[i].disinfectdate);
             detail.killflag = rows[i].killflag;
+            detail.id = rows[i].applicationId;
             //detail.recFlag="";
             //detail.recOperator="";
             //detail.recDate="";
@@ -980,11 +981,8 @@ $(function () {
                 if (r) {
                     var exportVo = getCommitData();
                     $.postJSON("/api/exp-stock/exp-export-manage", exportVo, function (data) {
-                        var rows = $("#right").datagrid('getRows');
-                        $.postJSON("/api/exp-provide-application/abandon", rows, function (data) {
-                            $.messager.alert('系统提示', '出库成功', 'success',function(){
-                                parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
-                            });
+                        $.messager.alert('系统提示', '出库成功', 'success',function(){
+                            parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
                             //刷新左侧列表
                             $("#search").click();
                             $("#clear").click();

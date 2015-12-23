@@ -661,10 +661,15 @@ public class ExpStockFacade extends BaseFacade {
         String stockCode = masters.get(0).getStorage() ;
         for(ExpExportDetail detail:details){
             ExpStock expStock = this.getExpStock(stockCode,detail.getExpCode(),detail.getExpSpec(),detail.getBatchNo(), detail.getFirmId(),detail.getPackageSpec(),detail.getHospitalId()) ;
+            ExpProvideApplication expProvideApplication = get(ExpProvideApplication.class, detail.getId());
             if(expStock !=null){
                 expStock.setQuantity(expStock.getQuantity() - detail.getQuantity());//更新库存
                 detail.setInventory(expStock.getQuantity() - detail.getQuantity());
                 merge(expStock) ;
+            }
+            if(expProvideApplication !=null){
+                expProvideApplication.setProvideFlag("1");//更新出库标志
+                merge(expProvideApplication) ;
             }
 
         }

@@ -604,7 +604,7 @@ $(function(){
         var rows = $("#exportDetail").datagrid('getRows');
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].quantity == 0) {
-                $.messager.alert("系统提示", "第" + parseInt(i+1) + "行入库数量为0 请重新填写", 'error');
+                $.messager.alert("系统提示", "第" + parseInt(i+1) + "行出库数量为0 请重新填写", 'error');
                 $("#exportDetail").datagrid('beginEdit', i);
                 return false;
             }

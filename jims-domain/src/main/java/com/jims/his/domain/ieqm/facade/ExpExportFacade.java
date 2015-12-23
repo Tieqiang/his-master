@@ -75,8 +75,6 @@ public class ExpExportFacade extends BaseFacade {
                 "         ( EXP_EXPORT_MASTER.HOSPITAL_ID = '" + hospitalId + "' ) \n" +
                 "order by  EXP_EXPORT_DETAIL.DOCUMENT_NO  \n" +
                 " \n";
-        System.out.println(sql);
-
         List<ExpExportDetialVo> nativeQuery = createNativeQuery(sql, new ArrayList<Object>(), ExpExportDetialVo.class);
         return nativeQuery;
 
