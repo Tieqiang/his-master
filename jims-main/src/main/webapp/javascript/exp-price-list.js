@@ -122,15 +122,19 @@ $(function () {
                         para.expCode = expCode;
                     },
                     columns: [[{
-                        field: 'dosePerUnit', title: '最小规格', width: "50%"
+                        field: 'expSpec', title: '包装规格', width: "50%"
                     }, {
-                        field: 'doseUnits', title: '最小单位', width: "50%"
+                        field: 'units', title: '包装单位', width: "50%"
                     }]],
                     onClickRow: function (index, row) {
                         var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-                        $(ed.target).combogrid('setValue', row.dosePerUnit);
+                        $(ed.target).combogrid('setValue', row.expSpec);
                         var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'units'});
-                        $(edu.target).combobox('setValue', row.doseUnits);
+                        $(edu.target).textbox('setValue', row.units);
+                        var minSpec = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
+                        $(minSpec.target).textbox('setValue', row.expSpec);
+                        var minUnits = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
+                        $(minUnits.target).textbox('setValue', row.units);
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
                         enter: function (e) {
@@ -138,9 +142,13 @@ $(function () {
                             var row = $(this).combogrid('grid').datagrid('getSelected');
                             if (row) {
                                 var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-                                $(ed.target).combogrid('setValue', row.dosePerUnit);
+                                $(ed.target).combogrid('setValue', row.expSpec);
                                 var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'units'});
-                                $(edu.target).combobox('setValue', row.doseUnits);
+                                $(edu.target).textbox('setValue', row.units);
+                                var minSpec = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
+                                $(minSpec.target).textbox('setValue', row.expSpec);
+                                var minUnits = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
+                                $(minUnits.target).textbox('setValue', row.units);
                             }
                             $(this).combogrid('hidePanel');
                         }
@@ -151,16 +159,21 @@ $(function () {
             title: '包装单位',
             field: 'units',
             width: "5%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'measuresName',
-                    textField: 'measuresName',
-                    method: 'get',
-                    url: '/api/measures-dict/list'
+            editor: {type:'textbox',
+                options:{
+                    editable:false
                 }
             }
+            //editor: {
+            //    type: 'combobox',
+            //    options: {
+            //        panelHeight: 'auto',
+            //        valueField: 'measuresName',
+            //        textField: 'measuresName',
+            //        method: 'get',
+            //        url: '/api/measures-dict/list'
+            //    }
+            //}
         }, {
             title: '厂家',
             field: 'firmId',
@@ -246,57 +259,71 @@ $(function () {
             field: 'minSpec',
             width: "10%",
             editor: {
-                type: 'combogrid',
+                type: 'textbox',
                 options: {
-                    idField: 'minSpec',
-                    textValue: 'minSpec',
-                    singleSelect: true,
-                    method: 'GET',
-                    url: '/api/exp-dict/list-query',
-                    mode: 'remote',
-                    onBeforeLoad: function (para) {
-                        para.expCode = expCode;
-                    },
-                    columns: [[{
-                        field: 'expSpec', title: '包装规格', width: "50%"
-                    }, {
-                        field: 'units', title: '包装单位', width: "50%"
-                    }]],
-                    onClickRow: function (index, row) {
-                        var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-                        $(ed.target).combogrid('setValue', row.expSpec);
-                        var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-                        $(edu.target).combobox('setValue', row.units);
-                    },
-                    keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
-                        enter: function (e) {
-
-                            var row = $(this).combogrid('grid').datagrid('getSelected');
-                            if (row) {
-                                var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-                                $(ed.target).combogrid('setValue', row.expSpec);
-                                var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-                                $(edu.target).combobox('setValue', row.units);
-                            }
-                            $(this).combogrid('hidePanel');
-                        }
-                    })
+                    editable: false
                 }
             }
+            //,
+            //editor: {
+            //    type: 'combogrid',
+            //    options: {
+            //        idField: 'minSpec',
+            //        textValue: 'minSpec',
+            //        singleSelect: true,
+            //        method: 'GET',
+            //        url: '/api/exp-dict/list-query',
+            //        mode: 'remote',
+            //        onBeforeLoad: function (para) {
+            //            para.expCode = expCode;
+            //        },
+            //        columns: [[{
+            //            field: 'expSpec', title: '包装规格', width: "50%"
+            //        }, {
+            //            field: 'units', title: '包装单位', width: "50%"
+            //        }]],
+            //        onClickRow: function (index, row) {
+            //            var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
+            //            $(ed.target).combogrid('setValue', row.expSpec);
+            //            var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
+            //            $(edu.target).combobox('setValue', row.units);
+            //        },
+            //        keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+            //            enter: function (e) {
+            //
+            //                var row = $(this).combogrid('grid').datagrid('getSelected');
+            //                if (row) {
+            //                    var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
+            //                    $(ed.target).combogrid('setValue', row.expSpec);
+            //                    var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
+            //                    $(edu.target).combobox('setValue', row.units);
+            //                }
+            //                $(this).combogrid('hidePanel');
+            //            }
+            //        })
+            //    }
+            //}
         }, {
             title: '最小单位',
             field: 'minUnits',
             width: "5%",
             editor: {
-                type: 'combobox',
+                type: 'textbox',
                 options: {
-                    panelHeight: 'auto',
-                    valueField: 'measuresName',
-                    textField: 'measuresName',
-                    method: 'get',
-                    url: '/api/measures-dict/list'
+                    editable: false
                 }
             }
+            //,
+            //editor: {
+            //    type: 'combobox',
+            //    options: {
+            //        panelHeight: 'auto',
+            //        valueField: 'measuresName',
+            //        textField: 'measuresName',
+            //        method: 'get',
+            //        url: '/api/measures-dict/list'
+            //    }
+            //}
         }, {
             title: '住院收据费用分类',
             field: 'classOnInpRcpt',
