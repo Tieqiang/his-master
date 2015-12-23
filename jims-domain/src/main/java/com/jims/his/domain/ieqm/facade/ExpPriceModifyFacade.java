@@ -209,7 +209,17 @@ public class ExpPriceModifyFacade extends BaseFacade {
                 priceNew.setStartDate(up.getActualEfficientDate());
                 priceNew.setStopDate(null);
                 priceNew.setMemos(priceOld.getMemos());
+                priceNew.setMaxRetailPrice(priceOld.getMaxRetailPrice());
                 priceNew.setMaterialCode(priceOld.getMaterialCode());
+                priceNew.setOperator(dict.getModifyMan());
+                priceNew.setPermitNo(priceOld.getPermitNo());
+                priceNew.setPermitDate(priceOld.getPermitDate());
+                priceNew.setRegisterNo(priceOld.getRegisterNo());
+                priceNew.setRegisterDate(priceOld.getRegisterDate());
+                priceNew.setFdaOrCeNo(priceOld.getFdaOrCeNo());
+                priceNew.setFdaOrCeDate(priceOld.getFdaOrCeDate());
+                priceNew.setOtherNo(priceOld.getOtherNo());
+                priceNew.setOtherDate(priceOld.getOtherDate());
                 priceNew.setHospitalId(up.getHospitalId());
                 this.merge(priceNew);
             }
