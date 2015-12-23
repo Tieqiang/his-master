@@ -233,7 +233,7 @@ public class ExpPriceListFacade extends BaseFacade {
      */
     public ExpPriceList getExpPriceList(String expCode, String expSpec, String firmId, String units){
         String hql = "from ExpPriceList pri where pri.expCode='" + expCode +"' and pri.expSpec='"
-                + expSpec + "' and pri.firmId='" + firmId + "' and pri.units='" + units +"'";
+                + expSpec + "' and pri.firmId='" + firmId + "' and pri.units='" + units +"' and pri.stopDate is null ";
         List resultList = this.entityManager.createQuery(hql).getResultList();
         if (resultList.size() > 0) {
             return(ExpPriceList)resultList.get(0);
