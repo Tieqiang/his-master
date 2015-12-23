@@ -164,6 +164,10 @@ $(function () {
         height: 500,
         singleSelect: true,
         columns: [[{
+            title: 'id',
+            field: 'id',
+            hidden: true
+        }, {
             title: '代码',
             field: 'expCode',
             width: "7%"
@@ -459,8 +463,8 @@ $(function () {
 
         var inserted = $("#tab2").datagrid("getRows");
         var deleted = $("#tab1").datagrid('getChanges', 'deleted');
-        var updated = $("#tab1").datagrid('getChanges', 'updated');
-
+        //var updated = $("#tab1").datagrid('getChanges', 'updated');
+        var updated = $("#tab1").datagrid("getRows");
         $.each(inserted, function (index, item) {
             //格式化日期
             item.actualEfficientDate = new Date(item.actualEfficientDate);
