@@ -110,6 +110,7 @@ $(function () {
 
     //定义页面中部expNAmeDict列表
     $("#expNameDict").datagrid({
+        title: '产品名称',
         footer: '#tbNameDict',
         singleSelect: true,
         fit:true,
@@ -134,6 +135,7 @@ $(function () {
     });
     //定义页面下方expDict列表
     $("#expDict").datagrid({
+        title:'产品属性',
         footer: '#tbDict',
         singleSelect: true,
         fit: true,
@@ -395,35 +397,24 @@ $(function () {
     //增加ExpNameDict
     $("#addExpName").on('click',function(){
         stopEdit();
-        var allRows = $('#expNameDict').datagrid("getRows");
-        if (allRows.length > 0) {
-            var code = $('#expNameDict').datagrid('getData').rows[allRows.length - 1].expCode;
-            $('#expNameDict').datagrid('appendRow', {
-                expCode: code, expName: ''
-            });
-            var addRowIndex = $("#expNameDict").datagrid('getRowIndex', allRows[allRows.length - 1]);
-            editIndex = addRowIndex;
-            $("#expNameDict").datagrid('selectRow', editIndex);
-            $("#expNameDict").datagrid('beginEdit', editIndex);
-        } else {
-            var getMax = newExpCode();
-            console.log("getMax:" + getMax);
-            if (getMax != "") {
-                getMax.done(function () {
-                    if (newCode != '') {
-                        $('#expNameDict').datagrid('appendRow', {
-                            expCode: newCode, expName: ''
-                        });
-                        var rows = $("#expNameDict").datagrid("getRows");
-                        var addRowIndex = $("#expNameDict").datagrid('getRowIndex', rows[rows.length - 1]);
-                        editIndex = addRowIndex;
-                        $("#expNameDict").datagrid('selectRow', editIndex);
-                        $("#expNameDict").datagrid('beginEdit', editIndex);
-                    }
-                })
-            }
 
+        var getMax = newExpCode();
+        console.log("getMax:" + getMax);
+        if (getMax != "") {
+            getMax.done(function () {
+                if (newCode != '') {
+                    $('#expNameDict').datagrid('appendRow', {
+                        expCode: newCode, expName: ''
+                    });
+                    var rows = $("#expNameDict").datagrid("getRows");
+                    var addRowIndex = $("#expNameDict").datagrid('getRowIndex', rows[rows.length - 1]);
+                    editIndex = addRowIndex;
+                    $("#expNameDict").datagrid('selectRow', editIndex);
+                    $("#expNameDict").datagrid('beginEdit', editIndex);
+                }
+            })
         }
+
     });
 
     //删除ExpNameDict
@@ -451,17 +442,15 @@ $(function () {
         var allRowsBottom = $('#expDict').datagrid("getRows");
         var code = "";
         var name = "";
-
+        var row = $('#expNameDict').datagrid('getSelected');
         if (allRowsBottom.length <= 0 && allRowsTop.length <= 0) {
+            $.messager.alert("提示", "请首先添加产品名称！", "error");
+        } else if (!row) {
+            $.messager.alert("提示", "请首先选中产品名称！", "error");
+        }else {
+            code = row.expCode;
+            name = row.expName;
 
-        } else {
-            if (allRowsBottom.length > 0) {
-                code = $('#expDict').datagrid('getData').rows[allRowsBottom.length - 1].expCode;
-                name = $('#expDict').datagrid('getData').rows[allRowsBottom.length - 1].expName;
-            } else if (allRowsBottom.length <= 0 && allRowsTop.length > 0) {
-                code = $('#expNameDict').datagrid('getData').rows[allRowsTop.length - 1].expCode;
-                name = $('#expNameDict').datagrid('getData').rows[allRowsTop.length - 1].expName
-            }
             $('#expDict').datagrid('appendRow', {
                 expCode: code, expName: name, expSpec: '', units: '', expForm: '', toxiProperty: '', dosePerUnit: '',
                 doseUnits: '', storageCode: parent.config.storageCode, expIndicator: ''
