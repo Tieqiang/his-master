@@ -137,7 +137,7 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    valueField: 'name',
+                    valueField: 'code',
                     textField: 'name',
                     data: [{'code': '1', 'name': '全院产品'}, {'code': '2', 'name': '普通产品'}]
                 }
@@ -359,6 +359,7 @@ $(function () {
         if (beanChangeVo) {
             $.postJSON("/api/exp-name-dict/save", beanChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
+                $("#clear").click();
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
             })
