@@ -80,6 +80,7 @@ public class ExpStockService {
                 "       c.FIRM_ID,\n" +
                 "       c.TRADE_PRICE,\n" +
                 "       c.retail_price,\n" +
+                "       c.material_code,\n" +
                 "       nvl(d.quantity, 0)quantity,\n" +
                 "       c.Register_no,\n" +
                 "       c.Permit_no\n" +
