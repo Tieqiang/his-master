@@ -258,15 +258,98 @@ $(function () {
 
             $("#stockRecordDialog").dialog('close');
         }
+    });
 
+    $("#hisDialog").dialog({
+        title: '产品价格信息',
+        width: 1000,
+        height: 300,
+        left: 100,
+        top:100,
+        closed: false,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#priceHis").datagrid('load', {
+                expCode: expCode
+            });
+        }
+    });
+    $("#priceHis").datagrid({
+        url: '/api/exp-price-modify/list-history/',
+        method: 'GET',
+        singleSelect: true,
+        fit:true,
+        columns: [[{
+            title: '代码',
+            field: 'expCode',
+            width: "7%"
+        }, {
+            title: '物价编码',
+            field: 'materialCode',
+            width: "7%"
+        }, {
+            title: '产品名称',
+            field: 'expName',
+            width: "7%"
+        }, {
+            title: '产品规格',
+            field: 'expSpec',
+            width: "7%"
+        }, {
+            title: '单位',
+            field: 'units',
+            width: "5%"
+        }, {
+            title: '厂家',
+            field: 'firmId',
+            width: "7%"
+        }, {
+            title: '市场价',
+            field: 'tradePrice',
+            width: "5%"
+        }, {
+            title: '零售价',
+            field: 'retailPrice',
+            width: "5%"
+        }, {
+            title: '包装量',
+            field: 'amountPerPackage',
+            width: "7%"
+        }, {
+            title: '最小规格',
+            field: 'minSpec',
+            width: "7%"
+        }, {
+            title: '最小单位',
+            field: 'minUnits',
+            width: "5%"
+        }, {
+            title: '起用日期',
+            field: 'startDate',
+            width: "8%",
+            formatter: formatterDate
+        }, {
+            title: '停止日期',
+            field: 'stopDate',
+            width: "8%",
+            formatter: formatterDate
+        }, {
+            title: '备注',
+            field: 'memos',
+            width: "7%"
+        }
+        ]]
     });
 
     $("#dg").datagrid({
         title: '调价记录维护',
         loadMsg: '数据正在加载',
         toolbar: '#ft',
-        height: 300,
+        footer: '#tb',
         singleSelect: true,
+        fit:true,
         columns: [[{
             title: '代码',
             field: 'expCode',
@@ -435,73 +518,10 @@ $(function () {
                 $(this).datagrid('beginEdit', index);
                 editIndex = index;
             }else{
-                loadHis(row.expCode);
+                expCode = row.expCode;
+                $("#hisDialog").dialog('open');
             }
         }
-    });
-
-    $("#priceHis").datagrid({
-        height: 300,
-        footer: '#tb',
-        singleSelect: true,
-        columns: [[{
-            title: '代码',
-            field: 'expCode',
-            width: "7%"
-        }, {
-            title: '物价编码',
-            field: 'materialCode',
-            width: "7%"
-        }, {
-            title: '产品名称',
-            field: 'expName',
-            width: "7%"
-        }, {
-            title: '产品规格',
-            field: 'expSpec',
-            width: "7%"
-        }, {
-            title: '单位',
-            field: 'units',
-            width: "5%"
-        }, {
-            title: '厂家',
-            field: 'firmId',
-            width: "7%"
-        }, {
-            title: '市场价',
-            field: 'tradePrice',
-            width: "5%"
-        }, {
-            title: '零售价',
-            field: 'retailPrice',
-            width: "5%"
-        }, {
-            title: '包装量',
-            field: 'amountPerPackage',
-            width: "7%"
-        }, {
-            title: '最小规格',
-            field: 'minSpec',
-            width: "7%"
-        }, {
-            title: '最小单位',
-            field: 'minUnits',
-            width: "5%"
-        }, {
-            title: '起用日期',
-            field: 'startDate',
-            width: "8%"
-        }, {
-            title: '停止日期',
-            field: 'stopDate',
-            width: "8%"
-        }, {
-            title: '备注',
-            field: 'memos',
-            width: "7%"
-        }
-        ]]
     });
 
     //新增按钮功能
@@ -614,22 +634,6 @@ $(function () {
         });
     }
 
-    var loadHis = function(expCode){
-        $.get("/api/exp-price-modify/list-history?expCode=" + expCode, function (data) {
-            if (data) {
-                $.each(data, function (index, item) {
-                    //格式化日期
-                    item.startDate = formatterDate(new Date(item.startDate));
-                    if(item.stopDate!=null){
-                        item.stopDate = formatterDate(new Date(item.stopDate));
-                    }
-
-                });
-                $("#priceHis").datagrid('loadData', data);
-                $("#priceHis").datagrid("autoMergeCells", ['expCode', 'expName','expSpec']);
-            }
-        });
-    }
 });
 
 
