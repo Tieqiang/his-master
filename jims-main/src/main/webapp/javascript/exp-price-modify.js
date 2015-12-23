@@ -552,16 +552,27 @@ $(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
+        var flag=true;
         var inserted = $("#dg").datagrid("getChanges", "inserted");
         var deleted = $("#dg").datagrid('getChanges', 'deleted');
         var updated = $("#dg").datagrid('getChanges', 'updated');
 
         $.each(inserted, function (index, item) {
+            if(item.currentTradePrice<=0 || item.currentRetailPrice<=0){
+                $.messager.alert("系统提示", "第" + parseInt(index+1) + "行新批发价或新零售价为0 请重新填写", 'error');
+                return flag=false;
+
+            }
             //格式化日期
             item.noticeEfficientDate = new Date(item.noticeEfficientDate);
             item.hospitalId = parent.config.hospitalId;
         });
         $.each(updated, function (index, item) {
+            if(item.currentTradePrice<=0 || item.currentRetailPrice<=0){
+                $.messager.alert("系统提示", "第" + parseInt(index+1) + "行新批发价或新零售价为0 请重新填写", 'error');
+                return flag=false;
+
+            }
             //格式化日期
             item.noticeEfficientDate = new Date(item.noticeEfficientDate);
             item.hospitalId = parent.config.hospitalId;
@@ -575,8 +586,7 @@ $(function () {
         expPriceModifyChangeVo.inserted = inserted;
         expPriceModifyChangeVo.deleted = deleted;
         expPriceModifyChangeVo.updated = updated;
-        console.log(inserted);
-        if (expPriceModifyChangeVo) {
+        if (expPriceModifyChangeVo && flag) {
             $.postJSON("/api/exp-price-modify/save", expPriceModifyChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
                 loadDict();
