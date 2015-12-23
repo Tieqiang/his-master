@@ -146,6 +146,7 @@ $(document).ready(function () {
             title:"被申请科室",
             field:"provideName",
             width:"10%",
+            hidden:true,
             editor:{
                 type:"textbox",
                 options: {
@@ -155,6 +156,7 @@ $(document).ready(function () {
             title: "申请科室",
             field: "applicantName",
             width: "10%",
+            hidden: true,
             editor: {
                 type: "textbox",
                 options: {
