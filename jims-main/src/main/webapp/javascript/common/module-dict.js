@@ -328,7 +328,7 @@ $(function () {
         searcher: function (value, name) {
             var rows = $("#waitCheckStaff").datagrid("getRows");
             for (var i = 0; i < rows.length; i++) {
-                if (rows[i].name == value) {
+                if (rows[i].name == value || rows[i].loginName == value) {
                     $("#waitCheckStaff").datagrid('selectRow', i);
                 }
             }
