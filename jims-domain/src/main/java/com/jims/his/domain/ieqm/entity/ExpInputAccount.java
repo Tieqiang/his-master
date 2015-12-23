@@ -104,7 +104,7 @@ public class ExpInputAccount implements java.io.Serializable {
 		this.supply = supply;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "IN_DATE", length = 7)
 	public Date getInDate() {
 		return this.inDate;

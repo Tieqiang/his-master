@@ -186,7 +186,7 @@ public class ExpBarCodeRec implements java.io.Serializable {
 		this.operator = operator;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "REC_DATE", length = 7)
 	public Date getRecDate() {
 		return this.recDate;

@@ -230,7 +230,7 @@ public class ExpPlan implements java.io.Serializable {
 		this.inSum = inSum;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "PLAN_DATE", length = 7)
 	public Date getPlanDate() {
 		return this.planDate;
@@ -240,7 +240,7 @@ public class ExpPlan implements java.io.Serializable {
 		this.planDate = planDate;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "OVER_DATE", length = 7)
 	public Date getOverDate() {
 		return this.overDate;

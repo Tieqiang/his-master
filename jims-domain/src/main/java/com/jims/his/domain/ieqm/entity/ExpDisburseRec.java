@@ -153,7 +153,7 @@ public class ExpDisburseRec implements java.io.Serializable {
 		this.checkerNo = checkerNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DISBURSE_DATE", length = 7)
 	public Date getDisburseDate() {
 		return this.disburseDate;

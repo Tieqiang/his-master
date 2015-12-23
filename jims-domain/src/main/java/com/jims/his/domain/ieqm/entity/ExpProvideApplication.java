@@ -159,7 +159,7 @@ public class ExpProvideApplication implements java.io.Serializable {
 		this.packageUnits = packageUnits;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ENTER_DATE_TIME", length = 7)
 	public Date getEnterDateTime() {
 		return this.enterDateTime;
@@ -232,7 +232,7 @@ public class ExpProvideApplication implements java.io.Serializable {
 		this.retflag = retflag;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "RETDATE", length = 7)
 	public Date getRetdate() {
 		return this.retdate;

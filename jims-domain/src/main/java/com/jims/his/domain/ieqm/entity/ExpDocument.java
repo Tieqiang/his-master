@@ -195,7 +195,7 @@ public class ExpDocument implements java.io.Serializable {
 		this.expForm = expForm;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXPORT_DATE", length = 7)
 	public Date getExportDate() {
 		return this.exportDate;
@@ -205,7 +205,7 @@ public class ExpDocument implements java.io.Serializable {
 		this.exportDate = exportDate;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DOCUMENT_DATE", length = 7)
 	public Date getDocumentDate() {
 		return this.documentDate;
