@@ -176,7 +176,7 @@ public class ExpPriceModify implements java.io.Serializable {
 		this.currentRetailPrice = currentRetailPrice;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "NOTICE_EFFICIENT_DATE", length = 7)
 	public Date getNoticeEfficientDate() {
 		return this.noticeEfficientDate;
@@ -186,7 +186,7 @@ public class ExpPriceModify implements java.io.Serializable {
 		this.noticeEfficientDate = noticeEfficientDate;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ACTUAL_EFFICIENT_DATE", length = 7)
 	public Date getActualEfficientDate() {
 		return this.actualEfficientDate;

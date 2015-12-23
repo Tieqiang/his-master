@@ -239,7 +239,7 @@ public class ExpPriceList implements java.io.Serializable {
 		this.classOnMr = classOnMr;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "START_DATE", length = 7)
 	public Date getStartDate() {
 		return this.startDate;
@@ -249,7 +249,7 @@ public class ExpPriceList implements java.io.Serializable {
 		this.startDate = startDate;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "STOP_DATE", length = 7)
 	public Date getStopDate() {
 		return this.stopDate;
@@ -304,7 +304,7 @@ public class ExpPriceList implements java.io.Serializable {
 		this.permitNo = permitNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "PERMIT_DATE", length = 7)
 	public Date getPermitDate() {
 		return this.permitDate;
@@ -323,7 +323,7 @@ public class ExpPriceList implements java.io.Serializable {
 		this.registerNo = registerNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "REGISTER_DATE", length = 7)
 	public Date getRegisterDate() {
 		return this.registerDate;
@@ -342,7 +342,7 @@ public class ExpPriceList implements java.io.Serializable {
 		this.fdaOrCeNo = fdaOrCeNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "FDA_OR_CE_DATE", length = 7)
 	public Date getFdaOrCeDate() {
 		return this.fdaOrCeDate;
@@ -361,7 +361,7 @@ public class ExpPriceList implements java.io.Serializable {
 		this.otherNo = otherNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "OTHER_DATE", length = 7)
 	public Date getOtherDate() {
 		return this.otherDate;
