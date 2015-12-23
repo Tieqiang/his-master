@@ -621,10 +621,10 @@ $(function () {
         var stopDate = $('#stopDate').datetimebox('getText');
         $.get("/api/exp-price-modify/list?startDate=" + startDate + "&stopDate=" + stopDate, function (data) {
             if (data) {
-                //$.each(data, function (index, item) {
-                //    //格式化日期
-                //    item.noticeEfficientDate = formatterDate(new Date(item.noticeEfficientDate));
-                //});
+                $.each(data, function (index, item) {
+                    //格式化日期
+                    item.noticeEfficientDate = formatterDate(new Date(item.noticeEfficientDate));
+                });
                 $("#dg").datagrid('loadData', data);
             }else{
                 $.messager.alert("系统提示", "数据库暂无数据", "info");
