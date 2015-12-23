@@ -22,166 +22,6 @@ $(function () {
         $(this).siblings(":radio").next().combogrid('disable');
     });
 
-    //定义页面中部expNAmeDict列表
-    $("#expNameDict").datagrid({
-        footer: '#tbNameDict',
-        singleSelect: true,
-        fit:true,
-        columns: [[{
-            title: '代码',
-            field: 'expCode',
-            width: "30%"
-        }, {
-            title: '品名',
-            field: 'expName',
-            width: "30%",
-            editor: {type: 'text', options: {required: true}}
-        }
-        ]],
-        onClickRow: function (index, row) {
-            stopEdit();
-            if (row.columnProtect != 1) {
-                $(this).datagrid('beginEdit', index);
-                editIndex = index;
-            }
-        }
-    });
-    //定义页面下方expDict列表
-    $("#expDict").datagrid({
-        footer: '#tbDict',
-        singleSelect: true,
-        fit: true,
-        columns: [[{
-            title: '代码',
-            field: 'expCode',
-            width: "10%"
-        }, {
-            title: '品名',
-            field: 'expName',
-            width: "10%"
-        }, {
-            title: '规格',
-            field: 'expSpec',
-            width: "10%",
-            editor: {type: 'text', options: {required: true}}
-        }, {
-            title: '单位',
-            field: 'units',
-            width: "10%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'measuresName',
-                    textField: 'measuresName',
-                    method: 'get',
-                    url: '/api/measures-dict/list'
-                }
-            }
-        }, {
-            title: '类型',
-            field: 'expForm',
-            width: "10%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'formName',
-                    textField: 'formName',
-                    method: 'get',
-                    url: '/api/exp-form-dict/list'
-                }
-            }
-        }, {
-            title: '属性',
-            field: 'toxiProperty',
-            width: "10%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'toxiProperty',
-                    textField: 'toxiProperty',
-                    method: 'get',
-                    url: '/api/exp-property-dict/list'
-                }
-            }
-        }, {
-            title: '单位数量',
-            field: 'dosePerUnit',
-            width: "7%",
-            editor: 'numberbox'
-        }, {
-            title: '数量单位',
-            field: 'doseUnits',
-            width: "10%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'measuresName',
-                    textField: 'measuresName',
-                    method: 'get',
-                    url: '/api/measures-dict/list'
-                }
-            }
-        }, {
-            title: 'storageCode',
-            field: 'storageCode',
-            hidden:true
-        },{
-            title: '标志',
-            field: 'singleGroupIndicator',
-            width: "10%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'code',
-                    textField: 'name',
-                    data: [{'code': '1', 'name': '全院产品'}, {'code': '2', 'name': '普通产品'}]
-                }
-            }
-        }, {
-            title: '是否包',
-            field: 'expIndicator',
-            width: "7%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'code',
-                    textField: 'name',
-                    data: [{'code': '1', 'name': '是'}, {'code': '2', 'name': '否'}]
-                }
-            }
-        }
-        ]],
-        onClickRow: function (index, row) {
-            stopEdit();
-            if (row.columnProtect != 1) {
-                $(this).datagrid('beginEdit', index);
-                editIndex = index;
-            }
-        }
-    });
-
-    $("#top").datagrid({
-        toolbar: '#tb',
-        border: false
-    });
-    $("#bottom").datagrid({
-        footer: '#ft',
-        border: false
-    });
-
-    $('#dg').layout('panel', 'north').panel('resize', {height: 'auto'});
-    $('#dg').layout('panel', 'south').panel('resize', {height: 'auto'});
-
-    $("#dg").layout({
-        fit: true
-    });
-
     //定义expName
     $('#expName').combogrid({
         panelWidth: 500,
@@ -268,19 +108,165 @@ $(function () {
         });
     });
 
-    //expNameDict数据添加
-    $('#expNameDict').datagrid({
+    //定义页面中部expNAmeDict列表
+    $("#expNameDict").datagrid({
+        footer: '#tbNameDict',
         singleSelect: true,
-        url: '',
-        method: 'get',
-        footer: '#ftEnd'
+        fit:true,
+        columns: [[{
+            title: '代码',
+            field: 'expCode',
+            width: "30%"
+        }, {
+            title: '品名',
+            field: 'expName',
+            width: "30%",
+            editor: {type: 'text', options: {required: true}}
+        }
+        ]],
+        onClickRow: function (index, row) {
+            stopEdit();
+            if (row.columnProtect != 1) {
+                $(this).datagrid('beginEdit', index);
+                editIndex = index;
+            }
+        }
     });
-    //expDict数据添加
-    $('#expDict').datagrid({
+    //定义页面下方expDict列表
+    $("#expDict").datagrid({
+        footer: '#tbDict',
         singleSelect: true,
-        url: '',
-        method: 'get',
-        footer: '#ftEd'
+        fit: true,
+        columns: [[{
+            title: '代码',
+            field: 'expCode',
+            width: "10%"
+        }, {
+            title: '品名',
+            field: 'expName',
+            width: "10%",
+            editor: {type: 'text', options: {required: true}}
+        }, {
+            title: '规格',
+            field: 'expSpec',
+            width: "10%",
+            editor: {type: 'text', options: {required: true}}
+        }, {
+            title: '单位',
+            field: 'units',
+            width: "10%",
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'measuresName',
+                    textField: 'measuresName',
+                    method: 'get',
+                    url: '/api/measures-dict/list'
+                }
+            }
+        }, {
+            title: '类型',
+            field: 'expForm',
+            width: "10%",
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'formName',
+                    textField: 'formName',
+                    method: 'get',
+                    url: '/api/exp-form-dict/list'
+                }
+            }
+        }, {
+            title: '属性',
+            field: 'toxiProperty',
+            width: "10%",
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'toxiProperty',
+                    textField: 'toxiProperty',
+                    method: 'get',
+                    url: '/api/exp-property-dict/list'
+                }
+            }
+        }, {
+            title: '单位数量',
+            field: 'dosePerUnit',
+            width: "7%",
+            editor: 'numberbox'
+        }, {
+            title: '数量单位',
+            field: 'doseUnits',
+            width: "10%",
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'measuresName',
+                    textField: 'measuresName',
+                    method: 'get',
+                    url: '/api/measures-dict/list'
+                }
+            }
+        }, {
+            title: 'storageCode',
+            field: 'storageCode',
+            hidden:true
+        },{
+            title: '是否包',
+            field: 'singleGroupIndicator',
+            width: "10%",
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'code',
+                    textField: 'name',
+                    data: [{'code': '1', 'name': '是'}, {'code': '2', 'name': '否'}]
+                }
+            }
+        }, {
+            title: '产品范围',
+            field: 'expIndicator',
+            width: "7%",
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'code',
+                    textField: 'name',
+                    data: [{'code': '1', 'name': '全院产品'}, {'code': '2', 'name': '普通产品'}]
+                }
+            }
+        }
+        ]],
+        onClickRow: function (index, row) {
+            stopEdit();
+            if (row.columnProtect != 1) {
+                $(this).datagrid('beginEdit', index);
+                editIndex = index;
+            }
+        }
+    });
+
+    $("#top").datagrid({
+        toolbar: '#tb',
+        border: false
+    });
+    $("#bottom").datagrid({
+        footer: '#ft',
+        border: false
+    });
+
+    $('#dg').layout('panel', 'north').panel('resize', {height: 'auto'});
+    $('#dg').layout('panel', 'south').panel('resize', {height: 'auto'});
+
+    $("#dg").layout({
+        fit: true
     });
 
     $("#fText").textbox({
@@ -295,18 +281,28 @@ $(function () {
 
         if (val) {
             //expNameDict数据添加
-            $('#expNameDict').datagrid({
-                singleSelect: true,
-                url: '/api/exp-name-dict/list?expCode=' + val,
-                method: 'get',
-                footer: '#tbNameDict'
+            $.get('/api/exp-name-dict/list?expCode=' + val, function (data) {
+                if (data.length == 0) {
+                    $.messager.alert("提示", "数据库暂无数据", "info");
+                    $("#expNameDict").datagrid("loadData", {rows: []});
+                } else {
+                    $.each(data, function (index, item) {
+                        item.columnProtect = 1;
+                    });
+                    $("#expNameDict").datagrid("loadData", data);
+                }
             });
             //expDict数据添加
-            $('#expDict').datagrid({
-                singleSelect: true,
-                url: '/api/exp-dict/list-query?expCode=' + val,
-                method: 'get',
-                footer: '#tbDict'
+            $.get('/api/exp-dict/list-query?expCode=' + val, function (data) {
+                if (data.length == 0) {
+                    $.messager.alert("提示", "数据库暂无数据", "info");
+                    $("#expDict").datagrid("loadData", {rows: []});
+                } else {
+                    $.each(data, function (index, item) {
+                        item.columnProtect = 1;
+                    });
+                    $("#expDict").datagrid("loadData", data);
+                }
             });
         } else {
             $.messager.alert("提示","请先选择产品名称或代码！","info");
