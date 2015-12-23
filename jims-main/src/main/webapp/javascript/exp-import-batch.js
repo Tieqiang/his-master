@@ -529,7 +529,7 @@ $(function () {
                 $.messager.alert("系统提示","获取供货单位代码失败！","error");
                 return false;
             }
-            $("#expExportDatagrid").datagrid('load', {storageCode:storageCode,stockName:parent.config.storage,expClass:parent.config.exportClass,hospitalId:parent.config.hospitalId});
+            $("#expExportDatagrid").datagrid('load', {storageCode:storageCode,stockName:parent.config.storageName,expClass:parent.config.exportClass,hospitalId:parent.config.hospitalId});
             $("#expExportDatagrid").datagrid('selectRow', 0)
         }
     });
