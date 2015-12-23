@@ -244,7 +244,7 @@ public class ExpStockBalance implements java.io.Serializable {
 		this.realProfit = realProfit;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "START_DATE", length = 7)
 	public Date getStartDate() {
 		return this.startDate;
@@ -254,7 +254,7 @@ public class ExpStockBalance implements java.io.Serializable {
 		this.startDate = startDate;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "STOP_DATE", length = 7)
 	public Date getStopDate() {
 		return this.stopDate;

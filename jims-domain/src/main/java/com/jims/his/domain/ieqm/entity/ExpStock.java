@@ -150,7 +150,7 @@ public class ExpStock implements java.io.Serializable {
 		this.batchNo = batchNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXPIRE_DATE", length = 7)
 	public Date getExpireDate() {
 		return this.expireDate;
@@ -295,7 +295,7 @@ public class ExpStock implements java.io.Serializable {
 		this.supplyIndicator = supplyIndicator;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "PRODUCEDATE", length = 7)
 	public Date getProducedate() {
 		return this.producedate;
@@ -305,7 +305,7 @@ public class ExpStock implements java.io.Serializable {
 		this.producedate = producedate;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DISINFECTDATE", length = 7)
 	public Date getDisinfectdate() {
 		return this.disinfectdate;

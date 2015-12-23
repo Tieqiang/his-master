@@ -202,7 +202,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.licenceNo = licenceNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LICENCE_DATE", length = 7)
 	public Date getLicenceDate() {
 		return this.licenceDate;
@@ -221,7 +221,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.permitNo = permitNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "PERMIT_DATE", length = 7)
 	public Date getPermitDate() {
 		return this.permitDate;
@@ -240,7 +240,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.registerNo = registerNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "REGISTER_DATE", length = 7)
 	public Date getRegisterDate() {
 		return this.registerDate;
@@ -259,7 +259,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.fdaOrCeNo = fdaOrCeNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "FDA_OR_CE_DATE", length = 7)
 	public Date getFdaOrCeDate() {
 		return this.fdaOrCeDate;
@@ -278,7 +278,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.otherNo = otherNo;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "OTHER_DATE", length = 7)
 	public Date getOtherDate() {
 		return this.otherDate;

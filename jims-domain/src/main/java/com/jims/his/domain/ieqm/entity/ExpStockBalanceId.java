@@ -51,7 +51,7 @@ public class ExpStockBalanceId implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "YEAR_MONTH", nullable = false, length = 7)
 	public Date getYearMonth() {
 		return this.yearMonth;
