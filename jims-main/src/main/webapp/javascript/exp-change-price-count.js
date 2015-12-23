@@ -4,31 +4,54 @@
 /***
  * 产品调价情况统计
  */
-function ww3(date){
-    var y = date.getFullYear();
-    var m = date.getMonth()+1;
-    var d = date.getDate();
-    var h = date.getHours();
-    var min = date.getMinutes();
-    var sec = date.getSeconds();
-    var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
-    return str;
-}
-function w3(s){
-    if (!s) return new Date();
-    var y = s.substring(0,4);
-    var m =s.substring(5,7);
-    var d = s.substring(8,10);
-    var h = s.substring(11,14);
-    var min = s.substring(15,17);
-    var sec = s.substring(18,20);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)){
-        return new Date(y,m-1,d);
-    } else {
-        return new Date();
-    }
-}
 $(function () {
+    //格式化日期函数
+    function formatterDate(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+    $('#startDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#startDate').datetimebox('setText', dateTime);
+            $('#startDate').datetimebox('hidePanel');
+        }
+    });
+    $('#stopDate').datetimebox({
+        value: 'dateTime',
+        required: true,
+        showSeconds: true,
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            //(m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + "/" + y + " " + time;
+            $('#stopDate').datetimebox('setText', dateTime);
+            $('#stopDate').datetimebox('hidePanel');
+        }
+    });
+
     $("#dg").datagrid({
         title: '产品调价情况统计',
         fit: true,//让#dg数据创铺满父类容器
@@ -66,12 +89,12 @@ $(function () {
             title: '起用日期',
             field: 'startDate',
             width: "11%",
-            formatter : ww2
+            formatter : formatterDate
         },{
             title: '停止日期',
             field: 'stopDate',
             width: "11%",
-            formatter : ww2
+            formatter : formatterDate
         },{
             title: '备注',
             field: 'memos',
@@ -79,24 +102,7 @@ $(function () {
         }
         ]]
     });
-    function ww2(val, row){
-        if (val != null) {
-            var date = new Date(val);
-            var y = date.getFullYear();
-            var m = date.getMonth()+1;
-            var d = date.getDate();
-            var h = date.getHours();
-            var min = date.getMinutes();
-            var sec = date.getSeconds();
-            var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
-            return str;
-        }
 
-    }
-    //设置时间
-    var curr_time = new Date();
-    $("#startDate").datebox("setValue", ww3(curr_time));
-    $("#stopDate").datebox("setValue", ww3(curr_time));
     var prices = [];
     $("#searchBtn").on('click',function(){
         var get = loadDict();
