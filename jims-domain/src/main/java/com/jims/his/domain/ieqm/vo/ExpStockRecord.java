@@ -1,5 +1,6 @@
 package com.jims.his.domain.ieqm.vo;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -39,9 +40,10 @@ public class ExpStockRecord implements Serializable {
     private String subPackageSpec2;
     private Double discount;
     private Long indicator;
+    private String materialCode;
 
 
-    public ExpStockRecord(String expName, String expCode, String expSpec, String units, String minSpec, String minUnits, String firmId, Double purchasePrice, Double tradePrice, Double retailPrice, Double quantity, String registerNo, String permitNo, String batchNo, Date disinfectdate, Date producedate, Date expireDate, String documentNo, String singleGroupIndicator, String expForm, Integer killflag, String subPackageUnits1, Double subPackage1, String subPackageSpec1, String subPackageUnits2, Double subPackage2, String subPackageSpec2, Double discount, Long indicator) {
+    public ExpStockRecord(String expName, String expCode, String expSpec, String units, String minSpec, String minUnits, String firmId, Double purchasePrice, Double tradePrice, Double retailPrice, Double quantity, String registerNo, String permitNo, String batchNo, Date disinfectdate, Date producedate, Date expireDate, String documentNo, String singleGroupIndicator, String expForm, Integer killflag, String subPackageUnits1, Double subPackage1, String subPackageSpec1, String subPackageUnits2, Double subPackage2, String subPackageSpec2, Double discount, Long indicator, String materialCode) {
         this.expName = expName;
         this.expCode = expCode;
         this.expSpec = expSpec;
@@ -71,6 +73,7 @@ public class ExpStockRecord implements Serializable {
         this.subPackageSpec2 = subPackageSpec2;
         this.discount = discount;
         this.indicator = indicator;
+        this.materialCode = materialCode;
     }
 
     public ExpStockRecord() {
@@ -307,6 +310,14 @@ public class ExpStockRecord implements Serializable {
 
     public void setIndicator(Long indicator) {
         this.indicator = indicator;
+    }
+
+    public String getMaterialCode() {
+        return materialCode;
+    }
+
+    public void setMaterialCode(String materialCode) {
+        this.materialCode = materialCode;
     }
 }
 
