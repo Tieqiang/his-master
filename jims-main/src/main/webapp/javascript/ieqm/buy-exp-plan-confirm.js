@@ -25,7 +25,7 @@ $(function () {
         singleSelect: true,
         fit: true,
         nowrap: false,
-        url: '/api/buy-exp-plan/list-confirm?storageCode=' + parent.config.storageCode + "&loginName=" + parent.config.loginName,
+        url: '/api/buy-exp-plan/list-confirm?storageCode=' + parent.config.storageCode + "&loginName=" + parent.config.staffName,
         method: 'GET',
         columns: [[{
             title: '采购单号',
@@ -122,7 +122,16 @@ $(function () {
             title: '采购供应商',
             field: 'stockSupplier',
             width: "7%",
-            editor:{type:'text'}
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'supplierId',
+                    textField: 'supplier',
+                    method: 'get',
+                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '供应商'
+                }
+            }
         }, {
             title: '采购员',
             field: 'buyer',
@@ -186,7 +195,7 @@ $(function () {
         fit: true
     });
     var refresh=function(){
-        $.get('/api/buy-exp-plan/list-confirm?storageCode=' + parent.config.storageCode + "&loginName=" + parent.config.loginName, function (data) {
+        $.get('/api/buy-exp-plan/list-confirm?storageCode=' + parent.config.storageCode + "&loginName=" + parent.config.staffName, function (data) {
             $("#left").datagrid("loadData", data);
         });
     };
@@ -207,7 +216,7 @@ $(function () {
             buyNo = $('#right').datagrid('getData').rows[rows.length - 1].buyNo;
         }
         buyNo = maxBuyNo >= buyNo ? maxBuyNo : buyNo;
-        $('#right').datagrid('appendRow', {buyNo: buyNo + 1, buyId: newBuyId});
+        $('#right').datagrid('appendRow', {buyNo: buyNo + 1, buyId: newBuyId,buyer:parent.config.staffName});
 
         var addRowIndex = $("#right").datagrid('getRowIndex', rows[rows.length - 1]);
         editIndex = addRowIndex;
@@ -282,7 +291,7 @@ $(function () {
         if(checkValidate(rows)){
             for (var i = 0; i < rows.length; i++) {
                 rows[i].flag = 2;
-                rows[i].buyer = parent.config.loginName;
+                rows[i].buyer = parent.config.staffName;
             }
 
 
@@ -315,7 +324,7 @@ $(function () {
         if (checkValidate(rows)) {
             for (var i = 0; i < rows.length; i++) {
                 rows[i].flag = 3;
-                rows[i].buyer = parent.config.loginName;
+                rows[i].buyer = parent.config.staffName;
             }
 
             var updated = [];

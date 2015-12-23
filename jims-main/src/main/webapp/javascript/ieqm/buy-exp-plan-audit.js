@@ -24,7 +24,7 @@ $(function () {
         singleSelect: true,
         fit: true,
         nowrap: false,
-        url: '/api/buy-exp-plan/list-audit?storageCode=' + parent.config.storageCode + "&loginName=" + parent.config.loginName,
+        url: '/api/buy-exp-plan/list-audit?storageCode=' + parent.config.storageCode + "&loginName=" + parent.config.staffName,
         method: 'GET',
         columns: [[{
             title: '采购单号',
@@ -120,7 +120,16 @@ $(function () {
             title: '审核供应商',
             field: 'checkSupplier',
             width: "7%",
-            editor:{type:'text'}
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    valueField: 'supplierId',
+                    textField: 'supplier',
+                    method: 'get',
+                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '供应商'
+                }
+            }
         }, {
             title: '审核人',
             field: 'checker',
@@ -189,7 +198,7 @@ $(function () {
         fit: true
     });
     var refresh = function() {
-        $.get("/api/buy-exp-plan/list-audit?storageCode=" + parent.config.storageCode + "&loginName=" + parent.config.loginName, function (data) {
+        $.get("/api/buy-exp-plan/list-audit?storageCode=" + parent.config.storageCode + "&loginName=" + parent.config.staffName, function (data) {
             $("#left").datagrid("loadData", data);
         });
     }
@@ -209,7 +218,7 @@ $(function () {
             buyNo = $('#right').datagrid('getData').rows[rows.length - 1].buyNo;
         }
         buyNo = maxBuyNo >= buyNo ? maxBuyNo : buyNo;
-        $('#right').datagrid('appendRow', {buyNo: buyNo + 1, buyId: newBuyId});
+        $('#right').datagrid('appendRow', {buyNo: buyNo + 1, buyId: newBuyId, checker:parent.config.staffName});
 
         var addRowIndex = $("#right").datagrid('getRowIndex', rows[rows.length - 1]);
         editIndex = addRowIndex;
@@ -290,7 +299,7 @@ $(function () {
             if (rows[i].flag != 8) {
                 rows[i].flag = 4;
             }
-            rows[i].checker = parent.config.loginName;
+            rows[i].checker = parent.config.staffName;
         }
 
 
@@ -362,7 +371,7 @@ $(function () {
             }else{
                 rows[i].flag = 7;
             }
-            rows[i].checker = parent.config.loginName;
+            rows[i].checker = parent.config.staffName;
         }
 
         var updated = [];

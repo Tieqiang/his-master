@@ -42,7 +42,7 @@ $(function () {
     //采购单号数据加载
     $('#buyId').combobox({
         panelHeight: 'auto',
-        url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.loginName,
+        url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.staffName,
         method: 'GET',
         valueField: 'classCode',
         textField: 'className',
@@ -153,7 +153,7 @@ $(function () {
                 units: row.units,
                 purchasePrice: row.purchase,
                 expForm: row.expForm,
-                storer: parent.config.loginName,
+                storer: parent.config.staffName,
                 stockquantityRef: row.quantity,
                 retailPrice: row.retailPrice,
                 storage: row.storage,
@@ -375,7 +375,7 @@ $(function () {
                     units: row.units,
                     purchasePrice: row.purchase,
                     expForm: row.expForm,
-                    storer: parent.config.loginName,
+                    storer: parent.config.staffName,
                     stockquantityRef: row.quantity,
                     retailPrice: row.retailPrice,
                     storage: row.storage,
@@ -409,7 +409,7 @@ $(function () {
                 units: row.units,
                 purchasePrice: row.purchase,
                 expForm: row.expForm,
-                storer: parent.config.loginName,
+                storer: parent.config.staffName,
                 stockquantityRef: row.quantity,
                 retailPrice: row.retailPrice,
                 storage: row.storage,
@@ -545,7 +545,7 @@ $(function () {
                 //采购单号数据加载
                 $('#buyId').combobox({
                     panelHeight: 'auto',
-                    url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.loginName,
+                    url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.staffName,
                     method: 'GET',
                     valueField: 'classCode',
                     textField: 'className',
@@ -598,7 +598,7 @@ $(function () {
                 //采购单号数据加载
                 $('#buyId').combobox({
                     panelHeight: 'auto',
-                    url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.loginName,
+                    url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.staffName,
                     method: 'GET',
                     valueField: 'classCode',
                     textField: 'className',
