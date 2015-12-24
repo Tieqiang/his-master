@@ -53,7 +53,7 @@ public class ExpImportService {
     @Path("exp-import-document-search")
     @GET
     @Consumes("application/json")
-    public List<ExpImportMaster> searchMasterDataDict(@QueryParam("imClass") String imClass,@QueryParam("startBill") String startBill,@QueryParam("stopBill") String stopBill,@QueryParam("classRadio") String classRadio,@QueryParam("billRadio") Integer billRadio,@QueryParam("startDate") Date startDate,@QueryParam("stopDate") Date stopDate,@QueryParam("supplier") String supplier,@QueryParam("searchInput") String searchInput,@QueryParam("hospitalId") String hospitalId,@QueryParam("storage") String storage){
+    public List<ExpImportMaster> searchMasterDataDict(@QueryParam("imClass") String imClass,@QueryParam("startBill") String startBill,@QueryParam("stopBill") String stopBill,@QueryParam("classRadio") String classRadio,@QueryParam("billRadio") Integer billRadio,@QueryParam("startDate") String startDate,@QueryParam("stopDate") String stopDate,@QueryParam("supplier") String supplier,@QueryParam("searchInput") String searchInput,@QueryParam("hospitalId") String hospitalId,@QueryParam("storage") String storage){
         List<ExpImportMaster> dicts = expImportMasterFacade.searchImportMasterDict(imClass,startBill,stopBill,searchInput,startDate,stopDate,storage,supplier,classRadio,billRadio,hospitalId) ;
         return dicts ;
     }

@@ -39,15 +39,7 @@ public class ExpImportMasterFacade extends BaseFacade {
      * @param hospitalId   医院Id
      * @return
      */
-    public List<ExpImportMaster> searchImportMasterDict(String imClass, String startBill, String stopBill, String searchInput, Date startDate, Date stopDate, String storage, String supplier, String classRadio, Integer billRadio, String hospitalId){
-        String s1=null;
-        String s2=null;
-        if(startDate!=null && stopDate != null){
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
-             s1 = formatter.format(startDate.getTime());
-             s2 = formatter.format(stopDate.getTime());
-
-        }
+    public List<ExpImportMaster> searchImportMasterDict(String imClass, String startBill, String stopBill, String searchInput, String startDate, String stopDate, String storage, String supplier, String classRadio, Integer billRadio, String hospitalId){
         String hql = "select distinct dict from ExpImportMaster as dict,ExpImportDetail as dc where 1=1 ";
         if (billRadio != null) {
             hql += " and dict.docStatus='" + billRadio + "'";
@@ -65,11 +57,11 @@ public class ExpImportMasterFacade extends BaseFacade {
         if (classRadio != null && classRadio.trim().length() > 0) {
             hql += " and dict.accountIndicator='" + classRadio + "'";
         }
-        if (s1 != null) {
-            hql += " and dict.importDate>=to_date ( '" + s1 + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
+        if (startDate != null && !startDate.trim().equals("")) {
+            hql += " and dict.importDate>=to_date ( '" + startDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
-        if (s2 != null) {
-            hql += " and dict.importDate<=to_date ( '" + s2 + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
+        if (stopDate != null && !stopDate.trim().equals("")) {
+            hql += " and dict.importDate<=to_date ( '" + stopDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
         if (supplier != null && supplier.trim().length() > 0) {
             hql += " and dict.supplier='" + supplier + "'";
