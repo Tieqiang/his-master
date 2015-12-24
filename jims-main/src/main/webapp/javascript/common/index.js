@@ -73,11 +73,85 @@ $(function(){
 
     $("#mm").menu({
         onClick : function (item) {
-            //closeTab(this, item.name);
-            console.log(item) ;
+            closeTab(item.id);
         }
     }) ;
+    var onlyOpenTitle = "主页";
+    function closeTab(action) {
+        var alltabs = $('#mainContent').tabs('tabs');
+        var currentTab = $('#mainContent').tabs('getSelected');
+        var allTabtitle = [];
+        $.each(alltabs, function (i, n) {
+            allTabtitle.push($(n).panel('options').title);
+        })
 
+
+        switch (action) {
+            //case "refresh":
+            //    var iframe = $(currentTab.panel('options').content);
+            //    var src = iframe.attr('src');
+            //    $('#mainContent').tabs('update', {
+            //        tab: currentTab,
+            //        options: {
+            //            content: createFrame(src)
+            //        }
+            //    })
+            //    break;
+            case "close":
+                var currtab_title = currentTab.panel('options').title;
+                $('#mainContent').tabs('close', currtab_title);
+                break;
+            case "closeall":
+                $.each(allTabtitle, function (i, n) {
+                    if (n != onlyOpenTitle) {
+                        $('#mainContent').tabs('close', n);
+                    }
+                });
+                break;
+            case "closeother":
+                var currtab_title = currentTab.panel('options').title;
+                $.each(allTabtitle, function (i, n) {
+                    if (n != currtab_title && n != onlyOpenTitle) {
+                        $('#mainContent').tabs('close', n);
+                    }
+                });
+                break;
+            case "closeright":
+                var tabIndex = $('#mainContent').tabs('getTabIndex', currentTab);
+
+                if (tabIndex == alltabs.length - 1) {
+                    $.messager.alert("提示","该页已经是最右页！","info");
+                    return false;
+                }
+                $.each(allTabtitle, function (i, n) {
+                    if (i > tabIndex) {
+                        if (n != onlyOpenTitle) {
+                            $('#mainContent').tabs('close', n);
+                        }
+                    }
+                });
+
+                break;
+            case "closeleft":
+                var tabIndex = $('#mainContent').tabs('getTabIndex', currentTab);
+                if (tabIndex == 1) {
+                    $.messager.alert("提示", "该页已经是最左页！", "info");
+                    return false;
+                }
+                $.each(allTabtitle, function (i, n) {
+                    if (i < tabIndex) {
+                        if (n != onlyOpenTitle) {
+                            $('#mainContent').tabs('close', n);
+                        }
+                    }
+                });
+
+                break;
+            case "exit":
+                $('#mm').menu('hide');
+                break;
+        }
+    }
     //所定窗口
     //$("#logwindow").window({
     //    title:'窗口锁定',
