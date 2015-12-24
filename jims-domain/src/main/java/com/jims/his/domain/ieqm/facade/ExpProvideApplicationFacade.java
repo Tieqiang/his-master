@@ -156,10 +156,10 @@ public class ExpProvideApplicationFacade extends BaseFacade {
                 " from exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION a , EXP_DICT b " +
                 " where s1.storage_code=a.PROVIDE_STORAGE and s2.storage_code=a.APPLICANT_STORAGE and a.exp_code = b.exp_code and a.package_spec = b.exp_spec";
         if(null != startTime && !startTime.trim().equals("")){
-            sql += " and a.enter_date_time >= to_date('" + startTime + "' , 'yyyy/mm/dd') ";
+            sql += " and a.enter_date_time >= to_date('" + startTime + "' , 'YYYY-MM-DD HH24:MI:SS') ";
         }
         if (null != endTime && !endTime.trim().equals("")) {
-            sql += " and a.enter_date_time <= to_date('" + endTime + "' , 'yyyy/mm/dd') ";
+            sql += " and a.enter_date_time <= to_date('" + endTime + "' , 'YYYY-MM-DD HH24:MI:SS') ";
         }
         if (null != endTime && !endTime.trim().equals("")) {
              sql += " and a.provide_flag = '" + isSure + "'";
