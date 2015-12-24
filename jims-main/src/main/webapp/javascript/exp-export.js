@@ -1,37 +1,38 @@
 /**
  * Created by heren on 2015/10/23.
  */
-function myformatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '/' + (m < 10 ? ('0' + m) : m) + '/' + (d < 10 ? ('0' + d) : d);
-}
-function w3(s) {
-    if (!s){
-        return new Date();
-    }
-    var y = s.substring(0, 4);
-    var m = s.substring(5, 7);
-    var d = s.substring(8, 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
-    } else {
-        return new Date();
-    }
-}
-//格式化日期函数
-function formatterDate(val, row) {
-    if (val != null) {
-        var date = new Date(val);
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        var d = date.getDate();
-        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-        return dateTime
-    }
-}
 $(function(){
+    //格式化日期函数
+    function formatterDate(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
+        } else {
+            return new Date();
+        }
+    }
+
     $.extend($.fn.datagrid.methods, {
             getChecked: function (jq) {
         var rr = [];
@@ -42,13 +43,29 @@ $(function(){
         });
         return rr;
     }
-});
+    });
     var documentNo;//入库单号
     var flag ;
     var editIndex;
     var currentExpCode;
     var panelHeight = $(window).height - 300 ;
 
+    //出库日期
+    $('#exportDate').datebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#exportDate').datetimebox('setText', dateTime);
+            $('#exportDate').datetimebox('hidePanel');
+        }
+    });
     /**
      * 设置明细信息
      */
@@ -293,8 +310,7 @@ $(function(){
             $(this).combobox('select', data[0].exportClass);
         }
     });
-    var curr_time = new Date();
-    $("#exportDate").datebox("setValue", myformatter2(curr_time));
+
     $("#documentNo").textbox({
         disabled: true
     });
