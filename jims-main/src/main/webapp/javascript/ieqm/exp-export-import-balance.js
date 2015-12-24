@@ -27,9 +27,12 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-            return dateTime
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime;
         }
     }
 
@@ -38,9 +41,11 @@ $(function () {
         var y = s.substring(0, 4);
         var m = s.substring(5, 7);
         var d = s.substring(8, 10);
-
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-            return new Date(y, m - 1, d);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
         } else {
             return new Date();
         }
@@ -56,8 +61,8 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#importDate').datetimebox('setText', dateTime);
             $('#importDate').datetimebox('hidePanel');
         }
@@ -72,8 +77,8 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#exportDate').datetimebox('setText', dateTime);
             $('#exportDate').datetimebox('hidePanel');
         }
@@ -775,22 +780,27 @@ $(function () {
             title: '发票日期',
             field: 'invoiceDate',
             width: '7%',
+            formatter: formatterDate,
             editor: {
-                type: 'datebox', options: {
-                    formatter: function (date) {
-                        if (date) {
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            return y + "-" + m + "-" + d
-                        }
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#dg").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'invoiceDate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
 
-                    },
-                    parser: function (date) {
-                        if (date) {
-                            return new Date(Date.parse(date.replace(/-/g, "/")));
-                        }
-                        return null;
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
