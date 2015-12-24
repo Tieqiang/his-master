@@ -2,21 +2,32 @@
  * 付款情况查询
  * Created by wangbinbin on 2015/11、02.
  */
-function myformatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-}
-function w3(s) {
-    if (!s){
-        return new Date();
+//格式化日期函数
+function myformatter2(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mm = date.getMinutes();
+        var s = date.getSeconds();
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
     }
+}
+
+function w3(s) {
+    if (!s) return new Date();
     var y = s.substring(0, 4);
     var m = s.substring(5, 7);
     var d = s.substring(8, 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
+    var h = s.substring(11, 14);
+    var min = s.substring(15, 17);
+    var sec = s.substring(18, 20);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+        return new Date(y, m - 1, d, h, min, sec);
     } else {
         return new Date();
     }
@@ -112,7 +123,7 @@ $(function () {
             title: '有效日期',
             width: '8%',
             field: 'expireDate',
-            formatter: formatterDate
+            formatter: myformatter2
         }, {
             title: '批号',
             width: '5%',
@@ -123,21 +134,41 @@ $(function () {
             field: 'documentNo'
         }]]
     });
-        //格式化日期函数
-        function formatterDate(val, row) {
-            if (val != null) {
-                var date = new Date(val);
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                var d = date.getDate();
-                var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-                return dateTime
-            }
-        }
+
     //设置时间
     var curr_time = new Date();
-    $("#startDate").datebox("setValue", myformatter2(curr_time));
-    $("#stopDate").datebox("setValue", myformatter2(curr_time));
+    $("#startDate").datetimebox("setValue", myformatter2(curr_time));
+    $("#stopDate").datetimebox("setValue", myformatter2(curr_time));
+    $('#startDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: myformatter2,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#startDate').datetimebox('setText', dateTime);
+            $('#startDate').datetimebox('hidePanel');
+        }
+    });
+    $('#stopDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: myformatter2,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#stopDate').datetimebox('setText', dateTime);
+            $('#stopDate').datetimebox('hidePanel');
+        }
+    });
     //供应商
     var suppliers = {};
     var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
@@ -194,8 +225,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            var stopDate = $("#stopDate").datebox("getText");
-            var startDate =$("#startDate").datebox("getText");
+            var stopDate = $("#stopDate").datetimebox("getText");
+            var startDate =$("#startDate").datetimebox("getText");
             var supplier = $("#supplier").combogrid("getText");
             var documentNo = $("#documentNo").textbox("getValue");
             var searchInput = $("#searchInput").textbox("getValue");
@@ -217,8 +248,8 @@ $(function () {
     var importDetailDataVO = {};//传递vo
     var detailsData = [];//信息
     var loadDict = function(){
-        importDetailDataVO.stopDate = new Date($("#stopDate").datebox("getText"));
-        importDetailDataVO.startDate =new Date($("#startDate").datebox("getText"));
+        importDetailDataVO.stopDate = new Date($("#stopDate").datetimebox("getText"));
+        importDetailDataVO.startDate =new Date($("#startDate").datetimebox("getText"));
         importDetailDataVO.supplier = $("#supplier").combogrid("getText");
         importDetailDataVO.documentNo = $("#documentNo").textbox("getValue");
         importDetailDataVO.searchInput = $("#searchInput").textbox("getValue");

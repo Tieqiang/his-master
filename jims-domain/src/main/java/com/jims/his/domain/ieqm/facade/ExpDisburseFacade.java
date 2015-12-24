@@ -141,7 +141,7 @@ public class ExpDisburseFacade extends BaseFacade {
                 "         EXP_IMPORT_DETAIL.INVOICE_DATE,   \n" +
                 "         EXP_IMPORT_DETAIL.TRADE_PRICE,   \n" +
                 "         EXP_IMPORT_DETAIL.RETAIL_PRICE,   \n" +
-                "         EXP_IMPORT_DETAIL.DISBURSE_REC_NO,   \n" +
+                "         EXP_DISBURSE_REC_DETAIL.DISBURSE_REC_NO,   \n" +
                 "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
                 "         EXP_DISBURSE_REC_DETAIL.DISBURSE_COUNT,   \n" +
                 "         EXP_DISBURSE_REC_DETAIL.PAY_AMOUNT,   \n" +

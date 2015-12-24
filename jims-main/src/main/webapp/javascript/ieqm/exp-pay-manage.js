@@ -2,34 +2,17 @@
  * 付款处理
  * Created by wangbinbin on 2015/10/28.
  */
-function myformatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-}
-function w3(s) {
-    if (!s){
-        return new Date();
-    }
-    var y = s.substring(0, 4);
-    var m = s.substring(5, 7);
-    var d = s.substring(8, 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
-    } else {
-        return new Date();
-    }
-}
+
+
 function checkRadio(){
     if($("#dateTime:checked").val()){
-        $("#startDate").datebox("enable");
-        $("#stopDate").datebox("enable");
+        $("#startDate").datetimebox("enable");
+        $("#stopDate").datetimebox("enable");
     }else{
-        $("#startDate").datebox("clear");
-        $("#stopDate").datebox("clear");
-        $("#startDate").datebox({disabled:true});
-        $("#stopDate").datebox({disabled:true});
+        $("#startDate").datetimebox("clear");
+        $("#stopDate").datetimebox("clear");
+        $("#startDate").datetimebox({disabled:true});
+        $("#stopDate").datetimebox({disabled:true});
     }
     if($("#supply:checked").val()){
         $("#supplier").combogrid("enable");
@@ -46,14 +29,33 @@ function checkRadio(){
 }
 $(function () {
     //格式化日期函数
-    function formatterDate(val, row) {
+    function myformatter2(val, row) {
         if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
             return dateTime
+        }
+    }
+
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
+        } else {
+            return new Date();
         }
     }
     var editRowIndex  ; //编辑行
@@ -106,9 +108,9 @@ $(function () {
 
         }, {
             title: '日期',
-            width: '8%',
+            width: '11%',
             field: 'expireDate',
-            formatter: formatterDate
+            formatter: myformatter2
         }, {
             title: '批号',
             width: '5%',
@@ -236,8 +238,38 @@ $(function () {
     });
     //设置时间
     var curr_time = new Date();
-    $("#startDate").datebox("setValue", myformatter2(curr_time));
-    $("#stopDate").datebox("setValue", myformatter2(curr_time));
+    $("#startDate").datetimebox("setValue", myformatter2(curr_time));
+    $("#stopDate").datetimebox("setValue", myformatter2(curr_time));
+    $('#startDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: myformatter2,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#startDate').datetimebox('setText', dateTime);
+            $('#startDate').datetimebox('hidePanel');
+        }
+    });
+    $('#stopDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: myformatter2,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#stopDate').datetimebox('setText', dateTime);
+            $('#stopDate').datetimebox('hidePanel');
+        }
+    });
     //供应商
     var suppliers = {};
     var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
