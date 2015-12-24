@@ -8,12 +8,49 @@ $(function () {
     var flag;
     var staffs = [];//员工信息
     var rows=[] ;//选中记录
+
     var setDefaultDate = function () {
         var date = new Date();
         var y = date.getFullYear();
         var m = date.getMonth() + 1;
         var d = date.getDate();
-        return m + '/' + d + '/' + y
+        var h = date.getHours();
+        var mm = date.getMinutes();
+        var s = date.getSeconds();
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime;
+    }
+
+    //格式化日期函数
+    function formatterDate(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime;
+        }
+    }
+
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
+        } else {
+            return new Date();
+        }
     }
     var deptPromse = $.get("/api/dept-dict/list?hospitalId="+parent.config.hospitalId,function(data){
         for(var i = 0 ;i<data.length ;i++){
@@ -123,24 +160,19 @@ $(function () {
         }
     })
 
-    $("#importDate").datebox({
-        currentText: '选择入库日期',
-        okText: '确定',
-        closeText: '关闭',
-        formatter: function (date) {
-            if (date) {
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                var d = date.getDate();
-                return y + "-" + m + "-" + d
-            }
-
-        },
-        parser: function (date) {
-            if (date) {
-                return new Date(Date.parse(date.replace(/-/g, "/")));
-            }
-            return null;
+    $('#importDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#importDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#importDate').datetimebox('setText', dateTime);
+            $('#importDate').datetimebox('hidePanel');
         }
     });
 
@@ -334,22 +366,27 @@ $(function () {
             title: '有效日期',
             field: 'expireDate',
             width:'7%',
+            formatter: formatterDate,
             editor: {
-                type: 'datebox', options: {
-                    formatter: function (date) {
-                        if (date) {
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            return y + "-" + m + "-" + d
-                        }
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#importDetail").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'expireDate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
 
-                    },
-                    parser: function (date) {
-                        if (date) {
-                            return new Date(Date.parse(date.replace(/-/g, "/")));
-                        }
-                        return null;
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -373,22 +410,27 @@ $(function () {
             title: '发票日期',
             field: 'invoiceDate',
             width:'7%',
+            formatter: formatterDate,
             editor: {
-                type: 'datebox', options: {
-                    formatter: function (date) {
-                        if (date) {
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            return y + "-" + m + "-" + d
-                        }
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#importDetail").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'invoiceDate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
 
-                    },
-                    parser: function (date) {
-                        if (date) {
-                            return new Date(Date.parse(date.replace(/-/g, "/")));
-                        }
-                        return null;
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -400,22 +442,27 @@ $(function () {
             title: '生产日期',
             field: 'produceDate',
             width:'7%',
+            formatter: formatterDate,
             editor: {
-                type: 'datebox', options: {
-                    formatter: function (date) {
-                        if (date) {
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            return y + "-" + m + "-" + d
-                        }
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#importDetail").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'produceDate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
 
-                    },
-                    parser: function (date) {
-                        if (date) {
-                            return new Date(Date.parse(date.replace(/-/g, "/")));
-                        }
-                        return null;
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -423,22 +470,27 @@ $(function () {
             title: '消毒日期',
             field: 'disinfectDate',
             width:'7%',
+            formatter: formatterDate,
             editor: {
-                type: 'datebox', options: {
-                    formatter: function (date) {
-                        if (date) {
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            return y + "-" + m + "-" + d
-                        }
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#importDetail").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'disinfectDate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
 
-                    },
-                    parser: function (date) {
-                        if (date) {
-                            return new Date(Date.parse(date.replace(/-/g, "/")));
-                        }
-                        return null;
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -573,7 +625,8 @@ $(function () {
             field: 'expForm'
         }, {
             title: '有效日期',
-            field: 'expireDate'
+            field: 'expireDate',
+            formatter: formatterDate
         }, {
             title: '厂家',
             field: 'firmId'
@@ -588,17 +641,20 @@ $(function () {
             field: 'invoiceNo'
         }, {
             title: '发票日期',
-            field: 'invoiceDate'
+            field: 'invoiceDate',
+            formatter: formatterDate
         }, {
             title: '备注',
             field: 'memo'
         }, {
             title: '生产日期',
-            field: 'produceDate'
+            field: 'produceDate',
+            formatter: formatterDate
 
         }, {
             title: '消毒日期',
-            field: 'disinfectDate'
+            field: 'disinfectDate',
+            formatter: formatterDate
         }, {
             title: '灭菌标志',
             field: 'killFlag'
@@ -606,10 +662,8 @@ $(function () {
             title: '折扣',
             field: 'discount'
         }, {
-
             title: '招标文号',
             field: 'orderBatch'
-
         }, {
             title: '招标文号序号',
             field: 'tenderNo'
