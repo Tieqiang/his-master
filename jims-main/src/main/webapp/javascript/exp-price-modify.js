@@ -477,6 +477,7 @@ $(function () {
             title: '通知生效日期',
             field: 'noticeEfficientDate',
             width: "15%",
+            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -620,11 +621,7 @@ $(function () {
         var startDate = $('#startDate').datetimebox('getText');
         var stopDate = $('#stopDate').datetimebox('getText');
         $.get("/api/exp-price-modify/list?startDate=" + startDate + "&stopDate=" + stopDate, function (data) {
-            if (data) {
-                $.each(data, function (index, item) {
-                    //格式化日期
-                    item.noticeEfficientDate = formatterDate(new Date(item.noticeEfficientDate));
-                });
+            if (data.length>0) {
                 $("#dg").datagrid('loadData', data);
             }else{
                 $.messager.alert("系统提示", "数据库暂无数据", "info");
