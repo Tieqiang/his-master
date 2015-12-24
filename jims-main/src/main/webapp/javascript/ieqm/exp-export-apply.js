@@ -20,9 +20,12 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-            return dateTime
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime;
         }
     }
 
@@ -31,9 +34,11 @@ $(function () {
         var y = s.substring(0, 4);
         var m = s.substring(5, 7);
         var d = s.substring(8, 10);
-
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-            return new Date(y, m - 1, d);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
         } else {
             return new Date();
         }
@@ -48,8 +53,8 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
@@ -64,8 +69,8 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#endDate').datetimebox('setText', dateTime);
             $('#endDate').datetimebox('hidePanel');
         }
@@ -80,8 +85,8 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#exportDate').datetimebox('setText', dateTime);
             $('#exportDate').datetimebox('hidePanel');
         }
@@ -300,7 +305,8 @@ $(function () {
         }, {
             title: '申请时间',
             field: 'enterDate',
-            width: "25%"
+            width: "25%",
+            formatter: formatterDate
         }]],
         onSelect:function(index, row){
             var rows = $("#left").datagrid("getSelections");
@@ -332,7 +338,8 @@ $(function () {
         columns: [[{
             title: 'id',
             field: 'applicationId',
-            width: "10%"
+            width: "10%",
+            hidden:true
         },{
             title: '产品代码',
             field: 'expCode',
@@ -817,7 +824,7 @@ $(function () {
         var hospitalId = parent.config.hospitalId;
         $.get('/api/exp-export/export-apply?storage=' + provideStorage + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
             if (data.length <= 0) {
-                $.messager.alert("系统提示", "没有记录", "info");
+                $.messager.alert('系统提示', '数据库暂无数据', 'info');
             } else {
                 $("#left").datagrid("loadData", data);
             }

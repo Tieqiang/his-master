@@ -96,14 +96,7 @@ public class ExpExportFacade extends BaseFacade {
      * @param hospitalId  医院Id
      * @return
      */
-    public List<ExpExportMaster> searchExportMasterDict(String imClass, String startBill, String stopBill, String searchInput, Date startDate, Date stopDate, String storage, String receiver, String classRadio, Integer billRadio, String hospitalId) {
-        String s1 = null;
-        String s2 = null;
-        if (startDate != null && stopDate != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
-            s1 = formatter.format(startDate.getTime());
-            s2 = formatter.format(stopDate.getTime());
-        }
+    public List<ExpExportMaster> searchExportMasterDict(String imClass, String startBill, String stopBill, String searchInput, String startDate, String stopDate, String storage, String receiver, String classRadio, Integer billRadio, String hospitalId) {
         String hql = "select distinct dict from ExpExportMaster as dict,ExpExportDetail as dc where 1=1 ";
         if (billRadio != null) {
             hql += " and dict.docStatus='" + billRadio + "'";
@@ -120,11 +113,11 @@ public class ExpExportFacade extends BaseFacade {
         if (classRadio != null && classRadio.trim().length() > 0) {
             hql += " and dict.accountIndicator='" + classRadio + "'";
         }
-        if (s1 != null) {
-            hql += " and dict.exportDate>=to_date ( '" + s1 + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
+        if (startDate != null && !startDate.trim().equals("")) {
+            hql += " and dict.exportDate>=to_date ( '" + startDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
-        if (s2 != null) {
-            hql += " and dict.exportDate<=to_date ( '" + s2 + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
+        if (stopDate != null && !stopDate.trim().equals("")) {
+            hql += " and dict.exportDate<=to_date ( '" + stopDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
         if (receiver != null && receiver.trim().length() > 0) {
             hql += " and dict.receiver='" + receiver + "'";

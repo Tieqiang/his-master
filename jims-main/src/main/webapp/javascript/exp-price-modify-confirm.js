@@ -139,7 +139,6 @@ $(function () {
             var d = date.getDate();
             var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-            //(m < 10 ? ("0" + m) : m) + "/" + (d < 10 ? ("0" + d) : d) + "/" + y + " " + time;
             $('#stopDate').datetimebox('setText', dateTime);
             $('#stopDate').datetimebox('hidePanel');
         }
@@ -229,6 +228,7 @@ $(function () {
             title: '实际生效日期',
             field: 'actualEfficientDate',
             width: "15%",
+            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -390,7 +390,8 @@ $(function () {
         }, {
             title: '执行时间',
             field: 'actualEfficientDate',
-            width: "15%"
+            width: "15%",
+            formatter: formatterDate
         }
         ]],
         onLoadSuccess: function () {
@@ -505,12 +506,7 @@ $(function () {
         var startDate = $('#startDate').datetimebox('getText');
         var stopDate = $('#stopDate').datetimebox('getText');
         $.get("/api/exp-price-modify/list?startDate=" + startDate + "&stopDate=" + stopDate, function (data) {
-            if (data) {
-                $.each(data, function (index, item) {
-                    //格式化日期
-                    item.noticeEfficientDate = formatterDate(new Date(item.noticeEfficientDate));
-                    item.actualEfficientDate = formatterDate(new Date(item.actualEfficientDate));
-                });
+            if (data.length>0) {
                 $("#tab1").datagrid('loadData', data);
             } else {
                 $.messager.alert("系统提示", "数据库暂无数据", "info");
@@ -530,14 +526,6 @@ $(function () {
 
         $.postJSON("/api/exp-price-modify-profit/calc-profit",rows, function (data) {
             if (data) {
-                $.each(data, function (index, item) {
-                    //格式化日期
-                    if(item.expName=='小计'|| item.expName == '合计'){
-                        item.actualEfficientDate = '';
-                    }else{
-                        item.actualEfficientDate = formatterDate(new Date(item.actualEfficientDate));
-                    }
-                });
                 $("#tab2").datagrid('loadData', data);
                 $("#tab2").datagrid("autoMergeCells", ['storageName', 'expCode','expName', 'expSpec','units','firmId']);
             }
