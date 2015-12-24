@@ -4,55 +4,35 @@
 /***
  * 根据消耗量定义库存量
  */
-function myformatter(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '/' + (m < 10 ? ('0' + m) : m) + '/01';
-}
-function myformatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '/' + (m < 10 ? ('0' + m) : m) + '/' + (d < 10 ? ('0' + d) : d);
+function formatterDate(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mm = date.getMinutes();
+        var s = date.getSeconds();
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h)+":"+ (mm < 10 ? ("0" + mm) : mm)+":"+ (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
 }
 function w3(s) {
     if (!s) return new Date();
     var y = s.substring(0, 4);
     var m = s.substring(5, 7);
     var d = s.substring(8, 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
+    var h = s.substring(11, 14);
+    var min = s.substring(15, 17);
+    var sec = s.substring(18, 20);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+        return new Date(y, m - 1, d, h, min, sec);
     } else {
         return new Date();
     }
 }
 $(function () {
-    //格式化日期函数
-    function formatterDate(val, row) {
-        if (val != null) {
-            var date = new Date(val);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-            return dateTime
-        }
-    }
-
-    function w3(s) {
-        if (!s) return new Date();
-        var y = s.substring(0, 4);
-        var m = s.substring(5, 7);
-        var d = s.substring(8, 10);
-
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-            return new Date(y, m - 1, d);
-        } else {
-            return new Date();
-        }
-    }
     $("#expName").searchbox({
         searcher: function (value, name) {
             var rows = $("#dg").datagrid("getRows");
@@ -63,6 +43,10 @@ $(function () {
             }
         }
     });
+    //设置时间
+    var curr_time = new Date();
+    $("#startDate").datetimebox("setValue", formatterDate(curr_time));
+    $("#stopDate").datetimebox("setValue", formatterDate(curr_time));
     //开始日期
     $('#startDate').datebox({
         required: true,
@@ -73,8 +57,8 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
@@ -89,8 +73,8 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#stopDate').datetimebox('setText', dateTime);
             $('#stopDate').datetimebox('hidePanel');
         }
@@ -160,11 +144,6 @@ $(function () {
             editRowIndex = rowIndex;
         }
     });
-    //设置时间
-    var curr_time = new Date();
-    $("#startDate").datebox("setValue", myformatter(curr_time));
-    $("#stopDate").datebox("setValue", myformatter2(curr_time));
-
     var prices = [];
     $("#searchBtn").on('click', function () {
          loadDict();

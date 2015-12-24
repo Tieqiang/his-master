@@ -136,14 +136,14 @@ $(function () {
             field: 'batchNo'
         } , {
             title: '入(出)库日期',
-            width: '9%',
+            width: '11%',
             field: 'actionDate',
-            formatter: formatterDate
+            formatter: myFormatter2
         }, {
             title: '失效日期',
-            width: '9%',
+            width: '11%',
             field: 'expireDate',
-            formatter: formatterDate
+            formatter: myFormatter2
         }, {
             title: "结存",
             width: '7%',
@@ -175,17 +175,7 @@ $(function () {
             type:'numberbox'
         }]]
     });
-        //格式化日期函数
-        function formatterDate(val, row) {
-            if (val != null) {
-                var date = new Date(val);
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                var d = date.getDate();
-                var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-                return dateTime
-            }
-        }
+
     //设置时间
     var curr_time = new Date();
     $("#startDate").datetimebox("setValue", myFormatter2(curr_time));

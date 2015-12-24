@@ -199,7 +199,7 @@ $(function () {
             title: '发票日期',
             field: 'invoiceDate',
             formatter: formatterDate,
-            width: "10%"
+            width: "11%"
         }, {
             title: '入库单号',
             field: 'documentNo',
@@ -207,7 +207,7 @@ $(function () {
         }, {
             title: '供货单位',
             field: 'supplier',
-            width: "7%"
+            width: "11%"
         }, {
             title: '批号',
             field: 'batchNo',
@@ -216,7 +216,7 @@ $(function () {
             title: '有效期',
             field: 'expireDate',
             formatter: formatterDate,
-            width: "10%"
+            width: "11%"
         }, {
             title: '备注',
             field: 'memo',

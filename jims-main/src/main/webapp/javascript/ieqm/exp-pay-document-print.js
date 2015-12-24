@@ -16,23 +16,37 @@ function checkRadio(){
         $("#supplier").combogrid({disabled:true});
     }
 }
-function myFormatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+//格式化日期函数
+function myFormatter2(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mm = date.getMinutes();
+        var s = date.getSeconds();
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
 }
+
 function w3(s) {
     if (!s) return new Date();
     var y = s.substring(0, 4);
     var m = s.substring(5, 7);
     var d = s.substring(8, 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
+    var h = s.substring(11, 14);
+    var min = s.substring(15, 17);
+    var sec = s.substring(18, 20);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+        return new Date(y, m - 1, d, h, min, sec);
     } else {
         return new Date();
     }
 }
+
 $(function () {
     /**
      * 供货方
@@ -68,8 +82,8 @@ $(function () {
         columns: [[{
             title: '付款日期',
             field: 'disburseDate',
-            width: '9%',
-            formatter:formatterDate
+            width: '11%',
+            formatter:myFormatter2
         },{
             title: '付款单号',
             field: 'disburseRecNo',
@@ -123,9 +137,7 @@ $(function () {
                 dis.disburseRecNo = rowData.disburseRecNo;
                 dis.hospitalId = parent.config.hospitalId;
                 dis.storage = parent.config.storageCode;
-                console.log(dis);
                 var promiseDis =$.get("/api/exp-dis/exp-pay-detail-print",dis,function(data){
-                    console.log(data);
                     disData =data ;
                 },'json');
                 promiseDis.done(function(){
@@ -207,17 +219,18 @@ $(function () {
             field: 'batchNo'
         }, {
             title: '有效期',
-            width: '5%',
-            field: 'operator'
+            width: '11%',
+            field: 'expireDate',
+            formatter:myFormatter2
         }, {
             title: '发票号',
             width: '5%',
             field: 'invoiceNo'
         }, {
             title: '发票日期',
-            width: '7%',
+            width: '11%',
             field: 'invoiceDate',
-            formatter:formatterDate
+            formatter:myFormatter2
         }, {
             title: '付款单据号',
             width: '5%',
@@ -242,8 +255,38 @@ $(function () {
     });
     //设置时间
     var curr_time = new Date();
-    $("#startDate").datebox("setValue", myFormatter2(curr_time));
-    $("#stopDate").datebox("setValue", myFormatter2(curr_time));
+    $("#startDate").datetimebox("setValue", myFormatter2(curr_time));
+    $("#stopDate").datetimebox("setValue", myFormatter2(curr_time));
+    $('#startDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: myFormatter2,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#startDate').datetimebox('setText', dateTime);
+            $('#startDate').datetimebox('hidePanel');
+        }
+    });
+    $('#stopDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: myFormatter2,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#stopDate').datetimebox('setText', dateTime);
+            $('#stopDate').datetimebox('hidePanel');
+        }
+    });
     //入库分类字典
     $("#importClass").combobox({
         url: '/api/exp-import-class-dict/list',
@@ -311,8 +354,8 @@ $(function () {
     var loadDict = function(){
 
         masterDataVo.disburseRecNo = $("#startBill").textbox("getText");
-        masterDataVo.startDate = new Date($("#startDate").datebox("getText"));
-        masterDataVo.stopDate = new Date($("#stopDate").datebox("getText"));
+        masterDataVo.startDate = new Date($("#startDate").datetimebox("getText"));
+        masterDataVo.stopDate = new Date($("#stopDate").datetimebox("getText"));
         masterDataVo.supplier = $("#supplier").combogrid("getText");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
@@ -331,8 +374,8 @@ $(function () {
         closed: true,
         onOpen: function () {
             var disburseRecNo = $("#startBill").textbox("getText");
-            var startDate = $("#startDate").datebox("getText");
-            var stopDate = $("#stopDate").datebox("getText");
+            var startDate = $("#startDate").datetimebox("getText");
+            var stopDate = $("#stopDate").datetimebox("getText");
             var supplier = $("#supplier").combogrid("getText");
             var hospitalId = parent.config.hospitalId;
             var storage = parent.config.storageCode;

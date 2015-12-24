@@ -62,12 +62,12 @@ $(function () {
         },{
             title: '起始日期',
             field: 'startDate',
-            width: "9%",
+            width: "11%",
             formatter : formatterDate
         },{
             title: '停止日期',
             field: 'stopDate',
-            width: "9%",
+            width: "11%",
             formatter : formatterDate
         },{
             title: '备注',
