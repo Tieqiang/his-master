@@ -276,7 +276,7 @@ $(function () {
         }, {
             title: '招标文号序号',
             field: 'tenderNo',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'numberbox', options: {}}
         }, {
             title: '现有数量',
             field: 'inventory',
@@ -284,12 +284,12 @@ $(function () {
         }, {
             title: '零售价',
             field: 'retailPrice',
-            hidden: true,
+            //hidden: true,
             editor: {type: 'numberbox', options: {precision: '2'}}
         }, {
             title: '进货价',
             field: 'tradePrice',
-            hidden: true,
+            //hidden: true,
             editor: {type: 'numberbox', options: {precision: '2'}}
         }, {
             title: '最小规格',
@@ -823,10 +823,10 @@ $(function () {
             $(orderBatchEd.target).textbox('setValue', 'x');
 
             var retailedEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
-            $(retailedEd.target).numberbox('setValue', 'x');
+            $(retailedEd.target).numberbox('setValue',  row.retailPrice);
 
             var tradePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'tradePrice'});
-            $(tradePriceEd.target).numberbox('setValue', 'x');
+            $(tradePriceEd.target).numberbox('setValue', row.tradePrice);
 
             $("#stockRecordDialog").dialog('close');
         }
@@ -945,7 +945,7 @@ $(function () {
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
-            detail.tradePrice = rows[i].retailPrice;
+            detail.tradePrice = rows[i].tradePrice;
 
             detail.killflag = rows[i].killflag;
             detail.discount = rows[i].discount;

@@ -364,11 +364,13 @@ $(function () {
             if(rows[i].needDisburse<=0){
                 $.messager.alert('系统提示','第'+index+'行的“待结算数”不允许出现小于等于0的数','info');
                 loadDict();
+                clearData();
                 return;
             }
             if(rows[i].needDisburse>rows[i].quantity){
                 $.messager.alert('系统提示','第'+index+'行的“待结算数”不允许出现大于当前行“数量”的数','info');
                 loadDict();
+                clearData();
                 return;
             }
             for(var j=0 ;j<rows.length;j++){
@@ -376,6 +378,7 @@ $(function () {
                 if(rows[i].supplier != rows[j].supplier){
                     $.messager.alert('系统提示','第'+index+'行和第'+index2+'的“供应商不一致，不能出现在同一张付款单上”，要求供应商一致才能进行“填付”操作','info');
                     loadDict();
+                    clearData();
                     return;
                 }
             }
@@ -427,7 +430,6 @@ $(function () {
         rec.operator = parent.config.loginName;
         rec.hospitalId  = parent.config.hospitalId;
         expDisburseRecBeanChangeVo.inserted.push(rec);
-        console.log(expDisburseVo);
         $.postJSON("/api/exp-dis/dis", expDisburseVo, function (data) {
             loadDocument();
             loadDict();
@@ -438,10 +440,13 @@ $(function () {
             loadDocument();
             loadDict();
         })
+        clearData();
+
+    })
+    var clearData = function(){
         $('#supplierUnits').textbox('clear');
         $('#payPrice').textbox('clear');
         $('#detailPrice').textbox('clear');
         $('#tradePrice').textbox('clear');
-
-    })
+    }
 })
