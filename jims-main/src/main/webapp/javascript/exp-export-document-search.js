@@ -274,6 +274,8 @@ $(function () {
             $("#stopDate").datebox("clear");
             $("#startDate").datetimebox({disabled: true});
             $("#stopDate").datetimebox({disabled: true});
+            masterDataVo.startDate ="";
+            masterDataVo.stopDate = "";
         }
         masterDataVo.receiver = $("#depts").combogrid("getText");
         masterDataVo.searchInput = $("#searchInput").combogrid("getValue");

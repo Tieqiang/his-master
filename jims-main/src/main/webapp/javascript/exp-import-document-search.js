@@ -13,13 +13,13 @@ function checkRadio(){
         $("#stopBill").textbox({disabled:true});
     }
     if($("#dateTime:checked").val()){
-        $("#startDate").datebox("enable");
-        $("#stopDate").datebox("enable");
+        $("#startDate").datetimebox("enable");
+        $("#stopDate").datetimebox("enable");
     }else{
-        $("#startDate").datebox("clear");
-        $("#stopDate").datebox("clear");
-        $("#startDate").datebox({disabled:true});
-        $("#stopDate").datebox({disabled:true});
+        $("#startDate").datetimebox("setValue","");
+        $("#stopDate").datetimebox("setValue","");
+        $("#startDate").datetimebox({disabled:true});
+        $("#stopDate").datetimebox({disabled:true});
     }
     if($("#expName:checked").val()){
         $("#searchInput").combogrid("enable");
@@ -40,24 +40,39 @@ function checkRadio(){
         $("#importClass").combobox({disabled:true});
     }
 }
-function myFormatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '/' + (m < 10 ? ('0' + m) : m) + '/' + (d < 10 ? ('0' + d) : d);
-}
-function w3(s) {
-    if (!s) return new Date();
-    var y = s.substring(0, 4);
-    var m = s.substring(5, 7);
-    var d = s.substring(8, 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
-    } else {
-        return new Date();
-    }
-}
+
 $(function () {
+    //格式化日期函数
+    function formatterDate(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
+        } else {
+            return new Date();
+        }
+    }
+
     /**
      * 供货方
      *
@@ -88,47 +103,47 @@ $(function () {
         }, {
             title: '入库单号',
             field: 'documentNo',
-            width: '9%',
+            width: '15%',
             editor: {type: 'textbox'}
         }, {
             title: '入库日期',
             field: 'importDate',
-            width: '9%'
+            width: '11%',
+            formatter: formatterDate
         }, {
             title: '供货商',
             field: 'supplier',
-            width: '9%',
+            width: '15%',
             editor: {type: 'textbox'}
         }, {
             title: "应付金额",
-            width: '9%',
+            width: '7%',
             field: 'accountReceivable'
         }, {
             title: '已付金额',
             field: 'accountPayed',
-            width: '9%',
+            width: '7%',
             editor: {type: 'textbox'}
         }, {
             title: '附加费用',
             field: 'additionalFee',
-            width: '9%',
+            width: '7%',
             editor: {type: 'numberbox'}
         }, {
             title: '入库类别',
-            width: '9%',
+            width: '11%',
             field: 'importClass'
-
         }, {
             title: '记账',
-            width: '9%',
+            width: '7%',
             field: 'accountIndicator'
         }, {
             title: '操作员',
-            width: '9%',
+            width: '7%',
             field: 'operator'
         }, {
             title: '作废',
-            width: '9%',
+            width: '7%',
             field: 'docStatus'
         }]],
         onClickRow: function (index, row) {
@@ -148,9 +163,36 @@ $(function () {
         })
     });
     //设置时间
-    var curr_time = new Date();
-    $("#startDate").datebox("setValue", myFormatter2(curr_time));
-    $("#stopDate").datebox("setValue", myFormatter2(curr_time));
+    $('#startDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#startDate').datetimebox('setText', dateTime);
+            $('#startDate').datetimebox('hidePanel');
+        }
+    });
+    $('#stopDate').datetimebox({
+        value: 'dateTime',
+        required: true,
+        showSeconds: true,
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#stopDate').datetimebox('setText', dateTime);
+            $('#stopDate').datetimebox('hidePanel');
+        }
+    });
     //入库分类字典
     $("#importClass").combobox({
         url: '/api/exp-import-class-dict/list',
@@ -221,13 +263,15 @@ $(function () {
         masterDataVo.classRadio = $("#detailForm input[name='radioOne']:checked").val();
         masterDataVo.billRadio = $("#detailForm input[name='radioTwo']:checked").val();
         if($("#dateTime:checked").val()){
-            masterDataVo.startDate = $("#startDate").datebox("getText");
-            masterDataVo.stopDate = $("#stopDate").datebox("getText");
+            masterDataVo.startDate = $("#startDate").datetimebox("getText");
+            masterDataVo.stopDate = $("#stopDate").datetimebox("getText");
         }else{
-            $("#startDate").datebox("clear");
-            $("#stopDate").datebox("clear");
-            masterDataVo.startDate = $("#startDate").datebox("getText");
-            masterDataVo.stopDate = $("#stopDate").datebox("getText");
+            $("#startDate").datetimebox("clear");
+            $("#stopDate").datetimebox("clear");
+            $("#startDate").datetimebox({disabled: true});
+            $("#stopDate").datetimebox({disabled: true});
+            masterDataVo.startDate ="";
+            masterDataVo.stopDate="";
         }
         masterDataVo.supplier = $("#supplier").combogrid("getText");
         masterDataVo.searchInput = $("#searchInput").combogrid("getValue");
@@ -342,15 +386,4 @@ $(function () {
             }
         }
     });
-    //格式化日期函数
-    function formatterDate(val, row) {
-        if (val != null) {
-            var date = new Date(val);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-            return dateTime
-        }
-    }
 })
