@@ -13,13 +13,13 @@ function checkRadio() {
         $("#stopBill").textbox({disabled: true});
     }
     if ($("#dateTime:checked").val()) {
-        $("#startDate").datebox("enable");
-        $("#stopDate").datebox("enable");
+        $("#startDate").datetimebox("enable");
+        $("#stopDate").datetimebox("enable");
     } else {
         $("#startDate").datebox("clear");
         $("#stopDate").datebox("clear");
-        $("#startDate").datebox({disabled: true});
-        $("#stopDate").datebox({disabled: true});
+        $("#startDate").datetimebox({disabled: true});
+        $("#stopDate").datetimebox({disabled: true});
     }
     if ($("#expName:checked").val()) {
         $("#searchInput").combogrid("enable");
@@ -40,25 +40,7 @@ function checkRadio() {
         $("#exportClass").combobox({disabled: true});
     }
 }
-function myformatter2(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '/' + (m < 10 ? ('0' + m) : m) + '/' + (d < 10 ? ('0' + d) : d);
-}
-function w3(s) {
-    if (!s){
-        return new Date();
-    }
-    var y = s.substring(0, 4);
-    var m = s.substring(5, 7);
-    var d = s.substring(8, 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
-    } else {
-        return new Date();
-    }
-}
+
 $(function () {
     /**
      * 供货方
@@ -68,6 +50,68 @@ $(function () {
     var masters = [];//信息
     var currentDocumentNo;//当前账单号
     var flag = 0;
+
+    //格式化日期函数
+    function formatterDate(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
+        } else {
+            return new Date();
+        }
+    }
+
+    $('#startDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#startDate').datetimebox('setText', dateTime);
+            $('#startDate').datetimebox('hidePanel');
+        }
+    });
+    $('#stopDate').datetimebox({
+        value: 'dateTime',
+        required: true,
+        showSeconds: true,
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#stopDate').datetimebox('setText', dateTime);
+            $('#stopDate').datetimebox('hidePanel');
+        }
+    });
 
     /**
     * 定义主表信息表格
@@ -95,11 +139,12 @@ $(function () {
         }, {
             title: '出库日期',
             field: 'exportDate',
-            width: '9%'
+            width: '11%',
+            formatter: formatterDate
         }, {
             title: '收货方',
             field: 'receiver',
-            width: '9%',
+            width: '15%',
             editor: {type: 'textbox'}
         }, {
             title: "应付金额",
@@ -149,10 +194,7 @@ $(function () {
             }
         })
     });
-    //设置时间
-    var curr_time = new Date();
-    $("#startDate").datebox("setValue", myformatter2(curr_time));
-    $("#stopDate").datebox("setValue", myformatter2(curr_time));
+
     //出库分类字典
     $("#exportClass").combobox({
         url: '/api/exp-export-class-dict/list',
@@ -225,13 +267,13 @@ $(function () {
         masterDataVo.classRadio = $("#detailForm input[name='radioOne']:checked").val();
         masterDataVo.billRadio = $("#detailForm input[name='radioTwo']:checked").val();
         if ($("#dateTime:checked").val()) {
-            masterDataVo.startDate = $("#startDate").datebox("getText");
-            masterDataVo.stopDate = $("#stopDate").datebox("getText");
+            masterDataVo.startDate = $("#startDate").datetimebox('getText');;
+            masterDataVo.stopDate = $("#stopDate").datetimebox('getText');;
         } else {
             $("#startDate").datebox("clear");
             $("#stopDate").datebox("clear");
-            masterDataVo.startDate = $("#startDate").datebox("getText");
-            masterDataVo.stopDate = $("#stopDate").datebox("getText");
+            $("#startDate").datetimebox({disabled: true});
+            $("#stopDate").datetimebox({disabled: true});
         }
         masterDataVo.receiver = $("#depts").combogrid("getText");
         masterDataVo.searchInput = $("#searchInput").combogrid("getValue");
@@ -259,8 +301,10 @@ $(function () {
     }
     $("#retailDialog").dialog({
         title: '消耗品出库明细',
-        width: "50%",
+        width: "80%",
         height: 300,
+        left:100,
+        top:100,
         closed: false,
         inline: true,
         catch: false,
@@ -279,41 +323,53 @@ $(function () {
         method: 'GET',
         columns: [[{
             title: '产品名称',
-            field: 'expName'
+            field: 'expName',
+            width: '11%'
         }, {
             title: '数量',
-            field: 'quantity'
+            field: 'quantity',
+            width: '7%'
         }, {
             title: '规格',
-            field: 'expSpec'
+            field: 'expSpec',
+            width: '11%'
         }, {
             title: '批号',
-            field: 'batchNo'
+            field: 'batchNo',
+            width: '11%'
         }, {
             title: '单位',
-            field: 'units'
+            field: 'units',
+            width: '7%'
         }, {
             title: '有效期',
             field: 'expireDate',
+            width:'11%',
             formatter: formatterDate
         }, {
             title: '厂家',
-            field: 'firmId'
+            field: 'firmId',
+            width: '11%'
         }, {
             title: '批发价',
-            field: 'tradePrice'
+            field: 'tradePrice',
+            width: '7%'
         }, {
             title: '零售价',
-            field: 'retailPrice'
+            field: 'retailPrice',
+            width: '7%'
         }, {
             title: '进价',
-            field: 'purchasePrice'
+            field: 'purchasePrice',
+            width: '7%'
         }, {
             title: '结存',
-            field: 'inventory'
+            field: 'inventory',
+            width: '7%'
         }, {
             title: '零价合计',
-            field: 'zeroAccount'
+            field: 'zeroAccount',
+            width: '7%'
         }]],
         onLoadSuccess:function(data){
             console.log(data);
@@ -328,15 +384,4 @@ $(function () {
             }
         }
     });
-    ////格式化日期函数
-    function formatterDate(val, row) {
-        if (val != null) {
-            var date = new Date(val);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
-            return dateTime
-        }
-    }
 })
