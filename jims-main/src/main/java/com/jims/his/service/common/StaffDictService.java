@@ -44,6 +44,7 @@ public class StaffDictService {
             StaffDict staffDict = new StaffDict();
             staffDict.setDeptDict(vo.getDeptDict());
             staffDict.setId(vo.getId());
+            staffDict.setName(vo.getName());
             staffDict.setJob(vo.getJob());
             staffDict.setLoginName(vo.getLoginName());
             staffDict.setPassword(vo.getPassword());
