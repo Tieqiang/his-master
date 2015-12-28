@@ -74,6 +74,12 @@ public class AcctDeptDictService {
         return acctDeptDictFacade.getAcctDeptDict(hospitalId) ;
     }
 
+    @GET
+    @Path("acct-list-all")
+    public List<AcctDeptDict> listAllAcctDeptDict(@QueryParam("hospitalId")String hospitalId){
+        return acctDeptDictFacade.listAll(hospitalId) ;
+    }
+
 
     @POST
     @Path("del/{id}")

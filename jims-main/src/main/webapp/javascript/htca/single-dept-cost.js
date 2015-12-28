@@ -69,18 +69,18 @@ $(function(){
             editor:{type:'combobox',options:{
                 method:'GET',
                 url:'/api/cost-item/list-item?hospitalId='+parent.config.hospitalId ,
-                valueField:'costItemCode',
+                valueField:'id',
                 textField:'costItemName',
                 onLoadSuccess:function(data){
                     var data =$(this).combobox('getData') ;
                     if(data.length){
-                        $(this).combobox('setValue',data[0].costItemCode) ;
+                        $(this).combobox('setValue',data[0].id) ;
                     }
                 }
             }},
             formatter:function(value,row,index){
                 for(var i = 0 ;i<costItemDicts.length ;i++){
-                    if(value==costItemDicts[i].costItemCode){
+                    if(value==costItemDicts[i].id){
                         return costItemDicts[i].costItemName ;
                     }
                 }

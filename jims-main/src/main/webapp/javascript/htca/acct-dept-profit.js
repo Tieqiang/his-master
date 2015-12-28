@@ -94,7 +94,7 @@ $(function () {
             },
             width:'10%'
         },{
-            title: '满意率',
+            title: '质量达标率',
             field: 'pleasedNum',
             width: '20%',
             editor: {
@@ -103,7 +103,7 @@ $(function () {
                 }
             }
         }, {
-            title: '单项考评奖',
+            title: '专项奖',
             field: 'specialIncome',
             width: '10%',
             editor: {

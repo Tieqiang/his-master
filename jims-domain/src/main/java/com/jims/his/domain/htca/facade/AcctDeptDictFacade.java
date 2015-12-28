@@ -112,7 +112,7 @@ public class AcctDeptDictFacade extends BaseFacade {
      */
     public List<AcctDeptDict> getAcctDeptDict(String hospitalId) {
 
-        String hql = "from AcctDeptDict as a where a.hospitalId = '"+hospitalId+"'" ;
+        String hql = "from AcctDeptDict as a where a.hospitalId = '"+hospitalId+"' and a.delFlag = '1'" ;
         TypedQuery<AcctDeptDict> query = createQuery(AcctDeptDict.class, hql, new ArrayList<Object>());
         return query.getResultList() ;
     }
@@ -122,7 +122,10 @@ public class AcctDeptDictFacade extends BaseFacade {
         AcctDeptDict dict = get(AcctDeptDict.class, id);
         String hql = "delete AcctDeptVsDeptDict as vsd where vsd.acctDeptId='"+id+"'" ;
         this.getEntityManager().createQuery(hql).executeUpdate() ;
-        remove(dict);
+        dict.setDelFlag("0");
+        //通过标志位选择
+        merge(dict) ;
+        //remove(dict);
         return dict ;
     }
 
@@ -190,4 +193,16 @@ public class AcctDeptDictFacade extends BaseFacade {
             this.getEntityManager().createQuery(hql).executeUpdate() ;
         }
     }
+
+    /**
+     * 获取所有历史核算单元信息
+     * @param hospitalId
+     * @return
+     */
+    public List<AcctDeptDict> listAll(String hospitalId) {
+        String hql = "from AcctDeptDict as dict where dict.hospitalId='"+hospitalId+"'" ;
+        return createQuery(AcctDeptDict.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+
+
 }

@@ -103,4 +103,24 @@ public class ServiceDeptIncomeService  {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
         }
     }
+
+    @GET
+    @Path("list-by-confirm-status")
+    public List<ServiceDeptIncome> listByDeptAndConfirmStatus(@QueryParam("hospitalId")String hospitalId,
+                                                              @QueryParam("yearMonth")String yearMonth,
+                                                              @QueryParam("deptId")String deptId,
+                                                              @QueryParam("confirmStatus")String confirmStatus){
+
+        String hql = "from ServiceDeptIncome as income where income.hospitalId='"+hospitalId+"' and " +
+                "income.yearMonth = '"+yearMonth+"'" ;
+        if(null !=deptId && !"".equals(deptId)){
+            hql +=" and income.acctDeptId='"+deptId+"'" ;
+        }
+
+        if(null !=confirmStatus && !"".equals(confirmStatus)){
+            hql += " and income.confirmStatus='"+confirmStatus+"'" ;
+        }
+        return serviceDeptIncomeFacade.createQuery(ServiceDeptIncome.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+
 }

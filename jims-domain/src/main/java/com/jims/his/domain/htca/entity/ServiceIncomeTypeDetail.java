@@ -8,35 +8,39 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
- * ServieIncomeType entity. @author ztq
+ * ServiceIncomeTypeDetail entity. @author ztq
  */
 @Entity
-@Table(name = "service_income_type", schema = "HTCA")
-public class ServiceIncomeType implements java.io.Serializable {
+@Table(name = "SERVICE_INCOME_TYPE_DETAIL", schema = "HTCA")
+public class ServiceIncomeTypeDetail implements java.io.Serializable {
 
 	// Fields
 
 	private String id;
-	private String serviceTypeName;
+	private String incomeDetailName;
 	private String inputCode;
+	private String incomeTypeId;
+	private String unit;
+	private Double price;
 	private String hospitalId;
-    private String unit ;
-    private Double price ;
     private Double addRate ;
+
 	// Constructors
 
 	/** default constructor */
-	public ServiceIncomeType() {
+	public ServiceIncomeTypeDetail() {
 	}
 
 	/** full constructor */
-	public ServiceIncomeType(String serviceTypeName, String inputCode,
-                             String hospitalId, String unit, Double price, Double addRate) {
-		this.serviceTypeName = serviceTypeName;
+	public ServiceIncomeTypeDetail(String incomeDetailName, String inputCode,
+                                   String incomeTypeId, String unit, Double price,
+                                   String hospitalId, Double addRate) {
+		this.incomeDetailName = incomeDetailName;
 		this.inputCode = inputCode;
+		this.incomeTypeId = incomeTypeId;
+		this.unit = unit;
+		this.price = price;
 		this.hospitalId = hospitalId;
-        this.unit = unit;
-        this.price = price;
         this.addRate = addRate;
     }
 
@@ -53,13 +57,13 @@ public class ServiceIncomeType implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "SERVICE_TYPE_NAME", length = 100)
-	public String getServiceTypeName() {
-		return this.serviceTypeName;
+	@Column(name = "INCOME_DETAIL_NAME", length = 100)
+	public String getIncomeDetailName() {
+		return this.incomeDetailName;
 	}
 
-	public void setServiceTypeName(String serviceTypeName) {
-		this.serviceTypeName = serviceTypeName;
+	public void setIncomeDetailName(String incomeDetailName) {
+		this.incomeDetailName = incomeDetailName;
 	}
 
 	@Column(name = "INPUT_CODE", length = 50)
@@ -71,6 +75,33 @@ public class ServiceIncomeType implements java.io.Serializable {
 		this.inputCode = inputCode;
 	}
 
+	@Column(name = "INCOME_TYPE_ID", length = 64)
+	public String getIncomeTypeId() {
+		return this.incomeTypeId;
+	}
+
+	public void setIncomeTypeId(String incomeTypeId) {
+		this.incomeTypeId = incomeTypeId;
+	}
+
+	@Column(name = "UNIT", length = 10)
+	public String getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	@Column(name = "PRICE", precision = 22, scale = 0)
+	public Double getPrice() {
+		return this.price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
 	@Column(name = "HOSPITAL_ID", length = 64)
 	public String getHospitalId() {
 		return this.hospitalId;
@@ -80,24 +111,6 @@ public class ServiceIncomeType implements java.io.Serializable {
 		this.hospitalId = hospitalId;
 	}
 
-    @Column(name="unit")
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    @Column(name="price")
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     @Column(name="add_rate")
     public Double getAddRate() {
         return addRate;
@@ -106,4 +119,6 @@ public class ServiceIncomeType implements java.io.Serializable {
     public void setAddRate(Double addRate) {
         this.addRate = addRate;
     }
+
+
 }

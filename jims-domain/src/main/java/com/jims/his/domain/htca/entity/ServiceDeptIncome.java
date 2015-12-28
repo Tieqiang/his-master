@@ -29,6 +29,10 @@ public class ServiceDeptIncome implements java.io.Serializable {
     private String outFlag ;
     private String operator ;
     private Date operatorDate ;
+    private String confirmStatus ;
+    private String confirmOperator ;
+    private Date confirmDate ;
+    private String detailIncomeId ;
     // Constructors
     /**
      * default constructor
@@ -40,7 +44,7 @@ public class ServiceDeptIncome implements java.io.Serializable {
      * full constructor
      */
     public ServiceDeptIncome(String acctDeptId, String incomeTypeId,
-                             Double totalIncome, String hospitalId, String yearMonth, String serviceForDeptId, String getWay, String outFlag, String operator, Date operatorDate) {
+                             Double totalIncome, String hospitalId, String yearMonth, String serviceForDeptId, String getWay, String outFlag, String operator, Date operatorDate, String confirmStatus, String confirmOperator, Date confirmDate, String detailIncomeId) {
         this.acctDeptId = acctDeptId;
         this.incomeTypeId = incomeTypeId;
         this.totalIncome = totalIncome;
@@ -51,6 +55,10 @@ public class ServiceDeptIncome implements java.io.Serializable {
         this.outFlag = outFlag;
         this.operator = operator;
         this.operatorDate = operatorDate;
+        this.confirmStatus = confirmStatus;
+        this.confirmOperator = confirmOperator;
+        this.confirmDate = confirmDate;
+        this.detailIncomeId = detailIncomeId;
     }
 
     // Property accessors
@@ -62,9 +70,12 @@ public class ServiceDeptIncome implements java.io.Serializable {
         return this.id;
     }
 
+
     public void setId(String id) {
         this.id = id;
     }
+
+
 
     @Column(name = "ACCT_DEPT_ID", length = 64)
     public String getAcctDeptId() {
@@ -154,5 +165,42 @@ public class ServiceDeptIncome implements java.io.Serializable {
 
     public void setOperatorDate(Date operatorDate) {
         this.operatorDate = operatorDate;
+    }
+
+    @Column(name="confirm_status")
+    public String getConfirmStatus() {
+        return confirmStatus;
+    }
+
+    public void setConfirmStatus(String confirmStatus) {
+        this.confirmStatus = confirmStatus;
+    }
+
+    @Column(name="confirm_operator")
+    public String getConfirmOperator() {
+        return confirmOperator;
+    }
+
+    public void setConfirmOperator(String confirmOperator) {
+        this.confirmOperator = confirmOperator;
+    }
+
+    @Column(name="confirm_date")
+    public Date getConfirmDate() {
+        return confirmDate;
+    }
+
+    public void setConfirmDate(Date confirmDate) {
+        this.confirmDate = confirmDate;
+    }
+
+
+    @Column(name="detail_income_id")
+    public String getDetailIncomeId() {
+        return detailIncomeId;
+    }
+
+    public void setDetailIncomeId(String detailIncomeId) {
+        this.detailIncomeId = detailIncomeId;
     }
 }

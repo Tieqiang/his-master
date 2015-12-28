@@ -68,6 +68,20 @@ public class AcctDeptCostService {
     }
 
     @POST
+    @Path("save-dept-devide/{incomeDeptId}")
+    public Response saveDeptDevideAcctDeptCost(List<AcctDeptCost> acctDeptCosts,@PathParam("incomeDeptId")String incomeDeptId) {
+
+        try {
+            acctDeptCostFacade.saveDeptDevideDeriectWrite(acctDeptCosts, incomeDeptId);
+            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+    @POST
     @Path("delete-dept-cost")
     public Response deleteAcctDeptCost(List<String> ids) {
 
@@ -126,6 +140,21 @@ public class AcctDeptCostService {
     }
 
 
+    @POST
+    @Path("save-cost")
+    public Response saveCostData(List<AcctDeptCost> acctDeptCosts){
+        try {
+            acctDeptCostFacade.saveCostData(acctDeptCosts);
+            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+
     @GET
     @Path("list-collection")
     public List<AcctDeptCost> listCollectionDeptCost(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
@@ -155,7 +184,7 @@ public class AcctDeptCostService {
     //分摊类型成本计算
     @GET
     @Path("cost-devide")
-    public List<AcctDeptCost> devideAcctDeptCost(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth,
+    public List<AcctDeptCost> devideHospitalAcctDeptCost(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth,
                                                  @QueryParam("devideWay")String devideWay,@QueryParam("costItemId")String costItemId,
                                                  @QueryParam("totalMoney")Double totalMoney,
                                                  @QueryParam("depts")String depts){

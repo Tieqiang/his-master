@@ -50,6 +50,7 @@ public class StaffDictService {
             staffDict.setPassword(vo.getPassword());
             staffDict.setTitle(vo.getTitle());
             staffDict.setHospitalId(vo.getHospitalId());
+            staffDict.setName(vo.getName());
             Set<StaffVsRole> staffVsRoles = new HashSet<>() ;
             for(String str:vo.getIds()){
                 RoleDict roleDict = roleDictFacade.get(RoleDict.class, str);

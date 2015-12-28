@@ -21,6 +21,7 @@ public class ServiceDeptIncomeRule implements java.io.Serializable {
 	private String ruleSql;
 	private String hospitalId;
 	private String depts;
+    private String costFlag ;
 
 	// Constructors
 
@@ -30,12 +31,13 @@ public class ServiceDeptIncomeRule implements java.io.Serializable {
 
 	/** full constructor */
 	public ServiceDeptIncomeRule(String ruleName, String ruleSql,
-			String hospitalId, String depts) {
+                                 String hospitalId, String depts, String costFlag) {
 		this.ruleName = ruleName;
 		this.ruleSql = ruleSql;
 		this.hospitalId = hospitalId;
 		this.depts = depts;
-	}
+        this.costFlag = costFlag;
+    }
 
 	// Property accessors
 	@GenericGenerator(name = "generator", strategy = "uuid.hex")
@@ -86,4 +88,12 @@ public class ServiceDeptIncomeRule implements java.io.Serializable {
 		this.depts = depts;
 	}
 
+    @Column(name="cost_flag")
+    public String getCostFlag() {
+        return costFlag;
+    }
+
+    public void setCostFlag(String costFlag) {
+        this.costFlag = costFlag;
+    }
 }

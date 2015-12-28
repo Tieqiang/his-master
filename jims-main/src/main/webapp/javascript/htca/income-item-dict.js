@@ -142,15 +142,15 @@ $(function(){
         //保存所有
         var inserted = $("#incomeItemGrid").datagrid('getRows') ;
         for(var i = 0 ;i<inserted.length;i++){
-            inserted[i].hospitalId = config.hospitalId ;
+            inserted[i].hospitalId = parent.config.hospitalId ;
             incomeItemDictBeanChangeVo.inserted.push(inserted[i])
         }
         for(var i = 0 ;i<updated.length;i++){
-            updated[i].hospitalId = config.hospitalId ;
+            updated[i].hospitalId = parent.config.hospitalId ;
             incomeItemDictBeanChangeVo.updated.push(updated[i])
         }
         for(var i = 0 ;i<deleted.length;i++){
-            deleted[i].hospitalId = config.hospitalId ;
+            deleted[i].hospitalId = parent.config.hospitalId ;
             incomeItemDictBeanChangeVo.deleted.push(deleted[i])
         }
 

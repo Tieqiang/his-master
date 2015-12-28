@@ -12,27 +12,27 @@ $(function(){
         method:'GET',
         url:"/api/single-reward-dict/list-all?hospitalId="+parent.config.hospitalId,
         rownumbers:true,
-        footer:"#ft",
+        toolbar:"#ft",
         loadMsg:'数据正在加载中.....',
         columns:[[{
             title:'id',
             field:'id',
             checkbox:true
         },{
-            title:'单项奖名称',
+            title:'专项奖名称',
             field:'rewardName',
             width:'30%',
             editor:{type:'validatebox',options:{
                 required:true,
-                missingMessage:'请输入单项奖名称'
+                missingMessage:'请输入专项奖名称'
             }}
         },{
-            title:'单项奖拼音码',
+            title:'专项奖拼音码',
             field:'inputCode',
             width:'40%',
             editor:{type:'validatebox',options:{
                 required:true,
-                missingMessage:'请输入单项奖拼音码'
+                missingMessage:'请输入专项奖拼音码'
             }}
         }]],
         onDblClickRow:function(rowIndex,rowData){
@@ -58,7 +58,7 @@ $(function(){
     $("#delBtn").on('click',function(){
         var rows = $("#costAttrDatagrid").datagrid('getSelections') ;
         if(!rows){
-            $.messager.alert('系统提示','请选择要删除的属性','error') ;
+            $.messager.alert('系统提示','请选择要删除的专项奖类别','error') ;
             return ;
         }
 

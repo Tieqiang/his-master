@@ -40,11 +40,11 @@ public class CostItemFacade extends BaseFacade {
     }
 
     @Transactional
-    public void saveCostDevide(List<CostItemDevideDept> costItemDevideDepts) {
+    public void saveCostDevide(List<CostItemDevideDept> costItemDevideDepts,String costId) {
+        String hql ="delete from CostItemDevideDept as d where d.costItemId='"+costId+"'" ;
+        getEntityManager().createQuery(hql).executeUpdate() ;
+
         if(costItemDevideDepts.size()>0){
-            String costId = costItemDevideDepts.get(0).getCostItemId() ;
-            String hql ="delete from CostItemDevideDept as d where d.costItemId='"+costId+"'" ;
-            getEntityManager().createQuery(hql).executeUpdate() ;
 
             for(CostItemDevideDept devideDept:costItemDevideDepts){
                 merge(devideDept) ;

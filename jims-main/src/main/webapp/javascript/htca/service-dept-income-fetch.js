@@ -139,7 +139,7 @@ $(function () {
 
         $.get("/api/service-dept-income/list-calc?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth,function(data){
             for(var i = 0 ;i<data.length ;i++){
-                if(data[i].incomeTypeId=="按比例提取"){
+                if(data[i].getWay=="计算计入"){
                     $.messager.confirm("系统提示","本月的分本科室的收入已经计算，重新计算将删除以往的计算记录，是否继续？",function(r){
                         if(r){
                             var options = $("#serviceDeptIncomeTable").datagrid('options') ;

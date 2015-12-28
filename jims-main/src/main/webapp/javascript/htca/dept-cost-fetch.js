@@ -54,9 +54,6 @@ $(function(){
         }//配置formatter，只返回年月
     });
 
-
-
-
     $("#deptCostTable").datagrid({
         fit:true,
         fitColumns:true,
@@ -65,7 +62,6 @@ $(function(){
         striped: true,
         singleSelect: false,
         toolbar: '#ft',
-        method: 'GET',
         pageSize:100,
         pageList: [50,100, 200, 300],
         pagination: true,
@@ -73,7 +69,7 @@ $(function(){
         columns:[[{
             title:'id',
             field:'id',
-            checkbox:true
+            hidden:true
         },{
             title:'核算单元',
             field:'acctDeptId',
@@ -104,7 +100,10 @@ $(function(){
             width:'10%',
             editor:{type:'validatebox',options:{
                 validType:'number'
-            }}
+            }},
+            formatter:function(value,row,index){
+                return parseFloat(value).toFixed(2) ;
+            }
         },{
             title:'减免成本',
             field:'minusCost',
@@ -121,7 +120,29 @@ $(function(){
             title:"获取方式",
             field:'fetchWay',
             width:'20%'
-        }]]
+        },{
+            title:"提取月份",
+            field:'yearMonth',
+            hidden:true
+        },{
+            title:'所属医院',
+            field:'hospitalId',
+            hidden:true
+        }]],
+        onLoadSuccess:function(data){
+            var totalCost =0.0 ;
+            for(var i = 0 ;i<data.total;i++){
+                totalCost += data.rows[i].cost ;
+            }
+
+            $(this).datagrid('insertRow',{
+                index:0,
+                row:{
+                    acctDeptId:'成本合计',
+                    cost:totalCost
+                }
+            }) ;
+        }
     }) ;
     //设置分页
     var p1 = $('#deptCostTable').datagrid('getPager');
@@ -148,9 +169,10 @@ $(function(){
             text:'数据高效提取中，请稍后....'
         }) ;
         $.get("/api/acct-dept-cost/fetch-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&fetchTypeId="+fetchTypeId,function(data){
-            var options = $("#deptCostTable").datagrid('options') ;
-            options.url = "/api/acct-dept-cost/list-all?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
-            $("#deptCostTable").datagrid('reload')  ;
+            //var options = $("#deptCostTable").datagrid('options') ;
+            //options.url = "/api/acct-dept-cost/list-all?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
+            //$("#deptCostTable").datagrid('reload')  ;
+            $("#deptCostTable").datagrid('loadData',data) ;
             $.messager.progress('close') ;
         })
     }) ;
@@ -176,10 +198,24 @@ $(function(){
             $.messager.alert('系统提示','获取日期失败','info') ;
             return ;
         }
-
         var options = $("#deptCostTable").datagrid('options') ;
         options.url = "/api/acct-dept-cost/list-collection?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
         $("#deptCostTable").datagrid('reload')  ;
+    }) ;
+
+    /**
+     * 保存
+     */
+    $("#saveBtn").on('click',function(){
+        var rows = $("#deptCostTable").datagrid('getRows') ;
+        rows.shift() ;
+        if(rows.length<=0){
+            $.messager.alert("系统提示","没有要保存的数据，请县提取，然后在保存！",'error') ;
+            return
+        }
+        $.postJSON("/api/acct-dept-cost/save-cost",rows,function(data){
+            $.messager.alert("系统提示","保存成功，在成本报表中查看各个科室的成本") ;
+        },function(data){})
     }) ;
 
 });

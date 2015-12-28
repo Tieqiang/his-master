@@ -29,20 +29,23 @@ public class AcctReckService {
     @Path("list")
     @GET
     public List<AcctReckItemClassDict> listByHospital(@QueryParam("hospitalId")String hospitalId){
-        String hql = "from AcctReckItemClassDict as dict where dict.hospitalId='"+hospitalId+"'" ;
+        String hql = "from AcctReckItemClassDict as dict where dict.hospitalId='"+hospitalId+"' " +
+                "order by dict.reckItemCode" ;
         return acctReckFacade.find(AcctReckItemClassDict.class,hql,new ArrayList<Object>()) ;
     }
     @Path("list-no-vs-cost")
     @GET
     public List<AcctReckItemClassDict> listByHospitalNoVsCost(@QueryParam("hospitalId")String hospitalId){
-        String hql = "from AcctReckItemClassDict as dict where dict.hospitalId='"+hospitalId+"' and dict.costId is null " ;
+        String hql = "from AcctReckItemClassDict as dict where dict.hospitalId='"+hospitalId+"' and dict.costId is null" +
+                " order by dict.reckItemCode" ;
         return acctReckFacade.find(AcctReckItemClassDict.class,hql,new ArrayList<Object>()) ;
     }
 
     @Path("list-ok-vs-cost")
     @GET
     public List<AcctReckItemClassDict> listVsCost(@QueryParam("hospitalId")String hospitalId,@QueryParam("costId")String costId){
-        String hql = "from AcctReckItemClassDict as dict where dict.hospitalId='"+hospitalId+"' and dict.costId='"+costId+"' " ;
+        String hql = "from AcctReckItemClassDict as dict where dict.hospitalId='"+hospitalId+"' and dict.costId='"+costId+"'" +
+                " order by dict.reckItemCode " ;
         return acctReckFacade.find(AcctReckItemClassDict.class,hql,new ArrayList<Object>()) ;
     }
 
@@ -64,7 +67,7 @@ public class AcctReckService {
     @GET
     public AcctReckItemClassDict getAcctReckItemClassDictByCode(@QueryParam("reckCode")String reckCode,@QueryParam("hospitalId")String hospitalId){
         String hql = "from AcctReckItemClassDict as dict where dict.reckItemCode='"+reckCode+"' and" +
-                " dict.hospitalId='"+hospitalId+"'" ;
+                " dict.hospitalId='"+hospitalId+"' order by dict.reckItemCode" ;
         TypedQuery<AcctReckItemClassDict> query = acctReckFacade.createQuery(AcctReckItemClassDict.class, hql, new ArrayList<Object>());
         List<AcctReckItemClassDict> resultList = query.getResultList();
         if(resultList.size()>0){

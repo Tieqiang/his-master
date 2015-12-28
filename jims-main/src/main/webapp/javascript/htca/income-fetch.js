@@ -137,53 +137,7 @@ $(function () {
             field: "wardIncome"
         }]],
         onLoadSuccess: function (data) {
-            //var options = $(p1).pagination('options');
-            //var totals = options.total;
-            //var pages = Math.ceil(totals / options.pageSize);
-            //if (currentPage <= pages+1) {
-            //    //var rows = $("#incomeDatagrid").datagrid('getRows');
-            //    var rows=data.rows
-            //    if (!rows.length) {
-            //        $.messager.alert("系统提示", "请首先提取数据", 'info');
-            //        return;
-            //    } else {
-            //        for (var i = 0; i <rows.length; i++) {
-            //            var priceItemCode = rows[i].incomeItemCode;
-            //            for (var j = 0; j < incomeItems.length; j++) {
-            //                if (incomeItems[j].priceItemCode == priceItemCode) {
-            //                    var rowIndex = $("#incomeDatagrid").datagrid('getRowIndex', rows[i]);
-            //                    $("#incomeDatagrid").datagrid('selectRow', rowIndex);
-            //                    $("#incomeDatagrid").datagrid('scrollTo', rowIndex);
-            //
-            //                    //门诊
-            //                    if (rows[i].inpOrOutp == '0') {
-            //                        rows[i].orderIncome = rows[i].totalCost * incomeItems[j].outpOrderedBy / 100;
-            //                        rows[i].performIncome = rows[i].totalCost * incomeItems[j].outpPerformedBy / 100;
-            //                        rows[i].wardIncome = rows[i].totalCost * incomeItems[j].outpWardCode / 100;
-            //                    }
-            //                    //住院
-            //                    if (rows[i].inpOrOutp == '1') {
-            //                        rows[i].orderIncome = rows[i].totalCost * incomeItems[j].inpOrderedBy / 100;
-            //                        rows[i].performIncome = rows[i].totalCost * incomeItems[j].inpPerformedBy / 100;
-            //                        rows[i].wardIncome = rows[i].totalCost * incomeItems[j].inpWardCode / 100;
-            //                    }
-            //                    //$("#incomeDatagrid").datagrid('updateRow', {index: rowIndex, row: rows[i]});
-            //                    break;
-            //                }
-            //            }
-            //        }
-            //    }
-            //    $.postJSON("/api/fetch-data/save-calc", rows, function (data) {
-            //        console.log('保存成功')
-            //    }, function (data) {
-            //    })
-            //    if(currentPage>pages){
-            //        devideIncome(pages);
-            //    }else{
-            //        devideIncome(currentPage);
-            //    }
-            //    currentPage++;
-            //}
+
 
         }
     });

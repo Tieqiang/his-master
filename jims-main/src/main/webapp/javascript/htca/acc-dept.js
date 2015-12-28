@@ -23,7 +23,7 @@ $(function () {
 
     $("#acctDeptFormWindow").window({
         width: '330',
-        height: '350',
+        height: '400',
         title: '核算单元维护',
         modal: true,
         closed: true,
@@ -123,6 +123,12 @@ $(function () {
             field: 'deptName',
             width: '30%'
         }, {
+            title:"使用面积",
+            field:'buildArea'
+        },{
+            title:'在编人数',
+            field:'staffNum'
+        },{
             title: '门诊住院',
             field: 'deptOutpInp',
             width: '10%',
@@ -135,10 +141,6 @@ $(function () {
                 }
                 return value ;
             }
-        }, {
-            title: '输入码',
-            field: 'inputCode',
-            width: '10%'
         }, {
             title: '科室类型',
             field: 'deptType',
@@ -198,12 +200,10 @@ $(function () {
                     return '未纳入科室'
                 }
             }
-        },{
-            title:"使用面积",
-            field:'buildArea'
-        },{
-            title:'在编人数',
-            field:'staffNum'
+        }, {
+            title: '输入码',
+            field: 'inputCode',
+            width: '10%'
         }]],
         onDblClickRow: function (row) {
             $("#deptDictTable").datagrid('reload') ;
@@ -284,6 +284,8 @@ $(function () {
             acc.costAppLevel = rows[i].costAppLevel;
             acc.buildArea = rows[i].buildArea ;
             acc.staffNum = rows[i].staffNum ;
+            acc.endDept = rows[i].endDept
+            acc.delFlag = '1' ;
             acctDeptDict.push(acc);
         }
         console.log(acctDeptDict);
@@ -328,6 +330,8 @@ $(function () {
         acctDeptDict.id =$("#id").textbox('getValue') ;
         acctDeptDict.buildArea = $("#buildArea").textbox('getValue');
         acctDeptDict.staffNum= $("#staffNum").textbox('getValue');
+        acctDeptDict.endDept = $("#endDept").combobox('getValue') ;
+        acctDeptDict.delFlag = '1';
 
         if (!acctDeptDict.deptName || !acctDeptDict.deptCode) {
             $.messager.alert("系统提示", "请完善核算单元信息，核算单元名称与编码不允许为空！");

@@ -28,7 +28,7 @@ public class CostItemService {
     @GET
     @Path("list-item-class")
     public List<CostItemClassDict> listCostItemClassDict(@QueryParam("hospitalId")String hospitalId){
-        String hql = "from CostItemClassDict as dict where dict.hospitalId='"+hospitalId+"'" ;
+        String hql = "from CostItemClassDict as dict where dict.hospitalId='"+hospitalId+"' order by dict.costItemClassCode" ;
         return costItemFacade.createQuery(CostItemClassDict.class,hql,new ArrayList<Object>()).getResultList() ;
     }
 
@@ -118,10 +118,10 @@ public class CostItemService {
 
 
     @POST
-    @Path("save-devide")
-    public Response saveCostDevide(List<CostItemDevideDept> costItemDevideDepts){
+    @Path("save-devide/{costId}")
+    public Response saveCostDevide(List<CostItemDevideDept> costItemDevideDepts,@PathParam("costId")String costId){
         try {
-            costItemFacade.saveCostDevide(costItemDevideDepts);
+            costItemFacade.saveCostDevide(costItemDevideDepts,costId);
             return Response.status(Response.Status.OK).entity(costItemDevideDepts).build() ;
         }catch (Exception e){
             e.printStackTrace();

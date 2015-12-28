@@ -140,8 +140,8 @@ $(function(){
             var confirm_pwd=$("#confirm_password").textbox('getValue');
             staff.title= $("#title").textbox('getValue') ;
             staff.job= $("#job").textbox('getValue') ;
-            staff.hospitalId=parent.config.hospitalId;
             staff.name = $("#name").textbox('getValue') ;
+            staff.hospitalId=parent.config.hospitalId;
             staff.ids=[] ;
 
             var rolesId = $("#roleIds").combobox('getValues') ;

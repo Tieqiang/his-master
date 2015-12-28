@@ -166,4 +166,5 @@ public class StaffDict implements java.io.Serializable {
     public void setInputCode(String inputCode) {
         this.inputCode = inputCode;
     }
+
 }

@@ -57,6 +57,7 @@ $(function () {
         singleSelect: true,
         toolbar: '#ft',
         method: 'GET',
+        rownumbers:true,
         url: "/api/cost-item/list-item?hospitalId=" + parent.config.hospitalId,
         loadMsg: '数据正在加载中，请稍后.....',
         columns: [[{
@@ -301,6 +302,13 @@ $(function () {
         height: 400,
         onClose: function () {
             $("#itemForm").form('reset');
+        },
+        onOpen:function(){
+            var row  = $("#costItemClassGrid").datagrid('getSelected') ;
+            if(row){
+                $("#costItemClassId").combobox('setValue',row.id) ;
+            }
+
         }
     });
 
@@ -714,7 +722,7 @@ $(function () {
             costDevide.push(cs) ;
         }
 
-        $.postJSON("/api/cost-item/save-devide",costDevide,function(data){
+        $.postJSON("/api/cost-item/save-devide/"+row.id,costDevide,function(data){
             $.messager.alert('系统提示','保存成功','info') ;
             $("#acctDeptWin").window('close') ;
         },function(data){})

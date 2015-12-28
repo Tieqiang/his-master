@@ -8,6 +8,8 @@ import com.jims.his.domain.common.facade.RoleDictFacade;
 import com.jims.his.domain.common.facade.StaffDictFacade;
 import com.jims.his.domain.common.vo.Config;
 import com.jims.his.domain.common.vo.ErrorMessager;
+import com.jims.his.domain.htca.entity.AcctDeptVsDeptDict;
+import com.jims.his.domain.htca.facade.AcctDeptDictFacade;
 import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.facade.ExpStorageDeptFacade;
 import org.codehaus.jettison.json.JSONArray;
@@ -41,17 +43,19 @@ public class LoginService {
     private ExpStorageDeptFacade expStorageDeptFacade;
     private HttpServletResponse resp;
     private HttpServletRequest request;
+    private AcctDeptDictFacade acctDeptDictFacade ;
 
 
 
     @Inject
-    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade) {
+    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade, AcctDeptDictFacade acctDeptDictFacade) {
         this.moduleDictFacade = moduleDictFacade;
         this.staffDictFacade = staffDictFacade;
         this.roleDictFacade = roleDictFacade;
         this.expStorageDeptFacade = expStorageDeptFacade;
         this.resp = resp;
         this.request = request;
+        this.acctDeptDictFacade = acctDeptDictFacade;
     }
 
     /**
@@ -88,6 +92,7 @@ public class LoginService {
                 session.setAttribute("loginName",staffDict.getLoginName());
                 session.setAttribute("staffName", staffDict.getName());
                 session.setAttribute("loginId",staffDict.getId());
+                session.setAttribute("deptId",staffDict.getDeptDict().getId());
                 return Response.status(Response.Status.OK).entity(staffDict).build() ;
             }
         }catch(Exception e){
@@ -257,6 +262,10 @@ public class LoginService {
             ModulDict modulDict = staffDictFacade.get(ModulDict.class, config.getModuleId());
             session.setAttribute("moduleId", modulDict.getId());
             session.setAttribute("moduleName", modulDict.getModuleName());
+            if("全成本核算系统".equals(modulDict.getModuleName())){
+                AcctDeptVsDeptDict dict = acctDeptDictFacade.getAcctDeptVsDeptDict((String)session.getAttribute("deptId")) ;
+                session.setAttribute("acctDeptId",dict.getAcctDeptId());
+            }
             config.setModuleName(modulDict.getModuleName());
         }
         if (null != config.getStorageCode() && !config.getStorageCode().trim().equals("")) {
@@ -284,6 +293,7 @@ public class LoginService {
         config.setStaffName((String) session.getAttribute("staffName"));
         config.setStorageCode((String) session.getAttribute("storageCode"));
         config.setStorageName((String) session.getAttribute("storageName"));
+        config.setAcctDeptId((String)session.getAttribute("acctDeptId"));
         config.setDefaultReportPath("http://192.168.6.68:8080/webReport/ReportServer?reportlet=");
         return config ;
     }

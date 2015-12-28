@@ -72,6 +72,9 @@ public class FetchDataFacade extends BaseFacade{
         List<Object[]> resultList = query.getResultList();
         List<CalcIncomeDetail> incomeDetails = new ArrayList<>() ;
         for(Object[] objects:resultList){
+            if(((BigDecimal)objects[9]).intValue()==0){
+                continue; //如果总金额为0 ，则不计入
+            }
             CalcIncomeDetail calcIncomeDetail = new CalcIncomeDetail() ;
             calcIncomeDetail.setHospitalId(hospitalId);
             calcIncomeDetail.setIncomeItemName((String) objects[1]);
@@ -164,53 +167,86 @@ public class FetchDataFacade extends BaseFacade{
     public List<CalcIncomeDetail> devideCalcIncome(String hospitalId, String yearMonth) {
         List<CalcIncomeDetail> incomeDetails = getCalcIncomeDetail(hospitalId, yearMonth);
         List<IncomeItemDict> incomeItemDicts =incomeItemDictFacade.findByHospitalId(hospitalId) ;
-
+        double inpOrderReate = 0;
+        double inpPerformReate = 0;
+        double inpWardReate =0;
+        double outpOrderReate = 0;
+        double outpPerformReate = 0;
+        double outpWardReate =0;
+        double orderIncome = 0;
+        double perormIncome = 0;
+        double wardIncome = 0;
         for(CalcIncomeDetail detail:incomeDetails){
-            for(IncomeItemDict incomeItemDict:incomeItemDicts){
-                String incomeItemCode = detail.getIncomeItemCode();
-                if("".equals(incomeItemCode)||incomeItemCode==null){
-                    continue;
+            BigDecimal totalCost = detail.getTotalCost();
+
+            IncomeItemDict incomeItemDict = getIncomeDict(detail,incomeItemDicts) ;
+            if(incomeItemDict !=null){
+                inpOrderReate = Double.parseDouble(incomeItemDict.getInpOrderedBy()==null?"0":incomeItemDict.getInpOrderedBy()) /100;
+                inpPerformReate = Double.parseDouble(incomeItemDict.getInpPerformedBy()==null?"0":incomeItemDict.getInpPerformedBy()) /100;
+                inpWardReate = Double.parseDouble(incomeItemDict.getInpWardCode()==null?"0":incomeItemDict.getInpWardCode()) /100;
+                outpOrderReate = Double.parseDouble(incomeItemDict.getOutpOrderedBy()==null?"0":incomeItemDict.getOutpOrderedBy()) /100;
+                outpPerformReate = Double.parseDouble(incomeItemDict.getOutpPerformedBy()==null?"0":incomeItemDict.getOutpPerformedBy()) /100;
+                outpWardReate = Double.parseDouble(incomeItemDict.getOutpWardCode()==null?"0":incomeItemDict.getOutpWardCode()) /100;
+            }else{
+                String reckingCode = detail.getClassOnRecking() ;
+                String hql = "from AcctReckItemClassDict as dict where dict.hospitalId='"+hospitalId+"' and dict.reckItemCode='"+reckingCode+"'" ;
+                List<AcctReckItemClassDict> acctReckItemClassDicts = createQuery(AcctReckItemClassDict.class,hql,new ArrayList<Object>()).getResultList() ;
+                if(acctReckItemClassDicts.size()>0){
+                    AcctReckItemClassDict acctReckItemClassDict = acctReckItemClassDicts.get(0) ;
+                    inpOrderReate = Double.parseDouble(acctReckItemClassDict.getInpOrderedBy()==null?"0":acctReckItemClassDict.getInpOrderedBy())/100 ;
+                    inpPerformReate = Double.parseDouble(acctReckItemClassDict.getInpPerformedBy()==null?"0":acctReckItemClassDict.getInpPerformedBy())/100 ;
+                    inpWardReate = Double.parseDouble(acctReckItemClassDict.getInpWardCode()==null?"0":acctReckItemClassDict.getInpWardCode())/100 ;
+                    outpOrderReate = Double.parseDouble(acctReckItemClassDict.getOutpOrderedBy()==null?"0":acctReckItemClassDict.getOutpOrderedBy())/100 ;
+                    outpPerformReate = Double.parseDouble(acctReckItemClassDict.getOutpPerformedBy()==null?"0":acctReckItemClassDict.getOutpPerformedBy())/100 ;
+                    outpWardReate = Double.parseDouble(acctReckItemClassDict.getOutpWardCode()==null?"0":acctReckItemClassDict.getOutpWardCode())/100 ;
                 }
-
-                BigDecimal totalCost = detail.getTotalCost();
-                if(incomeItemCode.equals(incomeItemDict.getPriceItemCode())){
-                    if("1".equals(detail.getInpOrOutp())){
-                        //住院
-                        //detail.setOrderIncome(totalCost * ());
-                        double orderReate = Double.parseDouble(incomeItemDict.getInpOrderedBy()) /100;
-                        double performReate = Double.parseDouble(incomeItemDict.getInpPerformedBy()) /100;
-                        double wardReate = Double.parseDouble(incomeItemDict.getInpWardCode()) /100;
-                        double orderIncome = new BigDecimal(totalCost.doubleValue() * orderReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-                        double perormIncome = new BigDecimal(totalCost.doubleValue() * performReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-                        double wardIncome = new BigDecimal(totalCost.doubleValue() * wardReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-                        detail.setOrderIncome(orderIncome);
-                        detail.setPerformIncome(perormIncome);
-                        detail.setWardIncome(wardIncome);
-                        merge(detail) ;
-                        break;
-                    }
-
-                    if("0".equals(detail.getInpOrOutp())){
-                        //门诊
-                        //detail.setOrderIncome(totalCost * ());
-                        double orderReate = Double.parseDouble(incomeItemDict.getOutpOrderedBy()) /100;
-                        double performReate = Double.parseDouble(incomeItemDict.getOutpPerformedBy()) /100;
-                        double wardReate = Double.parseDouble(incomeItemDict.getOutpWardCode()) /100;
-                        double orderIncome = new BigDecimal(totalCost.doubleValue() * orderReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-                        double perormIncome = new BigDecimal(totalCost.doubleValue() * performReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-                        double wardIncome = new BigDecimal(totalCost.doubleValue() * wardReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-                        detail.setOrderIncome(orderIncome);
-                        detail.setPerformIncome(perormIncome);
-                        detail.setWardIncome(wardIncome);
-                        merge(detail) ;
-                        break;
-                    }
-
-                }
-
             }
+
+            if("1".equals(detail.getInpOrOutp())){
+                //住院
+                orderIncome = new BigDecimal(totalCost.doubleValue() * inpOrderReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                perormIncome = new BigDecimal(totalCost.doubleValue() * inpPerformReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                wardIncome = new BigDecimal(totalCost.doubleValue() * inpWardReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                detail.setOrderIncome(orderIncome);
+                detail.setPerformIncome(perormIncome);
+                detail.setWardIncome(wardIncome);
+                merge(detail) ;
+            }
+
+            if("0".equals(detail.getInpOrOutp())){
+                //门诊
+                orderIncome = new BigDecimal(totalCost.doubleValue() * outpOrderReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                perormIncome = new BigDecimal(totalCost.doubleValue() * outpPerformReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                wardIncome = new BigDecimal(totalCost.doubleValue() * outpWardReate).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                detail.setOrderIncome(orderIncome);
+                detail.setPerformIncome(perormIncome);
+                detail.setWardIncome(wardIncome);
+                merge(detail) ;
+            }
+
         }
         return incomeDetails;
+    }
+
+    /**
+     * 根据待计算项目查找比例
+     * @param detail
+     * @param incomeItemDicts
+     * @return
+     */
+    private IncomeItemDict getIncomeDict(CalcIncomeDetail detail, List<IncomeItemDict> incomeItemDicts) {
+        for(IncomeItemDict incomeItemDict:incomeItemDicts){
+            String incomeItemCode = detail.getIncomeItemCode();
+            if("".equals(incomeItemCode)||incomeItemCode==null){
+                continue;
+            }
+            if(incomeItemCode.equals(incomeItemDict.getPriceItemCode())) {
+                return incomeItemDict ;
+            }else{
+                continue;
+            }
+        }
+        return null;
     }
 
 

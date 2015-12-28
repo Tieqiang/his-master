@@ -10,19 +10,44 @@
 </head>
 <body class="easyui-layout">
 
-<div id="main" data-options="region:'center'">
+<div id="main" data-options="region:'west'" style="padding:1px;background:#eee;width: 350px;">
     <table id="serviceIncomeTypeDatagrid" class="easyui-datagrid">
-
+    </table>
+</div>
+<div id="detail" data-options="region:'center',fit:true">
+    <table id="incomeDetailDatagrid" class="easyui-datagrid">
     </table>
 </div>
 
-<div id="ft" style="text-align: right">
+<div id="ft" style="text-align: left">
     <!--选择月份：<input type="text" id="synDate" class="easyui-datebox" />-->
-    <a href="#" id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">重新提取项目</a>
-    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存修改</a>
-    <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加项目</a>
-    <a href="#" id="delBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除项目</a>
+    <a href="#" id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
+    <a href="#" id="setDevideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-more'">设置对照</a>
+    <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+    <a href="#" id="delBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
 </div>
+
+
+
+<div id="tbDetail" style="text-align: left">
+    <!--选择月份：<input type="text" id="synDate" class="easyui-datebox" />-->
+    <a href="#" id="searchDBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询明细</a>
+    <a href="#" id="saveDBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存修改</a>
+    <a href="#" id="addDBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加明细</a>
+    <a href="#" id="delDBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除明细</a>
+</div>
+
+<div id="acctDeptWin" class="easyui-window" data-options="footer:'#acctTb'">
+    <table id="acctDeptTable" class="easyui-datagrid"></table>
+</div>
+
+<div style="padding:5px;text-align:right;" id="acctTb">
+    <a href="#" id="saveAcctDeptBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="cancelAcctDeptBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>

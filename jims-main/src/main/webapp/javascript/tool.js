@@ -310,22 +310,22 @@ var common = function () {
 
 var config = new common() ;
 //
-//config.authentication='YWRtaW46YWRtaW4='
-//config.defaultSupplier = "供应室"
-//config.hospitalId = "4028862d4fcf2590014fcf9aef480016" ;
-//config.hospitalName = "双滦区人民医院" ;
-//config.storage = "五金库";
-//config.storageCode='1503';
-//config.loginName = '123';
-//config.loginId = '11'
-//config.moduleId = '402886f350a6bd4f0150a6c0c47c0000' ;
-//config.moduleName = "消耗品管理系统"
-//config.exportClass = "'发放出库','批量出库','退账入库'";
-//config.reportServerIp = '192.168.6.68';
-//config.reportServerPort = '8080';
-//config.reportServerName = 'webReport';
-//config.reportServerResousePath = 'ReportServer?reportlet=';
-//config.defaultReportPath = "http://" + config.reportServerIp + ":" + config.reportServerPort + "/" + config.reportServerName + "/" + config.reportServerResousePath;
+config.authentication='YWRtaW46YWRtaW4='
+config.defaultSupplier = "供应室"
+config.hospitalId = "4028862d4fcf2590014fcf9aef480016" ;
+config.hospitalName = "双滦区人民医院" ;
+config.storage = "五金库";
+config.storageCode='1503';
+config.loginName = '123';
+config.loginId = '11'
+config.moduleId = '402886f350a6bd4f0150a6c0c47c0000' ;
+config.moduleName = "消耗品管理系统"
+config.exportClass = "'发放出库','批量出库','退账入库'";
+config.reportServerIp = '192.168.6.68';
+config.reportServerPort = '8080';
+config.reportServerName = 'webReport';
+config.reportServerResousePath = 'ReportServer?reportlet=';
+config.defaultReportPath = "http://" + config.reportServerIp + ":" + config.reportServerPort + "/" + config.reportServerName + "/" + config.reportServerResousePath;
 //写cookies
 function setCookie(name, value) {
     var Days = 1;

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>二线科室收入统计</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+<div id="main" data-options="region:'center'">
+    <table id="serviceDeptIncomeTable" class="easyui-datagrid">
+
+    </table>
+</div>
+
+<div id="ft" style="text-align: left">
+    提取月份：<input type="text" id="synDate" class="easyui-datebox" />
+    二线科室：<input type="text" class="easyui-combobox" id="secondLevelDept" />
+    <a href="#" id="queryBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询本院收入</a>
+    <a href="#" id="allConfirmBtn" class="easyui-linkbutton" data-options="iconCls:'icon-man'">全部审核通过</a>
+    <a href="#" id="allNotConfirmBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">全部审核不通过</a>
+    <a href="#" id="saveSingleBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存审核结果</a>
+    <a href="#" id="queryGoodBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">查询审核成功</a>
+    <a href="#" id="queryFailBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">查询审核失败</a>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/service-dept-income-confirm.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>
