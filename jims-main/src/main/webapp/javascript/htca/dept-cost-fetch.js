@@ -169,9 +169,7 @@ $(function(){
             text:'数据高效提取中，请稍后....'
         }) ;
         $.get("/api/acct-dept-cost/fetch-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&fetchTypeId="+fetchTypeId,function(data){
-            //var options = $("#deptCostTable").datagrid('options') ;
-            //options.url = "/api/acct-dept-cost/list-all?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
-            //$("#deptCostTable").datagrid('reload')  ;
+
             $("#deptCostTable").datagrid('loadData',data) ;
             $.messager.progress('close') ;
         })

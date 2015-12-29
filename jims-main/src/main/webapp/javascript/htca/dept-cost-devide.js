@@ -240,10 +240,10 @@ $(function(){
 
 
     $("#costItemId").combobox({
-        textField:'serviceTypeName',
+        textField:'costItemName',
         valueField:'id',
         method:'GET',
-        url:'/api/service-income-type/list-all?hospitalId='+parent.config.hospitalId,
+        url:'/api/cost-item/list-by-class?hospitalId='+parent.config.hospitalId+"&classId=4028803e519f790001519fac9c760009",
         onLoadSuccess:function(){
             var data =$(this).combobox('getData') ;
             if(data.length>0){
@@ -315,7 +315,7 @@ $(function(){
             text:'正在分摊...'
         }) ;
 
-        $.get("/api/service-income-type/get-by-id?id="+costItemId,function(data){
+        $.get("/api/cost-item/get-by-id?id="+costItemId,function(data){
             if(data.addRate>0){
                 totalMoney = totalMoney * data.addRate ;
             }

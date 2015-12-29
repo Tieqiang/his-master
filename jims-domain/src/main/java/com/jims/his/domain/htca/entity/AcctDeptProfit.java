@@ -27,7 +27,10 @@ public class AcctDeptProfit implements java.io.Serializable {
     private String acctDeptId ;
     private Double deptLastIncome ;
     private Double convertRate ;
-
+    private Double acctBalance ;
+    private Double managerCost ;
+    //ALL_ROUND_INCOME
+    private Double allRoundIncome ;
 
 	// Constructors
 
@@ -38,7 +41,7 @@ public class AcctDeptProfit implements java.io.Serializable {
 	/** full constructor */
 	public AcctDeptProfit(String yearMonth, String hospitalId,
                           Double deptIncome, Double deptCost, Double pleasedNum,
-                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate) {
+                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate, Double acctBalance, Double managerCost, Double allRoundIncome) {
 		this.yearMonth = yearMonth;
 		this.hospitalId = hospitalId;
 		this.deptIncome = deptIncome;
@@ -48,6 +51,9 @@ public class AcctDeptProfit implements java.io.Serializable {
         this.acctDeptId = acctDeptId;
         this.deptLastIncome = deptLastIncome;
         this.convertRate = convertRate;
+        this.acctBalance = acctBalance;
+        this.managerCost = managerCost;
+        this.allRoundIncome = allRoundIncome;
     }
 
 	// Property accessors
@@ -143,5 +149,33 @@ public class AcctDeptProfit implements java.io.Serializable {
 
     public void setConvertRate(Double convertRate) {
         this.convertRate = convertRate;
+    }
+
+    @Column(name="acct_balance")
+    public Double getAcctBalance() {
+        return acctBalance;
+    }
+
+    public void setAcctBalance(Double acctBalance) {
+        this.acctBalance = acctBalance;
+    }
+
+
+    @Column(name="manager_cost")
+    public Double getManagerCost() {
+        return managerCost;
+    }
+
+    public void setManagerCost(Double managerCost) {
+        this.managerCost = managerCost;
+    }
+
+    @Column(name="all_round_income")
+    public Double getAllRoundIncome() {
+        return allRoundIncome;
+    }
+
+    public void setAllRoundIncome(Double allRoundIncome) {
+        this.allRoundIncome = allRoundIncome;
     }
 }

@@ -2,6 +2,7 @@ package com.jims.his.domain.htca.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.htca.entity.CostItemClassDict;
 import com.jims.his.domain.htca.entity.CostItemDevideDept;
 import com.jims.his.domain.htca.entity.CostItemDict;
@@ -48,6 +49,18 @@ public class CostItemFacade extends BaseFacade {
 
             for(CostItemDevideDept devideDept:costItemDevideDepts){
                 merge(devideDept) ;
+            }
+        }
+    }
+
+    @Transactional
+    public void saveOrUpdate(BeanChangeVo<CostItemDict> costItemDicts) {
+        List<CostItemDict> costs=costItemDicts.getUpdated() ;
+        for(CostItemDict dict :costs){
+            CostItemDict costItemDict = get(CostItemDict.class,dict.getId()) ;
+            if(null !=costItemDict){
+                costItemDict.setAddRate(dict.getAddRate());
+                merge(costItemDict) ;
             }
         }
     }

@@ -39,6 +39,7 @@ public class CostItemDict implements java.io.Serializable {
     private Double outpOrderRate ;
     private Double outpPerformRate ;
     private Double outpWardRate ;
+    private Double addRate ;
 
 	// Constructors
 
@@ -51,7 +52,7 @@ public class CostItemDict implements java.io.Serializable {
                         String costItemName, String costItemCode, String inputCode,
                         String costAttr, String armyLocayCalcWay, String secondCalcWay,
                         String personCalcWay, String getWay, String calcType,
-                        String costType, String calcPercent, String hospitalId, Double inpOrderRate, Double inpPerformRate, Double inpWardRate, Double outpOrderRate, Double outpPerformRate, Double outpWardRate) {
+                        String costType, String calcPercent, String hospitalId, Double inpOrderRate, Double inpPerformRate, Double inpWardRate, Double outpOrderRate, Double outpPerformRate, Double outpWardRate, Double addRate) {
 		this.costItemClassDict = costItemClassDict;
 		this.costItemName = costItemName;
 		this.costItemCode = costItemCode;
@@ -72,6 +73,7 @@ public class CostItemDict implements java.io.Serializable {
         this.outpOrderRate = outpOrderRate;
         this.outpPerformRate = outpPerformRate;
         this.outpWardRate = outpWardRate;
+        this.addRate = addRate;
     }
 
 	// Property accessors
@@ -258,4 +260,14 @@ public class CostItemDict implements java.io.Serializable {
     public void setOutpWardRate(Double outpWardRate) {
         this.outpWardRate = outpWardRate;
     }
+
+    @Column(name="add_rate")
+    public Double getAddRate() {
+        return addRate;
+    }
+
+    public void setAddRate(Double addRate) {
+        this.addRate = addRate;
+    }
+
 }

@@ -72,9 +72,9 @@ public class FetchDataFacade extends BaseFacade{
         List<Object[]> resultList = query.getResultList();
         List<CalcIncomeDetail> incomeDetails = new ArrayList<>() ;
         for(Object[] objects:resultList){
-            if(((BigDecimal)objects[9]).intValue()==0){
-                continue; //如果总金额为0 ，则不计入
-            }
+            //if(((BigDecimal)objects[9]).intValue()==0){
+            //    continue; //如果总金额为0 ，则不计入
+            //}
             CalcIncomeDetail calcIncomeDetail = new CalcIncomeDetail() ;
             calcIncomeDetail.setHospitalId(hospitalId);
             calcIncomeDetail.setIncomeItemName((String) objects[1]);

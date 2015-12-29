@@ -14,7 +14,7 @@ $(function () {
     //$.get('/api/acct-reck/list?hospitalId='+parent.config.hospitalId,function(data){
     //    incomeTypes = data ;
     //});
-    $.get('/api/service-income-type/list-all?hospitalId=' + parent.config.hospitalId, function (data) {
+    $.get( '/api/cost-item/list-by-class?hospitalId='+parent.config.hospitalId+"&classId=4028803e519f790001519fac9c760009", function (data) {
         incomeTypes = data;
     })
 
@@ -108,7 +108,7 @@ $(function () {
             formatter: function (value, row, index) {
                 for (var i = 0; i < incomeTypes.length; i++) {
                     if (value == incomeTypes[i].id) {
-                        return incomeTypes[i].serviceTypeName;
+                        return incomeTypes[i].costItemName;
                     }
                 }
                 return value;
@@ -234,10 +234,10 @@ $(function () {
     });
 
     $("#incomeTypeId").combobox({
-        textField: 'serviceTypeName',
+        textField: 'costItemName',
         valueField: 'id',
         method: 'GET',
-        url: '/api/service-income-type/list-all?hospitalId=' + parent.config.hospitalId,
+        url: '/api/cost-item/list-by-class?hospitalId='+parent.config.hospitalId+"&classId=4028803e519f790001519fac9c760009",
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
             if (data.length > 0) {
@@ -269,10 +269,19 @@ $(function () {
             }
             $("#acctDeptId").combobox('setValue', deptId);
 
-            var data = $("#incomeTypeId").combobox('getData');
-            if (data.length > 0) {
+
+
+            var rows = $("#serviceDeptIncomeTable").datagrid('getRows') ;
+
+            if(rows.length>1){
+                var incomeTypeId = rows[rows.length-1].incomeTypeId ;
+                $("#incomeTypeId").combobox('setValue',incomeTypeId);
+            }else{
+                var data = $("#incomeTypeId").combobox('getData');
                 $("#incomeTypeId").combobox('setValue', data[0].id);
             }
+
+
             $("#outFlag").combobox('setValue', 1);
             var data = $("#serviceForDeptId").combobox('getData');
             if (data.length > 0) {

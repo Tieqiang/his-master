@@ -67,7 +67,7 @@ $(function () {
         }, {
             title: '核算单元',
             field: 'acctDeptId',
-            width: '20%',
+            width: '10%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < acctDeptDict.length; i++) {
                     if (value == acctDeptDict[i].id) {
@@ -84,7 +84,15 @@ $(function () {
             title: '科室成本',
             field: 'deptCost',
             width: '10%'
+        },{
+            title:'分摊前利润',
+            field:'acctBalance',
+            width:'10%'
         }, {
+            title:'管理成本',
+            field:'managerCost',
+            width:'10%'
+        },{
             title:'绩效提成比例',
             field:'convertRate',
             editor: {
@@ -92,11 +100,11 @@ $(function () {
                     validType: 'number'
                 }
             },
-            width:'10%'
+            width:'6%'
         },{
             title: '质量达标率',
             field: 'pleasedNum',
-            width: '20%',
+            width: '5%',
             editor: {
                 type: 'validatebox', options: {
                     validType: 'number'
@@ -112,7 +120,17 @@ $(function () {
                     validType: 'number'
                 }
             }
-        }, {
+        },{
+            title:'综合业绩奖',
+            field:'allRoundIncome',
+            width:'10%',
+            editor: {
+                type: 'validatebox',
+                options: {
+                    validType: 'number'
+                }
+            }
+        },{
             title: '奖金额度',
             field: 'deptLastIncome',
             width: '20%'
@@ -155,25 +173,6 @@ $(function () {
     //停止编辑行
     var stopEdit = function () {
         if (editRow || editRow == 0) {
-            //var ed = $("#acctDeptProfitDg").datagrid('getEditor', {index: editRow, field: "cost"});
-            //if (ed.target) {
-            //    var flag = $(ed.target).validatebox('isValid');
-            //    if (flag) {
-            //
-            //    } else {
-            //        $.messager.alert("系统提示", "金额必须填写", 'error');
-            //        return flag;
-            //    }
-            //}
-            //var ed1 = $("#acctDeptProfitDg").datagrid('getEditor', {index: editRow, field: "minusCost"});
-            //if (ed1.target) {
-            //    var flag = $(ed1.target).validatebox('isValid');
-            //    if (flag) {
-            //    } else {
-            //        $.messager.alert("系统提示", "名称必须填写", 'error');
-            //        return flag;
-            //    }
-            //}
             $("#acctDeptProfitDg").datagrid('endEdit', editRow);
             editRow = undefined;
             return true;

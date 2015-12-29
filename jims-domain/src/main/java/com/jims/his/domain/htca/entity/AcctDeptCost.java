@@ -29,6 +29,7 @@ public class AcctDeptCost implements java.io.Serializable {
     private String fetchWay ;//获取方式
     private String operator ;
     private Date   operatorDate ;
+
 	// Constructors
 
 	/** default constructor */
@@ -153,4 +154,6 @@ public class AcctDeptCost implements java.io.Serializable {
     public void setOperatorDate(Date operatorDate) {
         this.operatorDate = operatorDate;
     }
+
+
 }

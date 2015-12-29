@@ -137,6 +137,7 @@ public class AcctDeptCostFacade extends BaseFacade {
         return null;
     }
 
+
     private List<AcctDeptCost> convertCostData(String hospitalId,String yearMonth,String fetchTypeId){
         //计算成本
         AcctParam acctParam = get(AcctParam.class, fetchTypeId);
@@ -149,6 +150,7 @@ public class AcctDeptCostFacade extends BaseFacade {
         double outpOrder;
         Double outpPerformRate;
         Double outpWardRate;
+        double t=0.0 ;
         for (Object[] objects : resultList) {
             String hql = "select cost from CostItemDict as cost,AcctReckItemClassDict as income " +
                     "where cost.id=income.costId" +
@@ -171,8 +173,10 @@ public class AcctDeptCostFacade extends BaseFacade {
                     }else{
                         calcReate = fixConvert ;
                     }
+
                 }
                 double totalCost = ((BigDecimal) objects[3]).doubleValue() * (100 - calcReate)/100;
+
                 if(totalCost==0){
                     continue;
                 }
@@ -192,6 +196,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
+
                     }
                     if (inpPerform != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
@@ -203,6 +208,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
+
                     }
 
                     if (ward != 0) {
@@ -215,6 +221,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
+
                     }
                 } else {
                     outpOrder = (itemDict.getOutpOrderRate()==null?0:itemDict.getOutpOrderRate())/100;
@@ -230,6 +237,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
+
                     }
                     if (outpPerformRate != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
@@ -241,6 +249,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
+
                     }
                     if (outpWardRate != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
@@ -258,10 +267,6 @@ public class AcctDeptCostFacade extends BaseFacade {
                 continue;
             }
         }
-
-        //for(AcctDeptCost cost:acctDeptCosts){
-        //    merge(cost) ;
-        //}
         return acctDeptCosts ;
     }
 
@@ -455,7 +460,6 @@ public class AcctDeptCostFacade extends BaseFacade {
                     "income.hospitalId='"+hospitalId+"' and income.incomeTypeId='"+costItemId+"' and " +
                     "income.getWay='分摊'" ;
             getEntityManager().createQuery(hql2).executeUpdate() ;
-
 
             for(AcctDeptCost cost: acctDeptCosts){
                 ServiceDeptIncome serviceDeptIncome=new ServiceDeptIncome() ;

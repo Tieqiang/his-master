@@ -1,6 +1,7 @@
 package com.jims.his.service.htca;
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.htca.entity.CostItemClassDict;
 import com.jims.his.domain.htca.entity.CostItemDevideDept;
 import com.jims.his.domain.htca.entity.CostItemDict;
@@ -32,6 +33,11 @@ public class CostItemService {
         return costItemFacade.createQuery(CostItemClassDict.class,hql,new ArrayList<Object>()).getResultList() ;
     }
 
+    @GET
+    @Path("get-by-id")
+    public CostItemDict getCostItemById(@QueryParam("id")String id) {
+        return costItemFacade.get(CostItemDict.class, id) ;
+    }
 
     @POST
     @Path("save-item-class")
@@ -138,6 +144,22 @@ public class CostItemService {
                 "dict.getWay='"+getWay+"'" ;
 
         return costItemFacade.createQuery(CostItemDict.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+
+
+
+    @Path("save-update")
+    @POST
+    public Response saveOrUpdate(BeanChangeVo<CostItemDict> beanChangeVo){
+        try {
+            costItemFacade.saveOrUpdate(beanChangeVo);
+            return Response.status(Response.Status.OK).entity(beanChangeVo).build() ;
+        }catch (Exception e){
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+        }
     }
 
 

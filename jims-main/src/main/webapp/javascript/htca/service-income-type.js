@@ -7,7 +7,7 @@ $(function(){
     var editRowDetail = undefined ;
     var incomeTypes = [] ;
 
-    $.get("/api/service-income-type/list-all?hospitalId="+parent.config.hospitalId,function(data){
+    $.get('/api/cost-item/list-by-class?hospitalId='+parent.config.hospitalId+"&classId=4028803e519f790001519fac9c760009",function(data){
         incomeTypes = data ;
     })
     $("#serviceIncomeTypeDatagrid").datagrid({
@@ -15,7 +15,7 @@ $(function(){
         fitColumns:true,
         striped:true,
         method:'GET',
-        url:"/api/service-income-type/list-all?hospitalId="+parent.config.hospitalId,
+        url:'/api/cost-item/list-by-class?hospitalId='+parent.config.hospitalId+"&classId=4028803e519f790001519fac9c760009",
         rownumbers:true,
         singleSelect:true,
         toolbar:"#ft",
@@ -26,38 +26,17 @@ $(function(){
             hidden:true
         },{
             title:'服务类别名称',
-            field:'serviceTypeName',
-            width:'55%',
-            editor:{type:'validatebox',options:{
-                required:true,
-                missingMessage:'请输入服务类别名称'
-            }}
-        },{
-            title:'单位',
-            field:'unit',
-            width:'10%',
-            hidden:true,
-            editor:{type:'textbox',options:{}}
-        },{
-            title:'单价',
-            field:'price',
-            width:'10%',
-            hidden:true,
-            editor:{type:'textbox',options:{}}
+            field:'costItemName',
+            width:'55%'
         },{
             title:'加成率',
             field:'addRate',
             width:'15%',
             editor:{type:'textbox',options:{}}
-
         },{
-            title:'拼音码',
-            field:'inputCode',
-            width:'20%',
-            editor:{type:'validatebox',options:{
-                required:true,
-                missingMessage:'请输入拼音码'
-            }}
+            title:'编码',
+            field:'costItemCode',
+            width:'15%'
         }]],
         onDblClickRow:function(rowIndex,rowData){
             if(stopEdit()){
@@ -93,7 +72,7 @@ $(function(){
             formatter:function(value,row,index){
                 for(var i = 0 ;i<incomeTypes.length;i++){
                     if(value == incomeTypes[i].id){
-                        return incomeTypes[i].serviceTypeName ;
+                        return incomeTypes[i].costItemName ;
                     }else{
                         continue ;
                     }
@@ -179,7 +158,7 @@ $(function(){
             return ;
         }
         if(stopEditDetail()){
-            $("#incomeDetailDatagrid").datagrid('appendRow',{incomeTypeId:row.id,unit:row.unit,price:row.price,addRate:row.addRate}) ;
+            $("#incomeDetailDatagrid").datagrid('appendRow',{incomeTypeId:row.id,addRate:row.addRate}) ;
             var rows = $("#incomeDetailDatagrid").datagrid('getRows') ;
             var index = $("#incomeDetailDatagrid").datagrid('getRowIndex',rows[rows.length -1]) ;
             editRowDetail = index ;
@@ -225,21 +204,8 @@ $(function(){
             beanChangeVo.inserted=inserted;
             beanChangeVo.deleted=deleted;
             beanChangeVo.updated= updated ;
-            for(var i = 0;i<beanChangeVo.inserted.length ;i++){
-                if(isNaN(beanChangeVo.inserted[i].price)){
-                    $.messager.alert("系统提示","名称为：["+beanChangeVo.inserted[i].serviceTypeName+"]的项目输入的价格不合理",'error') ;
-                    return ;
-                }
-            }
-            for(var i = 0;i<beanChangeVo.updated.length ;i++){
-                if(isNaN(beanChangeVo.updated[i].price)){
-                    $.messager.alert("系统提示","名称为：["+beanChangeVo.updated[i].serviceTypeName+"]的项目输入的价格不合理",'error') ;
-                    return ;
-                }
-            }
-            $.postJSON("/api/service-income-type/save-update",beanChangeVo,function(data){
+            $.postJSON("/api/cost-item/save-update",beanChangeVo,function(data){
                 $.messager.alert('系统提示',"更新成功") ;
-                $("#serviceIncomeTypeDatagrid").datagrid('acceptChanges') ;
                 $("#serviceIncomeTypeDatagrid").datagrid('reload') ;
             },function(data){
                 $.messager.alert('系统提示','更新失败') ;
@@ -299,26 +265,8 @@ $(function(){
     //停止编辑行
     var stopEdit = function(){
         if(editRowType || editRowType==0){
-            var ed = $("#serviceIncomeTypeDatagrid").datagrid('getEditor', {index: editRowType, field: "serviceTypeName"});
-            if(ed.target){
-                var flag = $(ed.target).validatebox('isValid');
-                if (flag) {
-
-                } else {
-                    $.messager.alert("系统提示", "服务类型名称必须填写", 'error');
-                    return flag;
-                }
-            }
-            var ed1 = $("#serviceIncomeTypeDatagrid").datagrid('getEditor', {index: editRowType, field: "inputCode"});
-            if(ed1.target){
-                var flag = $(ed1.target).validatebox('isValid');
-                if (flag) {
-                } else {
-                    $.messager.alert("系统提示", "服务类型名称必须填写", 'error');
-                    return flag;
-                }
-            }
-            $("#serviceIncomeTypeDatagrid").datagrid('endEdit', editRowType);
+            console.log(editRowType) ;
+            $("#serviceIncomeTypeDatagrid").datagrid('endEdit',editRowType);
             editRowType = undefined ;
             return true ;
         }else{

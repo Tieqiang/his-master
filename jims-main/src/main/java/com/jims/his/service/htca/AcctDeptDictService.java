@@ -178,7 +178,7 @@ public class AcctDeptDictService {
     @Path("list-end-dept")
     public List<AcctDeptDict> listServiceAcctDeptDicts(@QueryParam("hospitalId")String hospitalId){
         String hql = "from AcctDeptDict as dept where dept.hospitalId='"+hospitalId+"' and " +
-                "dept.endDept=1 order by dept.deptCode" ;
+                "dept.endDept=1 and dept.delFlag='1' order by dept.deptCode" ;
         TypedQuery<AcctDeptDict> query = acctDeptDictFacade.createQuery(AcctDeptDict.class, hql, new ArrayList<Object>());
         return query.getResultList() ;
     }

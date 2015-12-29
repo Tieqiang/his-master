@@ -22,17 +22,20 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
     public void mergeServiceIncome(List<ServiceDeptIncome> serviceDeptIncomes) {
          for(ServiceDeptIncome income:serviceDeptIncomes){
              if(null !=income.getServiceForDeptId()&& !"".equals(income.getServiceForDeptId())){
-                 AcctDeptCost acctDeptCost = new AcctDeptCost() ;
-                 acctDeptCost.setCost(income.getTotalIncome());
-                 acctDeptCost.setAcctDeptId(income.getServiceForDeptId());
-                 acctDeptCost.setYearMonth(income.getYearMonth());
-                 acctDeptCost.setHospitalId(income.getHospitalId());
-                 acctDeptCost.setMinusCost(0.0);
-                 acctDeptCost.setCostItemId(income.getIncomeTypeId());
-                 acctDeptCost.setFetchWay("计算计入");
-                 acctDeptCost.setOperatorDate(income.getOperatorDate());
-                 acctDeptCost.setOperator(income.getOperator());
-                 merge(acctDeptCost) ;
+                 //首先判断成本是否已经记录如果已经记录则删除以前的成本
+                 if(income.getId()==null){
+                     AcctDeptCost acctDeptCost = new AcctDeptCost() ;
+                     acctDeptCost.setCost(income.getTotalIncome());
+                     acctDeptCost.setAcctDeptId(income.getServiceForDeptId());
+                     acctDeptCost.setYearMonth(income.getYearMonth());
+                     acctDeptCost.setHospitalId(income.getHospitalId());
+                     acctDeptCost.setMinusCost(0.0);
+                     acctDeptCost.setCostItemId(income.getIncomeTypeId());
+                     acctDeptCost.setFetchWay(income.getGetWay());
+                     acctDeptCost.setOperatorDate(income.getOperatorDate());
+                     acctDeptCost.setOperator(income.getOperator());
+                     merge(acctDeptCost) ;
+                 }
              }
              merge(income) ;
          }
@@ -43,10 +46,10 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
     public List<ServiceDeptIncome> fetchServiceDeptIncome(String hospitalId, String yearMonth, String deptId, String paramId) {
         String hql = "delete ServiceDeptIncome as income where income.yearMonth='"+yearMonth+"' and " +
                 "income.hospitalId='"+hospitalId+"' and " +
-                "income.getWay='计算计入'" ;
+                "income.getWay='按比例提取'" ;
         String hql2 = "delete AcctDeptCost as cost where cost.yearMonth = '"+yearMonth+"' and " +
                 "cost.hospitalId='"+hospitalId+"' and  " +
-                "cost.fetchWay='计算计入' " ;
+                "cost.fetchWay='按比例提取' " ;
 
         super.getEntityManager().createQuery(hql).executeUpdate() ;
         super.getEntityManager().createQuery(hql2).executeUpdate() ;
@@ -78,6 +81,16 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
 
     @Transactional
     public void delServiceIncome(ServiceDeptIncome serviceDeptIncome) {
+
+        String serviceDeptId = serviceDeptIncome.getServiceForDeptId() ;
+        if(!"".equals(serviceDeptId)||null!=serviceDeptId){
+            String hql =" delete AcctDeptCost as cost where cost.acctDeptId='"+serviceDeptId+"' and " +
+                    "cost.hospitalId='"+serviceDeptIncome.getHospitalId()+"' and " +
+                    "cost.operator='"+serviceDeptIncome.getOperator()+"' and " +
+                    "cost.fetchWay='录入'";
+            this.getEntityManager().createQuery(hql).executeUpdate() ;
+        }
+
         String id = serviceDeptIncome.getId() ;
         ArrayList<String> ids = new ArrayList<>();
         ids.add(id) ;
