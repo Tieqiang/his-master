@@ -93,10 +93,13 @@ $(function(){
             $.messager.alert('系统提示','获取关键数据失败','error') ;
             return ;
         }
-
-        $.post("/api/acct-param/del?id="+row.id,function(){
-            $.messager.alert('系统提示','删除成功','info') ;
-            $("#acctParamTable").datagrid('reload') ;
-        })
+        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+            if(r){
+                $.post("/api/acct-param/del?id="+row.id,function(){
+                    $.messager.alert('系统提示','删除成功','info') ;
+                    $("#acctParamTable").datagrid('reload') ;
+                })
+            }
+        });
     })
 })

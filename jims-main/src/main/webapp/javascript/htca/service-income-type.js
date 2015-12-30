@@ -139,13 +139,18 @@ $(function(){
             return ;
         }
 
-        for(var i = 0 ;i<rows.length ;i++){
-            var index = $("#serviceIncomeTypeDatagrid").datagrid('getRowIndex',rows[i]) ;
-            $("#serviceIncomeTypeDatagrid").datagrid('deleteRow',index) ;
-            if(index==editRowType){
-                editRowType = undefined ;
+        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+            if(r){
+                for(var i = 0 ;i<rows.length ;i++){
+                    var index = $("#serviceIncomeTypeDatagrid").datagrid('getRowIndex',rows[i]) ;
+                    $("#serviceIncomeTypeDatagrid").datagrid('deleteRow',index) ;
+                    if(index==editRowType){
+                        editRowType = undefined ;
+                    }
+                }
             }
-        }
+        });
+
 
     }) ;
 
@@ -174,13 +179,18 @@ $(function(){
             return ;
         }
 
-        for(var i = 0 ;i<rows.length ;i++){
-            var index = $("#incomeDetailDatagrid").datagrid('getRowIndex',rows[i]) ;
-            $("#incomeDetailDatagrid").datagrid('deleteRow',index) ;
-            if(index==editRowDetail){
-                editRowDetail = undefined ;
+        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+            if(r){
+                for(var i = 0 ;i<rows.length ;i++){
+                    var index = $("#incomeDetailDatagrid").datagrid('getRowIndex',rows[i]) ;
+                    $("#incomeDetailDatagrid").datagrid('deleteRow',index) ;
+                    if(index==editRowDetail){
+                        editRowDetail = undefined ;
+                    }
+                }
             }
-        }
+        });
+
 
     }) ;
 

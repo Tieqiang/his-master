@@ -357,10 +357,16 @@ $(function () {
                 $.messager.alert("系统提示", '存在该类别的成本项目，不允许删除！', 'error');
                 return;
             }
-            $.post("/api/cost-item/del-class?id=" + row.id, function (data) {
-                $.messager.alert('系统提示', '删除成功', 'info');
-                $("#costItemClassGrid").datagrid('reload');
+
+            $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+                if(r){
+                    $.post("/api/cost-item/del-class?id=" + row.id, function (data) {
+                        $.messager.alert('系统提示', '删除成功', 'info');
+                        $("#costItemClassGrid").datagrid('reload');
+                    });
+                }
             });
+
         })
 
     });
@@ -437,10 +443,15 @@ $(function () {
             return;
         }
 
-        $.post("/api/cost-item/del-cost-item?id=" + row.id, function (data) {
-            $.messager.alert("系统提示", '删除成功', 'info');
-            $("#costItemDictGrid").datagrid('reload');
-        })
+        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+            if(r){
+                $.post("/api/cost-item/del-cost-item?id=" + row.id, function (data) {
+                    $.messager.alert("系统提示", '删除成功', 'info');
+                    $("#costItemDictGrid").datagrid('reload');
+                })
+            }
+        });
+
     });
 
     /**

@@ -365,24 +365,30 @@ $(function () {
                     row:row
                 }) ;
             }
-            $("#serviceDeptIncomeTable").datagrid('deleteRow', index);
+            $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+                if(r){
+                    $("#serviceDeptIncomeTable").datagrid('deleteRow', index);
+                }
+            });
+
         } else {
             $.postJSON("/api/service-dept-income/del-service-income", rows, function (data) {
-                $.messager.alert('系统提示', '删除成功', 'info');
-                //$("#queryBtn").trigger('click');
-                var rowsTemp = $("#serviceDeptIncomeTable").datagrid('getRows') ;
-                if(rowsTemp.length>0){
-                    var row = rowsTemp[0] ;
-                    var rowIndex = $("#serviceDeptIncomeTable").datagrid('getRowIndex',row) ;
-                    row.totalIncome = row.totalIncome - rows.totalIncome ;
-                    $("#serviceDeptIncomeTable").datagrid('updateRow',{
-                        index:rowIndex,
-                        row:row
-                    }) ;
-                }
-                $("#serviceDeptIncomeTable").datagrid('reload')
-            }, function (data) {
+                        $.messager.alert('系统提示', '删除成功', 'info');
+                        //$("#queryBtn").trigger('click');
+                        var rowsTemp = $("#serviceDeptIncomeTable").datagrid('getRows') ;
+                        if(rowsTemp.length>0){
+                            var row = rowsTemp[0] ;
+                            var rowIndex = $("#serviceDeptIncomeTable").datagrid('getRowIndex',row) ;
+                            row.totalIncome = row.totalIncome - rows.totalIncome ;
+                            $("#serviceDeptIncomeTable").datagrid('updateRow',{
+                                index:rowIndex,
+                                row:row
+                            }) ;
+                        }
+                        $("#serviceDeptIncomeTable").datagrid('reload')
+                    }, function (data) {
             })
+
         }
     });
 

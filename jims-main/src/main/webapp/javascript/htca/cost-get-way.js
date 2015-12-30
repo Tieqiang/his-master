@@ -61,15 +61,17 @@ $(function(){
             $.messager.alert('系统提示','请选择要删除的属性','error') ;
             return ;
         }
-
-        for(var i = 0 ;i<rows.length ;i++){
-            var index = $("#costGetWatDatagrid").datagrid('getRowIndex',rows[i]) ;
-            $("#costGetWatDatagrid").datagrid('deleteRow',index) ;
-            if(index==editRow){
-                editRow = undefined ;
+        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+            if(r){
+                for(var i = 0 ;i<rows.length ;i++){
+                    var index = $("#costGetWatDatagrid").datagrid('getRowIndex',rows[i]) ;
+                    $("#costGetWatDatagrid").datagrid('deleteRow',index) ;
+                    if(index==editRow){
+                        editRow = undefined ;
+                    }
+                }
             }
-        }
-
+        });
     }) ;
 
     //保存

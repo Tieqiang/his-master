@@ -71,6 +71,7 @@ $(function () {
                 obj.deptType = item.deptType;
                 obj.deptClass = item.deptClass;
                 obj.endDept = item.endDept;
+                obj.position = item.position;
                 obj.buildArea = item.buildArea ;
                 obj.staffNum = item.staffNum ;
                 obj.children = [];
@@ -123,11 +124,18 @@ $(function () {
             field: 'deptName',
             width: '30%'
         }, {
+            title:"次序",
+            field:'position'
+        }, {
             title:"使用面积",
             field:'buildArea'
         },{
             title:'在编人数',
             field:'staffNum'
+        },{
+            title:'末级科室',
+            field:'endDept',
+            hidden:true
         },{
             title: '门诊住院',
             field: 'deptOutpInp',
@@ -223,7 +231,6 @@ $(function () {
                 top: e.pageY,
                 onClick:function(item){
                     if(item.id=='modifyDeptMenu'){
-                        console.log(row) ;
                         $("#deptName").textbox('setValue',row.deptName);
                         $("#deptCode").textbox('setValue',row.deptCode);
                         $("#inpOrOutp").combobox('setValue',row.deptOutpInp);
@@ -233,7 +240,15 @@ $(function () {
                         $("#parentId").textbox('setValue',row.parentId);
                         $("#id").textbox('setValue',row.id) ;
                         $("#buildArea").textbox('setValue',row.buildArea) ;
+                        $("#position").textbox('setValue',row.position) ;
                         $("#staffNum").textbox('setValue',row.staffNum);
+                        if(row.endDept=="1"){
+                            $("#endDept").combobox('setValue',"1");
+                        }else if(row.endDept=="0"){
+                            $("#endDept").combobox('setValue',"0");
+                        }else{
+                            $("#endDept").combobox('setValue',"");
+                        }
                         $("#acctDeptFormWindow").window('open') ;
                     }
                     if(item.id=='modifyDeptVs'){
@@ -283,13 +298,12 @@ $(function () {
             acc.costAppInd = rows[i].costAppInd;
             acc.costAppLevel = rows[i].costAppLevel;
             acc.buildArea = rows[i].buildArea ;
+            acc.position = rows[i].position ;
             acc.staffNum = rows[i].staffNum ;
             acc.endDept = rows[i].endDept
             acc.delFlag = '1' ;
             acctDeptDict.push(acc);
         }
-        console.log(acctDeptDict);
-
         $.postJSON("/api/acct-dept-dict/save-syn", acctDeptDict, function (data) {
             loadAcctDept();
             $.messager.alert("系统提示", "同步成功", "info");
@@ -305,10 +319,15 @@ $(function () {
     $("#removeBtn").on('click', function (e) {
         var row = $("#acctDeptDataGrid").datagrid('getSelected');
         if (row) {
-            $.post("/api/acct-dept-dict/del/" + row.id, function (data) {
-                loadAcctDept();
-                $.messager.alert("系统提示", "删除成功", 'info');
-            })
+            $.messager.confirm("系统提示", "确定要进行删除操作吗", function (r) {
+                if (r) {
+                    $.post("/api/acct-dept-dict/del/" + row.id, function (data) {
+                        loadAcctDept();
+                        $.messager.alert("系统提示", "删除成功", 'info');
+                    })
+                }
+            });
+
         } else {
             $.messager.alert("系统提示", "请选择要删除的记录", 'info');
         }
@@ -330,7 +349,9 @@ $(function () {
         acctDeptDict.id =$("#id").textbox('getValue') ;
         acctDeptDict.buildArea = $("#buildArea").textbox('getValue');
         acctDeptDict.staffNum= $("#staffNum").textbox('getValue');
+
         acctDeptDict.endDept = $("#endDept").combobox('getValue') ;
+        acctDeptDict.position = $("#position").textbox('getValue') ;
         acctDeptDict.delFlag = '1';
 
         if (!acctDeptDict.deptName || !acctDeptDict.deptCode) {
@@ -344,7 +365,6 @@ $(function () {
                 loadAcctDept();
             }, function (data) {
                 loadAcctDept();
-                console.log(data);
             })
         }
     });

@@ -149,13 +149,18 @@ $(function () {
             return;
         }
 
-        for (var i = 0; i < rows.length; i++) {
-            var index = $("#assumeSolutionItemDatagrid").datagrid('getRowIndex', rows[i]);
-            $("#assumeSolutionItemDatagrid").datagrid('deleteRow', index);
-            if (index == editRow) {
-                editRow = undefined;
+        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+            if(r){
+                for (var i = 0; i < rows.length; i++) {
+                    var index = $("#assumeSolutionItemDatagrid").datagrid('getRowIndex', rows[i]);
+                    $("#assumeSolutionItemDatagrid").datagrid('deleteRow', index);
+                    if (index == editRow) {
+                        editRow = undefined;
+                    }
+                }
             }
-        }
+        });
+
 
     });
 

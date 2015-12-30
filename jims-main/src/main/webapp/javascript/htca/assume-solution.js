@@ -62,13 +62,18 @@ $(function(){
             return ;
         }
 
-        for(var i = 0 ;i<rows.length ;i++){
-            var index = $("#assumeSolutionDatagrid").datagrid('getRowIndex',rows[i]) ;
-            $("#assumeSolutionDatagrid").datagrid('deleteRow',index) ;
-            if(index==editRow){
-                editRow = undefined ;
+        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+            if(r){
+                for(var i = 0 ;i<rows.length ;i++){
+                    var index = $("#assumeSolutionDatagrid").datagrid('getRowIndex',rows[i]) ;
+                    $("#assumeSolutionDatagrid").datagrid('deleteRow',index) ;
+                    if(index==editRow){
+                        editRow = undefined ;
+                    }
+                }
             }
-        }
+        });
+
 
     }) ;
 

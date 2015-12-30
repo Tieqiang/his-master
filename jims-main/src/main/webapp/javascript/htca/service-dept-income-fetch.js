@@ -186,12 +186,17 @@ $(function () {
         }
         if(!rows.id){
             var index = $("#serviceDeptIncomeTable").datagrid('getRowIndex',rows) ;
-            $("#serviceDeptIncomeTable").datagrid('deleteRow',index) ;
+
+            $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+                if(r){
+                    $("#serviceDeptIncomeTable").datagrid('deleteRow',index) ;
+                }
+            });
         }else{
             $.postJSON("/api/service-dept-income/del-service-income",rows,function(data){
-                $.messager.alert('系统提示','删除成功','info') ;
-                $("#queryBtn").trigger('click');
-            },function(data){})
+                        $.messager.alert('系统提示','删除成功','info') ;
+                        $("#queryBtn").trigger('click');
+                    },function(data){})
         }
     });
 

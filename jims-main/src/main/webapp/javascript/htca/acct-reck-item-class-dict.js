@@ -199,12 +199,17 @@ $(function () {
 
         var rowIndex = $("#reckClassDatagrid").datagrid('getRowIndex', row);
         if (!row.id) {
-            $("#reckClassDatagrid").datagrid('deleteRow', rowIndex);
+            $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+                if(r){
+                    $("#reckClassDatagrid").datagrid('deleteRow', rowIndex);
+                }
+            });
+
         } else {
             $.post("/api/acct-reck/del/" + row.id, function (data) {
-                $.messager.alert('系统提示', '删除成功', 'info');
-                $("#fetchItemBtn").trigger('click');
-            })
+                        $.messager.alert('系统提示', '删除成功', 'info');
+                        $("#fetchItemBtn").trigger('click');
+                    })
         }
     })
 });

@@ -123,6 +123,7 @@ public class AcctDeptDictFacade extends BaseFacade {
         String hql = "delete AcctDeptVsDeptDict as vsd where vsd.acctDeptId='"+id+"'" ;
         this.getEntityManager().createQuery(hql).executeUpdate() ;
         dict.setDelFlag("0");
+        dict.setEndDept("0");
         //通过标志位选择
         merge(dict) ;
         //remove(dict);

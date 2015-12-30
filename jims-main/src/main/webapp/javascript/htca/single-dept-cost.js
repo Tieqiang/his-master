@@ -250,11 +250,15 @@ $(function(){
         }
         //如果需要删除的
         if(deleteIds.length){
-            $.postJSON("/api/acct-dept-cost/delete-dept-cost",deleteIds,function(data){
-                $.messager.alert('系统提示','删除成功','info') ;
-                $("#searchBtn").trigger('click') ;
-            },function(data){
+            $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+                if(r){
+                    $.postJSON("/api/acct-dept-cost/delete-dept-cost",deleteIds,function(data){
+                        $.messager.alert('系统提示','删除成功','info') ;
+                        $("#searchBtn").trigger('click') ;
+                    },function(data){
 
+                    })
+                }
             })
         }else{
             $.messager.alert("系统提示","本页数据未存在在数据库中，不能删除","info") ;

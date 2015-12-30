@@ -71,8 +71,11 @@ $(function(){
             if(rowIndex == editRow){
                 editRow = undefined ;
             }
-
-            $("#incomeTypeGrid").datagrid('removeRow',rowIndex) ;
+            $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
+                if(r){
+                    $("#incomeTypeGrid").datagrid('deleteRow',rowIndex) ;
+                }
+            });
         }
     }) ;
 
