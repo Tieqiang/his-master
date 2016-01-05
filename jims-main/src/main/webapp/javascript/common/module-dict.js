@@ -33,6 +33,10 @@ $(function () {
             field:'inputCode',
             width:'20%'
         },{
+            title:'员工Ids',
+            field:'staffIds',
+            hidden:true
+        },{
             title:'模块权限Ids',
             field:'menuIds',
             editor: {
@@ -262,9 +266,7 @@ $(function () {
     }
     //保存分配的权限
     $("#saveMenuBtn").on('click',function(){
-
         var nodes=$("#tt").tree('getChecked',['checked','indeterminate']) ;
-        console.log(nodes) ;
         var data = {} ;
         var row=$("#dg").datagrid('getSelected');
         if(!row.id){
@@ -391,22 +393,34 @@ $(function () {
             return;
         }
         $("#checkStaffWin").window('open');
-
-        var staffIds = row.staffIds;
-        if (!staffIds) {
+        if (!row.staffIds) {
             return;
         }
-
+        var staffIds = [];
+        staffIds= row.staffIds.split(",");
         var selectStaffs=[];
         var staffs = [];
         var loadPromise = $.get("/api/staff-dict/list", function (data) {
-            $.each(data, function (index, row) {
-                if(staffIds.indexOf(row.id)>-1){
-                    selectStaffs.push(row);
-                }else{
-                    staffs.push(row);
+            var flag = true;
+            for(var i =0;i<data.length;i++){
+                    for(var j=0;j<staffIds.length;j++){
+                        if(staffIds[j]==data[i].id){
+                            selectStaffs.push(data[i]);
+                            flag=false;
+                        }
+                    }
+                if(flag==true){
+                    staffs.push(data[i]);
                 }
-            });
+                flag=true;
+            }
+            //$.each(data, function (index, row) {
+            //    if(staffIds.indexOf(row.id)>-1){
+            //        selectStaffs.push(row);
+            //    }else{
+            //        staffs.push(row);
+            //    }
+            //});
         });
 
         loadPromise.done(function () {
