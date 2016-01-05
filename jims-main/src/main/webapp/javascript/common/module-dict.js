@@ -393,10 +393,10 @@ $(function () {
             return;
         }
         $("#checkStaffWin").window('open');
-        if (!row.staffIds) {
-            return;
-        }
-        var staffIds = [];
+        //if (!row.staffIds) {
+        //    return;
+        //}
+        var staffIds = new Array;
         staffIds= row.staffIds.split(",");
         var selectStaffs=[];
         var staffs = [];
@@ -414,6 +414,9 @@ $(function () {
                 }
                 flag=true;
             }
+            //console.log(selectStaffs.length);
+            //console.log(staffs.length);
+
             //$.each(data, function (index, row) {
             //    if(staffIds.indexOf(row.id)>-1){
             //        selectStaffs.push(row);
