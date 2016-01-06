@@ -54,4 +54,19 @@ public class DeptProfitService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
         }
     }
+
+    @POST
+    @Path("re-devide-manager/{hospitalId}/{yearMonth}")
+    public Response reDevideManagerCost(List<AcctDeptProfit> acctDeptProfits,@PathParam("hospitalId")String hospitalId,@PathParam("yearMonth")String yearMonth){
+        try {
+            List<AcctDeptProfit> acctDeptProfitses=acctDeptProfitFacade.reDevideManagerCost(acctDeptProfits,yearMonth,hospitalId) ;
+            return Response.status(Response.Status.OK).entity(acctDeptProfitses).build() ;
+        }catch(Exception e ){
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
+        }
+    }
+
+
 }

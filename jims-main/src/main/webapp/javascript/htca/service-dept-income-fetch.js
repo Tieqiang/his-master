@@ -11,7 +11,7 @@ $(function () {
     })
 
     var incomeTypes=[] ;
-    $.get('/api/acct-reck/list?hospitalId='+parent.config.hospitalId,function(data){
+    $.get('/api/cost-item/list-item?hospitalId='+parent.config.hospitalId,function(data){
         incomeTypes = data ;
     })
 
@@ -86,7 +86,7 @@ $(function () {
             formatter:function(value,row,index){
                 for(var i = 0 ;i<incomeTypes.length ;i++){
                     if(value==incomeTypes[i].id){
-                        return incomeTypes[i].reckItemName;
+                        return incomeTypes[i].costItemName;
                     }
                 }
                 return value ;

@@ -1,11 +1,7 @@
 package com.jims.his.domain.htca.entity;
 
-import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -28,9 +24,13 @@ public class AcctDeptProfit implements java.io.Serializable {
     private Double deptLastIncome ;
     private Double convertRate ;
     private Double acctBalance ;
-    private Double managerCost ;
+    private Double managerProfitCost;
+    private Double managerStaffCost ;
+    private Double incomeChangeItem;
+    private Double costChangeItem ;
     //ALL_ROUND_INCOME
-    private Double allRoundIncome ;
+    private Double allRoundIncome ;//全项奖
+    private String position ;//辅助排序想
 
 	// Constructors
 
@@ -41,7 +41,7 @@ public class AcctDeptProfit implements java.io.Serializable {
 	/** full constructor */
 	public AcctDeptProfit(String yearMonth, String hospitalId,
                           Double deptIncome, Double deptCost, Double pleasedNum,
-                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate, Double acctBalance, Double managerCost, Double allRoundIncome) {
+                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate, Double acctBalance, Double managerProfitCost, Double managerStaffCost, Double incomeChangeItem, Double costChangeItem, Double allRoundIncome, String position) {
 		this.yearMonth = yearMonth;
 		this.hospitalId = hospitalId;
 		this.deptIncome = deptIncome;
@@ -52,8 +52,12 @@ public class AcctDeptProfit implements java.io.Serializable {
         this.deptLastIncome = deptLastIncome;
         this.convertRate = convertRate;
         this.acctBalance = acctBalance;
-        this.managerCost = managerCost;
+        this.managerProfitCost = managerProfitCost;
+        this.managerStaffCost = managerStaffCost;
+        this.incomeChangeItem = incomeChangeItem;
+        this.costChangeItem = costChangeItem;
         this.allRoundIncome = allRoundIncome;
+        this.position = position;
     }
 
 	// Property accessors
@@ -161,13 +165,13 @@ public class AcctDeptProfit implements java.io.Serializable {
     }
 
 
-    @Column(name="manager_cost")
-    public Double getManagerCost() {
-        return managerCost;
+    @Column(name="manager_profit_cost")
+    public Double getManagerProfitCost() {
+        return managerProfitCost;
     }
 
-    public void setManagerCost(Double managerCost) {
-        this.managerCost = managerCost;
+    public void setManagerProfitCost(Double managerProfitCost) {
+        this.managerProfitCost = managerProfitCost;
     }
 
     @Column(name="all_round_income")
@@ -177,5 +181,41 @@ public class AcctDeptProfit implements java.io.Serializable {
 
     public void setAllRoundIncome(Double allRoundIncome) {
         this.allRoundIncome = allRoundIncome;
+    }
+
+    @Column(name="income_change_item")
+    public Double getIncomeChangeItem() {
+        return incomeChangeItem;
+    }
+
+    public void setIncomeChangeItem(Double incomeChangeItem) {
+        this.incomeChangeItem = incomeChangeItem;
+    }
+
+    @Column(name="manager_staff_cost")
+    public Double getManagerStaffCost() {
+        return managerStaffCost;
+    }
+
+    public void setManagerStaffCost(Double managerStaffCost) {
+        this.managerStaffCost = managerStaffCost;
+    }
+
+    @Column(name="cost_change_item")
+    public Double getCostChangeItem() {
+        return costChangeItem;
+    }
+
+    public void setCostChangeItem(Double costChangeItem) {
+        this.costChangeItem = costChangeItem;
+    }
+
+    @Transient
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

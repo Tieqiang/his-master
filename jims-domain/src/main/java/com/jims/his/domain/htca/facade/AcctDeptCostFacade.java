@@ -22,35 +22,43 @@ public class AcctDeptCostFacade extends BaseFacade {
 
     public List<AcctDeptCost> listAccctDeptCost(String yearMonth, String hospitalId, String costItemId) {
 
-        String sql = "select b.id,\n" +
-                "       b.acct_dept_id,\n" +
-                "       b.cost_item_id,\n" +
-                "       b.cost,\n" +
-                "       b.minus_cost,\n" +
-                "       b.memo\n" +
-                "  from htca.acct_dept_cost b\n" +
-                " where(b.year_month = '" + yearMonth + "')\n" +
-                "   and b.hospital_id = '" + hospitalId + "'\n" +
-                "   and (b.cost_item_id = '" + costItemId + "')\n" +
-                "   and b.fetch_way='录入'" +
-                "union\n" +
-                "select '' id,\n" +
-                "       id acct_dept_id,\n" +
-                "       '' cost_item_id,\n" +
-                "       null cost,\n" +
-                "       null minus_cost,\n" +
-                "       '' memo\n" +
-                "  from htca.acct_dept_dict\n" +
-                " where id not in (select acct_dept_id\n" +
-                "                    from htca.acct_dept_cost\n" +
-                "                   where year_month = '" + yearMonth + "'\n" +
-                "                     and hospital_id = '" + hospitalId + "'\n" +
-                "                     and cost_item_id = '" + costItemId + "'" +
-                "                     and fetch_way='录入')\n" +
-                "                       " +
-                "   and hospital_id = '"+hospitalId+"'"+
-                "   and end_dept='1'" +
-                "   and del_flag <> '0'";
+        String sql ="select a.*\n" +
+                "  from (select b.id,\n" +
+                "               b.acct_dept_id,\n" +
+                "               b.cost_item_id,\n" +
+                "               b.cost,\n" +
+                "               b.minus_cost,\n" +
+                "               b.memo\n" +
+                "          from htca.acct_dept_cost b\n" +
+                "         where (b.year_month = '"+yearMonth+"')\n" +
+                "           and b.hospital_id = '"+hospitalId+"'\n" +
+                "           and (b.cost_item_id = '"+costItemId+"')\n" +
+                "           and b.fetch_way = '录入'\n" +
+                "           and b.acct_dept_id in (select id\n" +
+                "                                    from htca.acct_dept_dict\n" +
+                "                                   where end_dept = '1'\n" +
+                "                                     and del_flag = '1')\n" +
+                "        union\n" +
+                "        select '' id,\n" +
+                "               id acct_dept_id,\n" +
+                "               '' cost_item_id,\n" +
+                "               null cost,\n" +
+                "               null minus_cost,\n" +
+                "               '' memo\n" +
+                "          from htca.acct_dept_dict\n" +
+                "         where id not in\n" +
+                "               (select acct_dept_id\n" +
+                "                  from htca.acct_dept_cost\n" +
+                "                 where year_month = '"+yearMonth+"'\n" +
+                "                   and hospital_id = '"+hospitalId+"'\n" +
+                "                   and cost_item_id = '"+costItemId+"'\n" +
+                "                   and fetch_way = '录入')\n" +
+                "           and hospital_id = '4028862d4fcf2590014fcf9aef480016'\n" +
+                "           and end_dept = '1'\n" +
+                "           and del_flag <> '0') a,\n" +
+                "       htca.acct_dept_dict c\n" +
+                " where a.acct_dept_id = c.id\n" +
+                " order by c.position" ;
 
         List<AcctDeptCost> acctDeptCosts = createNativeQuery(sql, new ArrayList<Object>(), AcctDeptCost.class);
         return acctDeptCosts;
@@ -151,14 +159,16 @@ public class AcctDeptCostFacade extends BaseFacade {
         Double outpPerformRate;
         Double outpWardRate;
         double t=0.0 ;
+
+        String costItemHql = "from CostItemDict as  dict where dict.hospitalId='"+hospitalId+"'";
+        List<CostItemDict> costItemDicts=createQuery(CostItemDict.class,costItemHql,new ArrayList<Object>()).getResultList() ;
+
         for (Object[] objects : resultList) {
             String hql = "select cost from CostItemDict as cost,AcctReckItemClassDict as income " +
                     "where cost.id=income.costId" +
                     " and income.reckItemCode='" + objects[4] + "' and " +
                     " income.hospitalId='"+hospitalId+"'";
 
-            TypedQuery<CostItemDict> query = createQuery(CostItemDict.class, hql, new ArrayList<Object>());
-            List<CostItemDict> costItemDicts = query.getResultList();
             if (costItemDicts.size() > 0) {
                 CostItemDict itemDict = costItemDicts.get(0);
                 String hql2 = "from AcctReckItemClassDict as income where income.reckItemCode='"+objects[4]+"' and income.hospitalId='"+hospitalId+"'" ;
@@ -191,7 +201,13 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setHospitalId(hospitalId);
                         cost.setAcctDeptId((String) objects[0]);
                         cost.setCost(totalCost * inpOrder);
-                        cost.setMinusCost(0.0);
+                        double calcPercent=0.0 ;
+                        if(itemDict.getCalcPercent()!=null){
+                            calcPercent=Double.parseDouble(itemDict.getCalcPercent()) ;
+                            cost.setMinusCost(totalCost*inpOrder*(100-calcPercent)/100);
+                        }else{
+                            cost.setMinusCost(0.0);
+                        }
                         cost.setCostItemId(itemDict.getId());
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
@@ -204,7 +220,13 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setAcctDeptId((String) objects[1]);
                         cost.setCostItemId(itemDict.getId());
                         cost.setCost(totalCost * inpPerform);
-                        cost.setMinusCost(0.0);
+                        double calcPercent=0.0 ;
+                        if(itemDict.getCalcPercent()!=null){
+                            calcPercent=Double.parseDouble(itemDict.getCalcPercent()) ;
+                            cost.setMinusCost(totalCost * inpPerform*(100-calcPercent)/100);
+                        }else{
+                            cost.setMinusCost(0.0);
+                        }
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
@@ -217,7 +239,13 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCostItemId(itemDict.getId());
                         cost.setAcctDeptId((String) objects[2]);
                         cost.setCost(totalCost * ward);
-                        cost.setMinusCost(0.0);
+                        double calcPercent=0.0 ;
+                        if(itemDict.getCalcPercent()!=null){
+                            calcPercent=Double.parseDouble(itemDict.getCalcPercent()) ;
+                            cost.setMinusCost(totalCost * ward*(100-calcPercent)/100);
+                        }else{
+                            cost.setMinusCost(0.0);
+                        }
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
@@ -233,7 +261,13 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCostItemId(itemDict.getId());
                         cost.setAcctDeptId((String) objects[0]);
                         cost.setCost(totalCost * outpOrder);
-                        cost.setMinusCost(0.0);
+                        double calcPercent=0.0 ;
+                        if(itemDict.getCalcPercent()!=null){
+                            calcPercent=Double.parseDouble(itemDict.getCalcPercent()) ;
+                            cost.setMinusCost(totalCost * outpOrder*(100-calcPercent)/100);
+                        }else{
+                            cost.setMinusCost(0.0);
+                        }
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
@@ -245,7 +279,13 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setHospitalId(hospitalId);
                         cost.setAcctDeptId((String) objects[1]);
                         cost.setCost(totalCost * outpPerformRate);
-                        cost.setMinusCost(0.0);
+                        double calcPercent=0.0 ;
+                        if(itemDict.getCalcPercent()!=null){
+                            calcPercent=Double.parseDouble(itemDict.getCalcPercent()) ;
+                            cost.setMinusCost(totalCost * outpPerformRate*(100-calcPercent)/100);
+                        }else{
+                            cost.setMinusCost(0.0);
+                        }
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
@@ -257,7 +297,13 @@ public class AcctDeptCostFacade extends BaseFacade {
                         cost.setCostItemId(itemDict.getId());
                         cost.setAcctDeptId((String) objects[2]);
                         cost.setCost(totalCost * outpWardRate);
-                        cost.setMinusCost(0.0);
+                        double calcPercent=0.0 ;
+                        if(itemDict.getCalcPercent()!=null){
+                            calcPercent=Double.parseDouble(itemDict.getCalcPercent()) ;
+                            cost.setMinusCost(totalCost * outpWardRate*(100-calcPercent)/100);
+                        }else{
+                            cost.setMinusCost(0.0);
+                        }
                         cost.setYearMonth(yearMonth);
                         cost.setFetchWay("计算");
                         acctDeptCosts.add(cost);
@@ -321,6 +367,14 @@ public class AcctDeptCostFacade extends BaseFacade {
      * @return
      */
     private List<AcctDeptCost> devideByEq(String hospitalId, String yearMonth, String costItemId, Double totalMoney, String depts) {
+        String costItemDictHql = "from CostItemDict as  dict where dict.hospitalId='"+hospitalId+"'";
+        List<CostItemDict> costItemDicts=createQuery(CostItemDict.class,costItemDictHql,new ArrayList<Object>()).getResultList() ;
+        double calcPercent = 100 ;
+        for(CostItemDict dict :costItemDicts){
+            if(costItemId.equals(dict.getId())){
+                calcPercent = Double.parseDouble(dict.getCalcPercent()) ;
+            }
+        }
         String ids[]=depts.split(";") ;
         if(ids.length>0){
             Double perMoney = totalMoney /ids.length ;
@@ -331,7 +385,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                 cost.setFetchWay("分摊");
                 cost.setHospitalId(hospitalId);
                 cost.setCostItemId(costItemId);
-                cost.setMinusCost(0.0);
+                cost.setMinusCost(perMoney*(100-calcPercent)/100);
                 cost.setYearMonth(yearMonth);
                 cost.setCost(perMoney);
                 costs.add(cost) ;
@@ -361,20 +415,28 @@ public class AcctDeptCostFacade extends BaseFacade {
                 "dept.id=vsDept.deptId and vsDept.costItemId = '"+costItemId+"'" ;
         List<AcctDeptDict> depts = createQuery(AcctDeptDict.class,deptHql,new ArrayList<Object>()).getResultList() ;
         List<AcctDeptCost> costs = new ArrayList<>() ;
-
+        String costItemDictHql = "from CostItemDict as  dict where dict.hospitalId='"+hospitalId+"'";
+        List<CostItemDict> costItemDicts=createQuery(CostItemDict.class,costItemDictHql,new ArrayList<Object>()).getResultList() ;
+        double calcPercent = 100 ;
+        for(CostItemDict dict :costItemDicts){
+            if(costItemId.equals(dict.getId())){
+                calcPercent = Double.parseDouble(dict.getCalcPercent()) ;
+            }
+        }
         for(AcctDeptDict deptDict :depts){
             AcctDeptCost cost = new AcctDeptCost();
             cost.setAcctDeptId(deptDict.getId());
             cost.setFetchWay("分摊");
             cost.setHospitalId(hospitalId);
             cost.setCostItemId(costItemId);
-            cost.setMinusCost(0.0);
+
             cost.setYearMonth(yearMonth);
             double area = 0.0 ;
             if(deptDict.getBuildArea() !=null){
                 area = deptDict.getBuildArea() ;
             }
             cost.setCost(totalMoney * (area/totalAreas));
+            cost.setMinusCost(cost.getCost()*(100-calcPercent)/100);
             costs.add(cost) ;
         }
         return costs;
@@ -396,16 +458,28 @@ public class AcctDeptCostFacade extends BaseFacade {
                 "dept.id=vsDept.deptId and vsDept.costItemId = '"+costItemId+"'" ;
         List<AcctDeptDict> depts = createQuery(AcctDeptDict.class,deptHql,new ArrayList<Object>()).getResultList() ;
         List<AcctDeptCost> costs = new ArrayList<>() ;
+        String costItemDictHql = "from CostItemDict as  dict where dict.hospitalId='"+hospitalId+"'";
+        List<CostItemDict> costItemDicts=createQuery(CostItemDict.class,costItemDictHql,new ArrayList<Object>()).getResultList() ;
+
+        double calcPercent = 100 ;
+        for(CostItemDict dict :costItemDicts){
+            if(costItemId.equals(dict.getId())){
+                calcPercent = Double.parseDouble(dict.getCalcPercent()) ;
+            }
+        }
+
         if(staffNums==null){
             return null ;
         }
+
+
         for(AcctDeptDict deptDict :depts){
             AcctDeptCost cost = new AcctDeptCost();
             cost.setAcctDeptId(deptDict.getId());
             cost.setFetchWay("分摊");
             cost.setHospitalId(hospitalId);
             cost.setCostItemId(costItemId);
-            cost.setMinusCost(0.0);
+
             cost.setYearMonth(yearMonth);
             double v = 0.0 ;
             if(deptDict.getStaffNum() !=null){
@@ -413,7 +487,7 @@ public class AcctDeptCostFacade extends BaseFacade {
             }
             cost.setCost(totalMoney * (v/staffNums));
             if(cost.getCost()!=0){
-
+                cost.setMinusCost(cost.getCost() *(100-calcPercent)/100);
                 costs.add(cost) ;
             }
         }

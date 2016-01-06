@@ -16,7 +16,9 @@ window.addTab = function (title, href) {
     }else{
         var content = undefined ;
         if($.startWith(href,'http')){
-
+            if(href.indexOf("reportlet")){
+                href = href+"&dept_id="+config.acctDeptId ;
+            }
             content= '<iframe scrolling="auto" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>' ;
         }else{
             content= '<iframe scrolling="auto" frameborder="0"  src="views'+href+'.html" style="width:100%;height:100%;"></iframe>'
@@ -33,6 +35,9 @@ window.addTab = function (title, href) {
 window.updateTab = function (title, href) {
     var content = undefined;
     if ($.startWith(href, 'http')) {
+        if(href.indexOf("reportlet")){
+            href = href+"&dept_id="+config.acctDeptId ;
+        }
         content = '<iframe scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>';
     } else {
         content = '<iframe scrolling="auto" frameborder="0"  src="views' + href + '.html" style="width:100%;height:100%;"></iframe>'
