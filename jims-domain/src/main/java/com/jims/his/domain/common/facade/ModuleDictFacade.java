@@ -34,6 +34,18 @@ public class ModuleDictFacade extends BaseFacade {
         List resultList = query.getResultList();
         return resultList;
     }
+    public List<ModulDict> findAllTabs(String name, String hospitalId) {
+        String hql = "select module_load ,menu_name module_name from Modul_Dict,menu_dict where";
+        if (name != null && name.trim().length() > 0) {
+            hql += "  Modul_Dict.module_Name like '%" + name.trim() + "%'";
+        }
+        if(null !=hospitalId && !hospitalId.trim().equals("")){
+            hql += " and Modul_Dict.hospital_Id='"+hospitalId+"'";
+        }
+        hql+="and modul_dict.module_load = menu_dict.href";
+        List<ModulDict> nativeQuery = super.createNativeQuery(hql, new ArrayList<Object>(), ModulDict.class);
+        return nativeQuery;
+    }
 
     /**
      * 根据医院编号和员工编号查询模块列表

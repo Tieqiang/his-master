@@ -22,12 +22,20 @@ $(function () {
         },{
             title: '模块名称',
             field: 'moduleName',
-            width: "80%",
+            width: "20%",
             editor: {
                 type: 'validatebox', options: {
                     required: true, validType: 'length[0,128]', missingMessage: '请输入64个以内的汉字'
                 }
             }
+        },{
+            title:'模块主页路径',
+            field:'moduleLoad',
+            width:'20%',
+            editor: {
+                type: 'textbox'
+            }
+            //hidden:true
         },{
             title:'输入码',
             field:'inputCode',
@@ -145,6 +153,8 @@ $(function () {
             modulDict.id = insertData[i].id ;
             modulDict.moduleName = insertData[i].moduleName ;
             modulDict.inputCode = insertData[i].inputCode ;
+            modulDict.moduleLoad = insertData[i].moduleLoad ;
+            modulDict.hospitalId = parent.config.hospitalId ;
             modulDictBeanChangeVo.inserted.push(modulDict) ;
         }
 
@@ -153,6 +163,8 @@ $(function () {
             modulDict.id = updateData[i].id ;
             modulDict.moduleName = updateData[i].moduleName ;
             modulDict.inputCode = updateData[i].inputCode ;
+            modulDict.moduleLoad = updateData[i].moduleLoad ;
+            modulDict.hospitalId = parent.config.hospitalId ;
             modulDictBeanChangeVo.updated.push(modulDict) ;
         }
         for(var i = 0 ;i<deleteData.length ;i++){
@@ -160,6 +172,8 @@ $(function () {
             modulDict.id = deleteData[i].id ;
             modulDict.moduleName = deleteData[i].moduleName ;
             modulDict.inputCode = deleteData[i].inputCode ;
+            modulDict.moduleLoad = deleteData[i].moduleLoad ;
+            modulDict.hospitalId = parent.config.hospitalId ;
             modulDictBeanChangeVo.deleted.push(modulDict) ;
         }
 
