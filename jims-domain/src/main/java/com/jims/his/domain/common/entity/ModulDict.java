@@ -24,6 +24,7 @@ public class ModulDict implements java.io.Serializable {
     private String hospitalId;
     private Set<StaffVsModule> staffVsModules = new HashSet<StaffVsModule>(0);
     private String staffIds;
+    private String moduleLoad;
 
 	// Constructors
 
@@ -33,7 +34,7 @@ public class ModulDict implements java.io.Serializable {
 
 	/** full constructor */
 	public ModulDict(String moduleName, String inputCode,
-                     Set<ModuleVsMenu> moduleVsMenus, String menuIds, String hospitalId, Set<StaffVsModule> staffVsModules, String staffIds) {
+                     Set<ModuleVsMenu> moduleVsMenus, String menuIds, String hospitalId, Set<StaffVsModule> staffVsModules, String staffIds, String moduleLoad) {
 		this.moduleName = moduleName;
 		this.inputCode = inputCode;
 		this.moduleVsMenus = moduleVsMenus;
@@ -41,6 +42,7 @@ public class ModulDict implements java.io.Serializable {
         this.hospitalId = hospitalId;
         this.staffVsModules = staffVsModules;
         this.staffIds = staffIds;
+        this.moduleLoad = moduleLoad;
     }
 
 	// Property accessors
@@ -81,6 +83,14 @@ public class ModulDict implements java.io.Serializable {
 
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;
+    }
+    @Column(name = "MODULE_LOAD", length = 100)
+    public String getModuleLoad() {
+        return moduleLoad;
+    }
+
+    public void setModuleLoad(String moduleLoad) {
+        this.moduleLoad = moduleLoad;
     }
 
     @JsonIgnore

@@ -42,6 +42,15 @@ public class ModuleDictService {
     public List<ModulDict> list(@QueryParam("name") String name, @QueryParam("hospitalId") String hospitalId){
         return moduleDictFacade.findAll(name, hospitalId) ;
     }
+    /**
+     * 获取模块所对应的路径
+     * @return
+     */
+    @GET
+    @Path("list-tabs")
+    public List<ModulDict> listTabs(@QueryParam("name") String name, @QueryParam("hospitalId") String hospitalId){
+        return moduleDictFacade.findAllTabs(name, hospitalId) ;
+    }
 
     @GET
     @Path("list-by-staff")

@@ -239,7 +239,21 @@ $(function(){
 
             $("#menuTree").tree('loadData',menuTreeData);
             $("#menuTree").tree('collapseAll')//默认折叠所有的选项
+            var load = {};
+            if(menuTreeData){
+                var  promiseLoad = $.get("/api/module-dict/list-tabs?name=" + config.moduleName, function (data) {
+                    //$("#dg").datagrid('loadData', data);
+                    console.log(data);
+                    load=data;
+                    return load;
+                });
+                promiseLoad.done(function(){
+                    parent.addTab(load[0].moduleName, load[0].moduleLoad);
+                });
+            }
         }) ;
+
+
     })
 
 
