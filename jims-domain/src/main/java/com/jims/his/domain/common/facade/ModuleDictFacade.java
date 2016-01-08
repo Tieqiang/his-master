@@ -42,7 +42,6 @@ public class ModuleDictFacade extends BaseFacade {
         if(null !=hospitalId && !hospitalId.trim().equals("")){
             hql += " and Modul_Dict.hospital_Id='"+hospitalId+"'";
         }
-        hql+="and modul_dict.module_load = menu_dict.href";
         List<ModulDict> nativeQuery = super.createNativeQuery(hql, new ArrayList<Object>(), ModulDict.class);
         return nativeQuery;
     }

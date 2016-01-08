@@ -160,15 +160,13 @@ public class AcctDeptCostFacade extends BaseFacade {
         Double outpWardRate;
         double t=0.0 ;
 
-        String costItemHql = "from CostItemDict as  dict where dict.hospitalId='"+hospitalId+"'";
-        List<CostItemDict> costItemDicts=createQuery(CostItemDict.class,costItemHql,new ArrayList<Object>()).getResultList() ;
 
         for (Object[] objects : resultList) {
             String hql = "select cost from CostItemDict as cost,AcctReckItemClassDict as income " +
                     "where cost.id=income.costId" +
                     " and income.reckItemCode='" + objects[4] + "' and " +
                     " income.hospitalId='"+hospitalId+"'";
-
+            List<CostItemDict> costItemDicts = createQuery(CostItemDict.class,hql,new ArrayList<Object>()).getResultList() ;
             if (costItemDicts.size() > 0) {
                 CostItemDict itemDict = costItemDicts.get(0);
                 String hql2 = "from AcctReckItemClassDict as income where income.reckItemCode='"+objects[4]+"' and income.hospitalId='"+hospitalId+"'" ;
