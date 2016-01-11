@@ -25,12 +25,14 @@ public class ModuleDictService {
     private ModuleDictFacade moduleDictFacade ;
     private HttpServletResponse resp;
     private HttpServletRequest request;
+    private HttpSession httpSession ;
 
     @Inject
-    public ModuleDictService(HttpServletRequest request, HttpServletResponse resp,ModuleDictFacade moduleDictFacade) {
+    public ModuleDictService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, HttpSession httpSession) {
         this.request = request;
         this.resp = resp;
         this.moduleDictFacade = moduleDictFacade;
+        this.httpSession = httpSession;
     }
 
     /**
@@ -48,8 +50,11 @@ public class ModuleDictService {
      */
     @GET
     @Path("list-tabs")
-    public List<ModulDict> listTabs(@QueryParam("name") String name, @QueryParam("hospitalId") String hospitalId){
-        return moduleDictFacade.findAllTabs(name, hospitalId) ;
+    public List<ModulDict> listTabs(){
+        String hospitalId = (String)httpSession.getAttribute("hospitalId") ;
+        String moduleId = (String)httpSession.getAttribute("moduleId") ;
+        String loginId = (String)httpSession.getAttribute("loginId") ;
+        return moduleDictFacade.findAllTabs(loginId,moduleId, hospitalId) ;
     }
 
     @GET
