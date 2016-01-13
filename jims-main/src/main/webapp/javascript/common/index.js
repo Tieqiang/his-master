@@ -5,6 +5,10 @@ var config = new common() ;
 
 
 window.addTab = function (title, href) {
+    //如果路径为空，则直接返回
+    if(!href){
+        return ;
+    }
     var tabs = $("#mainContent").tabs('tabs');
     console.log(tabs)
     if(tabs.length>10){
@@ -16,7 +20,9 @@ window.addTab = function (title, href) {
     }else{
         var content = undefined ;
         if($.startWith(href,'http')){
-
+            if(href.indexOf("reportlet")){
+                href = href+"&dept_id="+config.acctDeptId ;
+            }
             content= '<iframe scrolling="auto" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>' ;
         }else{
             content= '<iframe scrolling="auto" frameborder="0"  src="views'+href+'.html" style="width:100%;height:100%;"></iframe>'
@@ -33,6 +39,9 @@ window.addTab = function (title, href) {
 window.updateTab = function (title, href) {
     var content = undefined;
     if ($.startWith(href, 'http')) {
+        if(href.indexOf("reportlet")){
+            href = href+"&dept_id="+config.acctDeptId ;
+        }
         content = '<iframe scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>';
     } else {
         content = '<iframe scrolling="auto" frameborder="0"  src="views' + href + '.html" style="width:100%;height:100%;"></iframe>'
@@ -88,16 +97,7 @@ $(function(){
 
 
         switch (action) {
-            //case "refresh":
-            //    var iframe = $(currentTab.panel('options').content);
-            //    var src = iframe.attr('src');
-            //    $('#mainContent').tabs('update', {
-            //        tab: currentTab,
-            //        options: {
-            //            content: createFrame(src)
-            //        }
-            //    })
-            //    break;
+
             case "close":
                 var currtab_title = currentTab.panel('options').title;
                 $('#mainContent').tabs('close', currtab_title);
@@ -153,16 +153,7 @@ $(function(){
                 break;
         }
     }
-    //所定窗口
-    //$("#logwindow").window({
-    //    title:'窗口锁定',
-    //    width:400,
-    //    height:200,
-    //    modal:true,
-    //    closed:true,
-    //    closable:false
-    //
-    //})
+
 
     $("#lockWindow").on('click',function(){
         $("#logwindow").window("open") ;
@@ -199,6 +190,7 @@ $(function(){
                 for(var j = 0 ;j<menus.length;j++){
                     if(menus[i].id ==menus[j].attributes.parentId){
                         menus[i].children.push(menus[j]) ;
+                        menus[i].state='closed' ;
                     }
                 }
 
@@ -210,7 +202,9 @@ $(function(){
                     menuTreeData.push(menus[i]) ;
                 }
             }
-
+            if(menuTreeData.length){
+                menuTreeData[0].state='open' ;
+            }
             menus.sort(function(a,b){
                 return a.attributes.index- b.attributes.index;
             });
@@ -239,17 +233,17 @@ $(function(){
             }) ;
 
             $("#menuTree").tree('loadData',menuTreeData);
-            $("#menuTree").tree('collapseAll')//默认折叠所有的选项
+            //$("#menuTree").tree('collapseAll')//默认折叠所有的选项
             var load = {};
             if(menuTreeData){
-                var  promiseLoad = $.get("/api/module-dict/list-tabs?name=" + config.moduleName, function (data) {
-                    //$("#dg").datagrid('loadData', data);
-                    console.log(data);
+                var  promiseLoad = $.get("/api/module-dict/list-tabs", function (data) {
                     load=data;
                     return load;
                 });
                 promiseLoad.done(function(){
-                    //parent.addTab(load[0].moduleName, load[0].moduleLoad);
+                    if(load.length){
+                        parent.addTab(load[0].moduleName, load[0].moduleLoad);
+                    }
                 });
             }
         }) ;

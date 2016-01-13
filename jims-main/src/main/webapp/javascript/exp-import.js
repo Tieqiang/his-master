@@ -471,61 +471,94 @@ $(function () {
         }
     });
 
-    var staffPromise = $.get('/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId, function (data) {
-        staffs = data;
+    //负责人数据加载
+    $('#principal').combogrid({
+        panelWidth: 500,
+        idField: 'id',
+        textField: 'name',
+        loadMsg: '数据正在加载',
+        url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+        mode: 'remote',
+        method: 'GET',
+        columns: [[
+            {field: 'job', title: '工种', width: 150, align: 'center'},
+            {field: 'name', title: '姓名', width: 150, align: 'center'},
+            {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+        ]],
+        pagination: false,
+        fitColumns: true,
+        rowNumber: true,
+        autoRowHeight: false,
+        pageSize: 50,
+        pageNumber: 1
     });
-
-    /**
-     * 初始化人员行管
-     */
-    staffPromise.done(function () {
-        var staffSetting = {
-            idField: 'loginName',
-            textField: 'name',
-            model: 'remote',
-            data: staffs,
-            columns: [[{
-                title: '登陆名',
-                field: 'loginName'
-            }, {
-                title: '名字',
-                field: 'name'
-            }, {
-                title: '职称',
-                field: 'title'
-            }, {
-                title: '科室',
-                field: 'deptDict',
-                formatter: function (value, row, index) {
-                    if (row.deptDict) {
-                        return row.deptDict.deptName;
-                    } else {
-                        return value;
-                    }
-                }
-            }]]
-        };
-
-        /**
-         * 负责人下拉框
-         */
-        $("#principal").combogrid(staffSetting)
-
-        /**
-         * 保管人下拉框
-         */
-        $("#storekeeper").combogrid(staffSetting)
-
-        /**
-         * 采购人下拉框
-         */
-        $("#buyer").combogrid(staffSetting)
-
-        /**
-         * 验收人下拉框
-         */
-        $("#checkMan").combogrid(staffSetting)
-    })
+    //保管人数据加载
+    $('#storekeeper').combogrid({
+        panelWidth: 500,
+        idField: 'id',
+        textField: 'name',
+        loadMsg: '数据正在加载',
+        url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+        mode: 'remote',
+        method: 'GET',
+        columns: [[
+            {field: 'job', title: '工种', width: 150, align: 'center'},
+            {field: 'name', title: '姓名', width: 150, align: 'center'},
+            {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+        ]],
+        pagination: false,
+        fitColumns: true,
+        rowNumber: true,
+        autoRowHeight: false,
+        pageSize: 50,
+        pageNumber: 1
+    });
+    //采购人数据加载
+    $('#buyer').combogrid({
+        panelWidth: 500,
+        idField: 'id',
+        textField: 'name',
+        loadMsg: '数据正在加载',
+        url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+        mode: 'remote',
+        method: 'GET',
+        columns: [[
+            {field: 'job', title: '工种', width: 150, align: 'center'},
+            {field: 'name', title: '姓名', width: 150, align: 'center'},
+            {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+        ]],
+        pagination: false,
+        fitColumns: true,
+        rowNumber: true,
+        autoRowHeight: false,
+        pageSize: 50,
+        pageNumber: 1
+    });
+    //验收人数据加载
+    $('#checkMan').combogrid({
+        panelWidth: 500,
+        idField: 'id',
+        textField: 'name',
+        loadMsg: '数据正在加载',
+        url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+        mode: 'remote',
+        method: 'GET',
+        columns: [[
+            {field: 'job', title: '工种', width: 150, align: 'center'},
+            {field: 'name', title: '姓名', width: 150, align: 'center'},
+            {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+        ]],
+        pagination: false,
+        fitColumns: true,
+        rowNumber: true,
+        autoRowHeight: false,
+        pageSize: 50,
+        pageNumber: 1
+    });
 
     var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
         suppliers = data;
@@ -536,16 +569,17 @@ $(function () {
             idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
-            panelWidth: 200,
+            panelWidth: 500,
+            fitColumns: true,
             columns: [[{
                 title: '供应商名称',
-                field: 'supplierName'
+                field: 'supplierName', width: 200, align: 'center'
             }, {
                 title: '供应商代码',
-                field: 'supplierCode'
+                field: 'supplierCode', width: 150, align: 'center'
             }, {
                 title: '输入码',
-                field: 'inputCode'
+                field: 'inputCode', width: 50, align: 'center'
             }]],
             filter: function (q, row) {
                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());

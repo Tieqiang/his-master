@@ -406,5 +406,10 @@ $(function(){
         }
         $("#acctDeptWin").window('close') ;
     })
+
+    $("#closeBtn").on("click",function(){
+        //取消按钮
+        $("#itemWin").window('close') ;
+    })
 });
 

@@ -57,6 +57,7 @@ $(function(){
         singleSelect: false,
         toolbar: '#ft',
         method: 'GET',
+        rownubers:true,
         pagination: true,
         loadMsg:'数据正在加载，请稍后......',
         columns:[[{
@@ -96,7 +97,6 @@ $(function(){
             editor:{type:'textbox',options:{}}
         }]],
         onDblClickRow:function(rowIndex,rowData){
-
             if(editRow==0||editRow){
                 stopEdit() ;
             }

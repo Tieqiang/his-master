@@ -57,7 +57,6 @@ $(function () {
         toolbar: '#ft',
         method: 'GET',
         rownumbers:true,
-        pagination: true,
         loadMsg: '数据正在加载，请稍后......',
         columns: [[{
             title: 'id',
@@ -77,20 +76,42 @@ $(function () {
                 return value;
             }
         }, {
-            title: '科室收入',
+            title: '收入',
             field: 'deptIncome',
-            width: '10%'
+            width: '5%'
         }, {
-            title: '科室成本',
+            title: '成本',
             field: 'deptCost',
-            width: '10%'
+            width: '5%'
+        },{
+            title:'收入调整',
+            field:'incomeChangeItem',
+            width:'5%',
+            editor: {
+                type: 'validatebox', options: {
+                    validType: 'number'
+                }
+            }
+        },{
+            title:'成本调整',
+            field:'costChangeItem',
+            width:'5%',
+            editor:{
+                type:'validatebox',options:{
+                    validType:'number'
+                }
+            }
         },{
             title:'分摊前利润',
             field:'acctBalance',
             width:'10%'
         }, {
-            title:'管理成本',
-            field:'managerCost',
+            title:'人员分摊',
+            field:'managerStaffCost',
+            width:'10%'
+        }, {
+            title:'效益分摊',
+            field:'managerProfitCost',
             width:'10%'
         },{
             title:'绩效提成比例',
@@ -205,11 +226,15 @@ $(function () {
         }
 
         if (stopEdit()) {
-            $.postJSON("/api/dept-profit/save-update", rows, function (data) {
-                $("#searchBtn").trigger('click');
-                $.messager.alert("系统提示", "保存成功", "info");
-            }, function (data) {
-                $.messager.alert("系统提示", "保存失败", "info");
+            $.messager.confirm('系统提示',"如果调整了相关数据，需要重新进行分摊管理成本，在进行保存，是否继续？",function(data){
+                if(data==1){
+                    $.postJSON("/api/dept-profit/save-update", rows, function (data) {
+                        $("#searchBtn").trigger('click');
+                        $.messager.alert("系统提示", "保存成功", "info");
+                    }, function (data) {
+                        $.messager.alert("系统提示", "保存失败", "info");
+                    })
+                }
             })
         }
 
@@ -262,5 +287,17 @@ $(function () {
         $.get("/api/dept-profit/calc-profit?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&paramId="+paramId,function(data){
             $("#acctDeptProfitDg").datagrid('loadData',data) ;
         })
+    }) ;
+
+    $("#devideBtn").on('click',function(){
+        var rows = $("#acctDeptProfitDg").datagrid('getRows') ;
+        var yearMonth =$("#fetchDate").datebox('getValue') ;
+        if(stopEdit()){
+            $.postJSON("/api/dept-profit/re-devide-manager/"+parent.config.hospitalId+"/"+yearMonth,rows,function(data){
+                $("#acctDeptProfitDg").datagrid('loadData',data) ;
+            },function(data){
+
+            })
+        }
     }) ;
 });

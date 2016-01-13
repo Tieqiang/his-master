@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.common.util.EnscriptAndDenScript;
+import com.jims.his.common.util.PinYin2Abbreviation;
 import com.jims.his.domain.common.entity.StaffDict;
 import com.jims.his.domain.common.entity.StaffVsRole;
 import org.omg.CORBA.Request;
@@ -43,7 +44,7 @@ public class StaffDictFacade extends BaseFacade {
 
     @Transactional
     public StaffDict saveStaffDict(StaffDict staffDict) {
-
+        staffDict.setInputCode(PinYin2Abbreviation.cn2py(staffDict.getName()));
         StaffDict merge = super.merge(staffDict);
         String id = staffDict.getId() ;
         if(id !=null){

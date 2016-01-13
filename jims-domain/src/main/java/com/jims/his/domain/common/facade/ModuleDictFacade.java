@@ -34,16 +34,24 @@ public class ModuleDictFacade extends BaseFacade {
         List resultList = query.getResultList();
         return resultList;
     }
-    public List<ModulDict> findAllTabs(String name, String hospitalId) {
-        String hql = "select module_load ,menu_name module_name from Modul_Dict,menu_dict where";
-        if (name != null && name.trim().length() > 0) {
-            hql += "  Modul_Dict.module_Name like '%" + name.trim() + "%'";
-        }
-        if(null !=hospitalId && !hospitalId.trim().equals("")){
-            hql += " and Modul_Dict.hospital_Id='"+hospitalId+"'";
-        }
-        hql+="and modul_dict.module_load = menu_dict.href";
-        List<ModulDict> nativeQuery = super.createNativeQuery(hql, new ArrayList<Object>(), ModulDict.class);
+    public List<ModulDict> findAllTabs(String loginId,String moduleId, String hospitalId) {
+        //String hql = "select module_load ,menu_name module_name from Modul_Dict,menu_dict where Modul_Dict.MODULE_LOAD = menu_dict.HREF and";
+        //if (name != null && name.trim().length() > 0) {
+        //    hql += "  Modul_Dict.module_Name like '%" + name.trim() + "%'";
+        //}
+        //if(null !=hospitalId && !hospitalId.trim().equals("")){
+        //    hql += " and Modul_Dict.hospital_Id='"+hospitalId+"'";
+        //}
+        //List<ModulDict> nativeQuery = super.createNativeQuery(hql, new ArrayList<Object>(), ModulDict.class);
+        String sql ="select a.module_load, b.menu_name module_name\n" +
+                "  from modul_dict a, menu_dict b, role_vs_menu c, staff_vs_role d\n" +
+                " where a.module_load = b.href\n" +
+                "   and b.id = c.menu_id\n" +
+                "   and c.role_id = d.role_id\n" +
+                "   and d.id = '"+loginId+"'" +
+                "   and a.id='"+moduleId+"' " +
+                "   and a.hospital_id='"+hospitalId+"'" ;
+        List<ModulDict> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ModulDict.class);
         return nativeQuery;
     }
 

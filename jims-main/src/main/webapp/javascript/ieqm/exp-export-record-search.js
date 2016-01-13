@@ -261,15 +261,16 @@ $(function () {
     $("#stopDate").datetimebox("setValue", myFormatter2(curr_time));
 
     $('#searchInput').combogrid({
-        panelWidth: 150,
+        panelWidth: 500,
         idField: 'expCode',
         textField: 'expName',
         url: '/api/exp-name-dict/list-exp-name-by-input',
         method: 'GET',
         mode: 'remote',
         columns: [[
-            {field: 'expCode', title: '消耗品代码', width: 100},
-            {field: 'expName', title: '消耗品名称', width: 100}
+            {field: 'expCode', title: '编码', width: 150, align: 'center'},
+            {field: 'expName', title: '名称', width: 200, align: 'center'},
+            {field: 'inputCode', title: '拼音', width: 50, align: 'center'}
         ]],
         pagination: false,
         fitColumns: true,

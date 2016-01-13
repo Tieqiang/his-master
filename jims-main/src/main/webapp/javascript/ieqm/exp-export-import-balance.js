@@ -197,16 +197,17 @@ $(function () {
             idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
-            panelWidth: 300,
+            panelWidth: 500,
+            fitColumns: true,
             columns: [[{
                 title: '供应商名称',
-                field: 'supplierName'
+                field: 'supplierName', width: 200, align: 'center'
             }, {
                 title: '供应商代码',
-                field: 'supplierCode'
+                field: 'supplierCode', width: 150, align: 'center'
             }, {
                 title: '输入码',
-                field: 'inputCode'
+                field: 'inputCode', width: 50, align: 'center'
             }]],
             filter: function (q, row) {
                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
@@ -299,7 +300,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -322,7 +323,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -345,7 +346,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -368,7 +369,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -391,7 +392,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -413,7 +414,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -435,7 +436,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
