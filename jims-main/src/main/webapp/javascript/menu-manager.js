@@ -1,6 +1,7 @@
 /**
  * Created by heren on 2015/9/11.
  */
+
 $(function () {
 
     $("#tt").treegrid({
@@ -9,6 +10,8 @@ $(function () {
         title: '系统菜单维护',
         fit: true,
         footer: '#tb',
+        //dnd:true,
+        singleSelect:true,
         columns: [[{
             title: '菜单名称',
             field: 'menuName',
@@ -18,11 +21,18 @@ $(function () {
             field: 'href',
             width: "70%"
         }, {
+            title: 'id',
+            field: 'id',
+            width: "20%",
+            hidden:true
+        }, {
             title: '层级',
             field: 'position',
             width: "10%"
         }]],
-        onLoadSuccess:function(node,data){
+        onLoadSuccess:function(row, data){
+            //启用拖动
+            enableDnd($('#tt'));
             //$(this).tree('collapseAll') ;
             //var roots = $(this).tree('getRoots') ;
             //for(var i = 0 ;i<roots.length ;i++){
@@ -30,7 +40,111 @@ $(function () {
             //}
         }
     });
+    function enableDnd(t) {
+        var nodes = t.treegrid('getPanel').find('tr[node-id]');
+        nodes.find('span.tree-hit').bind('mousedown.treegrid', function () {
+            return false;
+        });
+        nodes.draggable({
+            disabled: false,
+            revert: true,
+            cursor: 'pointer',
+            proxy: function (source) {
+                var p = $('<div class="tree-node-proxy tree-dnd-no"></div>').appendTo('body');
+                p.html($(source).find('.tree-title').html());
+                p.hide();
+                return p;
+            },
+            deltaX: 15,
+            deltaY: 15,
+            onBeforeDrag: function () {
+                $(this).next('tr.treegrid-tr-tree').find('tr[node-id]').droppable({accept: 'no-accept'});
+            },
+            onStartDrag: function () {
+                $(this).draggable('proxy').css({
+                    left: -10000,
+                    top: -10000
+                });
+            },
+            onDrag: function (e) {
+                $(this).draggable('proxy').show();
+                this.pageY = e.pageY;
+            },
+            onStopDrag: function () {
+                $(this).next('tr.treegrid-tr-tree').find('tr[node-id]').droppable({accept: 'tr[node-id]'});
+            }
+        }).droppable({
+            accept: 'tr[node-id]',
+            onDragOver: function (e, source) {
+                var pageY = source.pageY;
+                var top = $(this).offset().top;
+                var bottom = top + $(this).outerHeight();
+                $(source).draggable('proxy').removeClass('tree-dnd-no').addClass('tree-dnd-yes');
+                $(this).removeClass('row-append row-top row-bottom');
+                if (pageY > top + (bottom - top) / 2) {
+                    if (bottom - pageY < 5) {
+                        $(this).addClass('row-bottom');
+                    } else {
+                        $(this).addClass('row-append');
+                    }
+                } else {
+                    if (pageY - top < 5) {
+                        $(this).addClass('row-top');
+                    } else {
+                        $(this).addClass('row-append');
+                    }
+                }
+            },
+            onDragLeave: function (e, source) {
+                $(source).draggable('proxy').removeClass('tree-dnd-yes').addClass('tree-dnd-no');
+                $(this).removeClass('row-append row-top row-bottom');
+            },
+            onDrop: function (e, source) {
+                var action, point;
+                if ($(this).hasClass('row-append')) {
+                    action = 'append';
+                } else {
+                    action = 'insert';
+                    point = $(this).hasClass('row-top') ? 'top' : 'bottom';
+                }
+                $(this).removeClass('row-append row-top row-bottom');
 
+                var src = $('#tt').treegrid('find', $(source).attr('node-id'));
+                var des = $('#tt').treegrid('find', $(this).attr('node-id'));
+                if(des.parentId==null){
+                    $.messager.confirm("系统提示", "确认将当前目录设置成顶级目录吗?", function (r) {
+                        if (r) {
+                            src.parentId = "";
+                        } else {
+                            src.parentId = des.id;
+                        }
+                        var menuDict = {};
+                        menuDict.menuName = src.menuName;
+                        menuDict.href = src.href;
+                        menuDict.parentId = src.parentId;
+                        menuDict.position = src.position;
+                        menuDict.id = src.id;
+                        $.postJSON("/api/menu/add", menuDict, function (data) {
+                            loadMenu();
+                        }, function (data, status) {
+                        })
+                    })
+                }else if(des.parentId != null){
+                    src.parentId = des.id;
+                    var menuDict = {};
+                    menuDict.menuName = src.menuName;
+                    menuDict.href = src.href;
+                    menuDict.parentId = src.parentId;
+                    menuDict.position = src.position;
+                    menuDict.id = src.id;
+                    $.postJSON("/api/menu/add", menuDict, function (data) {
+                        loadMenu();
+                    }, function (data, status) {
+                    })
+                }
+            }
+        });
+    }
 
     var loadMenu = function () {
         var menus = [];//菜单列表
@@ -70,6 +184,7 @@ $(function () {
 
             $("#tt").treegrid('loadData',menuTreeData) ;
             $("#tt").treegrid("selectRow", 1);
+
         });
     }
 
@@ -77,7 +192,19 @@ $(function () {
     loadMenu();
 
 
+    $("#allMenuClose").on('click', function () {
+        var rows= $("#tt").treegrid('getRoots');
+        for(var i=0;i<rows.length;i++){
+            $("#tt").treegrid('collapseAll', rows[i].id);
+        }
 
+    })
+    $("#allMenuOpen").on('click', function () {
+        var rows = $("#tt").treegrid('getRoots');
+        for (var i = 0; i < rows.length; i++) {
+            $("#tt").treegrid('expandAll', rows[i].id);
+        }
+    })
     $("#saveBtn").on('click', function () {
         if ($("#fm").form('validate')) {
             var menuDict = {};

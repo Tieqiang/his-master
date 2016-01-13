@@ -3,6 +3,7 @@ package com.jims.his.domain.common.facade;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.common.util.EnscriptAndDenScript;
 import com.jims.his.domain.common.entity.StaffDict;
 import com.jims.his.domain.common.entity.StaffVsRole;
 import org.omg.CORBA.Request;
@@ -135,5 +136,25 @@ public class StaffDictFacade extends BaseFacade {
         }else{
             return null;
         }
+    }
+    public StaffDict findByLoginId(String hospitalId,String loginId) {
+        String hql ="from StaffDict as sf where sf.id = '"+ loginId+"' and sf.hospitalId = '"+hospitalId+"'" ;
+        return (StaffDict)super.createQuery(StaffDict.class, hql, new ArrayList()).getResultList().get(0);
+    }
+
+    /**
+     * 修改登录用户的密码
+     * @param hospitalId
+     * @param loginId
+     * @param password
+     * @return
+     */
+    @Transactional
+    public StaffDict editPasswordByLoginId(String hospitalId, String loginId, String password) {
+        StaffDict staffDict=findByLoginId(hospitalId, loginId);
+        EnscriptAndDenScript eads = new EnscriptAndDenScript();
+        staffDict.setPassword(eads.enScript(password));
+        merge(staffDict);
+        return staffDict;
     }
 }

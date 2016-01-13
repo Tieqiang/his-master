@@ -36,22 +36,27 @@ public class EnscriptAndDenScript {
      * @param str
      * @return
      */
-    public static String denScript(String str) {
-        if(str==null||"".equals(str)){
-            return "" ;
-        }
+    //public static String denScript(String str) {
+    //    if(str==null||"".equals(str)){
+    //        return "" ;
+    //    }
+    //
+    //    int x = Integer.parseInt(str.substring(62));
+    //    String temp = "";
+    //    String newPwd = "";
+    //
+    //    for (int i = 2; i < str.length() - 1; i = i + 3) {
+    //        temp = temp + str.charAt(i);
+    //    }
+    //    newPwd = temp.substring(0, x);
+    //    return newPwd;
+    //}
 
-        int x = Integer.parseInt(str.substring(62));
-        String temp = "";
-        String newPwd = "";
-
-        for (int i = 2; i < str.length() - 1; i = i + 3) {
-            temp = temp + str.charAt(i);
-        }
-        newPwd = temp.substring(0, x);
-        return newPwd;
-    }
-
+    /**
+     * 正确的解密算法
+     * @param str
+     * @return
+     */
     public static String denscriptFromHis(String str){
         if("".equals(str)||str==null){
             return "" ;
@@ -82,4 +87,5 @@ public class EnscriptAndDenScript {
         }
         return stringBuffer.toString() ;
     }
+
 }

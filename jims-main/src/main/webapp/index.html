@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assert/easyui/themes/color.css">
     <link rel="stylesheet" href="assert/easyui/portal.css">
     <link rel="stylesheet" href="assert/easyui/common.css">
+    <link rel="stylesheet" href="/style/common.css">
 </head>
 
 <body class="easyui-layout">
@@ -26,7 +27,7 @@
         <!--<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">控制面板</a>-->
         <!--<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">切换库房</a>-->
         <!--<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">切换医院</a>-->
-        <a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_zxMenu',iconCls:'icon-back'">注销</a>
+        <a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_zxMenu',iconCls:'icon-back'">操作</a>
     </div>
     <div id="layout_north_pfMenu" style="width: 120px; display: none;">
         <div onclick="changeTheme('default');">default</div>
@@ -45,6 +46,7 @@
         <div class="menu-sep"></div>
         <div id="reLogin">重新登录</div>
         <div id="changeLogin">切换信息</div>
+        <div id="changePassWord">修改密码</div>
         <div id="logout">退出系统</div>
     </div>
 
@@ -95,6 +97,43 @@
 <div id="mainContent" class="easyui-tabs" data-options="region:'center'">
 
 </div>
+<div id="dlg" class="easyui-dialog" style="width:300px;height:200px;padding:10px 20px"
+     closed="true" buttons="#dlgNew-buttons" data-options="modal:true">
+    <div class="ftitle">修改密码</div>
+    <form id="fm" method="post" novalidate>
+        <div class="fitem">
+            <label>原密码:</label>
+            <input type="password" name="password" id="password" class="easyui-textbox" data-options="type:password"
+                   required="true" style="width: 100px">
+        </div>
+    </form>
+</div>
+<div id="dlgNew" class="easyui-dialog" style="width:300px;height:250px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="modal:true">
+    <div class="ftitle">修改密码</div>
+    <form id="fm1" method="post" novalidate>
+        <div class="fitem">
+            <label>新密码:</label>
+            <input type="password" name="new_password" id="new_password" class="easyui-textbox"
+                   data-options="type:password" style="width: 100px" required="true">
+        </div>
+        <div class="fitem">
+            <label>确认密码:</label>
+            <input type="password" name="confirm_password" id="confirm_password" class="easyui-textbox"
+                   data-options="type:password" style="width: 100px" required="true">
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" id="saveBtn" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#dlgNew').dialog('close')" style="width:90px">关闭</a>
+</div>
+<div id="dlgNew-buttons">
+    <a href="javascript:void(0)" id="saveBtnNew" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">下一步</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#dlg').dialog('close')" style="width:90px">关闭</a>
+</div>
 
 
 <div data-options="region:'south',border:false">
@@ -117,6 +156,7 @@
 
 <script type="text/javascript" src="assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="assert/easyui/jquery.portal.js"></script>
 <script type="text/javascript" src="assert/easyui/jquery.cookie.js"></script>
 <script type="text/javascript" src="javascript/jeasyui.common.js"></script>
