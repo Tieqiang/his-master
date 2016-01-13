@@ -47,7 +47,7 @@ public class FetchDataFacade extends BaseFacade{
         if(month==1||month==3||month==5||month==7||month==8){
             startDate = strings[0]+month+"-01 00:00:00" ;
             endDate = strings[0]+month+"-31 23:59:59" ;
-        }else if(month==12){
+        }else if(month==12||month==10){
             startDate = strings[0]+"-"+month+"-01 00:00:00" ;
             endDate = strings[0]+"-"+month+"-31 23:59:59" ;
         }else if(month==4||month==6||month==9){
@@ -57,6 +57,9 @@ public class FetchDataFacade extends BaseFacade{
             startDate = strings[0]+"-"+month+"-01 00:00:00" ;
             endDate = strings[0]+"-"+month+"-30 23:59:59" ;
 
+        }else {
+            startDate = strings[0]+"-"+2+"-01 00:00:00" ;
+            endDate = strings[0]+"-"+3+"-01 00:00:00" ;
         }
 
         //删除之前计算的数据
