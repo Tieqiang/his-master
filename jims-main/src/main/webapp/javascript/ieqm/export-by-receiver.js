@@ -72,7 +72,7 @@ $(function () {
 
     //发往库房数据加载
     $('#receiver').combogrid({
-        panelWidth: 200,
+        panelWidth: 500,
         idField: 'storageCode',
         textField: 'storageName',
         loadMsg: '数据正在加载',
@@ -81,7 +81,8 @@ $(function () {
         method: 'GET',
         columns: [[
             {field: 'storageCode', title: '编码', width: 100, align: 'center'},
-            {field: 'storageName', title: '名称', width: 200, align: 'center'}
+            {field: 'storageName', title: '名称', width: 200, align: 'center'},
+            {field: 'disburseNoPrefix', title: '拼音码', width: 100, align: 'center'}
         ]],
         pagination: false,
         fitColumns: true,
