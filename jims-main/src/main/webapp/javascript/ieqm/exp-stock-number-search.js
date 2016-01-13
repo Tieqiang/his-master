@@ -113,13 +113,14 @@ $(function () {
     });
     promiseName.done(function(){
         $('#subStorageClass').combogrid({
-            panelWidth:160,
+            panelWidth:400,
             idField:'storageCode',
             textField:'subStorage',
             data:sName,
+            fitColumns: true,
             columns:[[
-                {field:'storageCode',title:'库房代码',width:60},
-                {field:'subStorage',title:'库房单元',width:100}
+                {field:'storageCode',title:'库房代码',width:150, align: 'center'},
+                {field:'subStorage',title:'库房单元',width:200, align: 'center'}
             ]]
         });
     })
@@ -148,15 +149,16 @@ $(function () {
 
     $('#searchInput').combogrid({
         disabled: true,
-        panelWidth: 200,
+        panelWidth: 500,
         idField: 'expCode',
         textField: 'expName',
         url: '/api/exp-name-dict/list-exp-name-by-input',
         method: 'GET',
         mode: 'remote',
         columns: [[
-            {field: 'expCode', title: '消耗品代码', width: 100},
-            {field: 'expName', title: '消耗品名称', width: 100}
+            {field: 'expCode', title: '编码', width: 150, align: 'center'},
+            {field: 'expName', title: '名称', width: 200, align: 'center'},
+            {field: 'inputCode', title: '拼音', width: 50, align: 'center'}
         ]],
         pagination: false,
         fitColumns: true,
@@ -176,16 +178,14 @@ $(function () {
             idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
-            panelWidth: 200,
+            panelWidth: 500,
+            fitColumns: true,
             columns: [[{
-                title: '供应商名称',
-                field: 'supplierName'
+                title: '供应商名称', field: 'supplierName', width: 200, align: 'center'
             }, {
-                title: '供应商代码',
-                field: 'supplierCode'
+                title: '供应商代码', field: 'supplierCode', width: 150, align: 'center'
             }, {
-                title: '输入码',
-                field: 'inputCode'
+                title: '输入码', field: 'inputCode', width: 50, align: 'center'
             }]],
             filter: function (q, row) {
                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
