@@ -170,20 +170,30 @@ $(function () {
         }
     });
     //供应商
-    $("#supplier").combogrid({
-        idField: 'supplier',
-        textField: 'supplier',
-        mode: 'remote',
-        method: 'GET',
-        panelWidth: 500,
-        fitColumns: true,
-        columns: [[
-            {field: 'supplierClass', title: '类别', width: 150, align: 'center'},
-            {field: 'supplier', title: '名称', width: 200, align: 'center'},
-            {field: 'inputCode', title: '拼音', width: 50, align: 'center'}
-        ]],
-        url: "/api/exp-supplier-catalog/find-supplier-by-q?type=供应商"
-    })
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
+    promise.done(function () {
+        $("#supplier").combogrid({
+            idField: 'supplierName',
+            textField: 'supplierName',
+            data: suppliers,
+            panelWidth: 500,
+            fitColumns: true,
+            columns: [[{
+                title: '供应商名称',field: 'supplierName', width: 200, align: 'center'
+            }, {
+                title: '供应商代码',field: 'supplierCode', width: 150, align: 'center'
+            }, {
+                title: '输入码',field: 'inputCode', width: 50, align: 'center'
+            }]],
+            filter: function (q, row) {
+                return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+            }
+        })
+    });
     $('#searchInput').combogrid({
             panelWidth: 500,
             idField: 'expCode',
