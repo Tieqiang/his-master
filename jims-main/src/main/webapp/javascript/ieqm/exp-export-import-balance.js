@@ -299,7 +299,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -322,7 +322,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -345,7 +345,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -368,7 +368,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -391,7 +391,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -413,7 +413,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
@@ -435,7 +435,7 @@ $(function () {
         mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+            {field: 'job', title: '工种', width: 150, align: 'center'},
             {field: 'name', title: '姓名', width: 150, align: 'center'},
             {field: 'loginName', title: '用户名', width: 150, align: 'center'},
             {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}

@@ -369,35 +369,74 @@ $(function(){
             }
         }
     });
-    //员工字典
-    var people = {};
-    var promise = $.get("/api/staff-dict/list-by-hospital?hospitalId=" + parent.config.hospitalId, function (data) {
-        people = data;
-        return people;
+
+    //负责人数据加载
+    $('#principal').combogrid({
+        panelWidth: 500,
+        idField: 'id',
+        textField: 'name',
+        loadMsg: '数据正在加载',
+        url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+        mode: 'remote',
+        method: 'GET',
+        columns: [[
+            {field: 'job', title: '工种', width: 150, align: 'center'},
+            {field: 'name', title: '姓名', width: 150, align: 'center'},
+            {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+        ]],
+        pagination: false,
+        fitColumns: true,
+        rowNumber: true,
+        autoRowHeight: false,
+        pageSize: 50,
+        pageNumber: 1
     });
-    promise.done(function () {
-        var staffSetting ={
-            idField: 'loginName',
-            textField: 'name',
-            data: people,
-            panelWidth: 300,
-            columns: [[{
-                title: '职称',
-                field: 'title',
-                width:'25%'
-            }, {
-                title: '工作类型',
-                field: 'job',
-                width:'20%'
-            }, {
-                title: '姓名',
-                field: 'name',
-                width:'20%'
-            }]]
-        };
-        $("#storekeeper").combogrid(staffSetting);
-        $("#principal").combogrid(staffSetting);
-        $("#acctoperator").combogrid(staffSetting);
+
+    //保管员数据加载
+    $('#storekeeper').combogrid({
+        panelWidth: 500,
+        idField: 'id',
+        textField: 'name',
+        loadMsg: '数据正在加载',
+        url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+        mode: 'remote',
+        method: 'GET',
+        columns: [[
+            {field: 'job', title: '工种', width: 150, align: 'center'},
+            {field: 'name', title: '姓名', width: 150, align: 'center'},
+            {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+        ]],
+        pagination: false,
+        fitColumns: true,
+        rowNumber: true,
+        autoRowHeight: false,
+        pageSize: 50,
+        pageNumber: 1
+    });
+
+    //领取人数据加载
+    $('#acctoperator').combogrid({
+        panelWidth: 500,
+        idField: 'id',
+        textField: 'name',
+        loadMsg: '数据正在加载',
+        url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+        mode: 'remote',
+        method: 'GET',
+        columns: [[
+            {field: 'job', title: '工种', width: 150, align: 'center'},
+            {field: 'name', title: '姓名', width: 150, align: 'center'},
+            {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+        ]],
+        pagination: false,
+        fitColumns: true,
+        rowNumber: true,
+        autoRowHeight: false,
+        pageSize: 50,
+        pageNumber: 1
     });
     //科室字典
     var depts = {};
