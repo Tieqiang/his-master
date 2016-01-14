@@ -202,7 +202,6 @@ $(function () {
 
         $('#formClass').combobox({
             panelHeight: 'auto',
-            width: 200,
             data: forms,
             valueField: 'formCode',
             textField: 'formName'

@@ -4,7 +4,7 @@
 var expNameCas = [];//产品名称列表
 var expTypes = [];//产品类型列表
 var expCategorys = [];//产品类别列表
-
+var codeArrays = [];//新生成的expCode数组
 $(function () {
     var editIndex;
     var stopEdit = function () {
@@ -358,6 +358,7 @@ $(function () {
             $.postJSON("/api/exp-name-dict/save", beanChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
                 $("#clear").click();
+                codeArrays = [];
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
             })
@@ -393,7 +394,24 @@ $(function () {
 
         return getMax;
     }
-
+    //当增加多条信息时，newCode从数据库获取的是相同的最大值，这是需要在js里面手动增大max值与前面的固定六位数字拼接
+    var existCode = function(){
+        if(codeArrays.length > 0){
+            for (var i = 0; i < codeArrays.length; i++) {
+                if (codeArrays[i] == newCode){
+                    var num = newCode.substr(6, 4);
+                    num = parseInt(num) + 1;
+                    var max = num+"";
+                    newCode = newCode.substr(0, 6);
+                    while (10 - newCode.length > max.length) {
+                        max = '0' + max;
+                    }
+                    newCode = newCode + max;
+                }
+            }
+        }
+        return newCode;
+    }
     //增加ExpNameDict
     $("#addExpName").on('click',function(){
         stopEdit();
@@ -402,10 +420,14 @@ $(function () {
         console.log("getMax:" + getMax);
         if (getMax != "") {
             getMax.done(function () {
+
                 if (newCode != '') {
+                    newCode = existCode();
+                    console.log("newCode:" + newCode);
                     $('#expNameDict').datagrid('appendRow', {
                         expCode: newCode, expName: ''
                     });
+                    codeArrays.push(newCode);
                     var rows = $("#expNameDict").datagrid("getRows");
                     var addRowIndex = $("#expNameDict").datagrid('getRowIndex', rows[rows.length - 1]);
                     editIndex = addRowIndex;

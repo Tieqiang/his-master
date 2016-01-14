@@ -1,6 +1,7 @@
 package com.jims.his.service.common;
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.common.util.EnscriptAndDenScript;
 import com.jims.his.domain.common.entity.RoleDict;
 import com.jims.his.domain.common.entity.StaffDict;
 import com.jims.his.domain.common.entity.StaffVsRole;
@@ -42,12 +43,13 @@ public class StaffDictService {
 
         try{
             StaffDict staffDict = new StaffDict();
+            EnscriptAndDenScript ed = new EnscriptAndDenScript();
             staffDict.setDeptDict(vo.getDeptDict());
             staffDict.setId(vo.getId());
             staffDict.setName(vo.getName());
             staffDict.setJob(vo.getJob());
             staffDict.setLoginName(vo.getLoginName());
-            staffDict.setPassword(vo.getPassword());
+            staffDict.setPassword(ed.enScript(vo.getPassword()));
             staffDict.setTitle(vo.getTitle());
             staffDict.setHospitalId(vo.getHospitalId());
             staffDict.setName(vo.getName());
@@ -96,6 +98,28 @@ public class StaffDictService {
         return all ;
     }
 
+    /**
+     * 获取密码
+     * @param hospitalId
+     * @param loginId
+     * @return
+     */
+    @GET
+    @Path("edit-pwd")
+    public StaffDict listEditPwdStaffDict(@QueryParam("hospitalId") String hospitalId, @QueryParam("loginId") String loginId){
+        StaffDict sd = staffDictFacade.findByLoginId(hospitalId,loginId);
+        EnscriptAndDenScript eads = new EnscriptAndDenScript();
+        sd.setPassword(eads.denscriptFromHis(sd.getPassword()));
+        return sd ;
+    }
+
+    @Path("edit-pwd-save")
+    @POST
+    public Response editPassWordStaffDictById(StaffDict staffDict){
+        staffDictFacade.editPasswordByLoginId(staffDict.getHospitalId(), staffDict.getId(), staffDict.getPassword());
+        return Response.status(Response.Status.OK).entity(staffDict).build();
+    }
+
     @DELETE
     @Path("del/{id}")
     public Response delDeptDict(@PathParam("id")String id){
@@ -107,6 +131,7 @@ public class StaffDictService {
     @Path("list-by-hospital")
     public List<StaffDict> listStaffDict(@QueryParam("hospitalId")String hospitalId, @QueryParam("q") String q){
         List<StaffDict> all = staffDictFacade.findByHospital(hospitalId,q);
+        EnscriptAndDenScript ed = new EnscriptAndDenScript();
         for(StaffDict dict :all){
             Set<StaffVsRole> staffVsRoles = dict.getStaffVsRoles();
             StringBuffer roldIds = new StringBuffer() ;
@@ -117,6 +142,7 @@ public class StaffDictService {
             }
             dict.setRoleIds(roldIds.toString());
             dict.setRoleNames(roleNames.toString());
+            dict.setPassword(ed.denscriptFromHis(dict.getPassword()));
         }
         return all ;
     }

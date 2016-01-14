@@ -10,6 +10,7 @@ window.addTab = function (title, href) {
         return ;
     }
     var tabs = $("#mainContent").tabs('tabs');
+    console.log(tabs)
     if(tabs.length>10){
         $.messager.alert("系统提示","打开的Tab页面太多，请观不需要的，重新在打开",'info') ;
         return ;
@@ -66,6 +67,7 @@ $(function(){
     $("#changeLogin").on('click',function(){
         location.href="/views/his/common/module-select.html"
     })
+
     $("#cc").layout() ;
     $("#mainContent").tabs({
         onContextMenu:function(e, title,index){
@@ -248,7 +250,70 @@ $(function(){
 
 
     })
-
+    $("#changePassWord").on('click', function () {
+        $("#password").textbox('clear');
+        $("#dlg").dialog('open').dialog('setTitle', '修改密码');
+    })
+    $("#saveBtnNew").on('click', function () {
+        var password = psdEdit($("#password").textbox('getValue'));
+        if ($("#fm").form('validate')) {
+            $.get("/api/staff-dict/edit-pwd?hospitalId=" + parent.config.hospitalId + "&loginId=" + parent.config.loginId, function (data) {
+                $("#dlg").dialog('close');
+                if (password == data.password) {
+                    $("#dlgNew").dialog('open').dialog('setTitle', '修改密码');
+                    $("#new_password").textbox('clear');
+                    $("#confirm_password").textbox('clear');
+                } else {
+                    $.messager.alert("系统提示", "密码错误请重新输入", 'error');
+                }
+            })
+        }else{
+            $.messager.alert("系统提示", "密码不能为空", 'info');
+        }
+    })
+    $("#saveBtn").on('click',function(){
+        if ($("#fm1").form('validate')) {
+            var password1 = psdEdit($("#new_password").textbox('getValue'));
+            var password2 = psdEdit($("#confirm_password").textbox('getValue'));
+            if(password1==password2){
+                var staffDict={}
+                staffDict.id= parent.config.loginId;
+                staffDict.hospitalId = parent.config.hospitalId;
+                staffDict.password = password1;
+                $.postJSON("/api/staff-dict/edit-pwd-save", staffDict,function (data) {
+                    $.messager.alert("系统提示", "修改密码成功", 'success');
+                    $("#dlgNew").dialog("close");
+                },function(data){
+                    $.messager.alert("系统提示", "修改密码失败", 'error');
+                })
+                //$("#dlgNew").dialog('close')
+            }else{
+                $.messager.alert("系统提示", "两次输入的密码不一致，请重新输入", 'error');
+            }
+        }else{
+            $.messager.alert("系统提示", "密码不能为空", 'info');
+        }
+    })
+    var psdEdit = function(data){
+        switch (data.length){
+            case 1:
+                data = "00000"+data;
+                break;
+            case 2:
+                data = "0000"+data;
+                break;
+            case 3:
+                data = "000"+data;
+                break;
+            case 4:
+                data = "00"+data;
+                break;
+            case 5:
+                data = "0"+data;
+                break;
+        }
+    return data;
+    }
 
 
 }) ;

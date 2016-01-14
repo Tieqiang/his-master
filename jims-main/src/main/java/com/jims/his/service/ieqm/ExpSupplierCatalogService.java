@@ -46,8 +46,8 @@ public class ExpSupplierCatalogService {
     }
     @GET
     @Path("find-supplier-by-q")
-    public List<ExpSupplierCatalog> listExpNameCa(@QueryParam("q") String q) {
-        List<ExpSupplierCatalog> expSupplierCatalogList = expSupplierCatalogFacade.listByInputCodeQ(q);
+    public List<ExpSupplierCatalog> listExpNameCa(@QueryParam("q") String q, @QueryParam("type") String type) {
+        List<ExpSupplierCatalog> expSupplierCatalogList = expSupplierCatalogFacade.listByInputCodeQ(q, type);
         return expSupplierCatalogList;
     }
 

@@ -102,12 +102,15 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         return expSupplierVos;
     }
 
-    public List<ExpSupplierCatalog> listByInputCodeQ(String q) {
+    public List<ExpSupplierCatalog> listByInputCodeQ(String q, String type) {
         String sql = "select distinct a.supplier_class,\n" +
                 "       a.supplier,\n" +
                 "       a.input_code\n" +
                 "  from Exp_Supplier_Catalog a\n" +
                 "  where upper(a.input_code) like upper('" + q + "%')";
+        if (null != type && !type.trim().equals("")) {
+            sql += " and a.supplier_class = '" + type + "'";
+        }
         List<ExpSupplierCatalog> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpSupplierCatalog.class);
         return nativeQuery;
     }

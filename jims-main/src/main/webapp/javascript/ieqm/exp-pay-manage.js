@@ -281,16 +281,14 @@ $(function () {
             idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
-            panelWidth: 200,
+            panelWidth: 500,
+            fitColumns: true,
             columns: [[{
-                title: '供应商名称',
-                field: 'supplierName'
+                title: '供应商名称', field: 'supplierName', width: 200, align: 'center'
             }, {
-                title: '供应商代码',
-                field: 'supplierCode'
+                title: '供应商代码', field: 'supplierCode', width: 150, align: 'center'
             }, {
-                title: '输入码',
-                field: 'inputCode'
+                title: '输入码', field: 'inputCode', width: 50, align: 'center'
             }]],
             filter: function (q, row) {
                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());

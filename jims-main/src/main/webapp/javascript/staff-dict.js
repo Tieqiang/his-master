@@ -7,7 +7,7 @@ $(function(){
         searcher: function (value, name) {
             var rows = $("#dg").datagrid("getRows");
             for (var i = 0; i < rows.length; i++) {
-                if (rows[i].name == value) {
+                if (rows[i].loginName == psdEdit(value.toUpperCase())) {
                     $("#dg").datagrid('selectRow', i);
                 }
             }
@@ -115,6 +115,26 @@ $(function(){
         $("#roleIds").combobox('loadData',role) ;
         $("#dlg").dialog('open').dialog('setTitle','工作人员维护') ;
     });
+    var psdEdit = function (data) {
+        switch (data.length) {
+            case 1:
+                data = "00000" + data;
+                break;
+            case 2:
+                data = "0000" + data;
+                break;
+            case 3:
+                data = "000" + data;
+                break;
+            case 4:
+                data = "00" + data;
+                break;
+            case 5:
+                data = "0" + data;
+                break;
+        }
+        return data;
+    }
     /**
      * 清除输入框信息
      */
@@ -136,8 +156,8 @@ $(function(){
             staff.deptDict ={} ;
             staff.deptDict.id= $("#deptName").combobox('getValue') ;
             staff.loginName = $("#loginName").textbox('getValue') ;
-            var pwd = staff.password = $("#password").textbox('getValue') ;
-            var confirm_pwd=$("#confirm_password").textbox('getValue');
+            var pwd = staff.password = psdEdit($("#password").textbox('getValue')) ;
+            var confirm_pwd= psdEdit($("#confirm_password").textbox('getValue'));
             staff.title= $("#title").textbox('getValue') ;
             staff.job= $("#job").textbox('getValue') ;
             staff.name = $("#name").textbox('getValue') ;

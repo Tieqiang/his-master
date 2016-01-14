@@ -202,15 +202,16 @@ $(function () {
     });
     $('#searchInput').combogrid({
         disabled: true,
-        panelWidth: 200,
+        panelWidth: 500,
         idField: 'expCode',
         textField: 'expName',
         url: '/api/exp-name-dict/list-exp-name-by-input',
         method: 'GET',
         mode: 'remote',
         columns: [[
-            {field: 'expCode', title: '消耗品代码', width: 100},
-            {field: 'expName', title: '消耗品名称', width: 100}
+            {field: 'expCode', title: '编码', width: 150, align: 'center'},
+            {field: 'expName', title: '名称', width: 200, align: 'center'},
+            {field: 'inputCode', title: '拼音', width: 50, align: 'center'}
         ]],
         pagination: false,
         fitColumns: true,
@@ -230,16 +231,17 @@ $(function () {
             idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
-            panelWidth: 200,
+            panelWidth: 500,
+            fitColumns: true,
             columns: [[{
                 title: '供应商名称',
-                field: 'supplierName'
+                field: 'supplierName', width: 200, align: 'center'
             }, {
                 title: '供应商代码',
-                field: 'supplierCode'
+                field: 'supplierCode', width: 150, align: 'center'
             }, {
                 title: '输入码',
-                field: 'inputCode'
+                field: 'inputCode', width: 50, align: 'center'
             }]],
             filter: function (q, row) {
                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
