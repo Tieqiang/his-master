@@ -2,6 +2,7 @@ package com.jims.his.domain.htca.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.entity.AppConfigerParameter;
 import com.jims.his.domain.htca.entity.*;
 import org.hibernate.engine.query.spi.sql.NativeSQLQueryNonScalarReturn;
 
@@ -18,21 +19,65 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
     @Transactional
     public void mergeServiceIncome(List<ServiceDeptIncome> serviceDeptIncomes) {
         if (serviceDeptIncomes.size() > 0) {
-            String hospitalId = serviceDeptIncomes.get(0).getHospitalId() ;
-            String hql = "from CostItemDict as  dict where dict.hospitalId='"+hospitalId+"'";
-            List<CostItemDict> costItemDicts=createQuery(CostItemDict.class,hql,new ArrayList<Object>()).getResultList() ;
+            String hospitalId = serviceDeptIncomes.get(0).getHospitalId();
+            String hql = "from CostItemDict as  dict where dict.hospitalId='" + hospitalId + "'";
+            List<CostItemDict> costItemDicts = createQuery(CostItemDict.class, hql, new ArrayList<Object>()).getResultList();
+            String lowValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_LOW_VALUE_RATE' ";
+            String medValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_MED_RATE' ";
+            String officeValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_OFFICE_LEVEL_RATE' ";
 
+            String lowIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_LOW_VALUE_ID' ";
+            String medIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_MED_ID' ";
+            String officeIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_OFFICE_LEVEL_ID' ";
+
+            //读取提取成本中材料费的成本和计入成参数
+            AppConfigerParameter lowParameter = createQuery(AppConfigerParameter.class, lowValueHql, new ArrayList<Object>()).getSingleResult();
+            AppConfigerParameter medParamter = createQuery(AppConfigerParameter.class, medValueHql, new ArrayList<Object>()).getSingleResult();
+            AppConfigerParameter officeParamter = createQuery(AppConfigerParameter.class, officeValueHql, new ArrayList<Object>()).getSingleResult();
+            AppConfigerParameter medIdParamter = createQuery(AppConfigerParameter.class, medIdHql, new ArrayList<Object>()).getSingleResult();
+            AppConfigerParameter officeIdParamter = createQuery(AppConfigerParameter.class, officeIdHql, new ArrayList<Object>()).getSingleResult();
+            AppConfigerParameter lowIdParamter = createQuery(AppConfigerParameter.class, lowIdHql, new ArrayList<Object>()).getSingleResult();
+
+
+            Boolean flag = false  ;
             for (ServiceDeptIncome income : serviceDeptIncomes) {
+                flag=false ;
                 if (null != income.getServiceForDeptId() && !"".equals(income.getServiceForDeptId())) {
                     //首先判断成本是否已经记录如果已经记录则删除以前的成本
+
                     if (income.getId() == null) {
                         AcctDeptCost acctDeptCost = new AcctDeptCost();
-                        acctDeptCost.setCost(income.getTotalIncome());
+                        //判断是否是材料费如果是材料费，按照不同类型的材料计入一定的成本
+                        if (medIdParamter != null) {
+                            String paraValue = medIdParamter.getParameterValue();
+                            if (paraValue.equals(income.getIncomeTypeId())) {
+                                acctDeptCost.setCost(income.getTotalIncome() * Double.parseDouble(medParamter.getParameterValue()));
+                                flag = true ;
+                            }
+                        }
+                        if (lowIdParamter != null) {
+                            String paraValue = lowIdParamter.getParameterValue();
+                            if (paraValue.equals(income.getIncomeTypeId())) {
+                                acctDeptCost.setCost(income.getTotalIncome() * Double.parseDouble(lowParameter.getParameterValue()));
+                                flag=true ;
+                            }
+                        }
+                        if (officeIdParamter != null) {
+                            String paraValue = officeIdParamter.getParameterValue();
+                            if (paraValue.equals(income.getIncomeTypeId())) {
+                                acctDeptCost.setCost(income.getTotalIncome() * Double.parseDouble(officeParamter.getParameterValue()));
+                                flag=true ;
+                            }
+                        }
+                        if(!flag){
+                            acctDeptCost.setCost(income.getTotalIncome());
+                        }
+
                         acctDeptCost.setAcctDeptId(income.getServiceForDeptId());
                         acctDeptCost.setYearMonth(income.getYearMonth());
                         acctDeptCost.setHospitalId(income.getHospitalId());
-                        double calcRate = getCalcRate(income,costItemDicts) ;
-                        acctDeptCost.setMinusCost(income.getTotalIncome()*(100-calcRate)/100);
+                        double calcRate = getCalcRate(income, costItemDicts);
+                        acctDeptCost.setMinusCost(income.getTotalIncome() * (100 - calcRate) / 100);
                         acctDeptCost.setCostItemId(income.getIncomeTypeId());
                         acctDeptCost.setFetchWay(income.getGetWay());
                         acctDeptCost.setOperatorDate(income.getOperatorDate());
@@ -50,9 +95,9 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
     }
 
     private double getCalcRate(ServiceDeptIncome income, List<CostItemDict> costItemDicts) {
-        for(CostItemDict dict:costItemDicts){
-            if(dict.getId().equals(income.getIncomeTypeId())){
-                return Double.parseDouble(dict.getCalcPercent()) ;
+        for (CostItemDict dict : costItemDicts) {
+            if (dict.getId().equals(income.getIncomeTypeId())) {
+                return Double.parseDouble(dict.getCalcPercent());
             }
         }
         return 0;
@@ -104,7 +149,7 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
             String hql = " delete AcctDeptCost as cost where cost.acctDeptId='" + serviceDeptId + "' and " +
                     "cost.hospitalId='" + serviceDeptIncome.getHospitalId() + "' and " +
                     "cost.operator='" + serviceDeptIncome.getOperator() + "' and " +
-                    "cost.fetchWay='录入'";
+                    "cost.fetchWay='录入' and cost.yearMonth = '"+serviceDeptIncome.getYearMonth()+"'";
             this.getEntityManager().createQuery(hql).executeUpdate();
         }
 

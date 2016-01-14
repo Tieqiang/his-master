@@ -2,9 +2,7 @@ package com.jims.his.service.htca;
 
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.common.vo.BeanChangeVo;
-import com.jims.his.domain.htca.entity.CostItemClassDict;
-import com.jims.his.domain.htca.entity.CostItemDevideDept;
-import com.jims.his.domain.htca.entity.CostItemDict;
+import com.jims.his.domain.htca.entity.*;
 import com.jims.his.domain.htca.facade.CostItemFacade;
 
 import javax.inject.Inject;
@@ -160,5 +158,12 @@ public class CostItemService {
         }
     }
 
+
+    @Path("list-detail")
+    @GET
+    public List<ServiceIncomeTypeDetail> findAllDetail(@QueryParam("hospitalId")String hospitalId){
+        String hql = "from ServiceIncomeTypeDetail as detail where detail.hospitalId='"+hospitalId+"'" ;
+        return costItemFacade.createQuery(ServiceIncomeTypeDetail.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
 
 }

@@ -676,7 +676,6 @@ $(function () {
         onOpen:function(){
             $(this).window('center');
             var row = $('#costItemDictGrid').datagrid('getSelected');
-            console.log(row) ;
             $.get("/api/cost-item/cost-devide?costId="+row.id,function(data){
                 for(var i = 0 ;i<data.length ;i++){
                     var deptId = data[i].deptId ;
@@ -689,6 +688,9 @@ $(function () {
                     }
                 }
             })
+        },
+        onClose:function(){
+            $("#acctDeptTable").datagrid("uncheckAll") ;
         }
     }) ;
 
