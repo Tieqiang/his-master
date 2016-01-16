@@ -97,43 +97,7 @@
 <div id="mainContent" class="easyui-tabs" data-options="region:'center'">
 
 </div>
-<div id="dlg" class="easyui-dialog" style="width:300px;height:200px;padding:10px 20px"
-     closed="true" buttons="#dlgNew-buttons" data-options="modal:true">
-    <div class="ftitle">修改密码</div>
-    <form id="fm" method="post" novalidate>
-        <div class="fitem">
-            <label>原密码:</label>
-            <input type="password" name="password" id="password" class="easyui-textbox" data-options="type:password"
-                   required="true" style="width: 100px">
-        </div>
-    </form>
-</div>
-<div id="dlgNew" class="easyui-dialog" style="width:300px;height:250px;padding:10px 20px"
-     closed="true" buttons="#dlg-buttons" data-options="modal:true">
-    <div class="ftitle">修改密码</div>
-    <form id="fm1" method="post" novalidate>
-        <div class="fitem">
-            <label>新密码:</label>
-            <input type="password" name="new_password" id="new_password" class="easyui-textbox"
-                   data-options="type:password" style="width: 100px" required="true">
-        </div>
-        <div class="fitem">
-            <label>确认密码:</label>
-            <input type="password" name="confirm_password" id="confirm_password" class="easyui-textbox"
-                   data-options="type:password" style="width: 100px" required="true">
-        </div>
-    </form>
-</div>
-<div id="dlg-buttons">
-    <a href="javascript:void(0)" id="saveBtn" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#dlgNew').dialog('close')" style="width:90px">关闭</a>
-</div>
-<div id="dlgNew-buttons">
-    <a href="javascript:void(0)" id="saveBtnNew" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">下一步</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#dlg').dialog('close')" style="width:90px">关闭</a>
-</div>
+
 
 
 <div data-options="region:'south',border:false">
@@ -153,5 +117,42 @@
 <script type="text/javascript" src="javascript/jeasyui.common.js"></script>
 <script type="text/javascript" src="javascript/tool.js"></script>
 <script type="text/javascript" src="javascript/common/index.js"></script>
+<div id="dlg" class="easyui-dialog" style="padding:10px 20px"
+        >
+    <div class="ftitle">修改密码</div>
+    <form id="fm" method="post" novalidate>
+        <div class="fitem">
+            <label>原密码:</label>
+            <input type="password" name="password" id="password" class="easyui-textbox"
+                   required="true" style="width: 100px">
+        </div>
+    </form>
+</div>
+<div id="dlgNew" class="easyui-dialog" style="padding:10px 20px">
+    <div class="ftitle">修改密码</div>
+    <form id="fm1" method="post" novalidate>
+        <div class="fitem">
+            <label>新密码:</label>
+            <input type="password" name="new_password" id="new_password" class="easyui-textbox"
+                   style="width: 100px" required="true">
+        </div>
+        <div class="fitem">
+            <label>确认密码:</label>
+            <input type="password" name="confirm_password" id="confirm_password" class="easyui-textbox"
+                   style="width: 100px" required="true">
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" id="saveBtn" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" id="closeDlgNew" class="easyui-linkbutton" iconCls="icon-cancel"
+       style="width:90px">关闭</a>
+</div>
+<div id="dlgNew-buttons">
+    <a href="javascript:void(0)" id="saveBtnNew" class="easyui-linkbutton c6" iconCls="icon-ok"
+       style="width:90px">下一步</a>
+    <a href="javascript:void(0)" id="closeDlg" class="easyui-linkbutton" iconCls="icon-cancel"
+       style="width:90px">关闭</a>
+</div>
 </body>
 </html>

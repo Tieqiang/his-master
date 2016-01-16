@@ -60,14 +60,34 @@ window.updateTab = function (title, href) {
     }
 };
 $(function(){
-
+    $("#closeDlgNew").on('click', function () {
+        $('#dlgNew').dialog('close');
+    })
+    $("#closeDlg").on('click',function(){
+        $('#dlg').dialog('close');
+    })
     $("#reLogin").on('click',function(){
         location.href="/login1.html"
     })
     $("#changeLogin").on('click',function(){
         location.href="/views/his/common/module-select.html"
     })
-
+    $("#dlgNew").dialog({
+        title: '修改密码',
+        width: 300,
+        height: 250,
+        closed: true,
+        buttons: '#dlg-buttons',
+        modal: true
+    })
+    $("#dlg").dialog({
+        title: '修改密码',
+        width: 300,
+        height: 200,
+        closed: true,
+        buttons: '#dlgNew-buttons',
+        modal: true
+    })
     $("#cc").layout() ;
     $("#mainContent").tabs({
         onContextMenu:function(e, title,index){
