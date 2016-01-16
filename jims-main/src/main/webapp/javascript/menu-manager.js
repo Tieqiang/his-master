@@ -100,24 +100,40 @@ $(function () {
                 $(this).removeClass('row-append row-top row-bottom');
             },
             onDrop: function (e, source) {
-                var action, point;
-                if ($(this).hasClass('row-append')) {
-                    action = 'append';
-                } else {
-                    action = 'insert';
-                    point = $(this).hasClass('row-top') ? 'top' : 'bottom';
-                }
-                $(this).removeClass('row-append row-top row-bottom');
+                //var action, point;
+                //if ($(this).hasClass('row-append')) {
+                //    action = 'append';
+                //} else {
+                //    action = 'insert';
+                //    point = $(this).hasClass('row-top') ? 'top' : 'bottom';
+                //}
+                //$(this).removeClass('row-append row-top row-bottom');
 
-                var src = $('#tt').treegrid('find', $(source).attr('node-id'));
-                var des = $('#tt').treegrid('find', $(this).attr('node-id'));
+                var src = [];
+                src=$('#tt').treegrid('find', $(source).attr('node-id'));
+                var des = [];
+                des=$('#tt').treegrid('find', $(this).attr('node-id'));
                 if(des.parentId==null){
                     $.messager.confirm("系统提示", "确认将当前目录设置成顶级目录吗?", function (r) {
                         if (r) {
                             src.parentId = "";
+                            $("#tt").treegrid('remove',src.id);
+                            $("#tt").treegrid('insert', {
+                                before: des.id,
+                                data: makeArray(src)
+                            });
+                            //$('#tt').treegrid('reload');
                         } else {
                             src.parentId = des.id;
+                            $("#tt").treegrid('remove', src.id);
+                            $("#tt").treegrid('append', {
+                                parent: des.id,
+                                data: makeArray(src)
+                            });
+                            //$('#tt').treegrid('reload');
                         }
+
+
                         var menuDict = {};
                         menuDict.menuName = src.menuName;
                         menuDict.href = src.href;
@@ -125,12 +141,19 @@ $(function () {
                         menuDict.position = src.position;
                         menuDict.id = src.id;
                         $.postJSON("/api/menu/add", menuDict, function (data) {
-                            loadMenu();
+                            //loadMenu();
                         }, function (data, status) {
                         })
                     })
                 }else if(des.parentId != null){
                     src.parentId = des.id;
+                    $("#tt").treegrid('remove', src.id);
+                    $("#tt").treegrid('append', {
+                        parent: des.id,
+                        data: makeArray(src)
+
+                    });
+                    //$('#tt').treegrid('reload');
                     var menuDict = {};
                     menuDict.menuName = src.menuName;
                     menuDict.href = src.href;
@@ -138,7 +161,7 @@ $(function () {
                     menuDict.position = src.position;
                     menuDict.id = src.id;
                     $.postJSON("/api/menu/add", menuDict, function (data) {
-                        loadMenu();
+                        //loadMenu();
                     }, function (data, status) {
                     })
                 }
@@ -146,6 +169,19 @@ $(function () {
         });
     }
 
+    var makeArray = function (array) {
+        var ret = [];
+        if (array != null) {
+            var i = array.length;
+// The window, strings (and functions) also have 'length'
+            if (i == null || typeof array === "string" || jQuery.isFunction(array) || array.setInterval)
+                ret[0] = array;
+            else
+                while (i)
+                    ret[--i] = array[i];
+        }
+        return ret;
+    }
     var loadMenu = function () {
         var menus = [];//菜单列表
         var menuTreeData = [];//菜单树的列表
@@ -181,7 +217,6 @@ $(function () {
         });
 
         menuPromise.done(function () {
-
             $("#tt").treegrid('loadData',menuTreeData) ;
             $("#tt").treegrid("selectRow", 1);
 
