@@ -9,7 +9,7 @@ $(function () {
         treeField: 'menuName',
         title: '系统菜单维护',
         fit: true,
-        footer: '#tb',
+        toolbar: '#tb',
         //dnd:true,
         singleSelect:true,
         columns: [[{
@@ -40,6 +40,7 @@ $(function () {
             //}
         }
     });
+
     function enableDnd(t) {
         var nodes = t.treegrid('getPanel').find('tr[node-id]');
         nodes.find('span.tree-hit').bind('mousedown.treegrid', function () {

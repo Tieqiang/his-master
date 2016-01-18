@@ -173,7 +173,7 @@ $(function () {
                     $.messager.progress('close') ;
                     return ;
                 }
-                $.post("/api/fetch-data/fetch-from-his?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth+"&fetchTypeId="+fetchTypeId, function (data) {
+                $.post("/api/fetch-data/fetch-from-his?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth+"&fetchTypeId=权责发生", function (data) {
                     $.messager.progress('close') ;
                     $("#fetchItemBtn").click();
                 })
@@ -258,7 +258,7 @@ $(function () {
         onLoadSuccess:function(){
             var data = $(this).combobox('getData') ;
             for(var i = 0 ;i<data.length;i++){
-                if(data[i].paramName=='实时发生制'){
+                if(data[i].paramName=='权责发生'){
                     $(this).combobox('setValue',data[i].id) ;
                     break ;
                 }

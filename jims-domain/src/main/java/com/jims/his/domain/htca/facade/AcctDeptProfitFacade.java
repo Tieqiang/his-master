@@ -93,7 +93,7 @@ public class AcctDeptProfitFacade extends BaseFacade {
             Double totalProfit =0.0 ;
             Double minus = 0.0 ;
             for(AcctDeptProfit profit:acctDeptProfits){
-                Double temp =profit.getDeptIncome() - profit.getDeptCost() + profit.getIncomeChangeItem() -profit.getCostChangeItem();
+                Double temp =profit.getDeptIncome() - (profit.getDeptCost()==null?0:profit.getDeptCost()) + (profit.getIncomeChangeItem()==null?0:profit.getIncomeChangeItem()) -(profit.getCostChangeItem()==null?0:profit.getCostChangeItem());
                 if(acctDeptIsInAcct(profit,acctDeptDicts)){
                     totalProfit +=(temp) ;
                     if(temp<minus){
