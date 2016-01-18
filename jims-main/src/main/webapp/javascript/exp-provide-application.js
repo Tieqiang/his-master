@@ -265,7 +265,7 @@ $(document).ready(function () {
         onOpen: function () {
             var applicationStorage = $("#storage").combobox("getValue");
             var applicantNo = $("#applicantNo").textbox("getValue");
-            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-provide-application.cpt&storage="+parent.config.storageCode+"&applicantNo="+applicantNo+"&applicationStorage="+applicationStorage);
+            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-provide-application.cpt&storageCode="+parent.config.storageCode+"&appNo="+applicantNo+"&applyStorage="+applicationStorage);
         }
     })
     $("#printBtn").on('click',function(){
