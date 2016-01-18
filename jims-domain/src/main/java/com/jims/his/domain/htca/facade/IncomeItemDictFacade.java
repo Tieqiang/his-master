@@ -40,11 +40,23 @@ public class IncomeItemDictFacade extends BaseFacade {
         List<IncomeItemDict> updated = incomeItemDictBeanChangeVo.getUpdated();
         List<IncomeItemDict> deleted = incomeItemDictBeanChangeVo.getDeleted();
 
+
         inserted.addAll(updated) ;
-
+        String hql = "From IncomeItemDict as income where income.priceItemCode=?";
         for (IncomeItemDict incomeItemDict :inserted){
-            merge(incomeItemDict) ;
+                List<Object> paras = new ArrayList<>() ;
+                paras.add(incomeItemDict.getPriceItemCode()) ;
 
+                List<IncomeItemDict> incomes=createQuery(IncomeItemDict.class,hql,paras).getResultList() ;
+                if(incomes.size()>0){
+                    String updateHql = "update IncomeItemDict as dict set dict.outpOrderedBy="+incomeItemDict.getOutpOrderedBy()+"" +
+                            " , dict.outpPerformedBy="+incomeItemDict.getOutpPerformedBy()+",dict.outpWardCode="+incomeItemDict.getOutpWardCode()+"," +
+                            "dict.inpOrderedBy="+incomeItemDict.getInpOrderedBy()+",dict.inpPerformedBy="+incomeItemDict.getInpPerformedBy()+",dict.inpWardCode="+incomeItemDict.getInpWardCode()+"" +
+                            " where dict.priceItemCode='"+incomeItemDict.getPriceItemCode()+"'" ;
+                    getEntityManager().createQuery(updateHql).executeUpdate() ;
+                }else{
+                    merge(incomeItemDict) ;
+                }
         }
 
         List<String> ids = new ArrayList<>() ;

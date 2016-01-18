@@ -3,7 +3,8 @@
  */
 
 //base 64 加密开始
-;(function($) {
+;
+(function ($) {
 
     var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
         a256 = '',
@@ -22,16 +23,16 @@
          * @param {String} strUni Unicode string to be encoded as UTF-8
          * @returns {String} encoded string
          */
-        encode: function(strUni) {
+        encode: function (strUni) {
             // use regular expressions & String.replace callback function for better efficiency
             // than procedural approaches
             var strUtf = strUni.replace(/[\u0080-\u07ff]/g, // U+0080 - U+07FF => 2 bytes 110yyyyy, 10zzzzzz
-                function(c) {
+                function (c) {
                     var cc = c.charCodeAt(0);
                     return String.fromCharCode(0xc0 | cc >> 6, 0x80 | cc & 0x3f);
                 })
                 .replace(/[\u0800-\uffff]/g, // U+0800 - U+FFFF => 3 bytes 1110xxxx, 10yyyyyy, 10zzzzzz
-                function(c) {
+                function (c) {
                     var cc = c.charCodeAt(0);
                     return String.fromCharCode(0xe0 | cc >> 12, 0x80 | cc >> 6 & 0x3F, 0x80 | cc & 0x3f);
                 });
@@ -44,15 +45,15 @@
          * @param {String} strUtf UTF-8 string to be decoded back to Unicode
          * @returns {String} decoded string
          */
-        decode: function(strUtf) {
+        decode: function (strUtf) {
             // note: decode 3-byte chars first as decoded 2-byte strings could appear to be 3-byte char!
             var strUni = strUtf.replace(/[\u00e0-\u00ef][\u0080-\u00bf][\u0080-\u00bf]/g, // 3-byte chars
-                function(c) { // (note parentheses for precence)
+                function (c) { // (note parentheses for precence)
                     var cc = ((c.charCodeAt(0) & 0x0f) << 12) | ((c.charCodeAt(1) & 0x3f) << 6) | (c.charCodeAt(2) & 0x3f);
                     return String.fromCharCode(cc);
                 })
                 .replace(/[\u00c0-\u00df][\u0080-\u00bf]/g, // 2-byte chars
-                function(c) { // (note parentheses for precence)
+                function (c) { // (note parentheses for precence)
                     var cc = (c.charCodeAt(0) & 0x1f) << 6 | c.charCodeAt(1) & 0x3f;
                     return String.fromCharCode(cc);
                 });
@@ -60,7 +61,7 @@
         }
     };
 
-    while(i < 256) {
+    while (i < 256) {
         var c = String.fromCharCode(i);
         a256 += c;
         r256[i] = i;
@@ -76,14 +77,14 @@
             result = '',
             bitsInBuffer = 0;
 
-        while(i < length) {
+        while (i < length) {
             var c = s.charCodeAt(i);
             c = c < 256 ? alpha[c] : -1;
 
             buffer = (buffer << w1) + c;
             bitsInBuffer += w1;
 
-            while(bitsInBuffer >= w2) {
+            while (bitsInBuffer >= w2) {
                 bitsInBuffer -= w2;
                 var tmp = buffer >> bitsInBuffer;
                 result += beta.charAt(tmp);
@@ -91,24 +92,25 @@
             }
             ++i;
         }
-        if(!discard && bitsInBuffer > 0) result += beta.charAt(buffer << (w2 - bitsInBuffer));
+        if (!discard && bitsInBuffer > 0) result += beta.charAt(buffer << (w2 - bitsInBuffer));
         return result;
     }
 
-    var Plugin = $.base64 = function(dir, input, encode) {
+    var Plugin = $.base64 = function (dir, input, encode) {
         return input ? Plugin[dir](input, encode) : dir ? null : this;
     };
 
-    Plugin.btoa = Plugin.encode = function(plain, utf8encode) {
+    Plugin.btoa = Plugin.encode = function (plain, utf8encode) {
         plain = Plugin.raw === false || Plugin.utf8encode || utf8encode ? UTF8.encode(plain) : plain;
         plain = code(plain, false, r256, b64, 8, 6);
         return plain + '===='.slice((plain.length % 4) || 4);
     };
 
-    Plugin.atob = Plugin.decode = function(coded, utf8decode) {
+    Plugin.atob = Plugin.decode = function (coded, utf8decode) {
         coded = String(coded).split('=');
         var i = coded.length;
-        do {--i;
+        do {
+            --i;
             coded[i] = code(coded[i], true, r64, a256, 6, 8);
         } while (i > 0);
         coded = coded.join('');
@@ -117,106 +119,83 @@
 }(jQuery));
 //base 64 加密结束
 
-/**
- * 使用POST方法进行方法传递
- * @param url
- * @param data
- * @param callback
- * @param error
- * @returns {*}
- */
-$.postJSON = function(url, data, callback,error) {
-    return jQuery.ajax({
-        'type' : 'POST',
-        'url' : url,
-        'contentType' : 'application/json',
-        'data' : JSON.stringify(data),
-        'dataType' : 'json',
-        'success' : callback,
-        'error':error
-    });
-};
+$.extend({
+    postJSON: function (url, data, callback, error) {
+        return jQuery.ajax({
+            'type': 'POST',
+            'url': url,
+            'contentType': 'application/json',
+            'data': JSON.stringify(data),
+            'dataType': 'json',
+            'success': callback,
+            'error': error
+        });
+    },
+    putJSON: function (url, data, callback, error) {
+        return jQuery.ajax({
+            'type': 'PUT',
+            'url': url,
+            'contentType': 'application/json',
+            'data': JSON.stringify(data),
+            'dataType': 'json',
+            'success': callback,
+            'error': error
+        });
+    },
+    delete: function (url, callback) {
+        return jQuery.ajax({
+            'type': 'DELETE',
+            'url': url,
+            'success': callback
+        });
+    },
+    getJSON: function (url, data, callback, error) {
+        return jQuery.ajax({
+            'type': 'GET',
+            'url': url,
+            'contentType': 'application/json',
+            'data': JSON.stringify(data),
+            'dataType': 'json',
+            'success': callback
+        });
+    },
 
-/**
- * 使用PUT方法更新一个选项
- * @param url
- * @param data
- * @param callback
- * @param error
- * @returns {*}
- */
-$.putJSON = function(url, data, callback,error) {
-    return jQuery.ajax({
-        'type' : 'PUT',
-        'url' : url,
-        'contentType' : 'application/json',
-        'data' : JSON.stringify(data),
-        'dataType' : 'json',
-        'success' : callback,
-        'error':error
-    });
-};
+    startWith: function (str, patten) {
 
+        var pLenth = patten.length;
+        var strLength = str.length;
+        if (strLength <= 0 || !str || !patten || pLenth <= 0) {
+            return false;
+        }
 
-$.delete = function(url, callback) {
-    return jQuery.ajax({
-        'type' : 'DELETE',
-        'url' : url,
-        'success' : callback
-    });
-};
+        if (str.substr(0, pLenth) == patten) {
+            return true;
+        } else {
+            return false;
+        }
+    },
 
+    endWith: function (str, patten) {
+        var pLenth = patten.length;
+        var strLength = str.length;
+        if (strLength <= 0 || !str || !patten || pLenth <= 0) {
+            return false;
+        }
 
-$.getJSON = function(url, data, callback,error) {
-    return jQuery.ajax({
-        'type' : 'GET',
-        'url' : url,
-        'contentType' : 'application/json',
-        'data' : JSON.stringify(data),
-        'dataType' : 'json',
-        'success' : callback
-    });
-};
-
-
-/**
- * 判断字符串是否开始
- * @param str
- * @param patten
- * @returns {boolean}
- */
-$.startWith = function(str,patten){
-
-    var pLenth = patten.length ;
-    var strLength = str.length ;
-    if(strLength<=0||!str || !patten || pLenth<=0){
-        return false ;
+        if (str.substr(strLength - pLenth) == patten) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    if(str.substr(0,pLenth)==patten){
-        return true ;
-    }else{
-        return false ;
-    }
-}
 
-$.endWith = function(str,patten){
-    var pLenth = patten.length ;
-    var strLength = str.length ;
-    if(strLength<=0||!str || !patten || pLenth<=0){
-        return false ;
-    }
+})
 
-    if(str.substr(strLength -pLenth)==patten){
-        return true ;
-    }else{
-        return false ;
-    }
-} ;
 
-$(function(){
-    function pagerFilter(data){
-        if ($.isArray(data)){    // is array
+$(function () {
+    function pagerFilter(data) {
+        if ($.isArray(data)) {    // is array
             data = {
                 total: data.length,
                 rows: data
@@ -225,52 +204,52 @@ $(function(){
         var dg = $(this);
         var state = dg.data('datagrid');
         var opts = dg.datagrid('options');
-        if (!state.allRows){
+        if (!state.allRows) {
             state.allRows = (data.rows);
         }
-        var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+        var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
         var end = start + parseInt(opts.pageSize);
-        data.rows = $.extend(true,[],state.allRows.slice(start, end));
+        data.rows = $.extend(true, [], state.allRows.slice(start, end));
         return data;
     }
 
     var loadDataMethod = $.fn.datagrid.methods.loadData;
     $.extend($.fn.datagrid.methods, {
-        clientPaging: function(jq){
-            return jq.each(function(){
+        clientPaging: function (jq) {
+            return jq.each(function () {
                 var dg = $(this);
                 var state = dg.data('datagrid');
                 var opts = state.options;
                 opts.loadFilter = pagerFilter;
                 var onBeforeLoad = opts.onBeforeLoad;
-                opts.onBeforeLoad = function(param){
+                opts.onBeforeLoad = function (param) {
                     state.allRows = null;
                     return onBeforeLoad.call(this, param);
                 }
                 dg.datagrid('getPager').pagination({
-                    onSelectPage:function(pageNum, pageSize){
+                    onSelectPage: function (pageNum, pageSize) {
                         opts.pageNumber = pageNum;
                         opts.pageSize = pageSize;
-                        $(this).pagination('refresh',{
-                            pageNumber:pageNum,
-                            pageSize:pageSize
+                        $(this).pagination('refresh', {
+                            pageNumber: pageNum,
+                            pageSize: pageSize
                         });
-                        dg.datagrid('loadData',state.allRows);
+                        dg.datagrid('loadData', state.allRows);
                     }
                 });
                 $(this).datagrid('loadData', state.data);
-                if (opts.url){
+                if (opts.url) {
                     $(this).datagrid('reload');
                 }
             });
         },
-        loadData: function(jq, data){
-            jq.each(function(){
+        loadData: function (jq, data) {
+            jq.each(function () {
                 $(this).data('datagrid').allRows = null;
             });
             return loadDataMethod.call($.fn.datagrid.methods, jq, data);
         },
-        getAllRows: function(jq){
+        getAllRows: function (jq) {
             return jq.data('datagrid').allRows;
         }
     })
@@ -281,13 +260,13 @@ $(function(){
      * @param callback
      * @returns {*}
      */
-    $.fn.watch = function(callback) {
-        return this.each(function() {
+    $.fn.watch = function (callback) {
+        return this.each(function () {
             //缓存以前的值
             $.data(this, 'originVal', $(this).val());
 
             //event
-            $(this).on('keyup paste', function() {
+            $(this).on('keyup paste', function () {
                 var originVal = $(this, 'originVal');
                 var currentVal = $(this).val();
 
@@ -308,17 +287,17 @@ var common = function () {
     this.defaultReportPath = "";
 }
 
-var config = new common() ;
+var config = new common();
 //
-config.authentication='YWRtaW46YWRtaW4='
+config.authentication = 'YWRtaW46YWRtaW4='
 config.defaultSupplier = "供应室"
-config.hospitalId = "4028862d4fcf2590014fcf9aef480016" ;
-config.hospitalName = "双滦区人民医院" ;
+config.hospitalId = "4028862d4fcf2590014fcf9aef480016";
+config.hospitalName = "双滦区人民医院";
 config.storage = "五金库";
-config.storageCode='1503';
+config.storageCode = '1503';
 config.loginName = '123';
 config.loginId = '11'
-config.moduleId = '402886f350a6bd4f0150a6c0c47c0000' ;
+config.moduleId = '402886f350a6bd4f0150a6c0c47c0000';
 config.moduleName = "消耗品管理系统"
 config.exportClass = "'发放出库','批量出库','退账入库'";
 config.reportServerIp = '192.168.6.68';
@@ -371,18 +350,16 @@ function delCookie(name) {
 }
 
 
-
-
 //--------权限认证
 $.base64.utf8encode = true;
 
 $.ajaxSetup({
-    beforeSend : function(req) {
+    beforeSend: function (req) {
         //var result=$.base64.btoa('000LRF:1') ;//加密
         //req.setRequestHeader('Authorization', config.authentication);
         //result = $.base64.atob(config.authentication)
     }
-}) ;
+});
 
 
 /**
@@ -394,7 +371,7 @@ function cjkEncode(text) {
     }
     var newText = "";
     for (var i = 0; i < text.length; i++) {
-        var code = text.charCodeAt (i);
+        var code = text.charCodeAt(i);
         if (code >= 128 || code == 91 || code == 93) {  //91 is "[", 93 is "]".
             newText += "[" + code.toString(16) + "]";
         } else {
@@ -406,7 +383,7 @@ function cjkEncode(text) {
 
 
 //多线程
-function Queue (n) {
+function Queue(n) {
     n = parseInt(n || 1, 10);
     return (n && n > 0) ? new Queue.prototype.init(n) : null;
 }
@@ -431,17 +408,23 @@ Queue.prototype = {
 
         if (index != -1) {
             this.threads[index].idle(callback)
-            try { console.log('Thread-' + (index+1) + ' accept the task!') } catch (e) {}
+            try {
+                console.log('Thread-' + (index + 1) + ' accept the task!')
+            } catch (e) {
+            }
         }
         else {
             this.taskList.push(callback);
 
             for (var i = 0, l = this.threads.length; i < l; i++) {
 
-                (function(thread, self, id){
-                    thread.idle(function(){
+                (function (thread, self, id) {
+                    thread.idle(function () {
                         if (self.taskList.length > 0) {
-                            try { console.log('Thread-' + (id+1) + ' accept the task!') } catch (e) {}
+                            try {
+                                console.log('Thread-' + (id + 1) + ' accept the task!')
+                            } catch (e) {
+                            }
 
                             var promise = self.taskList.pop()();    // 正确的返回值应该是一个promise对象
                             return promise.promise ? promise : thread.promise;
@@ -481,8 +464,8 @@ Queue.prototype = {
 
 Queue.prototype.init.prototype = Queue.prototype;
 
-$.messager.defaults.ok="确定"
-$.messager.defaults.cancel="取消"
+$.messager.defaults.ok = "确定"
+$.messager.defaults.cancel = "取消"
 
 //扩展验证输入框
 $.extend($.fn.validatebox.defaults.rules, {
@@ -498,10 +481,11 @@ $.extend($.fn.validatebox.defaults.rules, {
         },
         message: '请输入至少（2）个字符.'
     },
-    length: { validator: function (value, param) {
-        var len = $.trim(value).length;
-        return len >= param[0] && len <= param[1];
-    },
+    length: {
+        validator: function (value, param) {
+            var len = $.trim(value).length;
+            return len >= param[0] && len <= param[1];
+        },
         message: "输入内容长度必须介于{0}和{1}之间."
     },
     phone: {// 验证电话号码

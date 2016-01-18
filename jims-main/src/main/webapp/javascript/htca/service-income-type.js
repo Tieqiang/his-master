@@ -120,39 +120,7 @@ $(function(){
         }
     }) ;
 
-    //添加
-    $("#addBtn").on('click',function(){
-        if(stopEdit()){
-            $("#serviceIncomeTypeDatagrid").datagrid('appendRow',{}) ;
-            var rows = $("#serviceIncomeTypeDatagrid").datagrid('getRows') ;
-            var index = $("#serviceIncomeTypeDatagrid").datagrid('getRowIndex',rows[rows.length -1]) ;
-            editRowType = index ;
-            beginEdit() ;
-        }
-    }) ;
 
-    //删除
-    $("#delBtn").on('click',function(){
-        var rows = $("#serviceIncomeTypeDatagrid").datagrid('getSelections') ;
-        if(!rows){
-            $.messager.alert('系统提示','请选择要删除的属性','error') ;
-            return ;
-        }
-
-        $.messager.confirm('系统提示','确定要进行删除操作吗',function(r){
-            if(r){
-                for(var i = 0 ;i<rows.length ;i++){
-                    var index = $("#serviceIncomeTypeDatagrid").datagrid('getRowIndex',rows[i]) ;
-                    $("#serviceIncomeTypeDatagrid").datagrid('deleteRow',index) ;
-                    if(index==editRowType){
-                        editRowType = undefined ;
-                    }
-                }
-            }
-        });
-
-
-    }) ;
 
 
     //添加

@@ -40,6 +40,7 @@ $(function () {
             //}
         }
     });
+
     function enableDnd(t) {
         var nodes = t.treegrid('getPanel').find('tr[node-id]');
         nodes.find('span.tree-hit').bind('mousedown.treegrid', function () {

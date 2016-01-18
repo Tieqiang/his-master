@@ -62,6 +62,7 @@ public class DeptProfitService {
             List<AcctDeptProfit> acctDeptProfitses=acctDeptProfitFacade.reDevideManagerCost(acctDeptProfits,yearMonth,hospitalId) ;
             return Response.status(Response.Status.OK).entity(acctDeptProfitses).build() ;
         }catch(Exception e ){
+            e.printStackTrace();
             ErrorException errorException = new ErrorException() ;
             errorException.setMessage(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;

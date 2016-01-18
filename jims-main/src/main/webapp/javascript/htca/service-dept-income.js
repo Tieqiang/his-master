@@ -11,12 +11,16 @@ $(function () {
     })
 
     var incomeTypes = [];
-    //$.get('/api/acct-reck/list?hospitalId='+parent.config.hospitalId,function(data){
-    //    incomeTypes = data ;
-    //});
+    var incomeDetail = [] ;
+
     $.get( '/api/cost-item/list-by-class?hospitalId='+parent.config.hospitalId+"&classId=4028803e519f790001519fac9c760009", function (data) {
         incomeTypes = data;
     })
+
+    $.get('/api/cost-item/list-detail?hospitalId='+parent.config.hospitalId,function(data){
+        incomeDetail = data ;
+    })
+
 
     var p = $('#synDate').datebox('panel');//日期选择对象
     var tds = false; //日期选择对象中月份
@@ -84,6 +88,7 @@ $(function () {
         showFooter: true,
         rownumbers: true,
         pageSize: 30,
+        singleSelect:true,
         loadMsg: '数据正在加载中.....',
         columns: [[{
             title: 'id',
@@ -117,6 +122,11 @@ $(function () {
             title:'明细项目',
             field:'detailIncomeId',
             formatter:function(value,row,index){
+                for(var i = 0 ;i<incomeDetail.length;i++){
+                    if(value==incomeDetail[i].id){
+                        return incomeDetail[i].incomeDetailName ;
+                    }
+                }
                 return value ;
             }
         }, {
@@ -142,7 +152,7 @@ $(function () {
         }, {
             title: '是否本院',
             field: 'outFlag',
-            width: '20%',
+            width: '5%',
             formatter: function (value, row, index) {
                 if (value == '0') {
                     return "院外"
@@ -152,6 +162,10 @@ $(function () {
                 }
                 return value;
             }
+        },{
+            title:'获取方式',
+            field:'getWay',
+            width:'15%'
         }]],
         onLoadSuccess: function (data) {
             var totalIncomes = 0;
@@ -224,7 +238,7 @@ $(function () {
         textField: 'deptName',
         valueField: 'id',
         method: 'GET',
-        url: '/api/acct-dept-dict/acct-list?hospitalId=' + parent.config.hospitalId,
+        url: '/api/acct-dept-dict/list-end-dept?hospitalId=' + parent.config.hospitalId,
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
             if (data.length > 0) {
@@ -351,6 +365,12 @@ $(function () {
         var rows = $("#serviceDeptIncomeTable").datagrid('getSelected')
         if (!rows) {
             $.messager.alert("系统提示", "请选择要删除的记录", "error");
+            return ;
+        }
+
+        if(rows.getWay !="录入"){
+            $.messager.alert("系统提示","非录入项目,不能删除，亲按照获取来源重新获取","error") ;
+            return
         }
 
         if (!rows.id) {

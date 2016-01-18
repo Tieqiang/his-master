@@ -540,7 +540,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                 serviceDeptIncome.setHospitalId(hospitalId);
                 serviceDeptIncome.setIncomeTypeId(costItemId);
                 serviceDeptIncome.setGetWay("分摊");
-                serviceDeptIncome.setTotalIncome(cost.getCost() - cost.getMinusCost());
+                serviceDeptIncome.setTotalIncome(cost.getCost());
                 serviceDeptIncome.setOperator(cost.getOperator());
                 serviceDeptIncome.setOperatorDate(cost.getOperatorDate());
                 serviceDeptIncome.setConfirmStatus("0");

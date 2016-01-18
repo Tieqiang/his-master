@@ -188,7 +188,7 @@ $(function(){
         var menuTreeData = [] ;//菜单树的列表
         var url = "api/menu/list-login-module?moduleId="+config.moduleId+"&loginName="+config.loginName;
         var lisAll = "api/menu/list" ;
-        $(".site_title").append("极目云软件-"+config.moduleName) ;
+        $(".site_title").append(config.hospitalName+"-"+config.moduleName) ;
 
         //var url = "api/menu/list-login-module?moduleId=402886f350a6bd4f0150a6c0c4830001&loginName=000WL2"
 
