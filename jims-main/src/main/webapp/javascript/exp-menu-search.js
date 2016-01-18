@@ -69,9 +69,25 @@ $(function () {
     $("#saveAsBtn").on('click', function () {
         alert("saveAs");
     });
+    $("#printDiv").dialog({
+        title: '打印',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-menu-search.cpt&storageCode=" + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId);
+        }
+    })
     //打印
     $("#printBtn").on('click', function () {
-        alert("print");
+        var printData = $("#dg").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先检索数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
     });
     var loadDict = function () {
         $.get("/api/exp-menu-search/list?storageCode=" +parent.config.storageCode+"&hospitalId="+parent.config.hospitalId, function (data) {
