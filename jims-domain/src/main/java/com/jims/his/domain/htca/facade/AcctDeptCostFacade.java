@@ -131,7 +131,29 @@ public class AcctDeptCostFacade extends BaseFacade {
      * @return
      */
     private List<AcctDeptCost> equipmentCostData(String hospitalId, String yearMonth, String fetchTypeId) {
-        return null;
+        AcctParam acctParam = get(AcctParam.class, fetchTypeId);
+        String sql = acctParam.getParamSql().replace("${yearMonth}",yearMonth).replace("${hospitalId}",hospitalId) ;
+        List<Object[]> resultList = createNativeQuery(sql).getResultList();
+        List<AcctDeptCost> acctDeptCosts = new ArrayList<>() ;//获取核算单元成本
+        String hql3 = "from CostItemDict as dict where dict.id='4028803e51ec9c250151ed1ecfd10001'" ;
+        CostItemDict costItemDict = createQuery(CostItemDict.class,hql3,new ArrayList<Object>()).getSingleResult() ;
+        Double inRate = 100.0 ;
+        if(costItemDict !=null ){
+            inRate = Double.parseDouble(costItemDict.getCalcPercent());
+        }
+        for(Object[] obj:resultList){
+
+            AcctDeptCost acctDeptCost = new AcctDeptCost() ;
+            acctDeptCost.setAcctDeptId((String)obj[0]);
+            acctDeptCost.setCost(((BigDecimal) obj[1]).doubleValue());
+            acctDeptCost.setCostItemId("4028803e51ec9c250151ed1ecfd10001");
+            acctDeptCost.setFetchWay("计算");
+            acctDeptCost.setHospitalId(hospitalId);
+            acctDeptCost.setYearMonth(yearMonth);
+            acctDeptCost.setMinusCost(acctDeptCost.getCost()*(100-inRate)/100);
+            acctDeptCosts.add(acctDeptCost) ;
+        }
+        return acctDeptCosts;
     }
 
     /**
@@ -317,14 +339,16 @@ public class AcctDeptCostFacade extends BaseFacade {
     @Transactional
     public void saveCostData(List<AcctDeptCost> acctDeptCosts){
         if(acctDeptCosts.size()>0){
-            AcctDeptCost acctDeptCost = acctDeptCosts.get(0) ;
-            String yearMonth = acctDeptCost.getYearMonth() ;
-            String hospitalId = acctDeptCost.getHospitalId() ;
-            String deleteHql = "delete from AcctDeptCost as cost where cost.hospitalId='"+hospitalId+"' and " +
-                    "cost.yearMonth = '"+yearMonth+"' and cost.fetchWay in ('计算','买服务计入')" ;
-            this.getEntityManager().createQuery(deleteHql).executeUpdate() ;
-
             for (AcctDeptCost deptCost:acctDeptCosts){
+                String yearMonth = deptCost.getYearMonth() ;
+                String hospitalId = deptCost.getHospitalId() ;
+                String costItemId = deptCost.getCostItemId() ;
+                String acctDeptId = deptCost.getAcctDeptId() ;
+                String fetchWay = deptCost.getFetchWay() ;
+                String deleteHql = "delete from AcctDeptCost as cost where cost.hospitalId='"+hospitalId+"' and " +
+                        "cost.yearMonth = '"+yearMonth+"' and cost.fetchWay='"+fetchWay+"' and " +
+                        "cost.costItemId='"+costItemId+"' and cost.acctDeptId='"+acctDeptId+"'"  ;
+                this.getEntityManager().createQuery(deleteHql).executeUpdate() ;
                 merge(deptCost) ;
             }
         }
@@ -352,7 +376,154 @@ public class AcctDeptCostFacade extends BaseFacade {
         if("2".equals(devideWay)){
             return devideByEq(hospitalId,yearMonth,costItemId,totalMoney,depts) ;
         }
+
+        //护理单元占床日分摊
+        if("3".equals(devideWay)){
+            return devideByUseBed(hospitalId,yearMonth,costItemId,totalMoney,depts) ;
+        }
         return null;
+    }
+
+    private List<AcctDeptCost> devideByUseBed(String hospitalId, String yearMonth, String costItemId, Double totalMoney, String depts) {
+        //计算月份
+        String[] strings = yearMonth.split("-");
+        String startDate = "", endDate = "";
+        Integer month = Integer.parseInt(strings[1]);
+
+        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8) {
+            startDate = strings[0] + "-" + month + "-01 00:00:00";
+            endDate = strings[0] + "-" + month + "-31 23:59:59";
+        } else if (month == 12 || month == 10) {
+            startDate = strings[0] + "-" + month + "-01 00:00:00";
+            endDate = strings[0] + "-" + month + "-31 23:59:59";
+        } else if (month == 4 || month == 6 || month == 9) {
+            startDate = strings[0] + month + "-01 00:00:00";
+            endDate = strings[0] + month + "-30 23:59:59";
+        } else if (month == 11) {
+            startDate = strings[0] + "-" + month + "-01 00:00:00";
+            endDate = strings[0] + "-" + month + "-30 23:59:59";
+
+        } else {
+            startDate = strings[0] + "-" + 2 + "-01 00:00:00";
+            endDate = strings[0] + "-" + 3 + "-01 00:00:00";
+        }
+        String sql = "select q.ward_code, sum(days)\n" +
+                "  from (\n" +
+                "        ---------在院\n" +
+                "        select (case\n" +
+                "                  when a.discharge_date_time is not null then\n" +
+                "                   a.dept_discharge_from\n" +
+                "                  else\n" +
+                "                   (select decode(dept_code_lend,\n" +
+                "                                  null,\n" +
+                "                                  dept_code,\n" +
+                "                                  dept_code_lend)\n" +
+                "                      from pats_in_hospital\n" +
+                "                     where patient_id = a.patient_id\n" +
+                "                       and visit_id = a.visit_id)\n" +
+                "                end) visit_dept,\n" +
+                "                0 as money,\n" +
+                "                --b.request_doctor_id doctor,       \n" +
+                "                (case\n" +
+                "                  when trunc(a.admission_date_time) <\n" +
+                "                       trunc(to_date('"+startDate+"',\n" +
+                "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
+                "                   trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss')) -\n" +
+                "                   trunc(to_date('"+startDate+"', 'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
+                "                  else\n" +
+                "                   trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss')) -\n" +
+                "                   trunc(a.admission_date_time) + 1\n" +
+                "                end) days\n" +
+                "          from pat_visit a, mr_on_line b\n" +
+                "         where a.patient_id = b.patient_id\n" +
+                "           and a.visit_id = b.visit_id\n" +
+                "           and trunc(a.admission_date_time) <\n" +
+                "               trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss'))\n" +
+                "           and b.request_doctor_id <> '*'\n" +
+                "           and a.discharge_date_time is null\n" +
+                "        union all\n" +
+                "        -----------出院\n" +
+                "        select (case\n" +
+                "                 when a.discharge_date_time is not null then\n" +
+                "                  a.dept_discharge_from\n" +
+                "                 else\n" +
+                "                  (select decode(dept_code_lend,\n" +
+                "                                 null,\n" +
+                "                                 dept_code,\n" +
+                "                                 dept_code_lend)\n" +
+                "                     from pats_in_hospital\n" +
+                "                    where patient_id = a.patient_id\n" +
+                "                      and visit_id = a.visit_id)\n" +
+                "               end) visit_dept,\n" +
+                "               0 as money,\n" +
+                "               --b.request_doctor_id doctor,\n" +
+                "               (case\n" +
+                "                  when trunc(a.discharge_date_time) <\n" +
+                "                       trunc(to_date('"+endDate+"',\n" +
+                "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
+                "                   (case\n" +
+                "                  when trunc(a.admission_date_time) <\n" +
+                "                       trunc(to_date('"+startDate+"',\n" +
+                "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
+                "                   trunc(a.discharge_date_time) -\n" +
+                "                   trunc(to_date('"+startDate+"', 'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
+                "                  else\n" +
+                "                   trunc(a.discharge_date_time) - trunc(a.admission_date_time) + 1\n" +
+                "                end) else(case\n" +
+                "                 when trunc(a.admission_date_time) <\n" +
+                "                      trunc(to_date('"+startDate+"',\n" +
+                "                                    'yyyy-mm-dd hh24:mi:ss')) then\n" +
+                "                  trunc(to_date('"+endDate+"',\n" +
+                "                                'yyyy-mm-dd hh24:mi:ss')) -\n" +
+                "                  trunc(to_date('"+startDate+"',\n" +
+                "                                'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
+                "                 else\n" +
+                "                  trunc(to_date('"+endDate+"',\n" +
+                "                                'yyyy-mm-dd hh24:mi:ss')) -\n" +
+                "                  trunc(a.admission_date_time) + 1\n" +
+                "               end) end) days\n" +
+                "          from pat_visit a, mr_on_line b\n" +
+                "         where a.patient_id = b.patient_id\n" +
+                "           and a.visit_id = b.visit_id\n" +
+                "           and b.request_doctor_id <> '*'\n" +
+                "           and a.discharge_date_time is not null\n" +
+                "           and a.discharge_date_time >=\n" +
+                "               (to_date('"+startDate+"', 'yyyy-mm-dd  hh24:mi:ss'))\n" +
+                "           and a.admission_date_time <\n" +
+                "               (to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss'))) p,\n" +
+                "       dept_vs_ward q\n" +
+                " where p.visit_dept = q.dept_code\n" +
+                " group by q.ward_code" ;
+
+        List<Object[]> values = createNativeQuery(sql).getResultList() ;
+        double totalCost = 0.0 ;
+        for(Object[] obj :values){
+            totalCost +=((BigDecimal)obj[1]).doubleValue() ;
+        }
+        List<AcctDeptCost> costs = new ArrayList<>() ;
+
+        String costItemDictHql = "from CostItemDict as  dict where dict.hospitalId='"+hospitalId+"'";
+        List<CostItemDict> costItemDicts=createQuery(CostItemDict.class,costItemDictHql,new ArrayList<Object>()).getResultList() ;
+        double calcPercent = 100 ;
+        for(CostItemDict dict :costItemDicts){
+            if(costItemId.equals(dict.getId())){
+                calcPercent = Double.parseDouble(dict.getCalcPercent()) ;
+            }
+        }
+
+        for(Object[] obj:values){
+            double temp = ((BigDecimal)obj[1]).doubleValue() ;
+            AcctDeptCost cost = new AcctDeptCost();
+            cost.setAcctDeptId((String)obj[0]);
+            cost.setFetchWay("分摊");
+            cost.setHospitalId(hospitalId);
+            cost.setCostItemId(costItemId);
+            cost.setYearMonth(yearMonth);
+            cost.setCost(totalMoney * temp/totalCost );
+            cost.setMinusCost(cost.getCost()*(100-calcPercent)/100);
+            costs.add(cost) ;
+        }
+        return costs;
     }
 
     /**
@@ -519,21 +690,28 @@ public class AcctDeptCostFacade extends BaseFacade {
     @Transactional
     public void saveDeptDevideDeriectWrite(List<AcctDeptCost> acctDeptCosts, String incomeDeptId) {
         if(acctDeptCosts.size()>0){
-            String costItemId = acctDeptCosts.get(0).getCostItemId();
-            String yearMonth = acctDeptCosts.get(0).getYearMonth() ;
-            String hospitalId= acctDeptCosts.get(0).getHospitalId() ;
-
-            String hql ="delete AcctDeptCost as cost where cost.yearMonth ='"+yearMonth+"' " +
-                    "and cost.hospitalId='"+hospitalId+"' and cost.costItemId='"+costItemId+"' " +
-                    "and cost.fetchWay='分摊'" ;
-            getEntityManager().createQuery(hql).executeUpdate() ;
-
-            String hql2 = "delete ServiceDeptIncome as income where income.yearMonth = '"+yearMonth+"' and " +
-                    "income.hospitalId='"+hospitalId+"' and income.incomeTypeId='"+costItemId+"' and " +
-                    "income.getWay='分摊'" ;
-            getEntityManager().createQuery(hql2).executeUpdate() ;
-
             for(AcctDeptCost cost: acctDeptCosts){
+                String costItemId = cost.getCostItemId();
+                String yearMonth = cost.getYearMonth() ;
+                String hospitalId= cost.getHospitalId() ;
+                String acctDeptId= cost.getAcctDeptId() ;
+                String hql ="delete AcctDeptCost as cost where cost.yearMonth ='"+yearMonth+"' " +
+                        "and cost.hospitalId='"+hospitalId+"' and cost.costItemId='"+costItemId+"' " +
+                        "and cost.fetchWay='分摊' and cost.acctDeptId='"+acctDeptId+"'" ;
+                getEntityManager().createQuery(hql).executeUpdate() ;
+
+                String hql2 = "delete ServiceDeptIncome as income where income.yearMonth = '"+yearMonth+"' and " +
+                        "income.hospitalId='"+hospitalId+"' and income.incomeTypeId='"+costItemId+"' and " +
+                        "income.getWay='分摊' and income.acctDeptId='"+acctDeptId+"'" ;
+                getEntityManager().createQuery(hql2).executeUpdate() ;
+
+                String hql3 = "from CostItemDict as dict where dict.id='"+costItemId+"'" ;
+                CostItemDict costItemDict = createQuery(CostItemDict.class,hql,new ArrayList<Object>()).getSingleResult() ;
+                Double inRate = 100.0 ;
+                if(costItemDict !=null ){
+                    inRate = Double.parseDouble(costItemDict.getCalcPercent());
+                }
+
                 ServiceDeptIncome serviceDeptIncome=new ServiceDeptIncome() ;
                 serviceDeptIncome.setAcctDeptId(incomeDeptId);
                 serviceDeptIncome.setYearMonth(yearMonth);
@@ -547,7 +725,10 @@ public class AcctDeptCostFacade extends BaseFacade {
                 serviceDeptIncome.setOutFlag("1");
                 serviceDeptIncome.setServiceForDeptId(cost.getAcctDeptId());
                 merge(serviceDeptIncome) ;
+                cost.setMinusCost(cost.getCost()*(100-inRate)/100);
                 merge(cost) ;
+
+
             }
         }
     }

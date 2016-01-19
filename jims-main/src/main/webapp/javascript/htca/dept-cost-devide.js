@@ -265,6 +265,9 @@ $(function(){
         },{
             name:'平均分摊法',
             id:'2'
+        },{
+            name:'护理单元占床日分摊',
+            id:'3'
         }],
         onSelect:function(record){
             if(record.id=='2'){

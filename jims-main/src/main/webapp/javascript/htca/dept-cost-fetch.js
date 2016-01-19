@@ -169,8 +169,28 @@ $(function(){
             text:'数据高效提取中，请稍后....'
         }) ;
         $.get("/api/acct-dept-cost/fetch-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&fetchTypeId="+fetchTypeId,function(data){
+            var myData =[] ;
+            var flag = false ;
 
-            $("#deptCostTable").datagrid('loadData',data) ;
+            for(var i = 0 ;i<data.length ;i++){
+                for(var j=0;j<myData.length;j++){
+
+                    if(myData[j].costItemId == data[i].costItemId && myData[j].acctDeptId==data[i].acctDeptId){
+                        myData[j].cost += data[i].cost ;
+                        myData[j].minusCost += data[i].minusCost ;
+                        flag=true ;
+                        continue ;
+                    }
+                }
+                if(flag){
+                    flag=false ;
+                    continue ;
+
+                }
+                myData.push(data[i]) ;
+            }
+            //console.log(myData) ;
+            $("#deptCostTable").datagrid('loadData',myData) ;
             $.messager.progress('close') ;
         })
     }) ;
