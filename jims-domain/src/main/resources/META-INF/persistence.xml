@@ -108,6 +108,8 @@
         <class>com.jims.his.domain.htca.entity.AcctDeptCost</class>
         <class>com.jims.his.domain.htca.entity.AcctParam</class>
         <class>com.jims.his.domain.htca.entity.ServiceDeptIncomeRule</class>
+        <class>com.jims.his.domain.htca.entity.AcctProfitChangeDict</class>
+        <class>com.jims.his.domain.htca.entity.AcctProfitChangeRecord</class>
 
         <!-- 提供商——Hibernate -->
         <properties>
@@ -117,7 +119,7 @@
              <!--Database Driver —— Oracle -->
             <property name="hibernate.connection.driver6_class" value="oracle.jdbc.driver.OracleDriver"/>
              <!--Database Connection URL -->
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@192.168.6.143:1521:oracle"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@127.0.0.1:1521:localHost"/>
             <property name="hibernate.connection.username" value="jims"/>
             <property name="hibernate.connection.password" value="jims"/>
             <!--

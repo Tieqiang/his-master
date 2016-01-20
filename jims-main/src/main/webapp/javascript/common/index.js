@@ -10,7 +10,6 @@ window.addTab = function (title, href) {
         return ;
     }
     var tabs = $("#mainContent").tabs('tabs');
-    console.log(tabs)
     if(tabs.length>10){
         $.messager.alert("系统提示","打开的Tab页面太多，请观不需要的，重新在打开",'info') ;
         return ;
@@ -228,13 +227,11 @@ $(function(){
             menus.sort(function(a,b){
                 return a.attributes.index- b.attributes.index;
             });
-            console.log("asc menus:"+menus);
         }) ;
 
         menuTreeData.sort(function (a, b) {
             return a[0].attributes.index - b[0].attributes.index;
         });
-        console.log("asc menuTreeData:" + menuTreeData);
         //$("#menuTree").accordion({
         //    fit:true
         //}) ;
@@ -253,7 +250,7 @@ $(function(){
             }) ;
 
             $("#menuTree").tree('loadData',menuTreeData);
-            //$("#menuTree").tree('collapseAll')//默认折叠所有的选项
+            $("#menuTree").tree('collapseAll')//默认折叠所有的选项
             var load = {};
             if(menuTreeData){
                 var  promiseLoad = $.get("/api/module-dict/list-tabs", function (data) {
@@ -261,9 +258,10 @@ $(function(){
                     return load;
                 });
                 promiseLoad.done(function(){
-                    if(load.length){
+                    if(load.length>0){
                         parent.addTab(load[0].moduleName, load[0].moduleLoad);
                     }
+
                 });
             }
         }) ;
