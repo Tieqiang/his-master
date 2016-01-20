@@ -176,9 +176,31 @@ $(function () {
             oldPriceData.splice(0,oldPriceData.length);
         });
     })
+    //打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var expCode = $("#search").combogrid('getValue')
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-price-search.cpt&expCode=" + expCode);
+        }
+    })
+    $("#printBtn").on('click', function () {
+        var printData = $("#dg").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
     //加载相应编码的数据
     var loadDict = function () {
-        var expCode = $("#search").combogrid('getValue')
+        var expCode = $("#search").combogrid('getValue');
         prices.splice(0,prices.length);
         var pricePromise =   $.get("/api/exp-price-search/list?expCode=" + expCode+"&hospitalId="+parent.config.hospitalId, function(data){
             $.each(data,function(index,item){

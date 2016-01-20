@@ -147,7 +147,28 @@ $(function () {
     var prices = [];
     $("#searchBtn").on('click', function () {
          loadDict();
-    })
+    });
+    //打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-storage-upper-lower-market.cpt");
+        }
+    });
+    $("#printBtn").on('click', function () {
+        var printData = $("#dg").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    });
     var loadDict = function () {
         var startDate = $('#startDate').datetimebox('getText');
         var stopDate = $('#stopDate').datetimebox('getText');

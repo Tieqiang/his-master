@@ -130,7 +130,28 @@ $(function () {
     //提取
     $("#searchBtn").on('click',function(){
         loadDict();
-    })
+    });
+    //打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-storage-zero-manage.cpt");
+        }
+    });
+    $("#printBtn").on('click', function () {
+        var printData = $("#dg").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    });
 
     //删除全部
     $("#deleteBtnAll").on('click',function(){

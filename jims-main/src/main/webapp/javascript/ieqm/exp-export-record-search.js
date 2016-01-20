@@ -281,6 +281,27 @@ $(function () {
     });
     $("#searchBtn").on('click', function () {
         loadDict();
+    });
+    //打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-record-search.cpt");
+        }
+    })
+    $("#printBtn").on('click', function () {
+        var printData = $("#importMaster").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
     })
     var loadDict = function(){
         masterDataVo.formClass = $("#formClass").combobox("getText");
