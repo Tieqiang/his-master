@@ -3,9 +3,7 @@ package com.jims.his.domain.htca.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.common.entity.AppConfigerParameter;
-import com.jims.his.domain.htca.entity.AcctDeptDict;
-import com.jims.his.domain.htca.entity.AcctDeptProfit;
-import com.jims.his.domain.htca.entity.AcctParam;
+import com.jims.his.domain.htca.entity.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.List;
  * Created by heren on 2015/12/15.
  */
 public class AcctDeptProfitFacade extends BaseFacade {
+
 
     /**
      * 保存或者更新收入核算
@@ -160,5 +159,11 @@ public class AcctDeptProfitFacade extends BaseFacade {
         return false;
     }
 
+    @Transactional
+    public void saveacctProftChageRecords(List<AcctProfitChangeRecord> acctProfitChangeRecords) {
+        for(AcctProfitChangeRecord record : acctProfitChangeRecords){
+            merge(record);
+        }
 
+    }
 }

@@ -2,9 +2,11 @@ package com.jims.his.service.htca;
 
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.htca.entity.AcctDeptProfit;
+import com.jims.his.domain.htca.entity.AcctProfitChangeRecord;
 import com.jims.his.domain.htca.facade.AcctDeptProfitFacade;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -18,10 +20,12 @@ import java.util.List;
 public class DeptProfitService {
 
     private AcctDeptProfitFacade acctDeptProfitFacade ;
+    private HttpSession httpSession;
 
     @Inject
-    public DeptProfitService(AcctDeptProfitFacade acctDeptProfitFacade) {
+    public DeptProfitService(AcctDeptProfitFacade acctDeptProfitFacade, HttpSession httpSession) {
         this.acctDeptProfitFacade = acctDeptProfitFacade;
+        this.httpSession = httpSession;
     }
 
     @GET
@@ -48,6 +52,18 @@ public class DeptProfitService {
         try {
             acctDeptProfitFacade.saveOrUpdate(acctDeptProfits) ;
             return Response.status(Response.Status.OK).entity(acctDeptProfits).build() ;
+        }catch(Exception e ){
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
+        }
+    }
+    @POST
+    @Path("save-change-profit")
+    public Response saveChangeProfit(List<AcctProfitChangeRecord> acctProfitChangeRecords){
+        try {
+            acctDeptProfitFacade.saveacctProftChageRecords(acctProfitChangeRecords) ;
+            return Response.status(Response.Status.OK).entity(acctProfitChangeRecords).build() ;
         }catch(Exception e ){
             ErrorException errorException = new ErrorException() ;
             errorException.setMessage(e);

@@ -7,12 +7,71 @@
     <link rel="stylesheet" href="/assert/easyui/themes/color.css">
     <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
     <link rel="stylesheet" href="/style/common.css">
+    <style>
+        .fitem {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body class="easyui-layout">
 
 
 <div id="mainPanel" data-options="region:'center'">
     <table id="acctDeptProfitDg"></table>
+</div>
+<div id="rightMenu" class="easyui-menu" style="width:120px;">
+    <div data-options="iconCls:'icon-reload'" id="modifyDeptMenu">收入调整</div>
+    <div data-options="iconCls:'icon-reload'" id="modifyIncomeChange">修改收入调整</div>
+    <div class="menu-sep"></div>
+    <div data-options="iconCls:'icon-reload'" id="modifyDeptVs">成本调整</div>
+    <div data-options="iconCls:'icon-reload'" id="modifyCostChange">修改成本调整</div>
+
+</div>
+<div id="modifyChangeWindow" class = "easyui-dialog" style="width:500px;height:300px;">
+    <div id="modifyChangeDataGrid" >
+
+    </div>
+</div>
+<div id="acctDeptFormWindow" class="easyui-window">
+    <form id="acctDeptForm">
+        <div class="fitem">
+            <label for="incomeOrCost">调整项目:</label>
+            <select id="incomeOrCost" class="easyui-combobox" disabled="true" style="width:165px;">
+                <option value="0">成本调整</option>
+                <option value="1">收入调整</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label for="acctDeptId">调整核算单元编码:</label>
+            <input type="text" id="acctDeptId" class="easyui-textbox" />
+        </div>
+        <div class="fitem">
+            <label for="operator">操作者编码:</label>
+            <input type="text" id="operator" class="easyui-textbox" />
+        </div>
+        <div class="fitem">
+            <label for="changeItemId">调整项目编码:</label>
+            <input type="text" id="changeItemId" class="easyui-combobox" />
+        </div>
+        <div class="fitem">
+            <label for="changeAmount">调整金额:</label>
+            <input type="text" id="changeAmount" class="easyui-numberbox" data-options="min:0,precision:2" />
+        </div>
+        <div class="fitem">
+            <label for="changeReason">调整原因:</label>
+            <input type="text" id="changeReason" class="easyui-textbox" />
+        </div>
+        <div class="fitem">
+            <label for="yearMonth">调整月份:</label>
+            <input type="text" id="yearMonth" class="easyui-textbox" />
+        </div>
+        <div class="fitem">
+            <label for="operatorDate">调整日期:</label>
+            <input type="text" id="operatorDate" class="easyui-textbox" />
+        </div>
+        <input type="hidden" class="easyui-textbox" id="id" />
+    </form>
 </div>
 
 <div id="ft" style="margin:5px;">
@@ -23,6 +82,15 @@
     <a href="#" id="devideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-man'">重新分摊管理成本</a>
     <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
 </div>
+<div id="winFt" style="margin:5px;">
+    <a href="#" id="clearBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">暂存调整</a>
+    <a href="#" id="addAcctBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关闭</a>
+</div>
+<div id="changeModifyButton" style="margin:5px;">
+    <a href="#" id="timeChangeButton" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+    <a href="#" id="closeChangeButton" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关闭</a>
+</div>
+
 
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
