@@ -119,6 +119,8 @@
         <class>com.jims.his.domain.htca.entity.AcctSingleRewardDict</class>
         <class>com.jims.his.domain.htca.entity.AcctSingleRewardRecord</class>
         <class>com.jims.his.domain.htca.entity.ServiceIncomeTypeDetail</class>
+        <class>com.jims.his.domain.htca.entity.AcctProfitChangeDict</class>
+        <class>com.jims.his.domain.htca.entity.AcctProfitChangeRecord</class>
 
         <properties>
              <!--Oracle Dialect -->
@@ -128,7 +130,7 @@
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
              <!--Database Connection URL -->
             <!--<property name="hibernate.connection.url" value="jdbc:oracle:thin:@192.168.0.12:1521:orcl"/>-->
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@(description=(address=(protocol=tcp)(port=1521)(host=192.168.6.143))(connect_data=(service_name=oracle)))"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@(description=(address=(protocol=tcp)(port=1521)(host=127.0.0.1))(connect_data=(service_name=localHost)))"/>
             <property name="hibernate.connection.username" value="jims"/>
             <property name="hibernate.connection.password" value="jims"/>
 

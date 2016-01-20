@@ -19,12 +19,12 @@ $(function () {
         }, {
             title: '路径',
             field: 'href',
-            width: "70%"
+            width: "40%"
         }, {
             title: 'id',
             field: 'id',
-            width: "20%",
-            hidden:true
+            width: "20%"
+            //hidden:true
         }, {
             title: '层级',
             field: 'position',
@@ -110,10 +110,8 @@ $(function () {
                 //}
                 //$(this).removeClass('row-append row-top row-bottom');
 
-                var src = [];
-                src=$('#tt').treegrid('find', $(source).attr('node-id'));
-                var des = [];
-                des=$('#tt').treegrid('find', $(this).attr('node-id'));
+                var src = $('#tt').treegrid('find', $(source).attr('node-id'));
+                var des = $('#tt').treegrid('find', $(this).attr('node-id'));
                 if(des.parentId==null){
                     $.messager.confirm("系统提示", "确认将当前目录设置成顶级目录吗?", function (r) {
                         if (r) {
@@ -175,7 +173,7 @@ $(function () {
         if (array != null) {
             var i = array.length;
 // The window, strings (and functions) also have 'length'
-            if (i == null || typeof array === "string" || jQuery.isFunction(array) || array.setInterval)
+            if (i == null || typeof array === "string" || $.isFunction(array) || array.setInterval)
                 ret[0] = array;
             else
                 while (i)
@@ -220,7 +218,6 @@ $(function () {
         menuPromise.done(function () {
             $("#tt").treegrid('loadData',menuTreeData) ;
             $("#tt").treegrid("selectRow", 1);
-
         });
     }
 

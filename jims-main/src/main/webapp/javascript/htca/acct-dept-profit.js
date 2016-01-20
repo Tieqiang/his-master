@@ -7,7 +7,15 @@ $(function () {
     $.get("/api/acct-dept-dict/acct-list?hospitalId=" + parent.config.hospitalId, function (data) {
         acctDeptDict = data;
     });
-
+    var loadAcctProfitChangeDict = [];
+    $.get("/api/acct-profit-change-dict/list?hospitalId=" + parent.config.hospitalId, function (data) {
+        loadAcctProfitChangeDict = data;
+    });
+    //入库分类字典
+    $("#changeItemId").combobox({
+        valueField: 'id',
+        textField: 'changeItemName'
+    });
     var editRow = undefined;
     var p = $('#fetchDate').datebox('panel');//日期选择对象
     var tds = false; //日期选择对象中月份
@@ -165,17 +173,271 @@ $(function () {
             beginEdit();
         },
         onAfterEdit:function(index,rowData,changes){
-            console.log(rowData) ;
             rowData.deptLastIncome = rowData.specialIncome*1 + ((rowData.deptIncome-rowData.deptCost)*rowData.pleasedNum/100*rowData.convertRate/100 );
             rowData.deptLastIncome = rowData.deptLastIncome.toFixed(2) ;
             $(this).datagrid('updateRow',{
                 index:index,
                 row:rowData
             });
+        }, onRowContextMenu: onRowContextMenu
+    });
+    $("#acctDeptFormWindow").window({
+        width: '330',
+        height: '300',
+        title: '调整收益',
+        modal: true,
+        closed: true,
+        footer: '#winFt'
+    });
+    $("#acctDeptFormWindow").window('center');
+    var profitChangeRecord = {};
+    var profitChangeDict = {};
+    var changeIndex;
+    var yearMonthAll;
+    var incomeOrCostAll;
+    var acctDeptIdAll;
+
+//添加右击菜单内容
+    function onRowContextMenu(e, rowIndex, rowData) {
+        e.preventDefault();
+        var selected = $("#acctDeptProfitDg").datagrid('getRows'); //获取所有行集合对象
+        var row = selected[rowIndex]; //index为当前右键行的索引，指向当前行对象
+        $('#rightMenu').menu('show', {
+            left: e.pageX,
+            top: e.pageY,
+            onClick: function (item) {
+                changeIndex = rowIndex;
+                $("#changeAmount").numberbox('clear');
+                $("#changeReason").textbox('clear');
+                $("#changeItemId").combobox('loadData',loadAcctProfitChangeDict);
+                //$("#changeItemId").textbox('setValue', row.id);  //调整项目编码
+                $("#yearMonth").textbox('setValue', $("#fetchDate").datebox('getValue'));   //调整月份
+                $("#operator").textbox('setValue', parent.config.loginId);//操作者
+                $("#operatorDate").textbox('setValue', setDefaultDate());//调整日期
+                $("#acctDeptId").textbox('setValue', row.acctDeptId);//调整核算单元编码
+                acctDeptIdAll = row.acctDeptId;
+                //$("#id").textbox('setValue', rowIndex);//调整核算单元编码
+                if (item.id == 'modifyDeptMenu'|| item.id == 'modifyIncomeChange') {  //收入调整
+                    $("#incomeOrCost").combobox('setValue', "1");// 调整项目
+                    incomeOrCostAll = 1;
+                }
+                if (item.id == 'modifyDeptVs'||item.id=='modifyCostChange') {    //成本调整
+                    $("#incomeOrCost").combobox('setValue', "0");// 调整项目
+
+                }
+                if(item.id == 'modifyDeptMenu'|| item.id == 'modifyDeptVs'){
+                    $("#acctDeptFormWindow").window('open');
+                }
+                if(item.id == 'modifyIncomeChange'|| item.id == 'modifyCostChange'){
+                    flag = 0
+                    $("#modifyChangeWindow").dialog('open');
+                }
+            }
+        });
+    }
+    var changeProfit = new Array;
+    $("#clearBtn").on('click',function(){
+        var change = {};
+        change.changeAmount = $("#changeAmount").numberbox('getValue');
+        change.changeReason = $("#changeReason").textbox('getValue');
+        change.changeItemId = $("#changeItemId").textbox('getValue');
+        change.yearMonth = $("#yearMonth").textbox('getValue');
+        change.operator = $("#operator").textbox('getValue');
+        change.operatorDate = new Date($("#operatorDate").textbox('getValue'));
+        change.acctDeptId = $("#acctDeptId").textbox('getValue');
+        change.incomeOrCost = $("#incomeOrCost").combobox('getValue');
+        var row = $('#acctDeptProfitDg').datagrid('getData').rows[changeIndex];
+        var number = parseFloat(row.incomeChangeItem) + parseFloat(change.changeAmount);
+        var number1 = parseFloat(row.costChangeItem) + parseFloat(change.changeAmount);
+       if(change.incomeOrCost=="1"){
+           $('#acctDeptProfitDg').datagrid('updateRow', {
+               index: changeIndex,
+               row: {
+                   incomeChangeItem: number
+               }
+           });
+       }
+        if(change.incomeOrCost=="0"){
+            $('#acctDeptProfitDg').datagrid('updateRow', {
+                index: changeIndex,
+                row: {
+                    costChangeItem: number1
+                }
+            });
+       }
+        if($.trim(change.changeAmount)!=""&& $.trim(change.changeReason)!=""&& $.trim(change.changeItemId)){
+            changeProfit.push(change);
+        }else{
+            $.messager.alert('系统提示','“调整金额、调整原因、调整项目编码”其中最少有一项为空，请重新填写','error')
+            return;
+        }
+        $("#acctDeptFormWindow").window('close');
+    })
+    $("#addAcctBtn").on('click',function(){
+        $("#acctDeptFormWindow").window('close');
+    })
+    var setDefaultDate = function (val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime;
+        }else{
+            var date = new Date();
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime;
+        }
+
+    }
+    $("#modifyChangeWindow").dialog({
+        title: '修改调整',
+        width: 700,
+        height: 300,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var yearMonth = $("#yearMonth").textbox('getValue');
+            var incomeOrCost = $("#incomeOrCost").textbox('getValue');
+            var acctDeptId = $("#acctDeptId").textbox('getValue');
+            $("#modifyChangeDataGrid").datagrid('load', {
+                yearMonth: yearMonth ,
+                incomeOrCost: incomeOrCost,
+                acctDeptId: acctDeptId
+            });
+            $("#modifyChangeDataGrid").datagrid('selectRow', 0)
         }
     });
+    var flag ;
+    $("#modifyChangeDataGrid").datagrid({
+        singleSelect: true,
+        fit: true,
+        fitColumns: true,
+        url: '/api/acct-proft-chage-record/change-record-search/',
+        method: 'GET',
+        footer: '#changeModifyButton',
+        columns: [[{
+            title: '调整项目',
+            field: 'incomeOrCost',
+            formatter:function(value, row, index) {
+                    if (value=="1") {
+                        return value = "收入调整";
+                    } else if(value=="0") {
+                        return value= "成本调整";
+                    }else{
+                        return value;
+                    }
+                }
 
+            }, {
+            title: '调整核算单元编码',
+            field: 'acctDeptId',
+            formatter: function (value, row, index) {
+                for (var i = 0; i < acctDeptDict.length; i++) {
+                    if (value == acctDeptDict[i].id) {
+                        return acctDeptDict[i].deptName;
+                    }
+                }
+                return value;
+            }
+        }, {
+            title: '操作者编码',
+            field: 'operator',
+            formatter:function(value,row,index){
+                if(value==parent.config.loginId){
+                    return value = parent.config.loginName
+                }else{
+                    return value;
+                }
+            }
+        }, {
+            title: '调整项目编码',
+            field: 'changeItemId'
+        }, {
+            title: '调整金额',
+            field: 'changeAmount'
+        }, {
+            title: '调整原因',
+            field: 'changeReason'
+        }, {
+            title: 'id',
+            field: 'id',
+            hidden:false
+        }, {
+            title: '调整日期',
+            field: 'operatorDate',
+            formatter: setDefaultDate
+        }]],
+        onLoadSuccess: function (data) {
+            flag = flag + 1;
+            if (flag == 1) {
+                if (data.total == 0) {
+                    $.messager.alert('系统提示', '该核算单元暂未调整，无法进行修改操作', 'info');
+                    $("#modifyChangeWindow").dialog('close');
+                }
+                flag = 0;
+            }
+        }
+    });
+    $("#timeChangeButton").on('click',function(){
+        var row = $("#modifyChangeDataGrid").datagrid('getSelected');
+        if (row == null) {
+            $.messager.alert("系统提示", "请选择要删除的项目", "info");
+            return;
+        }
+        $.messager.confirm('系统提示', '确定要进行删除操作吗', function (r) {
+            if (r) {
+                var number = $("#modifyChangeDataGrid").datagrid('getRowIndex', row);
+                var rowProfit = $('#acctDeptProfitDg').datagrid('getData').rows[changeIndex];
+                var number1 = parseFloat(rowProfit.incomeChangeItem) - parseFloat(row.changeAmount);
+                var number2 = parseFloat(rowProfit.costChangeItem) - parseFloat(row.changeAmount);
+                if (row.incomeOrCost == "1") {
+                    $('#acctDeptProfitDg').datagrid('updateRow', {
+                        index: changeIndex,
+                        row: {
+                            incomeChangeItem: number1
+                        }
+                    });
+                }
+                if (row.incomeOrCost == "0") {
+                    $('#acctDeptProfitDg').datagrid('updateRow', {
+                        index: changeIndex,
+                        row: {
+                            costChangeItem: number2
+                        }
+                    });
+                }
+                $("#modifyChangeDataGrid").datagrid('deleteRow', number);
+                var acctProftChageRecordBeanChangeVo = {};
+                acctProftChageRecordBeanChangeVo.deleted = [];
+                var deleted = $("#modifyChangeDataGrid").datagrid('getChanges', 'deleted');
+                acctProftChageRecordBeanChangeVo.deleted.push(deleted[0]);
+                $.postJSON("/api/acct-proft-chage-record/save-update", acctProftChageRecordBeanChangeVo, function (data) {
 
+                    $.messager.alert('系统提示', "删除成功", 'info');
+                    //$("#saveBtn").trigger('click');
+                }, function (error) {
+                    $.messager.alert("系统提示", "删除失败", "error");
+                })
+            }
+        });
+    })
+    $("#closeChangeButton").on('click',function(){
+        $("#modifyChangeWindow").dialog('close');
+    })
     //查询按钮
     $("#searchBtn").on('click', function () {
         var yearMonth = $("#fetchDate").datebox('getValue');
@@ -183,14 +445,11 @@ $(function () {
             $.messager.alert("系统提示", "查询时间不能为空", 'info');
             return;
         }
-
         var options = $("#acctDeptProfitDg").datagrid('options');
         options.url = "/api/dept-profit/list?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth;
         $("#acctDeptProfitDg").datagrid('reload');
 
     })
-
-
     //停止编辑行
     var stopEdit = function () {
         if (editRow || editRow == 0) {
@@ -229,8 +488,18 @@ $(function () {
             $.messager.confirm('系统提示',"如果调整了相关数据，需要重新进行分摊管理成本，在进行保存，是否继续？",function(data){
                 if(data==1){
                     $.postJSON("/api/dept-profit/save-update", rows, function (data) {
-                        $("#searchBtn").trigger('click');
-                        $.messager.alert("系统提示", "保存成功", "info");
+                        if(changeProfit.length>0){
+                            $.postJSON("/api/dept-profit/save-change-profit", changeProfit, function (data) {
+                                $("#searchBtn").trigger('click');
+                                changeProfit = new  Array;
+                                $.messager.alert("系统提示", "保存成功", "info");
+                            }, function (data) {
+                                $.messager.alert("系统提示", "保存失败", "info");
+                            })
+                        }else{
+                            $("#searchBtn").trigger('click');
+                            $.messager.alert("系统提示", "保存成功", "info");
+                        }
                     }, function (data) {
                         $.messager.alert("系统提示", "保存失败", "info");
                     })
@@ -244,7 +513,6 @@ $(function () {
     //删除某一个成本项目
     $("#removeBtn").on('click', function () {
         var rows = $("#acctDeptProfitDg").datagrid('getSelections');
-        console.log(rows);
         if (!rows.length) {
             $.messager.alert("系统提示", "请选择要删除的项目", "info");
             return;

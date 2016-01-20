@@ -48,7 +48,7 @@ public class ModuleDictFacade extends BaseFacade {
                 " where a.module_load = b.href\n" +
                 "   and b.id = c.menu_id\n" +
                 "   and c.role_id = d.role_id\n" +
-                "   and d.id = '"+loginId+"'" +
+                "   and d.staff_id = '"+loginId+"'" +
                 "   and a.id='"+moduleId+"' " +
                 "   and a.hospital_id='"+hospitalId+"'" ;
         List<ModulDict> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ModulDict.class);
