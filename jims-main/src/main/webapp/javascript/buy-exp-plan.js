@@ -630,7 +630,7 @@ $(function () {
 
             //var hospitalId = parent.config.hospitalId;
             //var storage = parent.config.storageCode;
-            //$("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-do-account.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&imClass="+imClass+"&startBill="+startBill+"&stopBill="+stopBill+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&billRadio="+billRadio+"&expCode="+expCode+"&loginId="+parent.config.loginId);
+            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/buy-exp-plan.cpt");
         }
     })
     $("#print").on('click',function(){

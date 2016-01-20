@@ -258,9 +258,26 @@ $(function () {
     $("#saveAs").on('click', function () {
         alert("saveAs");
     });
-    //打印按钮
+    //打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-stock-balance.cpt");
+        }
+    });
     $("#print").on('click', function () {
-        alert("print");
+        var printData = $("#right").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
     });
     //打印设置按钮
     $("#printSet").on('click', function () {

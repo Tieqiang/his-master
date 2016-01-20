@@ -1004,10 +1004,27 @@ $(function () {
             })
         }
     });
-    //打印按钮操作
+    ///打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-apply.cpt");
+        }
+    })
     $("#print").on('click', function () {
-        alert("print");
-    });
+        var printData = $("#right").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
 
     //清屏按钮操作
     $("#clear").on('click', function () {

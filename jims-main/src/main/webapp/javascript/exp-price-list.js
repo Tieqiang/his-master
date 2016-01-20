@@ -68,12 +68,9 @@ $(function () {
             {field: 'expName', title: '名称', width: 200, align: 'center'},
             {field: 'inputCode', title: '拼音', width: 50, align: 'center'}
         ]],
-        pagination: false,
         fitColumns: true,
         rowNumber: true,
         autoRowHeight: false,
-        pageSize: 50,
-        pageNumber: 1,
         onSelect: function () {
             expCode = $("#expName").combobox("getValue");
         }
@@ -425,7 +422,8 @@ $(function () {
         }
     });
     if(getCookie("exp_code")){
-        $('#expName').combogrid('setValue', getCookie("exp_code"));
+        $('#expName').combo('setText', getCookie("exp_name"));
+        $('#expName').combo('setValue', getCookie("exp_code"));
         $("#filter").click();
     }
 
@@ -557,9 +555,26 @@ $(function () {
             })
         }
     });
-
+    //打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            expCode = $('#expName').combogrid('getValue');
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-price-list.cpt&expCode=" + expCode);
+        }
+    })
     $("#print").on('click', function () {
-        $.messager.alert('提示', "打印", "info");
+        var printData = $("#dg").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
     });
 
     var loadSimple = function(){
