@@ -669,7 +669,6 @@ public class AcctDeptCostFacade extends BaseFacade {
             String costItemId = acctDeptCosts.get(0).getCostItemId();
             String yearMonth = acctDeptCosts.get(0).getYearMonth() ;
             String hospitalId= acctDeptCosts.get(0).getHospitalId() ;
-
             String hql ="delete AcctDeptCost as cost where cost.yearMonth ='"+yearMonth+"' " +
                     "and cost.hospitalId='"+hospitalId+"' and cost.costItemId='"+costItemId+"' " +
                     "and cost.fetchWay='分摊'" ;
@@ -688,7 +687,55 @@ public class AcctDeptCostFacade extends BaseFacade {
      * @param incomeDeptId
      */
     @Transactional
-    public void saveDeptDevideDeriectWrite(List<AcctDeptCost> acctDeptCosts, String incomeDeptId) {
+    public void saveDeptDevideDeriectWrite(List<AcctDeptCost> acctDeptCosts, String incomeDeptId,String saveModel) {
+        if("0".equals(saveModel)|| saveModel==null){
+            saveDevideOverWrite(acctDeptCosts, incomeDeptId);
+        }
+        if("1".equals(saveModel)){
+            saveDevideUpdate(acctDeptCosts,incomeDeptId) ;
+        }
+    }
+
+    /**
+     * 对于存在的项目进行更新
+     * @param acctDeptCosts
+     * @param incomeDeptId
+     */
+    private void saveDevideUpdate(List<AcctDeptCost> acctDeptCosts, String incomeDeptId) {
+        for(AcctDeptCost cost:acctDeptCosts){
+            String costItemId = cost.getCostItemId();
+            String yearMonth = cost.getYearMonth() ;
+            String hospitalId= cost.getHospitalId() ;
+            String acctDeptId= cost.getAcctDeptId() ;
+            String hql3 = "from CostItemDict as dict where dict.id='"+costItemId+"'" ;
+            CostItemDict costItemDict = createQuery(CostItemDict.class,hql3,new ArrayList<Object>()).getSingleResult() ;
+            Double inRate = 100.0 ;
+            if(costItemDict !=null ){
+                inRate = Double.parseDouble(costItemDict.getCalcPercent());
+            }
+            ServiceDeptIncome serviceDeptIncome=new ServiceDeptIncome() ;
+            serviceDeptIncome.setAcctDeptId(incomeDeptId);
+            serviceDeptIncome.setYearMonth(yearMonth);
+            serviceDeptIncome.setHospitalId(hospitalId);
+            serviceDeptIncome.setIncomeTypeId(costItemId);
+            serviceDeptIncome.setGetWay("分摊");
+            serviceDeptIncome.setTotalIncome(cost.getCost());
+            serviceDeptIncome.setOperator(cost.getOperator());
+            serviceDeptIncome.setOperatorDate(cost.getOperatorDate());
+            serviceDeptIncome.setConfirmStatus("0");
+            serviceDeptIncome.setOutFlag("1");
+            serviceDeptIncome.setServiceForDeptId(cost.getAcctDeptId());
+            merge(serviceDeptIncome) ;
+            cost.setMinusCost(cost.getCost()*(100-inRate)/100);
+            merge(cost) ;
+        }
+    }
+
+
+    /**
+     *保存重新分摊结果，对已经存在的成本进行删除，重新计入
+     */
+    private void saveDevideOverWrite(List<AcctDeptCost> acctDeptCosts,String incomeDeptId){
         if(acctDeptCosts.size()>0){
             for(AcctDeptCost cost: acctDeptCosts){
                 String costItemId = cost.getCostItemId();
@@ -706,7 +753,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                 getEntityManager().createQuery(hql2).executeUpdate() ;
 
                 String hql3 = "from CostItemDict as dict where dict.id='"+costItemId+"'" ;
-                CostItemDict costItemDict = createQuery(CostItemDict.class,hql,new ArrayList<Object>()).getSingleResult() ;
+                CostItemDict costItemDict = createQuery(CostItemDict.class,hql3,new ArrayList<Object>()).getSingleResult() ;
                 Double inRate = 100.0 ;
                 if(costItemDict !=null ){
                     inRate = Double.parseDouble(costItemDict.getCalcPercent());
@@ -727,8 +774,6 @@ public class AcctDeptCostFacade extends BaseFacade {
                 merge(serviceDeptIncome) ;
                 cost.setMinusCost(cost.getCost()*(100-inRate)/100);
                 merge(cost) ;
-
-
             }
         }
     }

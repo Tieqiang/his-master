@@ -4,6 +4,7 @@ import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.htca.entity.AcctDeptProfit;
 import com.jims.his.domain.htca.entity.AcctProfitChangeRecord;
 import com.jims.his.domain.htca.facade.AcctDeptProfitFacade;
+import com.jims.his.domain.htca.vo.DeptProfitVo;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -48,10 +49,10 @@ public class DeptProfitService {
 
     @POST
     @Path("save-update")
-    public Response saveOrUpdate(List<AcctDeptProfit> acctDeptProfits){
+    public Response saveOrUpdate(DeptProfitVo deptProfitVo){
         try {
-            acctDeptProfitFacade.saveOrUpdate(acctDeptProfits) ;
-            return Response.status(Response.Status.OK).entity(acctDeptProfits).build() ;
+            acctDeptProfitFacade.saveOrUpdate(deptProfitVo) ;
+            return Response.status(Response.Status.OK).entity(deptProfitVo).build() ;
         }catch(Exception e ){
             ErrorException errorException = new ErrorException() ;
             errorException.setMessage(e);

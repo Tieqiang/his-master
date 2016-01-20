@@ -3,7 +3,9 @@ package com.jims.his.domain.htca.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.common.entity.AppConfigerParameter;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.htca.entity.*;
+import com.jims.his.domain.htca.vo.DeptProfitVo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,22 +19,44 @@ public class AcctDeptProfitFacade extends BaseFacade {
 
     /**
      * 保存或者更新收入核算
-     * @param acctDeptProfits
+     * @param deptProfitVo
      */
     @Transactional
-    public void saveOrUpdate(List<AcctDeptProfit> acctDeptProfits) {
+    public void saveOrUpdate(DeptProfitVo deptProfitVo) {
         //首先删除本月份其他的数据
-        if(acctDeptProfits.size()>0){
-            AcctDeptProfit acctDeptProfit = acctDeptProfits.get(0);
-            String hospitalId = acctDeptProfit.getHospitalId();
-            String yearMonth = acctDeptProfit.getYearMonth();
-            String hql = "delete from AcctDeptProfit as pro where pro.hospitalId='"+hospitalId+"' and " +
-                    "pro.yearMonth = '"+yearMonth+"'" ;
-            //createQuery(AcctDeptProfit.class,hql,new ArrayList<Object>()).executeUpdate()  ;
-            getEntityManager().createQuery(hql).executeUpdate() ;
-            for(AcctDeptProfit profit :acctDeptProfits){
-                merge(profit) ;
+
+        try {
+            List<AcctDeptProfit> acctDeptProfits = deptProfitVo.getAcctDeptProfits() ;
+            BeanChangeVo<AcctProfitChangeRecord> acctProfitChangeRecordBeanChangeVo = deptProfitVo.getAcctProfitChangeRecordBeanChangeVo() ;
+            List<AcctProfitChangeRecord> inserted=acctProfitChangeRecordBeanChangeVo.getInserted() ;
+            List<AcctProfitChangeRecord> updated = acctProfitChangeRecordBeanChangeVo.getUpdated() ;
+            inserted.addAll(updated) ;
+            List<AcctProfitChangeRecord> deleted = acctProfitChangeRecordBeanChangeVo.getDeleted() ;
+
+            //保存调整记录
+            for(AcctProfitChangeRecord record:inserted){
+                merge(record) ;
             }
+
+            List<String> ids = new ArrayList<>() ;
+            for(AcctProfitChangeRecord record:deleted){
+                ids.add(record.getId()) ;
+            }
+            removeByStringIds(AcctProfitChangeRecord.class,ids);
+
+            if(acctDeptProfits.size()>0){
+                AcctDeptProfit acctDeptProfit = acctDeptProfits.get(0);
+                String hospitalId = acctDeptProfit.getHospitalId();
+                String yearMonth = acctDeptProfit.getYearMonth();
+                String hql = "delete from AcctDeptProfit as pro where pro.hospitalId='"+hospitalId+"' and " +
+                        "pro.yearMonth = '"+yearMonth+"'" ;
+                getEntityManager().createQuery(hql).executeUpdate() ;
+                for(AcctDeptProfit profit :acctDeptProfits){
+                    merge(profit) ;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

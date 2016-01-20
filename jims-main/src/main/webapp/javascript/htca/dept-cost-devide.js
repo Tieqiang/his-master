@@ -2,46 +2,46 @@
  * Created by heren on 2015/12/2.
  */
 //一线科室成本提取
-$(function(){
+$(function () {
 
-    var depts = undefined ;
-    var incomeDeptId = undefined ;
-    var acctDeptDict=[] ;
-    $.get("/api/acct-dept-dict/acct-list?hospitalId="+parent.config.hospitalId,function(data){
-        acctDeptDict = data ;
-    }) ;
+    var depts = undefined;
+    var incomeDeptId = undefined;
+    var acctDeptDict = [];
+    $.get("/api/acct-dept-dict/acct-list?hospitalId=" + parent.config.hospitalId, function (data) {
+        acctDeptDict = data;
+    });
 
-    var costItems = [] ;
-    $.get("/api/cost-item/list-item?hospitalId="+parent.config.hospitalId,function(data){
+    var costItems = [];
+    $.get("/api/cost-item/list-item?hospitalId=" + parent.config.hospitalId, function (data) {
         //costItems = data ;
         console.log("1")
-        console.log(data) ;
-        for(var i = 0;i<data.length;i++){
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
             costItems.push(data[i])
         }
     })
-    $.get("/api/service-income-type/list-all?hospitalId="+parent.config.hospitalId,function(data){
+    $.get("/api/service-income-type/list-all?hospitalId=" + parent.config.hospitalId, function (data) {
         console.log("2")
-        console.log(data) ;
-        for(var i = 0 ;i<data.length;i++){
-            var obj = {} ;
-            obj.id=data[i].id ;
-            obj.costItemName = data[i].serviceTypeName ;
-            costItems.push(obj) ;
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            var obj = {};
+            obj.id = data[i].id;
+            obj.costItemName = data[i].serviceTypeName;
+            costItems.push(obj);
         }
-    }) ;
-    $.get("/api/service-income-type/list-detail?hospitalId="+parent.config.hospitalId,function(data){
+    });
+    $.get("/api/service-income-type/list-detail?hospitalId=" + parent.config.hospitalId, function (data) {
         console.log("3")
-        console.log(data) ;
-        for(var i = 0 ;i<data.length;i++){
-            var obj = {} ;
-            obj.id=data[i].id ;
-            obj.costItemName = data[i].incomeDetailName ;
-            costItems.push(obj) ;
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            var obj = {};
+            obj.id = data[i].id;
+            obj.costItemName = data[i].incomeDetailName;
+            costItems.push(obj);
         }
-    }) ;
+    });
 
-    var editRow = undefined ;
+    var editRow = undefined;
     var p = $('#fetchDate').datebox('panel');//日期选择对象
     var tds = false; //日期选择对象中月份
     var span = p.find('span.calendar-text'); //显示月份层的触发控件
@@ -71,7 +71,7 @@ $(function(){
                 month = 12;
                 year = year - 1;
             }
-            if(month<10){
+            if (month < 10) {
                 return year + '-0' + month;
             }
             return year + '-' + month;
@@ -80,17 +80,17 @@ $(function(){
     });
 
     $("#serviceDeptIncomeId").combobox({
-        textField:'deptName',
-        valueField:'id',
-        method:'GET',
-        url:"/api/acct-dept-dict/acct-list?hospitalId="+parent.config.hospitalId,
-        onLoadSuccess:function(){
-            var acctDeptId = parent.config.acctDeptId ;
-            if(acctDeptId){
-                $(this).combobox('setValue',acctDeptId) ;
-            }else{
-                if(acctDeptDict.length>0){
-                    $(this).combobox('setValue',acctDeptDict[0].id) ;
+        textField: 'deptName',
+        valueField: 'id',
+        method: 'GET',
+        url: "/api/acct-dept-dict/acct-list?hospitalId=" + parent.config.hospitalId,
+        onLoadSuccess: function () {
+            var acctDeptId = parent.config.acctDeptId;
+            if (acctDeptId) {
+                $(this).combobox('setValue', acctDeptId);
+            } else {
+                if (acctDeptDict.length > 0) {
+                    $(this).combobox('setValue', acctDeptDict[0].id);
                 }
             }
         }
@@ -98,257 +98,291 @@ $(function(){
 
 
     $("#deptCostTable").datagrid({
-        fit:true,
-        fitColumns:true,
-        method:'GET',
-        checkOnSelect:true,
+        fit: true,
+        fitColumns: true,
+        method: 'GET',
+        checkOnSelect: true,
         striped: true,
         singleSelect: false,
         toolbar: '#ft',
         method: 'GET',
-        pageSize:100,
-        pageList: [50,100, 200, 300],
+        pageSize: 100,
+        pageList: [50, 100, 200, 300],
         pagination: true,
-        loadMsg:'数据正在加载，请稍后......',
-        columns:[[{
-            title:'id',
-            field:'id',
-            checkbox:true
-        },{
-            title:'核算单元',
-            field:'acctDeptId',
-            width:'20%',
-            formatter:function(value,row,index){
-                for(var i = 0 ;i<acctDeptDict.length ;i++){
-                    if(value==acctDeptDict[i].id){
-                        return acctDeptDict[i].deptName ;
+        loadMsg: '数据正在加载，请稍后......',
+        columns: [[{
+            title: 'id',
+            field: 'id',
+            checkbox: true
+        }, {
+            title: '核算单元',
+            field: 'acctDeptId',
+            width: '20%',
+            formatter: function (value, row, index) {
+                for (var i = 0; i < acctDeptDict.length; i++) {
+                    if (value == acctDeptDict[i].id) {
+                        return acctDeptDict[i].deptName;
                     }
                 }
-                return value ;
+                return value;
             }
-        },{
-            title:'成本类型',
-            field:'costItemId',
-            width:'10%',
-            formatter:function(value,row,index){
-                console.log(costItems) ;
-                for(var i = 0 ;i<costItems.length;i++){
-                    if(value ==costItems[i].id){
-                        return costItems[i].costItemName ;
+        }, {
+            title: '成本类型',
+            field: 'costItemId',
+            width: '10%',
+            formatter: function (value, row, index) {
+                console.log(costItems);
+                for (var i = 0; i < costItems.length; i++) {
+                    if (value == costItems[i].id) {
+                        return costItems[i].costItemName;
                     }
                 }
-                return value ;
+                return value;
             }
-        },{
-            title:'成本金额',
-            field:'cost',
-            width:'10%',
-            editor:{type:'validatebox',options:{
-                validType:'number'
-            }},
-            formatter:function(value,row,index){
-                return parseFloat(value).toFixed(2) ;
+        }, {
+            title: '成本金额',
+            field: 'cost',
+            width: '10%',
+            editor: {
+                type: 'validatebox', options: {
+                    validType: 'number'
+                }
+            },
+            formatter: function (value, row, index) {
+                return parseFloat(value).toFixed(2);
             }
-        },{
-            title:'减免成本',
-            field:'minusCost',
-            width:'10%',
-            editor:{type:'validatebox',options:{
-                validType:'number'
-            }}
-        },{
-            title:'备注信息',
-            field:'memo',
-            width:'30%',
-            editor:{type:'textbox',options:{}}
-        },{
-            title:'取得方式',
-            field:'fetchWay',
-            width:'10%'
+        }, {
+            title: '减免成本',
+            field: 'minusCost',
+            width: '10%',
+            editor: {
+                type: 'validatebox', options: {
+                    validType: 'number'
+                }
+            }
+        }, {
+            title: '备注信息',
+            field: 'memo',
+            width: '30%',
+            editor: {type: 'textbox', options: {}}
+        }, {
+            title: '取得方式',
+            field: 'fetchWay',
+            width: '10%'
         }]],
-        onLoadSuccess:function(data){
-            var row = {} ;
-            row.acctDeptId = "费用合计" ;
-            row.cost = 0.0 ;
-            console.log(data) ;
-            for(var i =0 ;i<data.rows.length;i++){
-                row.cost +=parseFloat(data.rows[i].cost) ;
+        onLoadSuccess: function (data) {
+            var row = {};
+            row.acctDeptId = "费用合计";
+            row.cost = 0.0;
+            console.log(data);
+            for (var i = 0; i < data.rows.length; i++) {
+                row.cost += parseFloat(data.rows[i].cost);
             }
-            $(this).datagrid('insertRow',{
-                index:0,
-                row:row
-            }) ;
+            $(this).datagrid('insertRow', {
+                index: 0,
+                row: row
+            });
         }
-    }) ;
+    });
     //设置分页
     var p1 = $('#deptCostTable').datagrid('getPager');
     $(p1).pagination({
         pageSize: 100,//每页显示的记录条数，默认为10
-        pageList: [50,100, 200, 300],//可以设置每页记录条数的列表
+        pageList: [50, 100, 200, 300],//可以设置每页记录条数的列表
         beforePageText: '第',//页数文本框前显示的汉字
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
     //成本提取
-    $("#devideSetBtn").on('click',function(){
-        var yearMonth = $("#fetchDate").datebox('getValue') ;
-        if(!yearMonth){
-            $.messager.alert("系统提示","请选择计算成本月份","info") ;
-            return ;
+    $("#devideSetBtn").on('click', function () {
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert("系统提示", "请选择计算成本月份", "info");
+            return;
         }
-        $("#itemWin").window('open') ;
-    }) ;
+        $("#itemWin").window('open');
+    });
 
     $("#fetchType").combobox({
-        textField:'paramName',
-        valueField:'id',
-        method:'GET',
-        url:'/api/acct-param/list-by-type?hospitalId='+parent.config.hospitalId+"&fetchType=cost_fetch_type",
-        onLoadSuccess:function(){
-            var data = $(this).combobox('getData') ;
-            if(data.length>0){
-                $(this).combobox('setValue',data[0].id)
+        textField: 'paramName',
+        valueField: 'id',
+        method: 'GET',
+        url: '/api/acct-param/list-by-type?hospitalId=' + parent.config.hospitalId + "&fetchType=cost_fetch_type",
+        onLoadSuccess: function () {
+            var data = $(this).combobox('getData');
+            if (data.length > 0) {
+                $(this).combobox('setValue', data[0].id)
             }
         }
-    })  ;
+    });
 
 
     //查看汇总信息
-    $("#saveDevideBtn").on('click',function(){
-
-        if(!incomeDeptId){
-            $.messager.alert("系统提示","登记核算单元为空，不能够进行保存","error") ;
-            return  ;
+    $("#saveDevideBtn").on('click', function () {
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert("系统提示", "获取分摊月份出错", "info");
+            return;
+        }
+        if (!incomeDeptId) {
+            $.messager.alert("系统提示", "登记核算单元为空，不能够进行保存", "error");
+            return;
         }
 
-        var rows =$("#deptCostTable").datagrid('getRows') ;
-        if(rows.length==0){
-            $.messager.alert('系统提示','没有要保存的数据....','info') ;
-            return ;
+        var rows = $("#deptCostTable").datagrid('getRows');
+        if (rows.length <= 1) {
+            $.messager.alert('系统提示', '没有要保存的数据....', 'info');
+            return;
         }
-        for(var i = 0 ;i<rows.length ;i++){
-            rows[i].hospitalId = parent.config.hospitalId ;
-            rows[i].operator = parent.config.loginId ;
-            rows[i].operatorDate = new Date() ;
+        var costItemId = rows[1].costItemId;
+        if (!costItemId) {
+            $.messager.alert('系统提示', '获取成本类型错误', 'info');
+        }
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].hospitalId = parent.config.hospitalId;
+            rows[i].operator = parent.config.loginId;
+            rows[i].operatorDate = new Date();
         }
         rows.shift();
-        $.postJSON("/api/acct-dept-cost/save-dept-devide/"+incomeDeptId,rows,function(data){
-            $.messager.alert('系统提示','保存成功','info') ;
-        },function(data){})
-        //$.postJSON("")
-    }) ;
-
-
-    $("#costItemId").combobox({
-        textField:'costItemName',
-        valueField:'id',
-        method:'GET',
-        url:'/api/cost-item/list-by-class?hospitalId='+parent.config.hospitalId+"&classId=4028803e519f790001519fac9c760009",
-        onLoadSuccess:function(){
-            var data =$(this).combobox('getData') ;
-            if(data.length>0){
-                $(this).combobox('setValue',data[0].id) ;
-            }
-        }
-    }) ;
-
-    $("#devideWay").combobox({
-        textField:"name",
-        valueField:"id",
-        data:[{
-            name:'人员分摊法',
-            id:'0',
-            selected:true
-        },{
-            name:'面积分摊法',
-            id:'1'
-        },{
-            name:'平均分摊法',
-            id:'2'
-        },{
-            name:'护理单元占床日分摊',
-            id:'3'
-        }],
-        onSelect:function(record){
-            if(record.id=='2'){
-                $("#acctDeptWin").window('open')
-            }else{
-                depts = undefined ;
-            }
-        }
-    }) ;
-
-    $("#itemWin").window({
-        modal:true,
-        closed:true
-    })  ;
-
-    //分摊计算
-    $("#devideBtn").on('click',function(){
-        var yearMonth = $("#fetchDate").datebox('getValue') ;
-        if(!yearMonth){
-            $.messager.alert('系统提示','获取日期失败','info') ;
-            return ;
-        }
-        var costItemId = $("#costItemId").combobox('getValue');
-        if(!costItemId){
-            $.messager.alert('系统提示','请选择成本项目','error') ;
-            return ;
-        }
-
-        var devideWay = $("#devideWay").combobox('getValue') ;
-        if(!devideWay){
-            $.messager.alert('系统提示','请选择分摊方法','error') ;
-            return ;
-        }
-
-        if(devideWay=='2' && !depts){
-            $.messager.alert('系统提示','平均分摊法需要设置分摊核算单元','error') ;
-            return ;
-        }
-
-        var totalMoney = $("#devideMoney").textbox('getValue') ;
-        if(!totalMoney){
-            $.messager.alert('系统提示','请填写分摊金额','error') ;
-            return ;
-        }
-        $.messager.progress({
-            title:'系统提示',
-            msg:'正在加载中，请稍后....',
-            text:'正在分摊...'
-        }) ;
-
-        $.get("/api/cost-item/get-by-id?id="+costItemId,function(data){
-            if(data.addRate>0){
-                totalMoney = totalMoney * data.addRate ;
-            }
-            if(depts){
-                $.get("/api/acct-dept-cost/cost-devide?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+
-                "&costItemId="+costItemId+"&devideWay="+devideWay+"&totalMoney="+totalMoney+"&depts="+depts,function(data){
-                    if(data){
-                        $.messager.alert('系统提示','分摊成功','info') ;
-                        $("#deptCostTable").datagrid('loadData',data) ;
-                        $("#itemWin").window('close') ;
-                        $.messager.progress('close');
-                        incomeDeptId = $("#serviceDeptIncomeId").combobox('getValue') ;
+        $.get("/api/acct-dept-cost/list?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth + "&costItemId=" + costItemId, function (data) {
+            if (data.length > 0) {
+                $.messager.confirm("系统提示","本月份已经存在此成本的分摊数据，选择确定合并分摊结果，选择取消覆盖分摊结果",function(v){
+                    if(v){
+                        $.postJSON("/api/acct-dept-cost/save-dept-devide/1/" + incomeDeptId, rows, function (data) {
+                            $.messager.alert('系统提示', '保存成功', 'info');
+                        }, function (data) {
+                        })
                     }else{
-                        $.messager.alert("系统提示","分摊设置出现错误",'error') ;
-                        $("#itemWin").window('close') ;
-                        $.messager.progress('close');
+                        $.postJSON("/api/acct-dept-cost/save-dept-devide/0/" + incomeDeptId, rows, function (data) {
+                            $.messager.alert('系统提示', '保存成功', 'info');
+                        }, function (data) {
+
+                        })
                     }
                 })
             }else{
-                $.get("/api/acct-dept-cost/cost-devide?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+
-                "&costItemId="+costItemId+"&devideWay="+devideWay+"&totalMoney="+totalMoney,function(data){
-                    if(data){
-                        $.messager.alert('系统提示','分摊成功','info') ;
-                        $("#deptCostTable").datagrid('loadData',data) ;
-                        $("#itemWin").window('close') ;
+                $.postJSON("/api/acct-dept-cost/save-dept-devide/0/" + incomeDeptId, rows, function (data) {
+                    $.messager.alert('系统提示', '保存成功', 'info');
+                }, function (data) {
+
+                })
+            }
+        })
+
+        //$.postJSON("")
+    });
+
+
+    $("#costItemId").combobox({
+        textField: 'costItemName',
+        valueField: 'id',
+        method: 'GET',
+        url: '/api/cost-item/list-by-class?hospitalId=' + parent.config.hospitalId + "&classId=4028803e519f790001519fac9c760009",
+        onLoadSuccess: function () {
+            var data = $(this).combobox('getData');
+            if (data.length > 0) {
+                $(this).combobox('setValue', data[0].id);
+            }
+        }
+    });
+
+    $("#devideWay").combobox({
+        textField: "name",
+        valueField: "id",
+        data: [{
+            name: '人员分摊法',
+            id: '0',
+            selected: true
+        }, {
+            name: '面积分摊法',
+            id: '1'
+        }, {
+            name: '平均分摊法',
+            id: '2'
+        }, {
+            name: '护理单元占床日分摊',
+            id: '3'
+        }],
+        onSelect: function (record) {
+            if (record.id == '2') {
+                $("#acctDeptWin").window('open')
+            } else {
+                depts = undefined;
+            }
+        }
+    });
+
+    $("#itemWin").window({
+        modal: true,
+        closed: true
+    });
+
+    //分摊计算
+    $("#devideBtn").on('click', function () {
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert('系统提示', '获取日期失败', 'info');
+            return;
+        }
+        var costItemId = $("#costItemId").combobox('getValue');
+        if (!costItemId) {
+            $.messager.alert('系统提示', '请选择成本项目', 'error');
+            return;
+        }
+
+        var devideWay = $("#devideWay").combobox('getValue');
+        if (!devideWay) {
+            $.messager.alert('系统提示', '请选择分摊方法', 'error');
+            return;
+        }
+
+        if (devideWay == '2' && !depts) {
+            $.messager.alert('系统提示', '平均分摊法需要设置分摊核算单元', 'error');
+            return;
+        }
+
+        var totalMoney = $("#devideMoney").textbox('getValue');
+        if (!totalMoney) {
+            $.messager.alert('系统提示', '请填写分摊金额', 'error');
+            return;
+        }
+        $.messager.progress({
+            title: '系统提示',
+            msg: '正在加载中，请稍后....',
+            text: '正在分摊...'
+        });
+
+        $.get("/api/cost-item/get-by-id?id=" + costItemId, function (data) {
+            if (data.addRate > 0) {
+                totalMoney = totalMoney * data.addRate;
+            }
+            if (depts) {
+                $.get("/api/acct-dept-cost/cost-devide?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth +
+                "&costItemId=" + costItemId + "&devideWay=" + devideWay + "&totalMoney=" + totalMoney + "&depts=" + depts, function (data) {
+                    if (data) {
+                        $.messager.alert('系统提示', '分摊成功', 'info');
+                        $("#deptCostTable").datagrid('loadData', data);
+                        $("#itemWin").window('close');
                         $.messager.progress('close');
-                        incomeDeptId = $("#serviceDeptIncomeId").combobox('getValue') ;
-                    }else{
-                        $.messager.alert("系统提示","分摊设置出现错误",'error') ;
-                        $("#itemWin").window('close') ;
+                        incomeDeptId = $("#serviceDeptIncomeId").combobox('getValue');
+                    } else {
+                        $.messager.alert("系统提示", "分摊设置出现错误", 'error');
+                        $("#itemWin").window('close');
+                        $.messager.progress('close');
+                    }
+                })
+            } else {
+                $.get("/api/acct-dept-cost/cost-devide?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth +
+                "&costItemId=" + costItemId + "&devideWay=" + devideWay + "&totalMoney=" + totalMoney, function (data) {
+                    if (data) {
+                        $.messager.alert('系统提示', '分摊成功', 'info');
+                        $("#deptCostTable").datagrid('loadData', data);
+                        $("#itemWin").window('close');
+                        $.messager.progress('close');
+                        incomeDeptId = $("#serviceDeptIncomeId").combobox('getValue');
+                    } else {
+                        $.messager.alert("系统提示", "分摊设置出现错误", 'error');
+                        $("#itemWin").window('close');
                         $.messager.progress('close');
                     }
                 })
@@ -359,60 +393,60 @@ $(function(){
 
     //设置分摊项目的对照科室
     $("#acctDeptWin").window({
-        title:'分摊项目设置',
-        width:'500',
-        height:'500',
-        modal:true,
-        closed:true,
-        onOpen:function(){
+        title: '分摊项目设置',
+        width: '500',
+        height: '500',
+        modal: true,
+        closed: true,
+        onOpen: function () {
             $(this).window('center');
         }
-    }) ;
+    });
 
     $("#acctDeptTable").datagrid({
-        method:'GET',
-        fit:true,
-        fitColumns:true,
-        url:'/api/acct-dept-dict/list-end-dept?hospitalId='+parent.config.hospitalId,
-        columns:[[{
-            title:"编号",
-            field:'id',
-            checkbox:true
-        },{
-            title:'科室名称',
-            field:'deptName',
-            width:'50%'
-        },{
-            title:'科室代码',
-            field:'deptCode',
-            width:'50%'
+        method: 'GET',
+        fit: true,
+        fitColumns: true,
+        url: '/api/acct-dept-dict/list-end-dept?hospitalId=' + parent.config.hospitalId,
+        columns: [[{
+            title: "编号",
+            field: 'id',
+            checkbox: true
+        }, {
+            title: '科室名称',
+            field: 'deptName',
+            width: '50%'
+        }, {
+            title: '科室代码',
+            field: 'deptCode',
+            width: '50%'
         }]]
-    }) ;
+    });
 
 
     //取消按钮
-    $("#cancelAcctDeptBtn").on('click',function(){
+    $("#cancelAcctDeptBtn").on('click', function () {
         $("#acctDeptWin").window('close');
     });
 
-    $("#saveAcctDeptBtn").on('click',function(){
-        var rows = $("#acctDeptTable").datagrid('getSelections') ;
-        if(rows.length>0){
-            for(var i = 0 ;i<rows.length ;i++){
-                if(i==0){
-                    depts = rows[i].id ;
+    $("#saveAcctDeptBtn").on('click', function () {
+        var rows = $("#acctDeptTable").datagrid('getSelections');
+        if (rows.length > 0) {
+            for (var i = 0; i < rows.length; i++) {
+                if (i == 0) {
+                    depts = rows[i].id;
                 }
-                if(i>0){
-                    depts = depts +";"+rows[i].id ;
+                if (i > 0) {
+                    depts = depts + ";" + rows[i].id;
                 }
             }
         }
-        $("#acctDeptWin").window('close') ;
+        $("#acctDeptWin").window('close');
     })
 
-    $("#closeBtn").on("click",function(){
+    $("#closeBtn").on("click", function () {
         //取消按钮
-        $("#itemWin").window('close') ;
+        $("#itemWin").window('close');
     })
 });
 

@@ -250,7 +250,7 @@ $(function(){
             }) ;
 
             $("#menuTree").tree('loadData',menuTreeData);
-            $("#menuTree").tree('collapseAll')//默认折叠所有的选项
+            //$("#menuTree").tree('collapseAll')//默认折叠所有的选项
             var load = {};
             if(menuTreeData){
                 var  promiseLoad = $.get("/api/module-dict/list-tabs", function (data) {

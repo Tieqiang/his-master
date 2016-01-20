@@ -68,11 +68,12 @@ public class AcctDeptCostService {
     }
 
     @POST
-    @Path("save-dept-devide/{incomeDeptId}")
-    public Response saveDeptDevideAcctDeptCost(List<AcctDeptCost> acctDeptCosts,@PathParam("incomeDeptId")String incomeDeptId) {
+    @Path("save-dept-devide/{saveModel}/{incomeDeptId}")
+    public Response saveDeptDevideAcctDeptCost(List<AcctDeptCost> acctDeptCosts,@PathParam("incomeDeptId")String incomeDeptId,
+                                               @PathParam("saveModel")String saveModel) {
 
         try {
-            acctDeptCostFacade.saveDeptDevideDeriectWrite(acctDeptCosts, incomeDeptId);
+            acctDeptCostFacade.saveDeptDevideDeriectWrite(acctDeptCosts, incomeDeptId,saveModel);
             return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
         } catch (Exception e) {
             e.printStackTrace();
