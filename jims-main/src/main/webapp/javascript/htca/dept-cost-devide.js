@@ -448,5 +448,20 @@ $(function () {
         //取消按钮
         $("#itemWin").window('close');
     })
+
+
+    //根据当前时间获取上一个月份的数据
+    $("#sameWithLastMonth").on('click',function(){
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert('系统提示', '获取日期失败', 'info');
+            return;
+        }
+        var costItemId = $("#costItemId").combobox('getValue');
+        if (!costItemId) {
+            $.messager.alert('系统提示', '请选择成本项目', 'error');
+            return;
+        }
+    })
 });
 

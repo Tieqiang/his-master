@@ -7,7 +7,7 @@
  */
 $(function () {
 
-    var rowValue = undefined;
+var rowValue = undefined;
 
     $("#acctDeptStaffWindow").window({
         width: '500',
@@ -223,6 +223,11 @@ $(function () {
             var options = $("#acctVsDatagrid").datagrid('options') ;
             options.url="/api/dept-dict/list-width-recked-by-acct?hospitalId=" + parent.config.hospitalId+"&acctDeptId="+row.id ;
             $("#acctVsDatagrid").datagrid('reload') ;
+
+            var opt = $("#acctStaffGrid").datagrid('options')
+            opt.url="/api/staff-dict/list-with-acct?hospitalId=" + parent.config.hospitalId+"&acctDeptId="+rowValue.id ;
+            $("#acctStaffGrid").datagrid('reload') ;
+
         },
         onContextMenu:function(e,row){
             e.preventDefault() ;
@@ -319,7 +324,7 @@ $(function () {
     $("#removeBtn").on('click', function (e) {
         var row = $("#acctDeptDataGrid").datagrid('getSelected');
         if (row) {
-            $.messager.confirm("系统提示", "确定要进行删除操作吗", function (r) {
+            $.messager.confirm("系统提示", "删除的过程中，会同时删除人员对照和HIS科室对照，是否继续？", function (r) {
                 if (r) {
                     $.post("/api/acct-dept-dict/del/" + row.id, function (data) {
                         loadAcctDept();
@@ -450,12 +455,13 @@ $(function () {
 
     //已经对照的科室
     $("#acctVsDatagrid").datagrid({
-        fit: true,
         fitColumns: true,
         striped: true,
         singleSelect: true,
         method: 'GET',
         singleSelect: false,
+        height:200,
+        title:'核算单元对照科室',
         toolbar:'#footBar',
         columns: [[{
             text: 'id',
@@ -472,6 +478,11 @@ $(function () {
         }]]
     }) ;
 
+    $("#acctStaffGrid").datagrid({
+        title:'核算单元人员对照',
+        fit:true,
+        fitColumns:true
+    });
     //取消对照
     $("#cancleVsBtn").on('click',function(){
         var rows = $("#acctVsDatagrid").datagrid('getSelections') ;
@@ -489,5 +500,163 @@ $(function () {
             $("#acctVsDatagrid").datagrid('reload') ;
         })
 
+    })
+
+
+    //设置人元对照关系
+    $("#acctStaffWindow").window({
+        title:'设置人员对照',
+        width:'500',
+        height:'550',
+        closed: true,
+        modal:true,
+        footer: '#acctStaffVsFt',
+        onOpen:function(){
+            $(this).window('center') ;
+            $("#staffDictTable").datagrid('reload');
+        }
+    });
+
+    //尚未对照的工作人员
+    $("#staffDictTable").datagrid({
+        fit:true,
+        fitColumns:true,
+        url:"/api/staff-dict/list-no-acct?hospitalId="+parent.config.hospitalId,
+        method:'GET',
+        columns:[[{
+            title:'id',
+            field:'id',
+            checkbox:true
+        },{
+            title: '登录名',
+            field: 'loginName',
+            width: '20%'
+        },{
+            title:'姓名',
+            field:'name',
+            width:'20%'
+        },{
+            title: '科室名称',
+            field: 'deptDict',
+            width: '20%',
+            formatter: function(value,row,index){
+                if (value.deptName){
+                    return value.deptName ;
+                } else {
+                    return value;
+                }
+            }
+        }, {
+            title: '工作',
+            field: 'job',
+            width: '20%'
+        }, {
+            title: '职称',
+            field: 'title',
+            width: '20%'
+        }]]
+    }) ;
+
+    //关闭对照的科室
+    $("#acctStaffVsClearBtn").on('click',function(){
+        $("#acctStaffWindow").window('close');
+    }) ;
+
+    $("#addStaffMenu").on('click',function(){
+        $("#acctStaffWindow").window('open');
+    })
+
+    //保存设置的护理单元
+    $("#acctStaffVsAddBtn").on('click',function(){
+        if (!rowValue) {
+            $.messager.alert('系统提示', '选择了无效的核算组', 'error');
+            return;
+        } else {
+            var selectedRows = $("#staffDictTable").datagrid('getSelections');
+            if (selectedRows.length<=0) {
+                $.messager.confirm('系统提示', '没有选择任何工作人员，是否关闭？', function (data) {
+                    if (data == 1) {
+                        $("#acctStaffWindow").window('close');
+                    }
+                });
+            } else {
+
+                for (var i = 0; i < selectedRows.length; i++) {
+                    selectedRows[i].acctDeptId=rowValue.id ;
+                }
+
+                $.postJSON("/api/staff-dict/save-acct", selectedRows, function (data) {
+                    $.messager.alert('系统提示', '设置工作人员成功！', 'info');
+                    $("#acctStaffWindow").window('close');
+                    var options = $("#acctStaffGrid").datagrid('options') ;
+                    options.url="/api/staff-dict/list-with-acct?hospitalId=" + parent.config.hospitalId+"&acctDeptId="+rowValue.id ;
+                    $("#acctStaffGrid").datagrid('reload') ;
+                }, function (data) {
+                    $.messager.alert('系统提示', '设置工作人员失败', 'error');
+                    var options = $("#acctStaffGrid").datagrid('options') ;
+                    options.url="/api/staff-dict/list-with-acct?hospitalId=" + parent.config.hospitalId+"&acctDeptId="+rowValue.id ;
+                    $("#acctStaffGrid").datagrid('reload') ;
+                })
+            }
+        }
+
+    })
+
+
+    //对照后的
+    $("#acctStaffGrid").datagrid({
+        fit:true,
+        fitColumns:true,
+        url:"/api/staff-dict/list-with-acct?hospitalId="+parent.config.hospitalId,
+        method:'GET',
+        toolbar:'#staffFoot',
+        columns:[[{
+            title:'id',
+            field:'id',
+            checkbox:true
+        },{
+            title:'姓名',
+            field:'name',
+            width:'40%'
+        }, {
+            title: '工作',
+            field: 'job',
+            width: '30%'
+        }, {
+            title: '职称',
+            field: 'title',
+            width: '30%'
+        }]]
+    });
+
+    $("#cancleVsStaffBtn").on('click',function(){
+        if (!rowValue) {
+            $.messager.alert('系统提示', '选择了无效的核算组', 'error');
+            return;
+        } else {
+            var selectedRows = $("#acctStaffGrid").datagrid('getSelections');
+            if (selectedRows.length<=0) {
+                $.messager.alert("系统提示","请删除要处理的数据",'error') ;
+                return ;
+            } else {
+
+                for (var i = 0; i < selectedRows.length; i++) {
+                    selectedRows[i].acctDeptId="" ;
+                }
+
+                $.postJSON("/api/staff-dict/save-acct", selectedRows, function (data) {
+                    $.messager.alert('系统提示', '设置工作人员成功！', 'info');
+                    $("#acctStaffWindow").window('close');
+                    var options = $("#acctStaffGrid").datagrid('options') ;
+                    options.url="/api/staff-dict/list-with-acct?hospitalId=" + parent.config.hospitalId+"&acctDeptId="+rowValue.id ;
+                    $("#acctStaffGrid").datagrid('reload') ;
+                }, function (data) {
+                    $.messager.alert('系统提示', '设置工作人员失败', 'error');
+                    var options = $("#acctStaffGrid").datagrid('options') ;
+                    options.url="/api/staff-dict/list-with-acct?hospitalId=" + parent.config.hospitalId+"&acctDeptId="+rowValue.id ;
+                    $("#acctStaffGrid").datagrid('reload') ;
+                })
+            }
+        }
     })
 })

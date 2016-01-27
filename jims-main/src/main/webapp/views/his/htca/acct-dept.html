@@ -24,26 +24,37 @@
 <div id="right" data-options="region:'east'" style="padding:1px;width:300px;background:#eee;">
     <table id="acctVsDatagrid">
     </table>
+    <table id="acctStaffGrid" data-options="region:'center'">
+    </table>
 </div>
 <div id="ft" style="margin:5px;">
-    <!--选择月份：<input type="text" id="synDate" class="easyui-datebox" />-->
     <a href="#" id="synBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">同步科室信息</a>
     <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存核算单元信息</a>
     <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加核算单元</a>
     <a href="#" id="addNextBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加下级核算单元</a>
     <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除选中数据</a>
-    <a href="#">双击记录设置对照</a>
 </div>
 
 <div id="footBar" style="margin:5px;">
-    <a href="#" id="cancleVsBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">取消对照</a>
+    <a href="#" id="cancleVsBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">取消科室对照</a>
+</div>
+<div id="staffFoot" style="margin:5px;">
+    <a href="#" id="cancleVsStaffBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">取消人员对照</a>
 </div>
 
+<!--核算单元用于科室对照-->
 <div id="acctDeptStaffWindow" class="easyui-window">
     <table id="deptDictTable" class="easyui-tree">
-
     </table>
 </div>
+
+<!--人员核算单元归集-->
+<div id="acctStaffWindow" class="easyui-window">
+    <table id="staffDictTable" class="easyui-datagrid"></table>
+</div>
+
+
+
 
 <div id="acctDeptFormWindow" class="easyui-window">
     <form id="acctDeptForm">
@@ -118,7 +129,9 @@
 <div id="rightMenu" class="easyui-menu" style="width:120px;">
     <div data-options="iconCls:'icon-reload'" id="modifyDeptMenu">修改核算单元信息</div>
     <div class="menu-sep"></div>
-    <div data-options="iconCls:'icon-man'" id="modifyDeptVs">设置HIS对照</div>
+    <div data-options="iconCls:'icon-add'" id="modifyDeptVs">设置HIS对照</div>
+    <div class="menu-sep"></div>
+    <div data-options="iconCls:'icon-man'" id='addStaffMenu'>设置人员对照</div>
 </div>
 
 
@@ -130,6 +143,12 @@
 <div id="acctDeptVsDeptDictFt">
     <a href="#" id="accDeptVsClearBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">全部取消</a>
     <a href="#" id="accDeptVsAddBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存对照</a>
+</div>
+
+<!--人员对照-->
+<div id="acctStaffVsFt">
+    <a href="#" id="acctStaffVsClearBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">取消选择</a>
+    <a href="#" id="acctStaffVsAddBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">选择人员</a>
 </div>
 
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>

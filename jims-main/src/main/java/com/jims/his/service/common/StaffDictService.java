@@ -12,6 +12,7 @@ import com.jims.his.domain.common.vo.StaffDictVo;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -98,6 +99,32 @@ public class StaffDictService {
         return all ;
     }
 
+
+    /***
+     * 获取某一个医院为对照的工作人员
+     * @param hospitalId
+     * @return
+     */
+    @GET
+    @Path("list-no-acct")
+    public List<StaffDict> listWithNoAcctDeptId(@QueryParam("hospitalId")String hospitalId){
+        String hql = "from StaffDict as staff where staff.acctDeptId is null  order by staff.name " ;
+        return staffDictFacade.createQuery(StaffDict.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+
+    /**
+     * 根据核算单元查找对应的人员信息
+     * @param hospitalId
+     * @param acctDeptId
+     * @return
+     */
+    @GET
+    @Path("list-with-acct")
+    public List<StaffDict> listWithAcctDeptId(@QueryParam("hospitalId")String hospitalId,@QueryParam("acctDeptId")String acctDeptId){
+        String hql = "from StaffDict as staff where staff.acctDeptId='"+acctDeptId+"' order by staff.name" ;
+        return staffDictFacade.createQuery(StaffDict.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+
     /**
      * 获取密码
      * @param hospitalId
@@ -146,4 +173,24 @@ public class StaffDictService {
         }
         return all ;
     }
+
+    /**
+     * 保存所属核算单元
+     * @param staffDicts
+     * @return
+     */
+    @Path("save-acct")
+    @POST
+    public Response saveDeptDictId(List<StaffDict> staffDicts){
+        try{
+            List<StaffDict> staffDict1 = staffDictFacade.megerStaffWidthAcct(staffDicts) ;
+            return Response.status(Response.Status.OK).entity(staffDict1).build();
+        }catch (Exception e){
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
 }

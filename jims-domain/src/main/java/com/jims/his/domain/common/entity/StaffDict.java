@@ -26,8 +26,10 @@ public class StaffDict implements java.io.Serializable {
     private String roleNames ;
     private String hospitalId ;
     private String name ;
+    private String empNo ;
     private String inputCode;
 	private Set<StaffVsRole> staffVsRoles = new HashSet<StaffVsRole>(0);
+    private String acctDeptId ;
 
 	// Constructors
 
@@ -35,7 +37,7 @@ public class StaffDict implements java.io.Serializable {
 	public StaffDict() {
 	}
     /** full constructor */
-    public StaffDict(String id, DeptDict deptDict, String loginName, String password, String job, String title, String roleIds, String roleNames, String hospitalId, String name, String inputCode, Set<StaffVsRole> staffVsRoles) {
+    public StaffDict(String id, DeptDict deptDict, String loginName, String password, String job, String title, String roleIds, String roleNames, String hospitalId, String name, String empNo, String inputCode, Set<StaffVsRole> staffVsRoles, String acctDeptId) {
         this.id = id;
         this.deptDict = deptDict;
         this.loginName = loginName;
@@ -46,8 +48,10 @@ public class StaffDict implements java.io.Serializable {
         this.roleNames = roleNames;
         this.hospitalId = hospitalId;
         this.name = name;
+        this.empNo = empNo;
         this.inputCode = inputCode;
         this.staffVsRoles = staffVsRoles;
+        this.acctDeptId = acctDeptId;
     }
 
 
@@ -167,4 +171,21 @@ public class StaffDict implements java.io.Serializable {
         this.inputCode = inputCode;
     }
 
+    @Column(name="acct_dept_id")
+    public String getAcctDeptId() {
+        return acctDeptId;
+    }
+
+    public void setAcctDeptId(String acctDeptId) {
+        this.acctDeptId = acctDeptId;
+    }
+
+    @Column(name="emp_no")
+    public String getEmpNo() {
+        return empNo;
+    }
+
+    public void setEmpNo(String empNo) {
+        this.empNo = empNo;
+    }
 }

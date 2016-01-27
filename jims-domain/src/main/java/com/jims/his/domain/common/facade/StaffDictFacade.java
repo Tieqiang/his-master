@@ -158,4 +158,23 @@ public class StaffDictFacade extends BaseFacade {
         merge(staffDict);
         return staffDict;
     }
+
+    /**
+     * 修改相关人员的核算单元
+     * @param staffDicts
+     * @return
+     */
+    @Transactional
+    public List<StaffDict> megerStaffWidthAcct(List<StaffDict> staffDicts) {
+        for(StaffDict staff:staffDicts){
+            if(staff.getId()==null || "".equals(staff.getId())){
+                continue;
+            }else{
+                StaffDict staffDict = get(StaffDict.class,staff.getId()) ;
+                staffDict.setAcctDeptId(staff.getAcctDeptId());
+                merge(staffDict) ;
+            }
+        }
+        return staffDicts ;
+    }
 }

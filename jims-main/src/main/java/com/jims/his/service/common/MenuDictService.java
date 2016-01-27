@@ -34,7 +34,6 @@ public class MenuDictService {
     @GET
     @Path("list")
     public List<MenuDict> findAllMenuDict(){
-
         List<MenuDict> all = menuDictFacade.findAllByPosition();
         return all ;
     }

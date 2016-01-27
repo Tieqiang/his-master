@@ -122,6 +122,9 @@ public class AcctDeptDictFacade extends BaseFacade {
         AcctDeptDict dict = get(AcctDeptDict.class, id);
         String hql = "delete AcctDeptVsDeptDict as vsd where vsd.acctDeptId='"+id+"'" ;
         this.getEntityManager().createQuery(hql).executeUpdate() ;
+
+        String hql2 = "update StaffDict as staff set staff.acctDeptId='' where staff.acctDeptId='"+id+"'" ;
+        this.getEntityManager().createQuery(hql2).executeUpdate() ;
         dict.setDelFlag("0");
         dict.setEndDept("0");
         //通过标志位选择

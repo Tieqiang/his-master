@@ -3,6 +3,7 @@ package com.jims.his.domain.htca.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.common.entity.AppConfigerParameter;
+import com.jims.his.domain.common.entity.StaffDict;
 import com.jims.his.domain.common.vo.PageEntity;
 import com.jims.his.domain.htca.entity.*;
 
@@ -45,6 +46,8 @@ public class FetchDataFacade extends BaseFacade {
         String[] strings = yearMonth.split("-");
         String startDate = "", endDate = "";
         Integer month = Integer.parseInt(strings[1]);
+        String performDept = null ;//定义开单科室
+        String orderDept  = null ;//定义执行科室
 
         if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8) {
             startDate = strings[0] + "-" + month + "-01 00:00:00";
@@ -66,13 +69,16 @@ public class FetchDataFacade extends BaseFacade {
 
         //删除之前计算的数据
         removeCalcData(hospitalId, yearMonth);
-
         //根据选择的方式，获取对应的SQL；
-
         //AcctParam acctParam = get(AcctParam.class, fetchTypeId);
         String hql = "from AcctParam as param  where param.paramName='" + fetchTypeId + "'";
         List<AcctParam> acctParams = createQuery(AcctParam.class, hql, new ArrayList<Object>()).getResultList();
         List<CalcIncomeDetail> incomeDetails = new ArrayList<>();
+
+
+        String staffHql = "from StaffDict as staff where staff.hospitalId='"+hospitalId+"'" ;
+        List<StaffDict> staffDicts = createQuery(StaffDict.class,staffHql,new ArrayList<Object>()).getResultList() ;
+
         for (AcctParam acctParam : acctParams) {
             String sql = acctParam.getParamSql();
             sql = sql.replace("${startDate}", startDate).replace("${endDate}", endDate);
@@ -85,9 +91,24 @@ public class FetchDataFacade extends BaseFacade {
                 calcIncomeDetail.setIncomeItemName((String) objects[1]);
                 calcIncomeDetail.setIncomeItemCode((String) objects[0]);
                 calcIncomeDetail.setClassOnRecking((String) objects[2]);
-                calcIncomeDetail.setPerformedBy((String) objects[3]);
+                //设置执行科室
+                performDept = getAcctDeptDictId((String)objects[4],staffDicts) ;
+                if(performDept==null || "".equals(performDept)){
+                    calcIncomeDetail.setPerformedBy((String) objects[3]);
+                }else{
+                    calcIncomeDetail.setPerformedBy(performDept);
+                    performDept = null ;
+                }
                 calcIncomeDetail.setPerformedDoctor((String) objects[4]);
-                calcIncomeDetail.setOrderedBy((String) objects[5]);
+
+                //设置执行科室
+                orderDept =  getAcctDeptDictId((String)objects[6],staffDicts) ;
+                if(orderDept==null || "".equals(orderDept)){
+                    calcIncomeDetail.setOrderedBy((String) objects[5]);
+                }else{
+                    calcIncomeDetail.setOrderedBy(orderDept);
+                    orderDept = null ;
+                }
                 calcIncomeDetail.setOrderDoctor((String) objects[6]);
                 calcIncomeDetail.setWardCode((String) objects[7]);
                 calcIncomeDetail.setInpOrOutp(objects[8].toString());
@@ -98,6 +119,26 @@ public class FetchDataFacade extends BaseFacade {
             }
         }
         return incomeDetails;
+    }
+
+    /**
+     * 根据 empno name 或者loginname获取核算单元信息
+     * @param object
+     * @param staffDicts
+     * @return
+     */
+    private String getAcctDeptDictId(String object, List<StaffDict> staffDicts) {
+        if(object==null){
+            return null ;
+        }
+
+        for(StaffDict staffDict:staffDicts){
+            if(object.equals(staffDict.getLoginName())||object.equals(staffDict.getEmpNo())||object.equals(staffDict.getName())){
+                return staffDict.getAcctDeptId() ;
+            }
+        }
+
+        return null;
     }
 
     private AcctDeptDict getAcctDeptDict(String deptCode) {
@@ -286,6 +327,7 @@ public class FetchDataFacade extends BaseFacade {
                         detail.setPerformIncome(perormIncome);
                         detail.setWardIncome(wardIncome);
                     }
+                    detail.setOrderIncome(orderIncome);
                 }else if (outpWard.containsKey(detail.getOrderedBy())) {
                     //住院
                     orderIncome = new BigDecimal(totalCost.doubleValue() * inpOrderReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -306,6 +348,7 @@ public class FetchDataFacade extends BaseFacade {
                     perormIncome = new BigDecimal(totalCost.doubleValue() * outpPerformReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     wardIncome = new BigDecimal(totalCost.doubleValue() * outpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     //判断如果是手术室且费用为材料费则按照护理单元的比例计入对应的手术室
+                    detail.setOrderIncome(orderIncome);
                     if (isOpratorDept(detail, parameter)) {
                         if ("K01".equals(detail.getClassOnRecking())) {
                             detail.setPerformIncome(wardIncome);

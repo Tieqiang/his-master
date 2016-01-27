@@ -235,7 +235,8 @@ $(function(){
         //$("#menuTree").accordion({
         //    fit:true
         //}) ;
-        $("#uName").val(config.moduleName) ;
+        $("#uName").html(config.staffName) ;
+
         //初始化菜单
         menuPromise.done(function(){
 

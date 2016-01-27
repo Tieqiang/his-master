@@ -10,7 +10,6 @@ $(function () {
         title: '系统菜单维护',
         fit: true,
         toolbar: '#tb',
-        //dnd:true,
         singleSelect:true,
         columns: [[{
             title: '菜单名称',
@@ -23,8 +22,8 @@ $(function () {
         }, {
             title: 'id',
             field: 'id',
-            width: "20%"
-            //hidden:true
+            width: "20%",
+            hidden:true
         }, {
             title: '层级',
             field: 'position',
@@ -33,11 +32,6 @@ $(function () {
         onLoadSuccess:function(row, data){
             //启用拖动
             enableDnd($('#tt'));
-            //$(this).tree('collapseAll') ;
-            //var roots = $(this).tree('getRoots') ;
-            //for(var i = 0 ;i<roots.length ;i++){
-            //    $(this).tree('collapseAll',roots[i].target) ;
-            //}
         }
     });
 
@@ -101,14 +95,6 @@ $(function () {
                 $(this).removeClass('row-append row-top row-bottom');
             },
             onDrop: function (e, source) {
-                //var action, point;
-                //if ($(this).hasClass('row-append')) {
-                //    action = 'append';
-                //} else {
-                //    action = 'insert';
-                //    point = $(this).hasClass('row-top') ? 'top' : 'bottom';
-                //}
-                //$(this).removeClass('row-append row-top row-bottom');
 
                 var src = $('#tt').treegrid('find', $(source).attr('node-id'));
                 var des = $('#tt').treegrid('find', $(this).attr('node-id'));
@@ -199,13 +185,13 @@ $(function () {
             for(var i = 0 ;i<menus.length;i++){
                 for(var j = 0 ;j<menus.length;j++){
                     if(menus[i].id ==menus[j].parentId){
-                        menus[i].state='closed' ;
-                        menus[j].state='open' ;
+                        menus[i].state='closed'
                         menus[i].children.push(menus[j]) ;
                     }
                 }
 
                 if(menus[i].children.length>0 && !menus[i].parentId){
+                    menus[i].state='open'
                     menuTreeData.push(menus[i]) ;
                 }
 
@@ -247,14 +233,21 @@ $(function () {
             menuDict.position = $("#position").textbox('getValue');
             menuDict.id = $("#id").val();
 
-            var title = $("#dlg").dialog('options').title;
             $.postJSON("/api/menu/add", menuDict, function (data) {
-
                 $('#dlg').dialog('close');
-                //清空数据
-                //clearData();
-                //重新加载菜单
-                loadMenu();
+
+                if(!menuDict.id){
+                    $("#tt").treegrid('append',{
+                        parent:menuDict.parentId,
+                        data:[menuDict]
+                    })
+                }else{
+                    $("#tt").treegrid('update',{
+                        id:menuDict.id,
+                        row:menuDict
+                    })
+                }
+
             }, function (data, status) {
             })
         }
@@ -269,7 +262,7 @@ $(function () {
         }
         if (node) {
             $('#dlg').dialog('open').dialog('center').dialog('setTitle', '添加同级菜单');
-            //$('#fm').form('clear');
+            $('#fm').form('clear');
             $("#parentName").textbox('setValue', node.menuName);
             $("#parentId").textbox('setValue', node._parentId);
             $("#position").textbox('setValue', node.position);
@@ -285,9 +278,14 @@ $(function () {
             $.messager.alert("系统提示", "请选择，所添加菜单的同一级的任意一个菜单");
             return;
         }
+
+        if(!node.id){
+            $.messager.alert("系统提示",'所选菜单为新添加菜单，请刷新后，添加子菜单','info') ;
+            return ;
+        }
         if (node) {
             $('#dlg').dialog('open').dialog('center').dialog('setTitle', '添加子菜单');
-            //$('#fm').form('clear');
+            $('#fm').form('clear');
             $("#parentName").textbox('setValue', node.menuName);
             $("#parentId").textbox('setValue', node.id);
             $("#position").textbox('setValue', node.position);
@@ -303,12 +301,18 @@ $(function () {
             $.messager.alert("系统提示", "请选择要删除的菜单");
             return;
         }
+
+
+
         var children = $("#tt").treegrid('getChildren', row.id);
         if (children.length > 0) {
             $.messager.alert("系统提示", "请先删除子菜单");
             return;
         } else {
-
+            if(!row.id){
+                $.messager.alert("系统提示","对于新添加的菜单请先刷新在进行删除",'error') ;
+                return
+            }
             $.messager.confirm("系统提示", "确认删除:【" + row.menuName + "】的菜单吗?", function (r) {
                 if (r) {
                     $.post('/api/menu/del/' + row.id, function (data) {
