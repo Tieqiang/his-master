@@ -239,12 +239,12 @@ $(function () {
                 if(!menuDict.id){
                     $("#tt").treegrid('append',{
                         parent:menuDict.parentId,
-                        data:[menuDict]
+                        data:[data]
                     })
                 }else{
                     $("#tt").treegrid('update',{
                         id:menuDict.id,
-                        row:menuDict
+                        row:data
                     })
                 }
 

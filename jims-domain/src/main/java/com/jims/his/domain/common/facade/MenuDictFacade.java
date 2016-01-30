@@ -36,10 +36,9 @@ public class MenuDictFacade extends BaseFacade {
     }
 
     @Transactional
-    public void addMenuDict(MenuDict menuDict) {
+    public MenuDict addMenuDict(MenuDict menuDict) {
 
-        super.merge(menuDict);
-
+        return super.merge(menuDict);
     }
 
     /**

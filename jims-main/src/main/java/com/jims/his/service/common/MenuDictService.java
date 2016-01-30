@@ -70,8 +70,8 @@ public class MenuDictService {
     @Path("add")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addMenuDict(MenuDict menuDict){
-        menuDictFacade.addMenuDict(menuDict) ;
-        return Response.status(Response.Status.OK).entity(menuDict).build() ;
+        MenuDict md = menuDictFacade.addMenuDict(menuDict) ;
+        return Response.status(Response.Status.OK).entity(md).build() ;
     }
 
 

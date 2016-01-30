@@ -93,6 +93,7 @@ $(function(){
 
     $("#roleIds").combobox({
         valueField:'id',
+        width:160,
         textField:'roleName',
         formatter: function(row){
             var opts = $(this).combobox('options');
