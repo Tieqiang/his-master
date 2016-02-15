@@ -1,58 +1,45 @@
 package com.jims.his.domain.htca.entity;
 
-import java.lang.Double;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
+import java.util.Date;
+
 /**
- * AcctDeptCost entity. @author ztq
+ * AcctDeptCostConfirm entity. @author ztq
  */
 @Entity
-@Table(name = "ACCT_DEPT_COST", schema = "HTCA")
-public class AcctDeptCost implements java.io.Serializable {
+@Table(name = "ACCT_DEPT_COST_CONFIRM", schema = "HTCA")
+public class AcctDeptCostConfirm implements java.io.Serializable {
 
 	// Fields
 
 	private String id;
 	private String acctDeptId;
 	private String costItemId;
-	private Double cost;
-	private Double minusCost;
 	private String memo;
     private String yearMonth ;
     private String hospitalId ;
-    private String fetchWay ;//获取方式
     private String operator ;
     private Date   operatorDate ;
-    private Date publishDate;
-    private String confirmPublish;
+
 
 	// Constructors
 
 	/** default constructor */
-	public AcctDeptCost() {
+	public AcctDeptCostConfirm() {
 	}
 
 	/** full constructor */
-	public AcctDeptCost(String acctDeptId, String costItemId, Double cost,
-                        Double minusCost, String memo, String yearMonth, String hospitalId, String fetchWay, String operator, Date operatorDate, Date publishDate, String confirmPublish) {
+	public AcctDeptCostConfirm(String acctDeptId, String costItemId, String memo, String yearMonth, String hospitalId, String operator, Date operatorDate) {
 		this.acctDeptId = acctDeptId;
 		this.costItemId = costItemId;
-		this.cost = cost;
-		this.minusCost = minusCost;
 		this.memo = memo;
         this.yearMonth = yearMonth;
         this.hospitalId = hospitalId;
-        this.fetchWay = fetchWay;
         this.operator = operator;
         this.operatorDate = operatorDate;
-        this.publishDate = publishDate;
-        this.confirmPublish = confirmPublish;
+
     }
 
 	// Property accessors
@@ -86,24 +73,6 @@ public class AcctDeptCost implements java.io.Serializable {
 		this.costItemId = costItemId;
 	}
 
-	@Column(name = "COST", precision = 22, scale = 0)
-	public Double getCost() {
-		return this.cost;
-	}
-
-	public void setCost(Double cost) {
-		this.cost = cost;
-	}
-
-	@Column(name = "MINUS_COST", precision = 22, scale = 0)
-	public Double getMinusCost() {
-		return this.minusCost;
-	}
-
-	public void setMinusCost(Double minusCost) {
-		this.minusCost = minusCost;
-	}
-
 	@Column(name = "MEMO", length = 1000)
 	public String getMemo() {
 		return this.memo;
@@ -131,15 +100,6 @@ public class AcctDeptCost implements java.io.Serializable {
         this.hospitalId = hospitalId;
     }
 
-    @Column(name="fetch_way")
-    public String getFetchWay() {
-
-        return fetchWay;
-    }
-
-    public void setFetchWay(String fetchWay) {
-        this.fetchWay = fetchWay;
-    }
 
     @Column(name="operator")
     public String getOperator() {
@@ -159,21 +119,5 @@ public class AcctDeptCost implements java.io.Serializable {
         this.operatorDate = operatorDate;
     }
 
-    @Column(name = "publish_date")
-    public Date getPublishDate() {
-        return publishDate;
-    }
 
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    @Column(name = "confirm_publish")
-    public String getConfirmPublish() {
-        return confirmPublish;
-    }
-
-    public void setConfirmPublish(String confirmPublish) {
-        this.confirmPublish = confirmPublish;
-    }
 }

@@ -37,12 +37,85 @@ public class AcctDeptCostService {
 
     }
 
+    /**
+     * 查询成本发布情况
+     * @param yearMonth
+     * @param hospitalId
+     * @param costItemId
+     * @param operator
+     * @return
+     */
+    @GET
+    @Path("list-publish")
+    public List<AcctDeptCost> getAcctDeptCostPublish(@QueryParam("yearMonth") String yearMonth, @QueryParam("hospitalId") String hospitalId,
+                                              @QueryParam("costItemId") String costItemId,@QueryParam("operator")String operator) {
+
+        return acctDeptCostFacade.listAcctDeptCostPublish(yearMonth, hospitalId, costItemId,operator);
+
+    }
+
+    /**
+     * 科室成本确认
+     * @param yearMonth
+     * @param hospitalId
+     * @param acctDeptId
+     * @return
+     */
+    @GET
+    @Path("publish-confirm")
+    public List<AcctDeptCost> getAcctDeptCostPublishConfirm(@QueryParam("yearMonth") String yearMonth, @QueryParam("hospitalId") String hospitalId,
+                                              @QueryParam("acctDeptId")String acctDeptId) {
+
+        return acctDeptCostFacade.listAcctDeptCostPublishConfirm(yearMonth, hospitalId, acctDeptId);
+
+    }
+
     @POST
     @Path("save")
     public Response saveAcctDeptCost(List<AcctDeptCost> acctDeptCosts) {
 
         try {
             acctDeptCostFacade.saveDeriectWrite(acctDeptCosts);
+            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+    /**
+     * 保存发布
+     * @param acctDeptCosts
+     * @return
+     */
+    @POST
+    @Path("save-publish")
+    public Response saveAcctDeptCostPublish(List<AcctDeptCost> acctDeptCosts) {
+
+        try {
+            acctDeptCostFacade.savePublishCost(acctDeptCosts);
+            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+        }
+    }
+
+    /**
+     * 确认发布
+     * @param acctDeptCosts
+     * @return
+     */
+    @POST
+    @Path("save-publish-confirm/{saveModel}")
+    public Response saveAcctDeptCostPublishConfirm(List<AcctDeptCost> acctDeptCosts,@PathParam("saveModel") String saveModel) {
+
+        try {
+            acctDeptCostFacade.savePublishCostConfirm(acctDeptCosts, saveModel);
             return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
         } catch (Exception e) {
             e.printStackTrace();
