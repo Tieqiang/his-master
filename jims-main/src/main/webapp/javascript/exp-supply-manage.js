@@ -12,8 +12,6 @@ function checkRadio(){
         $("#searchInput").textbox("clear");
     }
 }
-
-
 $(function () {
     var editRowIndex;
     $("#dg").datagrid({
