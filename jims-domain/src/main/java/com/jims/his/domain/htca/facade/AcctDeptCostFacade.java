@@ -777,4 +777,76 @@ public class AcctDeptCostFacade extends BaseFacade {
             }
         }
     }
+
+    public List<AcctDeptCost> listAcctDeptCostPublish(String yearMonth, String hospitalId, String costItemId, String operator) {
+        String sql = "select b.*\n" +
+                "          from htca.acct_dept_cost b\n" +
+                "         where (b.year_month = '" + yearMonth + "')\n" +
+                "           and b.hospital_id = '" + hospitalId + "'\n" +
+                "           and (b.operator = '" + operator + "')\n" +
+                "           and b.acct_dept_id in (select id\n" +
+                "                                    from htca.acct_dept_dict\n" +
+                "                                   where end_dept = '1'\n" +
+                "                                     and del_flag = '1')" ;
+        if(costItemId!=null && !costItemId.trim().equals("")){
+            sql+= "           and (b.cost_item_id = '" + costItemId + "')" ;
+        }
+
+        List<AcctDeptCost> acctDeptCosts = createNativeQuery(sql, new ArrayList<Object>(), AcctDeptCost.class);
+        return acctDeptCosts;
+    }
+
+    /**
+     * 成本发布
+     * @param acctDeptCosts
+     */
+    @Transactional
+    public void savePublishCost(List<AcctDeptCost> acctDeptCosts) {
+        for(AcctDeptCost cost:acctDeptCosts){
+            AcctDeptCost publish = this.get(AcctDeptCost.class,cost.getId());
+            publish.setPublishDate(cost.getPublishDate());
+            merge(publish);
+        }
+    }
+
+    public List<AcctDeptCost> listAcctDeptCostPublishConfirm(String yearMonth, String hospitalId, String acctDeptId) {
+        String sql = "select b.*\n" +
+                "          from htca.acct_dept_cost b \n" +
+                "         where (b.year_month = '" + yearMonth + "')\n" +
+                "           and b.hospital_id = '" + hospitalId + "'\n" +
+                "           and b.acct_dept_id =  '" + acctDeptId + "'\n" +
+                "           and b.acct_dept_id in (select id\n" +
+                "                                    from htca.acct_dept_dict\n" +
+                "                                   where end_dept = '1'\n" +
+                "                                     and del_flag = '1')";
+        List<AcctDeptCost> acctDeptCosts = createNativeQuery(sql, new ArrayList<Object>(), AcctDeptCost.class);
+        return acctDeptCosts;
+
+    }
+
+    /**
+     * 成本确认
+     * @param acctDeptCosts
+     */
+    @Transactional
+    public void savePublishCostConfirm(List<AcctDeptCost> acctDeptCosts, String saveModel) {
+        for (AcctDeptCost cost : acctDeptCosts) {
+            AcctDeptCost publish = this.get(AcctDeptCost.class, cost.getId());
+            if("1".equals(saveModel)){
+                publish.setConfirmPublish("1");
+            }
+            AcctDeptCostConfirm costConfirm = new AcctDeptCostConfirm();
+            costConfirm.setHospitalId(cost.getHospitalId());
+            costConfirm.setAcctDeptId(cost.getAcctDeptId());
+            costConfirm.setCostItemId(cost.getCostItemId());
+            costConfirm.setMemo(cost.getMemo());
+            costConfirm.setOperator(cost.getOperator());
+            costConfirm.setYearMonth(cost.getYearMonth());
+            costConfirm.setOperatorDate(cost.getOperatorDate());
+            publish.setMemo(cost.getMemo());
+            merge(costConfirm);
+            merge(publish);
+
+        }
+    }
 }
