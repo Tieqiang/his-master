@@ -29,8 +29,7 @@ public class AcctDeptCost implements java.io.Serializable {
     private String fetchWay ;//获取方式
     private String operator ;
     private Date   operatorDate ;
-    private Date publishDate;
-    private String confirmPublish;
+
 
 	// Constructors
 
@@ -40,7 +39,7 @@ public class AcctDeptCost implements java.io.Serializable {
 
 	/** full constructor */
 	public AcctDeptCost(String acctDeptId, String costItemId, Double cost,
-                        Double minusCost, String memo, String yearMonth, String hospitalId, String fetchWay, String operator, Date operatorDate, Date publishDate, String confirmPublish) {
+                        Double minusCost, String memo, String yearMonth, String hospitalId, String fetchWay, String operator, Date operatorDate) {
 		this.acctDeptId = acctDeptId;
 		this.costItemId = costItemId;
 		this.cost = cost;
@@ -51,8 +50,7 @@ public class AcctDeptCost implements java.io.Serializable {
         this.fetchWay = fetchWay;
         this.operator = operator;
         this.operatorDate = operatorDate;
-        this.publishDate = publishDate;
-        this.confirmPublish = confirmPublish;
+
     }
 
 	// Property accessors
@@ -159,21 +157,5 @@ public class AcctDeptCost implements java.io.Serializable {
         this.operatorDate = operatorDate;
     }
 
-    @Column(name = "publish_date")
-    public Date getPublishDate() {
-        return publishDate;
-    }
 
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    @Column(name = "confirm_publish")
-    public String getConfirmPublish() {
-        return confirmPublish;
-    }
-
-    public void setConfirmPublish(String confirmPublish) {
-        this.confirmPublish = confirmPublish;
-    }
 }

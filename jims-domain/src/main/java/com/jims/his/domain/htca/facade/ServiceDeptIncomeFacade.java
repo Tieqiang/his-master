@@ -149,10 +149,9 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
             String hql = " delete AcctDeptCost as cost where cost.acctDeptId='" + serviceDeptId + "' and " +
                     "cost.hospitalId='" + serviceDeptIncome.getHospitalId() + "' and " +
                     "cost.operator='" + serviceDeptIncome.getOperator() + "' and " +
-                    "cost.fetchWay='录入' and cost.yearMonth = '"+serviceDeptIncome.getYearMonth()+"'";
+                    "cost.fetchWay='录入' and cost.yearMonth = '"+serviceDeptIncome.getYearMonth()+"' and cost.costItemId='"+serviceDeptIncome.getIncomeTypeId()+"' ";
             this.getEntityManager().createQuery(hql).executeUpdate();
         }
-
         String id = serviceDeptIncome.getId();
         ArrayList<String> ids = new ArrayList<>();
         ids.add(id);

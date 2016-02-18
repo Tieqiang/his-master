@@ -796,18 +796,7 @@ public class AcctDeptCostFacade extends BaseFacade {
         return acctDeptCosts;
     }
 
-    /**
-     * 成本发布
-     * @param acctDeptCosts
-     */
-    @Transactional
-    public void savePublishCost(List<AcctDeptCost> acctDeptCosts) {
-        for(AcctDeptCost cost:acctDeptCosts){
-            AcctDeptCost publish = this.get(AcctDeptCost.class,cost.getId());
-            publish.setPublishDate(cost.getPublishDate());
-            merge(publish);
-        }
-    }
+
 
     public List<AcctDeptCost> listAcctDeptCostPublishConfirm(String yearMonth, String hospitalId, String acctDeptId) {
         String sql = "select b.*\n" +
@@ -824,29 +813,4 @@ public class AcctDeptCostFacade extends BaseFacade {
 
     }
 
-    /**
-     * 成本确认
-     * @param acctDeptCosts
-     */
-    @Transactional
-    public void savePublishCostConfirm(List<AcctDeptCost> acctDeptCosts, String saveModel) {
-        for (AcctDeptCost cost : acctDeptCosts) {
-            AcctDeptCost publish = this.get(AcctDeptCost.class, cost.getId());
-            if("1".equals(saveModel)){
-                publish.setConfirmPublish("1");
-            }
-            AcctDeptCostConfirm costConfirm = new AcctDeptCostConfirm();
-            costConfirm.setHospitalId(cost.getHospitalId());
-            costConfirm.setAcctDeptId(cost.getAcctDeptId());
-            costConfirm.setCostItemId(cost.getCostItemId());
-            costConfirm.setMemo(cost.getMemo());
-            costConfirm.setOperator(cost.getOperator());
-            costConfirm.setYearMonth(cost.getYearMonth());
-            costConfirm.setOperatorDate(cost.getOperatorDate());
-            publish.setMemo(cost.getMemo());
-            merge(costConfirm);
-            merge(publish);
-
-        }
-    }
 }

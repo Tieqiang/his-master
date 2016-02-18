@@ -85,45 +85,9 @@ public class AcctDeptCostService {
         }
     }
 
-    /**
-     * 保存发布
-     * @param acctDeptCosts
-     * @return
-     */
-    @POST
-    @Path("save-publish")
-    public Response saveAcctDeptCostPublish(List<AcctDeptCost> acctDeptCosts) {
 
-        try {
-            acctDeptCostFacade.savePublishCost(acctDeptCosts);
-            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
-    }
 
-    /**
-     * 确认发布
-     * @param acctDeptCosts
-     * @return
-     */
-    @POST
-    @Path("save-publish-confirm/{saveModel}")
-    public Response saveAcctDeptCostPublishConfirm(List<AcctDeptCost> acctDeptCosts,@PathParam("saveModel") String saveModel) {
 
-        try {
-            acctDeptCostFacade.savePublishCostConfirm(acctDeptCosts, saveModel);
-            return Response.status(Response.Status.OK).entity(acctDeptCosts).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            ErrorException errorException = new ErrorException();
-            errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
-        }
-    }
 
     @POST
     @Path("save-devide")
