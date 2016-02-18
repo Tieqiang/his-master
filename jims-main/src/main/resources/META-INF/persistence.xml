@@ -121,6 +121,7 @@
         <class>com.jims.his.domain.htca.entity.ServiceIncomeTypeDetail</class>
         <class>com.jims.his.domain.htca.entity.AcctProfitChangeDict</class>
         <class>com.jims.his.domain.htca.entity.AcctProfitChangeRecord</class>
+        <class>com.jims.his.domain.htca.entity.AcctPublishRecord</class>
 
         <properties>
              <!--Oracle Dialect -->

@@ -119,6 +119,17 @@
 }(jQuery));
 //base 64 加密结束
 
+$.fn.datebox.defaults.formatter = function(date){
+    var y = date.getFullYear();
+    var m = date.getMonth()+1;
+    var d = date.getDate();
+    if(m<10){
+        return y+"-0"+m+"-"+d
+    }
+    return y+'-'+m+'-'+d;
+}
+
+
 $.extend({
     postJSON: function (url, data, callback, error) {
         return jQuery.ajax({

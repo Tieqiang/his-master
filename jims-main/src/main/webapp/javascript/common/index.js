@@ -21,6 +21,7 @@ window.addTab = function (title, href) {
         if($.startWith(href,'http')){
             if(href.indexOf("reportlet")){
                 href = href+"&dept_id="+config.acctDeptId ;
+                console.log(href) ;
             }
             content= '<iframe scrolling="auto" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>' ;
         }else{

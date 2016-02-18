@@ -110,7 +110,7 @@
         <class>com.jims.his.domain.htca.entity.ServiceDeptIncomeRule</class>
         <class>com.jims.his.domain.htca.entity.AcctProfitChangeDict</class>
         <class>com.jims.his.domain.htca.entity.AcctProfitChangeRecord</class>
-
+        <class>com.jims.his.domain.htca.entity.AcctPublishRecord</class>
         <!-- 提供商——Hibernate -->
         <properties>
              <!--Oracle Dialect -->

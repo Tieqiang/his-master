@@ -120,6 +120,8 @@ public class ServiceDeptIncomeService  {
         if(null !=confirmStatus && !"".equals(confirmStatus)){
             hql += " and income.confirmStatus='"+confirmStatus+"'" ;
         }
+        //只查询录入的项目
+        hql +=" and income.getWay='录入'" ;
         return serviceDeptIncomeFacade.createQuery(ServiceDeptIncome.class,hql,new ArrayList<Object>()).getResultList() ;
     }
 

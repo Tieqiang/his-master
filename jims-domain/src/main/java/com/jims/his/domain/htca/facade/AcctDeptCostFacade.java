@@ -749,7 +749,7 @@ public class AcctDeptCostFacade extends BaseFacade {
 
                 String hql2 = "delete ServiceDeptIncome as income where income.yearMonth = '"+yearMonth+"' and " +
                         "income.hospitalId='"+hospitalId+"' and income.incomeTypeId='"+costItemId+"' and " +
-                        "income.getWay='分摊' and income.acctDeptId='"+acctDeptId+"'" ;
+                        "income.getWay='分摊' and income.serviceForDeptId='"+acctDeptId+"'" ;
                 getEntityManager().createQuery(hql2).executeUpdate() ;
 
                 String hql3 = "from CostItemDict as dict where dict.id='"+costItemId+"'" ;
