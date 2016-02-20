@@ -92,13 +92,14 @@ public class FetchDataFacade extends BaseFacade {
                 calcIncomeDetail.setIncomeItemCode((String) objects[0]);
                 calcIncomeDetail.setClassOnRecking((String) objects[2]);
                 //设置执行科室
-                performDept = getAcctDeptDictId((String)objects[4],staffDicts) ;
-                if(performDept==null || "".equals(performDept)){
-                    calcIncomeDetail.setPerformedBy((String) objects[3]);
-                }else{
-                    calcIncomeDetail.setPerformedBy(performDept);
-                    performDept = null ;
-                }
+                //performDept = getAcctDeptDictId((String)objects[4],staffDicts) ;
+                calcIncomeDetail.setPerformedBy((String) objects[3]);
+                //if(performDept==null || "".equals(performDept)){
+                //    calcIncomeDetail.setPerformedBy((String) objects[3]);
+                //}else{
+                //    calcIncomeDetail.setPerformedBy(performDept);
+                //    performDept = null ;
+                //}
                 calcIncomeDetail.setPerformedDoctor((String) objects[4]);
 
                 //设置执行科室
@@ -313,7 +314,8 @@ public class FetchDataFacade extends BaseFacade {
                 //门诊
                 //如果比例按照住院比例进行计算收入的话
                 String emgWArd = outpWardParameter.getParameterValue() ;
-                if(emgWArd !=null && emgWArd.equals(detail.getWardCode())) {//判断护理单元如果是急诊护理，则按照住院进行计算
+                if(emgWArd !=null && emgWArd.equals(detail.getWardCode())) {
+                    //判断护理单元如果是急诊护理，则按照住院进行计算
                     //住院
                     orderIncome = new BigDecimal(totalCost.doubleValue() * inpOrderReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     perormIncome = new BigDecimal(totalCost.doubleValue() * inpPerformReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -330,6 +332,7 @@ public class FetchDataFacade extends BaseFacade {
                     detail.setOrderIncome(orderIncome);
                 }else if (outpWard.containsKey(detail.getOrderedBy())) {
                     //住院
+                    //判断此开单科室是否按按照住院的比例进行分割收入
                     orderIncome = new BigDecimal(totalCost.doubleValue() * inpOrderReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     perormIncome = new BigDecimal(totalCost.doubleValue() * inpPerformReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     wardIncome = new BigDecimal(totalCost.doubleValue() * inpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -342,7 +345,7 @@ public class FetchDataFacade extends BaseFacade {
                         detail.setPerformIncome(perormIncome);
                         detail.setWardIncome(wardIncome);
                     }
-                    detail.setWardCode(outpWard.get(detail.getOrderedBy()));
+                    detail.setWardCode(outpWard.get(detail.getOrderedBy()));//设置护理单元为对应的护理单元
                 } else {
                     orderIncome = new BigDecimal(totalCost.doubleValue() * outpOrderReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     perormIncome = new BigDecimal(totalCost.doubleValue() * outpPerformReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();

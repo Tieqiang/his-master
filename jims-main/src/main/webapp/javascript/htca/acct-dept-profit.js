@@ -246,6 +246,13 @@ $(function () {
         change.acctDeptId = $("#acctDeptId").textbox('getValue');
         change.incomeOrCost = $("#incomeOrCost").combobox('getValue');
         var row = $('#acctDeptProfitDg').datagrid('getData').rows[changeIndex];
+
+        if(!row.incomeChangeItem){
+            row.incomeChangeItem = 0 ;
+        }
+        if(!row.costChangeItem){
+            row.costChangeItem = 0 ;
+        }
         var number = parseFloat(row.incomeChangeItem) + parseFloat(change.changeAmount);
         var number1 = parseFloat(row.costChangeItem) + parseFloat(change.changeAmount);
         if (change.incomeOrCost == "1") {
@@ -257,6 +264,7 @@ $(function () {
             });
         }
         if (change.incomeOrCost == "0") {
+            console.log(number1) ;
             $('#acctDeptProfitDg').datagrid('updateRow', {
                 index: changeIndex,
                 row: {
