@@ -347,7 +347,12 @@ public class AcctDeptCostFacade extends BaseFacade {
                 String fetchWay = deptCost.getFetchWay() ;
                 String deleteHql = "delete from AcctDeptCost as cost where cost.hospitalId='"+hospitalId+"' and " +
                         "cost.yearMonth = '"+yearMonth+"' and cost.fetchWay='"+fetchWay+"' and " +
-                        "cost.costItemId='"+costItemId+"' and cost.acctDeptId='"+acctDeptId+"'"  ;
+                        "cost.costItemId='"+costItemId+"'"  ;
+                //对于非折算成本删除删除的时候需要根据核算单元进行删除
+                if("计算".equals(fetchWay)){
+                }else{
+                    deleteHql += "  and cost.acctDeptId='"+acctDeptId+"'" ;
+                }
                 this.getEntityManager().createQuery(deleteHql).executeUpdate() ;
                 merge(deptCost) ;
             }

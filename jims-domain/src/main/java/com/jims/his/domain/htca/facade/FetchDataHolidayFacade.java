@@ -8,7 +8,6 @@ import com.jims.his.domain.common.vo.PageEntity;
 import com.jims.his.domain.htca.entity.*;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
@@ -21,13 +20,13 @@ import java.util.Map;
  * Created by heren on 2015/11/18.
  * 提取数据用的Facade
  */
-public class FetchDataFacade extends BaseFacade {
+public class FetchDataHolidayFacade extends BaseFacade {
 
 
     private IncomeItemDictFacade incomeItemDictFacade;
 
     @Inject
-    public FetchDataFacade(IncomeItemDictFacade incomeItemDictFacade) {
+    public FetchDataHolidayFacade(IncomeItemDictFacade incomeItemDictFacade) {
         this.incomeItemDictFacade = incomeItemDictFacade;
     }
 
@@ -40,7 +39,7 @@ public class FetchDataFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<CalcIncomeDetail> fetchFromHis(String hospitalId, String yearMonth, String fetchTypeId) {
+    public List<CalcIncomeDetailForHoliday> fetchFromHis(String hospitalId, String yearMonth, String fetchTypeId) {
 
         //计算月份
         String[] strings = yearMonth.split("-");
@@ -73,7 +72,7 @@ public class FetchDataFacade extends BaseFacade {
         //AcctParam acctParam = get(AcctParam.class, fetchTypeId);
         String hql = "from AcctParam as param  where param.paramName='" + fetchTypeId + "'";
         List<AcctParam> acctParams = createQuery(AcctParam.class, hql, new ArrayList<Object>()).getResultList();
-        List<CalcIncomeDetail> incomeDetails = new ArrayList<>();
+        List<CalcIncomeDetailForHoliday> incomeDetails = new ArrayList<>();
 
 
         String staffHql = "from StaffDict as staff where staff.hospitalId='"+hospitalId+"'" ;
@@ -86,7 +85,7 @@ public class FetchDataFacade extends BaseFacade {
             List<Object[]> resultList = query.getResultList();
             for (Object[] objects : resultList) {
 
-                CalcIncomeDetail calcIncomeDetail = new CalcIncomeDetail();
+                CalcIncomeDetailForHoliday calcIncomeDetail = new CalcIncomeDetailForHoliday();
                 calcIncomeDetail.setHospitalId(hospitalId);
                 calcIncomeDetail.setIncomeItemName((String) objects[1]);
                 calcIncomeDetail.setIncomeItemCode((String) objects[0]);
@@ -102,7 +101,7 @@ public class FetchDataFacade extends BaseFacade {
                 //}
                 calcIncomeDetail.setPerformedDoctor((String) objects[4]);
 
-                //设置开单科室
+                //设置执行科室
                 orderDept =  getAcctDeptDictId((String)objects[6],staffDicts) ;
                 if(orderDept==null || "".equals(orderDept)){
                     calcIncomeDetail.setOrderedBy((String) objects[5]);
@@ -162,24 +161,24 @@ public class FetchDataFacade extends BaseFacade {
      * @return
      */
     private int removeCalcData(String hospitalId, String yearMonth) {
-        String hql = "delete from CalcIncomeDetail as calc where calc.yearMonth = '" + yearMonth + "' and " +
+        String hql = "delete from CalcIncomeDetailForHoliday as calc where calc.yearMonth = '" + yearMonth + "' and " +
                 "calc.hospitalId='" + hospitalId + "'";
         int i = this.getEntityManager().createQuery(hql).executeUpdate();
         return i;
     }
 
 
-    public PageEntity<CalcIncomeDetail> findByPages(String hospitalId, String yearMonth, String page, String rows) {
+    public PageEntity<CalcIncomeDetailForHoliday> findByPages(String hospitalId, String yearMonth, String page, String rows) {
 
-        String hql = "from CalcIncomeDetail as calc where calc.yearMonth = '" + yearMonth + "' and " +
+        String hql = "from CalcIncomeDetailForHoliday as calc where calc.yearMonth = '" + yearMonth + "' and " +
                 "calc.hospitalId = '" + hospitalId + "' order by calc.id";
         Integer iRow = Integer.parseInt(rows);
         Integer iPage = Integer.parseInt(page);
 
-        TypedQuery<CalcIncomeDetail> query = createQuery(CalcIncomeDetail.class, hql, new ArrayList<Object>());
+        TypedQuery<CalcIncomeDetailForHoliday> query = createQuery(CalcIncomeDetailForHoliday.class, hql, new ArrayList<Object>());
         query.setFirstResult((iPage - 1) * iRow);
         query.setMaxResults(iRow);
-        PageEntity<CalcIncomeDetail> pageEntity = new PageEntity<>();
+        PageEntity<CalcIncomeDetailForHoliday> pageEntity = new PageEntity<>();
 
         pageEntity.setRows(query.getResultList());
         pageEntity.setTotal(this.getCalcIncomeDetailCount(hospitalId, yearMonth));
@@ -194,7 +193,7 @@ public class FetchDataFacade extends BaseFacade {
      * @return
      */
     public Long getCalcIncomeDetailCount(String hospitalId, String yearMonth) {
-        String hql = "select count(*) from CalcIncomeDetail as calc where calc.yearMonth = '" + yearMonth + "' and " +
+        String hql = "select count(*) from CalcIncomeDetailForHoliday as calc where calc.yearMonth = '" + yearMonth + "' and " +
                 "calc.hospitalId = '" + hospitalId + "'";
         return createQuery(Long.class, hql, new ArrayList<Object>()).getResultList().get(0);
     }
@@ -206,8 +205,8 @@ public class FetchDataFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<CalcIncomeDetail> saveCalc(List<CalcIncomeDetail> calcIncomeDetails) {
-        for (CalcIncomeDetail detail : calcIncomeDetails) {
+    public List<CalcIncomeDetailForHoliday> saveCalc(List<CalcIncomeDetailForHoliday> calcIncomeDetails) {
+        for (CalcIncomeDetailForHoliday detail : calcIncomeDetails) {
             merge(detail);
         }
         return calcIncomeDetails;
@@ -226,7 +225,7 @@ public class FetchDataFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<CalcIncomeDetail> devideCalcIncome(String hospitalId, String yearMonth) {
+    public List<CalcIncomeDetailForHoliday> devideCalcIncome(String hospitalId, String yearMonth) {
 
         double inpOrderReate = 0;
         double inpPerformReate = 0;
@@ -237,7 +236,7 @@ public class FetchDataFacade extends BaseFacade {
         double orderIncome = 0;
         double perormIncome = 0;
         double wardIncome = 0;
-        List<CalcIncomeDetail> incomeDetails = getCalcIncomeDetail(hospitalId, yearMonth);
+        List<CalcIncomeDetailForHoliday> incomeDetails = getCalcIncomeDetail(hospitalId, yearMonth);
         List<IncomeItemDict> incomeItemDicts = incomeItemDictFacade.findByHospitalId(hospitalId);
 
         //读取参数获取手手术室信息
@@ -267,7 +266,7 @@ public class FetchDataFacade extends BaseFacade {
         }
 
 
-        for (CalcIncomeDetail detail : incomeDetails) {
+        for (CalcIncomeDetailForHoliday detail : incomeDetails) {
             BigDecimal totalCost = detail.getTotalCost();
             IncomeItemDict incomeItemDict = getIncomeDict(detail, incomeItemDicts);
             if (incomeItemDict != null) {
@@ -389,7 +388,7 @@ public class FetchDataFacade extends BaseFacade {
      * @param parameter
      * @return
      */
-    private boolean isOpratorDept(CalcIncomeDetail detail, AppConfigerParameter parameter) {
+    private boolean isOpratorDept(CalcIncomeDetailForHoliday detail, AppConfigerParameter parameter) {
         //如果收入名为空或者获取的参数为空
         if (detail == null || parameter == null) {
             return false;
@@ -410,7 +409,7 @@ public class FetchDataFacade extends BaseFacade {
      * @param incomeItemDicts
      * @return
      */
-    private IncomeItemDict getIncomeDict(CalcIncomeDetail detail, List<IncomeItemDict> incomeItemDicts) {
+    private IncomeItemDict getIncomeDict(CalcIncomeDetailForHoliday detail, List<IncomeItemDict> incomeItemDicts) {
         for (IncomeItemDict incomeItemDict : incomeItemDicts) {
             String incomeItemCode = detail.getIncomeItemCode();
             if ("".equals(incomeItemCode) || incomeItemCode == null) {
@@ -433,10 +432,10 @@ public class FetchDataFacade extends BaseFacade {
         return createQuery(AcctReckItemClassDict.class, hql, new ArrayList<Object>()).getResultList();
     }
 
-    private List<CalcIncomeDetail> getCalcIncomeDetail(String hospitalId, String yearMonth) {
-        String hql = "from CalcIncomeDetail as de where de.hospitalId='" + hospitalId + "' and " +
+    private List<CalcIncomeDetailForHoliday> getCalcIncomeDetail(String hospitalId, String yearMonth) {
+        String hql = "from CalcIncomeDetailForHoliday as de where de.hospitalId='" + hospitalId + "' and " +
                 "de.yearMonth='" + yearMonth + "'";
-        TypedQuery<CalcIncomeDetail> query = createQuery(CalcIncomeDetail.class, hql, new ArrayList<Object>());
+        TypedQuery<CalcIncomeDetailForHoliday> query = createQuery(CalcIncomeDetailForHoliday.class, hql, new ArrayList<Object>());
         return query.getResultList();
     }
 }

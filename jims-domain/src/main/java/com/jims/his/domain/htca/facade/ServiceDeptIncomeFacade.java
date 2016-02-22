@@ -145,17 +145,21 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
     public void delServiceIncome(ServiceDeptIncome serviceDeptIncome) {
 
         String serviceDeptId = serviceDeptIncome.getServiceForDeptId();
+        int i = 0 ;
         if (!"".equals(serviceDeptId) || null != serviceDeptId) {
             String hql = " delete AcctDeptCost as cost where cost.acctDeptId='" + serviceDeptId + "' and " +
                     "cost.hospitalId='" + serviceDeptIncome.getHospitalId() + "' and " +
                     "cost.operator='" + serviceDeptIncome.getOperator() + "' and " +
                     "cost.fetchWay='录入' and cost.yearMonth = '"+serviceDeptIncome.getYearMonth()+"' and cost.costItemId='"+serviceDeptIncome.getIncomeTypeId()+"' ";
-            this.getEntityManager().createQuery(hql).executeUpdate();
+            //此处存在问题，如果对一个核算单元录入相同的两个项目则在删除的时候有可能同时删除两个项目
+            i = this.getEntityManager().createQuery(hql).executeUpdate();
         }
         String id = serviceDeptIncome.getId();
         ArrayList<String> ids = new ArrayList<>();
         ids.add(id);
-        removeByStringIds(ServiceDeptIncome.class, ids);
+        if(i>0){
+            removeByStringIds(ServiceDeptIncome.class, ids);
+        }
     }
 
 
