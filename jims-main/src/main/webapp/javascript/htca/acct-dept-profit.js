@@ -94,31 +94,52 @@ $(function () {
         }, {
             title: '收入',
             field: 'deptIncome',
-            width: '5%'
+            width: '5%',
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '成本',
             field: 'deptCost',
-            width: '5%'
+            width: '5%',
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '收入调整',
             field: 'incomeChangeItem',
-            width: '5%'
+            width: '5%',
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '成本调整',
             field: 'costChangeItem',
-            width: '5%'
+            width: '5%',
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '分摊前利润',
             field: 'acctBalance',
-            width: '10%'
+            width: '10%',
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '人员分摊',
             field: 'managerStaffCost',
-            width: '10%'
+            width: '10%',
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '效益分摊',
             field: 'managerProfitCost',
-            width: '10%'
+            width: '10%',
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '绩效提成比例',
             field: 'convertRate',
@@ -380,7 +401,7 @@ $(function () {
         }, {
             title: 'id',
             field: 'id',
-            hidden: false
+            hidden: true
         }, {
             title: '调整日期',
             field: 'operatorDate',
@@ -470,7 +491,54 @@ $(function () {
         }
     }
 
-
+    $("#updateChangeBtn").on('click',function(){
+        var rows = $("#acctDeptProfitDg").datagrid('getRows');
+        if (!rows.length) {
+            $.messager.alert("系统提示", "没有要更新的内容", "info");
+            return;
+        }
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert("系统提示", "查询时间不能为空", 'info');
+            return;
+        }
+        $.post("/api/acct-proft-chage-record/change-update?yearMonth=" + yearMonth, function (data) {
+            if(data=="ok"){
+                $.messager.alert("系统提示", "更新成功", "info");
+                $("#searchBtn").trigger('click');
+            }
+         })
+    })
+    $("#updateMonthChangeRateBtn").on('click',function(){
+        var rows = $("#acctDeptProfitDg").datagrid('getRows');
+        if (!rows.length) {
+            $.messager.alert("系统提示", "没有要更新的内容", "info");
+            return;
+        }
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert("系统提示", "查询时间不能为空", 'info');
+            return;
+        }
+        var upYearMonth = yearMonth.split("-");
+        if(upYearMonth[1]=="01"){
+            upYearMonth[1]="12";
+            upYearMonth[0]=parseInt(upYearMonth[0])-1;
+        }
+        else if(upYearMonth[1]=="11" || upYearMonth[1]=="12"){
+            upYearMonth[1] = parseInt(upYearMonth[1])-1;
+        }
+        else if(upYearMonth[1]=="10"||upYearMonth[1]=="09"||upYearMonth[1]=="08"||upYearMonth[1]=="07"||upYearMonth[1]=="06"||upYearMonth[1]=="05"||upYearMonth[1]=="04"||upYearMonth[1]=="03"||upYearMonth[1]=="02"){
+            upYearMonth[1] = "0"+(parseInt(upYearMonth[1])-1);
+        }
+        var yearMonth1 = upYearMonth[0]+"-"+upYearMonth[1];
+        $.post("/api/acct-proft-chage-record/change-update-rate?yearMonth=" + yearMonth+"&yearMonth1="+yearMonth1, function (data) {
+            if(data=="ok"){
+                $.messager.alert("系统提示", "更新成功", "info");
+                $("#searchBtn").trigger('click');
+            }
+        })
+    })
     //保存按钮
     $("#saveBtn").on('click', function () {
         var rows = $("#acctDeptProfitDg").datagrid('getRows');

@@ -125,4 +125,41 @@ public class IncomeTypeDictFacade extends BaseFacade {
         List<AcctProfitChangeDict> resultList = createQuery(AcctProfitChangeDict.class, hql, new ArrayList<Object>()).getResultList();
         return resultList;
     }
+
+    /**
+     * 更新调整
+     * @param yearMonth
+     */
+    @Transactional
+    public void updateAcctProfitChangeRecord(String yearMonth) {
+        String hql = "update AcctDeptProfit as a set a.costChangeItem = nvl((select sum(changeAmount)\n" +
+                "                                  from AcctProfitChangeRecord as b " +
+                "                                 where b.yearMonth = '"+yearMonth+"' " +
+                "                                   and b.incomeOrCost = '0' " +
+                "                                   and b.acctDeptId = a.acctDeptId),0)\n" +
+                " where a.yearMonth = '"+yearMonth+"'";
+
+        String sql = "update AcctDeptProfit as a set a.incomeChangeItem = nvl((select sum(changeAmount) \n" +
+                "                                                  from AcctProfitChangeRecord as b  " +
+                "                                                 where b.yearMonth = '"+yearMonth+"' " +
+                "                                                   and b.incomeOrCost = '1'         " +
+                "                                                   and b.acctDeptId = a.acctDeptId),0) " +
+                "                 where a.yearMonth = '"+yearMonth+"'";
+        this.getEntityManager().createQuery(hql).executeUpdate();
+        this.getEntityManager().createQuery(sql).executeUpdate();
+    }
+
+    /**
+     * 更新上月提成比
+     * @param yearMonth
+     */
+    @Transactional
+    public void updateMonthRateChange(String yearMonth,String yearMonth1) {
+        String sql = "update AcctDeptProfit as a set a.convertRate =nvl((select b.convertRate" +
+                "           from AcctDeptProfit as b " +
+                "          where b.yearMonth = '"+yearMonth1+"'\n" +
+                "            and b.acctDeptId = a.acctDeptId),0)\n" +
+                "  where a.yearMonth = '"+yearMonth+"'";
+        this.getEntityManager().createQuery(sql).executeUpdate();
+    }
 }

@@ -49,11 +49,58 @@ public class AcctProfitChangeRecordService {
         }
     }
 
+    /**
+     * 更新调整
+     * @param yearMonth
+     * @return
+     */
+    @POST
+    @Path("change-update")
+    @Produces("text/html")
+    public Response updateAcctProfitChangeRecordService(@QueryParam("yearMonth") String yearMonth) {
+        try {
+            incomeTypeDictFacade.updateAcctProfitChangeRecord(yearMonth);
+            return Response.status(Response.Status.OK).entity("ok").build();
+        } catch (Exception e) {
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build();
+        }
+    }
+
+    /**
+     * 更新上月提成比
+     * @param yearMonth
+     * @return
+     */
+    @POST
+    @Path("change-update-rate")
+    @Produces("text/html")
+    public Response updateMonthRateService(@QueryParam("yearMonth") String yearMonth,@QueryParam("yearMonth1") String yearMonth1) {
+        try {
+            incomeTypeDictFacade.updateMonthRateChange(yearMonth,yearMonth1);
+            return Response.status(Response.Status.OK).entity("ok").build();
+        } catch (Exception e) {
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build();
+        }
+    }
+
     @GET
     @Path("change-record-search")
     public List<AcctProfitChangeRecord> listAcctProfitChangeRecord(@QueryParam("yearMonth") String yearMonth, @QueryParam("incomeOrCost") String incomeOrCost,
                                                    @QueryParam("acctDeptId") String acctDeptId) {
-        String hql = "from AcctProfitChangeRecord as a where a.yearMonth = '" + yearMonth + "'and a.acctDeptId='"+acctDeptId+"' and a.incomeOrCost = '"+incomeOrCost+"'";
+        String hql = "from AcctProfitChangeRecord as a where 1=1 " ;
+        if (yearMonth != null && yearMonth.trim().length() > 0) {
+            hql += " and a.yearMonth = '" + yearMonth + "'";
+        }
+        if (incomeOrCost != null && incomeOrCost.trim().length() > 0) {
+            hql += " and a.incomeOrCost = '"+incomeOrCost+"'";
+        }
+        if (acctDeptId != null && acctDeptId.trim().length() > 0) {
+            hql += " and a.acctDeptId = '" + acctDeptId + "'";
+        }
         List<AcctProfitChangeRecord> resultList = incomeTypeDictFacade.createQuery(AcctProfitChangeRecord.class, hql, new ArrayList<Object>()).getResultList();
         return resultList;
 
