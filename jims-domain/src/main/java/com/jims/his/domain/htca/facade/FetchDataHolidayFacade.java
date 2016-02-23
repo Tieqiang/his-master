@@ -11,10 +11,9 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by heren on 2015/11/18.
@@ -39,32 +38,12 @@ public class FetchDataHolidayFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<CalcIncomeDetailForHoliday> fetchFromHis(String hospitalId, String yearMonth, String fetchTypeId) {
+    public List<CalcIncomeDetailForHoliday> fetchFromHis(String hospitalId, String yearMonth, String fetchTypeId) throws ParseException {
 
-        //计算月份
-        String[] strings = yearMonth.split("-");
-        String startDate = "", endDate = "";
-        Integer month = Integer.parseInt(strings[1]);
+        ////计算月份
         String performDept = null ;//定义开单科室
         String orderDept  = null ;//定义执行科室
 
-        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8) {
-            startDate = strings[0] + "-" + month + "-01 00:00:00";
-            endDate = strings[0] + "-" + month + "-31 23:59:59";
-        } else if (month == 12 || month == 10) {
-            startDate = strings[0] + "-" + month + "-01 00:00:00";
-            endDate = strings[0] + "-" + month + "-31 23:59:59";
-        } else if (month == 4 || month == 6 || month == 9) {
-            startDate = strings[0] + month + "-01 00:00:00";
-            endDate = strings[0] + month + "-30 23:59:59";
-        } else if (month == 11) {
-            startDate = strings[0] + "-" + month + "-01 00:00:00";
-            endDate = strings[0] + "-" + month + "-30 23:59:59";
-
-        } else {
-            startDate = strings[0] + "-" + 2 + "-01 00:00:00";
-            endDate = strings[0] + "-" + 3 + "-01 00:00:00";
-        }
 
         //删除之前计算的数据
         removeCalcData(hospitalId, yearMonth);
@@ -77,47 +56,64 @@ public class FetchDataHolidayFacade extends BaseFacade {
 
         String staffHql = "from StaffDict as staff where staff.hospitalId='"+hospitalId+"'" ;
         List<StaffDict> staffDicts = createQuery(StaffDict.class,staffHql,new ArrayList<Object>()).getResultList() ;
+        String hqlHoliday = "from HolidayDict as dict where substr(dict.holiday,1,7)='"+yearMonth+"'" ;
+        List<HolidayDict> holidayDicts = createQuery(HolidayDict.class,hqlHoliday,new ArrayList<Object>()).getResultList() ;
+        String startDate = "" ;
+        String endDate = "" ;
+        for(HolidayDict holidayDict:holidayDicts){
+            String holiday = holidayDict.getHoliday() ;
 
-        for (AcctParam acctParam : acctParams) {
-            String sql = acctParam.getParamSql();
-            sql = sql.replace("${startDate}", startDate).replace("${endDate}", endDate);
-            Query query = createNativeQuery(sql);
-            List<Object[]> resultList = query.getResultList();
-            for (Object[] objects : resultList) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar c = Calendar.getInstance();
 
-                CalcIncomeDetailForHoliday calcIncomeDetail = new CalcIncomeDetailForHoliday();
-                calcIncomeDetail.setHospitalId(hospitalId);
-                calcIncomeDetail.setIncomeItemName((String) objects[1]);
-                calcIncomeDetail.setIncomeItemCode((String) objects[0]);
-                calcIncomeDetail.setClassOnRecking((String) objects[2]);
-                //设置执行科室
-                //performDept = getAcctDeptDictId((String)objects[4],staffDicts) ;
-                calcIncomeDetail.setPerformedBy((String) objects[3]);
-                //if(performDept==null || "".equals(performDept)){
-                //    calcIncomeDetail.setPerformedBy((String) objects[3]);
-                //}else{
-                //    calcIncomeDetail.setPerformedBy(performDept);
-                //    performDept = null ;
-                //}
-                calcIncomeDetail.setPerformedDoctor((String) objects[4]);
+            c.setTime(format.parse(holiday));
 
-                //设置执行科室
-                orderDept =  getAcctDeptDictId((String)objects[6],staffDicts) ;
-                if(orderDept==null || "".equals(orderDept)){
-                    calcIncomeDetail.setOrderedBy((String) objects[5]);
-                }else{
-                    calcIncomeDetail.setOrderedBy(orderDept);
-                    orderDept = null ;
+            int dayForWeek = 0;
+
+
+
+            int i = c.get(Calendar.DAY_OF_WEEK) ;
+            if(i==7 && "0".equals(holidayDict.getFullDay())){
+                startDate = holiday+" 12:00:00" ;
+            }else{
+                startDate = holiday +" 00:00:00" ;
+            }
+            endDate = holiday +" 23:59:59" ;
+            for (AcctParam acctParam : acctParams) {
+                String sql = acctParam.getParamSql();
+                sql = sql.replace("${startDate}", startDate).replace("${endDate}", endDate);
+                Query query = createNativeQuery(sql);
+                List<Object[]> resultList = query.getResultList();
+                for (Object[] objects : resultList) {
+
+                    CalcIncomeDetailForHoliday calcIncomeDetail = new CalcIncomeDetailForHoliday();
+                    calcIncomeDetail.setHospitalId(hospitalId);
+                    calcIncomeDetail.setIncomeItemName((String) objects[1]);
+                    calcIncomeDetail.setIncomeItemCode((String) objects[0]);
+                    calcIncomeDetail.setClassOnRecking((String) objects[2]);
+                    //设置执行科室
+                    calcIncomeDetail.setPerformedBy((String) objects[3]);
+                    calcIncomeDetail.setPerformedDoctor((String) objects[4]);
+
+                    //设置开单科室
+                    orderDept =  getAcctDeptDictId((String)objects[6],staffDicts) ;
+                    if(orderDept==null || "".equals(orderDept)){
+                        calcIncomeDetail.setOrderedBy((String) objects[5]);
+                    }else{
+                        calcIncomeDetail.setOrderedBy(orderDept);
+                        orderDept = null ;
+                    }
+                    calcIncomeDetail.setOrderDoctor((String) objects[6]);
+                    calcIncomeDetail.setWardCode((String) objects[7]);
+                    calcIncomeDetail.setInpOrOutp(objects[8].toString());
+                    calcIncomeDetail.setTotalCost((BigDecimal) objects[9]);
+                    calcIncomeDetail.setYearMonth(yearMonth);
+                    merge(calcIncomeDetail);
+                    incomeDetails.add(calcIncomeDetail);
                 }
-                calcIncomeDetail.setOrderDoctor((String) objects[6]);
-                calcIncomeDetail.setWardCode((String) objects[7]);
-                calcIncomeDetail.setInpOrOutp(objects[8].toString());
-                calcIncomeDetail.setTotalCost((BigDecimal) objects[9]);
-                calcIncomeDetail.setYearMonth(yearMonth);
-                merge(calcIncomeDetail);
-                incomeDetails.add(calcIncomeDetail);
             }
         }
+
         return incomeDetails;
     }
 

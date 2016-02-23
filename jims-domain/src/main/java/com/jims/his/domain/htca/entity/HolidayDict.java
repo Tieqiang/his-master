@@ -25,6 +25,7 @@ public class HolidayDict implements java.io.Serializable {
 	private String memo;
 	private String operator;
 	private Date operatorDate;
+    private String fullDay ;
 
 	// Constructors
 
@@ -34,13 +35,14 @@ public class HolidayDict implements java.io.Serializable {
 
 	/** full constructor */
 	public HolidayDict(String holiday, String holidayName, String memo,
-			String operator, Date operatorDate) {
+                       String operator, Date operatorDate, String fullDay) {
 		this.holiday = holiday;
 		this.holidayName = holidayName;
 		this.memo = memo;
 		this.operator = operator;
 		this.operatorDate = operatorDate;
-	}
+        this.fullDay = fullDay;
+    }
 
 	// Property accessors
 	@GenericGenerator(name = "generator", strategy = "uuid.hex")
@@ -101,4 +103,13 @@ public class HolidayDict implements java.io.Serializable {
 		this.operatorDate = operatorDate;
 	}
 
+
+    @Column(name="FULL_DAY")
+    public String getFullDay() {
+        return fullDay;
+    }
+
+    public void setFullDay(String fullDay) {
+        this.fullDay = fullDay;
+    }
 }
