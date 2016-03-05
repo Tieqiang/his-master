@@ -46,6 +46,7 @@ public class FetchDataFacade extends BaseFacade {
         String[] strings = yearMonth.split("-");
         String startDate = "", endDate = "";
         Integer month = Integer.parseInt(strings[1]);
+        Integer year = Integer.parseInt(strings[0]) ;
         String performDept = null ;//定义开单科室
         String orderDept  = null ;//定义执行科室
 
@@ -64,7 +65,11 @@ public class FetchDataFacade extends BaseFacade {
 
         } else {
             startDate = strings[0] + "-" + 2 + "-01 00:00:00";
-            endDate = strings[0] + "-" + 3 + "-01 00:00:00";
+            if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
+                endDate = strings[0] + "-02-29 23:59:59";
+            }else{
+                endDate = strings[0] + "-02-28 23:59:59";
+            }
         }
 
         //删除之前计算的数据
@@ -299,7 +304,7 @@ public class FetchDataFacade extends BaseFacade {
                 wardIncome = new BigDecimal(totalCost.doubleValue() * inpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
                 //判断如果是手术室且费用为材料费则按照护理单元的比例计入对应的手术室
-                if (isOpratorDept(detail, parameter) && "K01".equals(detail.getClassOnRecking())) {
+                if (isOpratorDept(detail, parameter) && ("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
                     detail.setPerformIncome(wardIncome);
                     detail.setWardIncome(perormIncome);
                 } else {
@@ -312,7 +317,7 @@ public class FetchDataFacade extends BaseFacade {
 
             if ("0".equals(detail.getInpOrOutp())) {
                 //门诊
-                //如果比例按照住院比例进行计算收入的话
+                //
                 String emgWArd = outpWardParameter.getParameterValue() ;
                 if(emgWArd !=null && emgWArd.equals(detail.getWardCode())) {
                     //判断护理单元如果是急诊护理，则按照住院进行计算
@@ -322,7 +327,7 @@ public class FetchDataFacade extends BaseFacade {
                     wardIncome = new BigDecimal(totalCost.doubleValue() * inpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
                     //如果是执行科室是手术室且是材料费，则将材料费按照护理单元比例计入手术室否则则将对应的护理收入计入急诊科
-                    if (isOpratorDept(detail, parameter) && "K01".equals(detail.getClassOnRecking())) {
+                    if (isOpratorDept(detail, parameter) && ("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
                         detail.setPerformIncome(wardIncome);
                         detail.setWardIncome(perormIncome);
                     } else {
@@ -337,8 +342,9 @@ public class FetchDataFacade extends BaseFacade {
                     perormIncome = new BigDecimal(totalCost.doubleValue() * inpPerformReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     wardIncome = new BigDecimal(totalCost.doubleValue() * inpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
+                    detail.setOrderIncome(orderIncome);
                     //如果是执行科室是手术室且是材料费，则将材料费按照护理单元比例计入手术室否则则将对应的护理收入计入急诊科
-                    if (isOpratorDept(detail, parameter) && "K01".equals(detail.getClassOnRecking())) {
+                    if (isOpratorDept(detail, parameter) && ("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
                         detail.setPerformIncome(wardIncome);
                         detail.setWardIncome(perormIncome);
                     } else {
@@ -350,34 +356,43 @@ public class FetchDataFacade extends BaseFacade {
                     orderIncome = new BigDecimal(totalCost.doubleValue() * outpOrderReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     perormIncome = new BigDecimal(totalCost.doubleValue() * outpPerformReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     wardIncome = new BigDecimal(totalCost.doubleValue() * outpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                    //判断如果是手术室且费用为材料费则按照护理单元的比例计入对应的手术室
+                    /**
+                     * 说明：如果非急诊护理，且不是按照住院比例进行收入分割的开单科室
+                     *      则价格开单的收入给开单，执行的收入给执行科室。
+                     */
                     detail.setOrderIncome(orderIncome);
-                    if (isOpratorDept(detail, parameter)) {
-                        if ("K01".equals(detail.getClassOnRecking())) {
-                            detail.setPerformIncome(wardIncome);
-                            detail.setWardIncome(perormIncome);
-                        } else {
-                            detail.setPerformIncome(perormIncome);
-                            detail.setWardIncome(wardIncome);
-                        }
-                    } else {
-                        if ("K01".equals(detail.getClassOnRecking())) {
-                            detail.setPerformIncome(perormIncome);
-                            detail.setWardCode(outpWardParameter.getParameterValue());//将护理单元设置成急诊科护理单元，从配置文件中取
-                            detail.setWardIncome(wardIncome);
-                        } else {
-                            detail.setPerformIncome(perormIncome);
-                            detail.setWardIncome(wardIncome);
-                        }
+                    detail.setPerformIncome(perormIncome);
+                    if("*".equals(detail.getWardCode())&&null !=detail.getWardIncome() && detail.getWardIncome() !=0){//如果护理部分有钱，且护理单元没有指定则将此部分钱归入急诊护理
+                        detail.setWardCode(outpWardParameter.getParameterValue());
                     }
+                    detail.setWardIncome(wardIncome);
+                    //注释部分主要是为了判断，如果是材料费，对于普通门诊如果执行科室是手术室，则材料收入按照门诊护理单元的比例计入手术室
+                    //如果不是则将此部分材料费按照护理单元的收入计入急诊护理
+                    //if (isOpratorDept(detail, parameter)) {
+                    //    if (("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
+                    //        detail.setPerformIncome(wardIncome);
+                    //        detail.setWardIncome(perormIncome);
+                    //    } else {
+                    //        detail.setPerformIncome(perormIncome);
+                    //        detail.setWardIncome(wardIncome);
+                    //    }
+                    //} else {
+                    //    if (("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
+                    //        detail.setPerformIncome(perormIncome);
+                    //        detail.setWardCode(outpWardParameter.getParameterValue());//将护理单元设置成急诊科护理单元，从配置文件中取
+                    //        detail.setWardIncome(wardIncome);
+                    //    } else {
+                    //        detail.setPerformIncome(perormIncome);
+                    //        detail.setWardIncome(wardIncome);
+                    //    }
+                    //}
                     //if("*".equals(detail.getWardCode())){
                     //    detail.setWardCode(outpWardParameter.getParameterValue());//如果门诊费用的护理单元为空，则将护理单元设置为急诊护理，从配置文件中获取
                     //}
-                    detail.setOrderIncome(orderIncome);
+                    //detail.setOrderIncome(orderIncome);
                 }
                 merge(detail);
             }
-
         }
         return incomeDetails;
     }

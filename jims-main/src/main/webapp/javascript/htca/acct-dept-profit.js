@@ -5,11 +5,11 @@
 $(function () {
     var acctDeptDict = [];
 
-    var acctProfitVo = {} ;//保存项目VO
-    acctProfitVo.acctProfitChangeRecordBeanChangeVo={} ;
-    acctProfitVo.acctProfitChangeRecordBeanChangeVo.inserted=[] ;
-    acctProfitVo.acctProfitChangeRecordBeanChangeVo.updated = [] ;
-    acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted=[] ;
+    var acctProfitVo = {};//保存项目VO
+    acctProfitVo.acctProfitChangeRecordBeanChangeVo = {};
+    acctProfitVo.acctProfitChangeRecordBeanChangeVo.inserted = [];
+    acctProfitVo.acctProfitChangeRecordBeanChangeVo.updated = [];
+    acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted = [];
 
 
     $.get("/api/acct-dept-dict/acct-list?hospitalId=" + parent.config.hospitalId, function (data) {
@@ -39,6 +39,7 @@ $(function () {
                     var year = /\d{4}/.exec(span.html())[0]//得到年份
                     var month = parseInt($(this).attr('abbr'), 10) + 1; //月份
                     $("#fetchDate").datebox('hidePanel').datebox('setValue', year + "-" + month)
+                    setButton(year,month) ;
                 });
             }, 0)
         },
@@ -59,8 +60,74 @@ $(function () {
             }
             return year + '-' + month;
 
-        }//配置formatter，只返回年月
+        }
+
     });
+
+    //设置按钮的使用状态
+    var setButton = function(year,month){
+        console.log(year,month)
+        var yearM = undefined ;
+        if(month==0){
+            year = year -1 ;
+            month = 12 ;
+        }else{
+            month = month -1 ;
+        }
+
+        if(month< 10 ){
+            yearM = year+"-0"+month ;
+        }else{
+            yearM = year +"-"+month ;
+        }
+
+        $.get("/api/acct-save-record/get?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearM,function(data){
+
+            if(data=="failure"){//尚未结存
+                $(".easyui-linkbutton").linkbutton("enable") ;
+                $("#acctEndEditBtn").linkbutton({
+                    text:'本月结存'
+                }) ;
+            }
+            if(data=="success"){
+                $(".easyui-linkbutton").linkbutton("disable") ;
+                $("#acctEndEditBtn").linkbutton("enable") ;
+                $("#searchBtn").linkbutton("enable") ;
+                $("#acctEndEditBtn").linkbutton({
+                    text:'取消结存'
+                }) ;
+                $("#searchBtn").linkbutton("enable") ;
+            }
+        })
+        //查询结存记录
+    }
+
+    $("#acctEndEditBtn").on('click',function(){
+        var obj = {} ;
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert("系统提示", "查询时间不能为空", 'info');
+            return;
+        }
+        obj.hospitalId = parent.config.hospitalId ;
+        obj.yearMonth =yearMonth ;
+        if($("#acctEndEditBtn").linkbutton("options").text=="本月结存"){
+            obj.saveStatus = "1" ;
+        }else{
+            obj.saveStatus = "-1" ;
+        }
+        var arr = yearMonth.split('-');
+        var year = parseInt(arr[0], 10)
+        var month = parseInt(arr[1]) +1;
+        obj.operator = parent.config.loginName ;
+        obj.operateDate = new Date() ;
+        $.postJSON("/api/acct-save-record/merge",obj,function(data){
+            $.messager.alert("系统提示","设置成功","info") ;
+            setButton(year,month) ;
+        },function(errr){
+            $.messager.alert("系统提示","设置失败",'error');
+        })
+    }) ;
 
 
     $("#acctDeptProfitDg").datagrid({
@@ -268,11 +335,11 @@ $(function () {
         change.incomeOrCost = $("#incomeOrCost").combobox('getValue');
         var row = $('#acctDeptProfitDg').datagrid('getData').rows[changeIndex];
 
-        if(!row.incomeChangeItem){
-            row.incomeChangeItem = 0 ;
+        if (!row.incomeChangeItem) {
+            row.incomeChangeItem = 0;
         }
-        if(!row.costChangeItem){
-            row.costChangeItem = 0 ;
+        if (!row.costChangeItem) {
+            row.costChangeItem = 0;
         }
         var number = parseFloat(row.incomeChangeItem) + parseFloat(change.changeAmount);
         var number1 = parseFloat(row.costChangeItem) + parseFloat(change.changeAmount);
@@ -285,7 +352,7 @@ $(function () {
             });
         }
         if (change.incomeOrCost == "0") {
-            console.log(number1) ;
+            console.log(number1);
             $('#acctDeptProfitDg').datagrid('updateRow', {
                 index: changeIndex,
                 row: {
@@ -460,7 +527,7 @@ $(function () {
                 var acctProftChageRecordBeanChangeVo = {};
                 acctProftChageRecordBeanChangeVo.deleted = [];
                 var deleted = $("#modifyChangeDataGrid").datagrid('getChanges', 'deleted');
-                acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted.push(row) ;
+                acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted.push(row);
 
             }
         });
@@ -499,7 +566,7 @@ $(function () {
         }
     }
 
-    $("#updateChangeBtn").on('click',function(){
+    $("#updateChangeBtn").on('click', function () {
         var rows = $("#acctDeptProfitDg").datagrid('getRows');
         if (!rows.length) {
             $.messager.alert("系统提示", "没有要更新的内容", "info");
@@ -511,13 +578,13 @@ $(function () {
             return;
         }
         $.post("/api/acct-proft-chage-record/change-update?yearMonth=" + yearMonth, function (data) {
-            if(data=="ok"){
+            if (data == "ok") {
                 $.messager.alert("系统提示", "更新成功", "info");
                 $("#searchBtn").trigger('click');
             }
-         })
+        })
     })
-    $("#updateMonthChangeRateBtn").on('click',function(){
+    $("#updateMonthChangeRateBtn").on('click', function () {
         var rows = $("#acctDeptProfitDg").datagrid('getRows');
         if (!rows.length) {
             $.messager.alert("系统提示", "没有要更新的内容", "info");
@@ -529,24 +596,48 @@ $(function () {
             return;
         }
         var upYearMonth = yearMonth.split("-");
-        if(upYearMonth[1]=="01"){
-            upYearMonth[1]="12";
-            upYearMonth[0]=parseInt(upYearMonth[0])-1;
+        if (upYearMonth[1] == "01") {
+            upYearMonth[1] = "12";
+            upYearMonth[0] = parseInt(upYearMonth[0]) - 1;
         }
-        else if(upYearMonth[1]=="11" || upYearMonth[1]=="12"){
-            upYearMonth[1] = parseInt(upYearMonth[1])-1;
+        else if (upYearMonth[1] == "11" || upYearMonth[1] == "12") {
+            upYearMonth[1] = parseInt(upYearMonth[1]) - 1;
         }
-        else if(upYearMonth[1]=="10"||upYearMonth[1]=="09"||upYearMonth[1]=="08"||upYearMonth[1]=="07"||upYearMonth[1]=="06"||upYearMonth[1]=="05"||upYearMonth[1]=="04"||upYearMonth[1]=="03"||upYearMonth[1]=="02"){
-            upYearMonth[1] = "0"+(parseInt(upYearMonth[1])-1);
+        else if (upYearMonth[1] == "10" || upYearMonth[1] == "09" || upYearMonth[1] == "08" || upYearMonth[1] == "07" || upYearMonth[1] == "06" || upYearMonth[1] == "05" || upYearMonth[1] == "04" || upYearMonth[1] == "03" || upYearMonth[1] == "02") {
+            upYearMonth[1] = "0" + (parseInt(upYearMonth[1]) - 1);
         }
-        var yearMonth1 = upYearMonth[0]+"-"+upYearMonth[1];
-        $.post("/api/acct-proft-chage-record/change-update-rate?yearMonth=" + yearMonth+"&yearMonth1="+yearMonth1, function (data) {
-            if(data=="ok"){
+        var yearMonth1 = upYearMonth[0] + "-" + upYearMonth[1];
+        $.post("/api/acct-proft-chage-record/change-update-rate?yearMonth=" + yearMonth + "&yearMonth1=" + yearMonth1, function (data) {
+            if (data == "ok") {
                 $.messager.alert("系统提示", "更新成功", "info");
                 $("#searchBtn").trigger('click');
             }
         })
     })
+
+
+    //更新专项奖
+    $("#updateSpecialIncome").on('click', function () {
+        var rows = $("#acctDeptProfitDg").datagrid('getRows');
+        if (!rows.length) {
+            $.messager.alert("系统提示", "没有要更新的内容", "info");
+            return;
+        }
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert("系统提示", "查询时间不能为空", 'info');
+            return;
+        }
+
+        $.post("/api/dept-profit/update-special-income?yearMonth=" + yearMonth + "&hospitalId=" + parent.config.hospitalId, function (data) {
+
+            if (data == "ok") {
+                $.messager.alert("系统提示", "更新成功", "info");
+                $("#searchBtn").trigger('click');
+            }
+        })
+    });
+
     //保存按钮
     $("#saveBtn").on('click', function () {
         var rows = $("#acctDeptProfitDg").datagrid('getRows');
@@ -564,12 +655,12 @@ $(function () {
         if (stopEdit()) {
             $.messager.confirm('系统提示', "如果调整了相关数据，需要重新进行分摊管理成本，在进行保存，是否继续？", function (data) {
                 if (data == 1) {
-                    acctProfitVo.acctDeptProfits = rows ;
+                    acctProfitVo.acctDeptProfits = rows;
                     $.postJSON("/api/dept-profit/save-update", acctProfitVo, function (data) {
-                        $.messager.alert("系统提示","保存成功","info") ;
-                        acctProfitVo.acctProfitChangeRecordBeanChangeVo.inserted.splice(0,acctProfitVo.acctProfitChangeRecordBeanChangeVo.inserted.length) ;
-                        acctProfitVo.acctProfitChangeRecordBeanChangeVo.updated.splice(0,acctProfitVo.acctProfitChangeRecordBeanChangeVo.updated.length) ;
-                        acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted.splice(0,acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted.length) ;
+                        $.messager.alert("系统提示", "保存成功", "info");
+                        acctProfitVo.acctProfitChangeRecordBeanChangeVo.inserted.splice(0, acctProfitVo.acctProfitChangeRecordBeanChangeVo.inserted.length);
+                        acctProfitVo.acctProfitChangeRecordBeanChangeVo.updated.splice(0, acctProfitVo.acctProfitChangeRecordBeanChangeVo.updated.length);
+                        acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted.splice(0, acctProfitVo.acctProfitChangeRecordBeanChangeVo.deleted.length);
                     }, function (data) {
                         $.messager.alert("系统提示", "保存失败", "info");
                     })
@@ -638,4 +729,9 @@ $(function () {
             })
         }
     });
+
+    //数据结存
+    $("#acctEndEditBtn").on('click',function(){
+
+    })
 });

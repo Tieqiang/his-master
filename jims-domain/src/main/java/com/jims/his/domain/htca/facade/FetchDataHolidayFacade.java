@@ -347,28 +347,34 @@ public class FetchDataHolidayFacade extends BaseFacade {
                     wardIncome = new BigDecimal(totalCost.doubleValue() * outpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     //判断如果是手术室且费用为材料费则按照护理单元的比例计入对应的手术室
                     detail.setOrderIncome(orderIncome);
-                    if (isOpratorDept(detail, parameter)) {
-                        if ("K01".equals(detail.getClassOnRecking())) {
-                            detail.setPerformIncome(wardIncome);
-                            detail.setWardIncome(perormIncome);
-                        } else {
-                            detail.setPerformIncome(perormIncome);
-                            detail.setWardIncome(wardIncome);
-                        }
-                    } else {
-                        if ("K01".equals(detail.getClassOnRecking())) {
-                            detail.setPerformIncome(perormIncome);
-                            detail.setWardCode(outpWardParameter.getParameterValue());//将护理单元设置成急诊科护理单元，从配置文件中取
-                            detail.setWardIncome(wardIncome);
-                        } else {
-                            detail.setPerformIncome(perormIncome);
-                            detail.setWardIncome(wardIncome);
-                        }
-                    }
-                    //if("*".equals(detail.getWardCode())){
-                    //    detail.setWardCode(outpWardParameter.getParameterValue());//如果门诊费用的护理单元为空，则将护理单元设置为急诊护理，从配置文件中获取
-                    //}
                     detail.setOrderIncome(orderIncome);
+                    detail.setPerformIncome(perormIncome);
+                    if("*".equals(detail.getWardCode())&&null !=detail.getWardIncome() && detail.getWardIncome()>0){//如果护理部分有钱，且护理单元没有指定则将此部分钱归入急诊护理
+                        detail.setWardCode(outpWardParameter.getParameterValue());
+                    }
+                    detail.setWardIncome(wardIncome);
+                    //if (isOpratorDept(detail, parameter)) {
+                    //    if ("K01".equals(detail.getClassOnRecking())) {
+                    //        detail.setPerformIncome(wardIncome);
+                    //        detail.setWardIncome(perormIncome);
+                    //    } else {
+                    //        detail.setPerformIncome(perormIncome);
+                    //        detail.setWardIncome(wardIncome);
+                    //    }
+                    //} else {
+                    //    if ("K01".equals(detail.getClassOnRecking())) {
+                    //        detail.setPerformIncome(perormIncome);
+                    //        detail.setWardCode(outpWardParameter.getParameterValue());//将护理单元设置成急诊科护理单元，从配置文件中取
+                    //        detail.setWardIncome(wardIncome);
+                    //    } else {
+                    //        detail.setPerformIncome(perormIncome);
+                    //        detail.setWardIncome(wardIncome);
+                    //    }
+                    //}
+                    ////if("*".equals(detail.getWardCode())){
+                    ////    detail.setWardCode(outpWardParameter.getParameterValue());//如果门诊费用的护理单元为空，则将护理单元设置为急诊护理，从配置文件中获取
+                    ////}
+                    //detail.setOrderIncome(orderIncome);
                 }
                 merge(detail);
             }

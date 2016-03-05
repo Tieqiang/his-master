@@ -85,6 +85,22 @@ public class DeptProfitService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
         }
     }
-
+    @POST
+    @Path("update-special-income")
+    @Produces("text/html")
+    public Response updateSpecialIncome(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
+        try {
+            int income=acctDeptProfitFacade.updateSpecialIncome(yearMonth,hospitalId) ;
+            if(income>0){
+                return Response.status(Response.Status.OK).entity("ok").build() ;
+            }
+            return Response.status(Response.Status.OK).entity("false").build() ;
+        }catch(Exception e ){
+            e.printStackTrace();
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build() ;
+        }
+    }
 
 }

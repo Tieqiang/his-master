@@ -23,6 +23,7 @@ $(function () {
                     var year = /\d{4}/.exec(span.html())[0]//得到年份
                     var month = parseInt($(this).attr('abbr'), 10) + 1; //月份
                     $("#fetchDate").datebox('hidePanel').datebox('setValue', year + "-" + month)
+                    setButton(year,month)
                 });
             }, 0)
         },
@@ -45,7 +46,37 @@ $(function () {
 
         }//配置formatter，只返回年月
     });
+    //设置按钮的使用状态
+    var setButton = function(year,month){
+        var yearM = undefined ;
+        if(month==0){
+            year = year -1 ;
+            month = 12 ;
+        }else{
+            month = month -1 ;
+        }
 
+        if(month< 10 ){
+            yearM = year+"-0"+month ;
+        }else{
+            yearM = year +"-"+month ;
+        }
+
+        $.get("/api/acct-save-record/get?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearM,function(data){
+
+            if(data=="failure"){//尚未结存
+                $(".easyui-linkbutton").linkbutton("enable") ;
+                $("#acctEndEditBtn").linkbutton({
+                    text:'本月结存'
+                }) ;
+            }
+            if(data=="success"){
+                $(".easyui-linkbutton").linkbutton("disable") ;
+                $("#fetchItemBtn").linkbutton("enable") ;
+            }
+        })
+        //查询结存记录
+    }
     //收入表格
     $("#incomeDatagrid").datagrid({
         fit: true,
