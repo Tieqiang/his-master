@@ -976,7 +976,7 @@ $(function () {
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.exportClass = $("#exportClass").combobox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
-        exportMaster.accountIndicator = 0;
+        exportMaster.accountIndicator = 1;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
         exportMaster.operator = parent.config.staffName;
@@ -1026,14 +1026,14 @@ $(function () {
             detail.producedate = new Date(rows[i].producedate);
             detail.disinfectdate = new Date(rows[i].disinfectdate);
             detail.killflag = rows[i].killflag;
-            //detail.recFlag="";
+            detail.recFlag=0;
             //detail.recOperator="";
             //detail.recDate="";
             detail.assignCode = rows[i].assignCode;
             detail.bigCode = rows[i].expCode;
             detail.bigSpec = rows[i].expSpec;
             detail.bigFirmId = rows[i].firmId;
-            detail.expSgtp = rows[i].expSgtp;
+            detail.expSgtp = "1";
             detail.memo = rows[i].memos;
             detail.hospitalId = parent.config.hospitalId;
             expExportDetailBeanChangeVo.inserted.push(detail);
@@ -1059,7 +1059,7 @@ $(function () {
         importMaster.additionalFee = $("#additionalFeeIn").numberbox('getValue');
         importMaster.importClass = $("#importClass").combobox('getValue');
         importMaster.subStorage = $("#subStorageIn").combobox('getValue');
-        importMaster.accountIndicator = 0;
+        importMaster.accountIndicator = 1;
         importMaster.memos = $('#memosIn').textbox('getValue');
         importMaster.operator = parent.config.staffName;
         importMaster.acctoperator = parent.config.staffName;////////// /////////////////////
@@ -1120,6 +1120,8 @@ $(function () {
             detail.inventory = rows[i].inventory;
             detail.registerNo = rows[i].registerNo;
             detail.permitNo = rows[i].permitNo;
+            detail.recFlag = 0;
+            detail.expSgtp = "1";
 
             expImportDetailBeanChangeVo.inserted.push(detail);
         }
