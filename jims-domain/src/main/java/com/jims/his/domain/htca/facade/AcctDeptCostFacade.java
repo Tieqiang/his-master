@@ -350,6 +350,7 @@ public class AcctDeptCostFacade extends BaseFacade {
                         "cost.costItemId='"+costItemId+"'"  ;
                 //对于非折算成本删除删除的时候需要根据核算单元进行删除
                 if("计算".equals(fetchWay)){
+                    deleteHql += "  and cost.acctDeptId='"+acctDeptId+"'" ;
                 }else{
                     deleteHql += "  and cost.acctDeptId='"+acctDeptId+"'" ;
                 }

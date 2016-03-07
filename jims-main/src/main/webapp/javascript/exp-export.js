@@ -703,7 +703,7 @@ $(function(){
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
-        exportMaster.accountIndicator = 0;
+        exportMaster.accountIndicator =1;
         exportMaster.docStatus = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
         exportMaster.fundItem = $('#fundItem').combogrid('getValue');
@@ -713,7 +713,6 @@ $(function(){
         exportMaster.acctoperator = parent.config.staffName;
         exportMaster.acctdate =new Date();
         exportMaster.principal = $("#principal").combogrid('getText');
-        exportMaster.docStatus = 0;
         //exportMaster.auditor = $("#auditor").combobox('getValue');
         //exportMaster.rcptNo = $("#rcptNo").combobox('getValue');
         exportMaster.buyer = $("#acctoperator").combobox('getText');
@@ -750,7 +749,7 @@ $(function(){
             detail.purchasePrice = rows[i].purchasePrice;
             detail.expireDate = new Date(rows[i].expireDate);
             detail.expForm = rows[i].expForm;
-
+            detail.recFlag = 0 ;
             detail.firmId = rows[i].firmId;
             detail.inventory = rows[i].disNum;
             detail.producedate = new Date(rows[i].producedate);
@@ -761,6 +760,7 @@ $(function(){
             }else{
                detail.killflag = 0;
             }
+            detail.expSgtp = 1 ;
             //if($(input).is(":checked")){
             //    alert(5);
             //}

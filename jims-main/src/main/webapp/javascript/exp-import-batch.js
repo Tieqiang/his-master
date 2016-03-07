@@ -52,12 +52,13 @@ $(function () {
             return new Date();
         }
     }
-    var deptPromse = $.get("/api/dept-dict/list?hospitalId="+parent.config.hospitalId,function(data){
+    var deptPromse = $.get("/api/exp-storage-dept/list?hospitalId="+parent.config.hospitalId,function(data){
+        console.log(data) ;
         for(var i = 0 ;i<data.length ;i++){
             var dept={} ;
-            dept.supplierName = data[i].deptName ;
-            dept.supplierCode = data[i].deptCode ;
-            dept.inputCode = data[i].inputCode ;
+            dept.supplierName = data[i].storageName ;
+            dept.supplierCode = data[i].storageCode ;
+            dept.inputCode = data[i].disburseNoPrefix ;
             depts.push(dept) ;
         }
     }) ;

@@ -1046,7 +1046,9 @@ $(function () {
             $("#importDetail").datagrid('endEdit', editIndex);
         }
         if (dataValid()) {
+            console.log("validate.....")
             var importVo = getCommitData() ;
+            console.log(importVo) ;
             $.postJSON("/api/exp-stock/imp", importVo, function (data) {
                 $.messager.alert('系统提示', '入库成功', 'success');
                 newDocument() ;

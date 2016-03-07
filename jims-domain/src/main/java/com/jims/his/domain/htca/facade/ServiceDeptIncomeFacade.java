@@ -22,9 +22,9 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
             String hospitalId = serviceDeptIncomes.get(0).getHospitalId();
             String hql = "from CostItemDict as  dict where dict.hospitalId='" + hospitalId + "'";
             List<CostItemDict> costItemDicts = createQuery(CostItemDict.class, hql, new ArrayList<Object>()).getResultList();
-            String lowValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_LOW_VALUE_RATE' ";
-            String medValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_MED_RATE' ";
-            String officeValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_OFFICE_LEVEL_RATE' ";
+            String lowValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_LOW_VALUE_RATE' ";//低值耗材计入成本率
+            String medValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_MED_RATE' ";//医用耗材成本率
+            String officeValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_OFFICE_LEVEL_RATE' ";//通用物资计入率
 
             String lowIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_LOW_VALUE_ID' ";
             String medIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_MED_ID' ";
@@ -100,7 +100,7 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
                 return Double.parseDouble(dict.getCalcPercent());
             }
         }
-        return 0;
+        return 100;
     }
 
 

@@ -6,6 +6,7 @@ import com.jims.his.common.util.PinYin2Abbreviation;
 import com.jims.his.domain.common.entity.DeptDict;
 import com.jims.his.domain.common.facade.DeptDictFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
+import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.entity.ExpSupplierCatalog;
 import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
 import com.jims.his.domain.ieqm.vo.ExpSupplierVo;
@@ -22,11 +23,13 @@ import java.util.List;
 public class ExpSupplierCatalogFacade extends BaseFacade {
     private EntityManager entityManager;
     private DeptDictFacade deptDictFacade ;
+    private ExpStorageDeptFacade expStorageDeptFacade ;
 
     @Inject
-    public ExpSupplierCatalogFacade(EntityManager entityManager, DeptDictFacade deptDictFacade) {
+    public ExpSupplierCatalogFacade(EntityManager entityManager, DeptDictFacade deptDictFacade, ExpStorageDeptFacade expStorageDeptFacade) {
         this.entityManager = entityManager;
         this.deptDictFacade = deptDictFacade;
+        this.expStorageDeptFacade = expStorageDeptFacade;
     }
 
     //public List<ExpSupplierCatalog> listExpSupplierCatalog() {
@@ -87,15 +90,20 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
     public List<ExpSupplierVo> listExpSupplierWithDept(String hospitalId) {
         List<ExpSupplierCatalog> supplierCatalogs = this.findSupplierBySupplierClass("供应商");
         List<ExpSupplierVo> expSupplierVos = new ArrayList<>() ;
-        List<DeptDict> deptDicts = deptDictFacade.findByHospitalId(hospitalId);
+        //List<DeptDict> deptDicts = deptDictFacade.findByHospitalId(hospitalId);
+        List<ExpStorageDept> expStorageDepts = expStorageDeptFacade.getByHospitalId(hospitalId,null,null) ;
 
         for (ExpSupplierCatalog catalog:supplierCatalogs){
             ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(),catalog.getSupplierId(),catalog.getInputCode()) ;
             expSupplierVos.add(vo) ;
         }
 
-        for(DeptDict deptDict :deptDicts){
-            ExpSupplierVo vo = new ExpSupplierVo(deptDict.getDeptName(),deptDict.getDeptCode(),deptDict.getInputCode()) ;
+        //for(DeptDict deptDict :deptDicts){
+        //    ExpSupplierVo vo = new ExpSupplierVo(deptDict.getDeptName(),deptDict.getDeptCode(),deptDict.getInputCode()) ;
+        //    expSupplierVos.add(vo) ;
+        //}
+        for(ExpStorageDept dept:expStorageDepts){
+            ExpSupplierVo vo = new ExpSupplierVo(dept.getStorageName(),dept.getStorageCode(),dept.getDisburseNoPrefix()) ;
             expSupplierVos.add(vo) ;
         }
 

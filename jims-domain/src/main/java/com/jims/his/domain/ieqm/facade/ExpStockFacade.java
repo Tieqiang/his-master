@@ -179,6 +179,7 @@ public class ExpStockFacade extends BaseFacade {
                 expStock.setProducedate(detail.getProducedate());
                 expStock.setDisinfectdate(detail.getDisinfectdate());
                 expStock.setKillflag(detail.getKillflag());
+                expStock.setHospitalId(detail.getHospitalId());
                 detail.setInventory(expStock.getQuantity() + detail.getQuantity());
                 merge(expStock) ;
             }else{
@@ -199,6 +200,7 @@ public class ExpStockFacade extends BaseFacade {
                 stock.setDiscount(detail.getDiscount());
                 stock.setProducedate(detail.getProducedate());
                 stock.setDisinfectdate(detail.getDisinfectdate());
+                stock.setHospitalId(detail.getHospitalId());
 
                 //设置结存量
                 detail.setInventory(detail.getQuantity());
@@ -642,26 +644,37 @@ public class ExpStockFacade extends BaseFacade {
      * @param exportVo
      */
     @Transactional
-    public void expExportManage(ExpExportManageVo exportVo) {
+    public void expExportManage(ExpExportManageVo exportVo){
 
-        //1，更新库存信息
-        updateExportStock(exportVo) ;
-        //2,保存入库单据 判断参数是否记账
-        saveExportDocument(exportVo) ;
+        try{
+            //1，更新库存信息
+            updateExportStock(exportVo) ;
+            //2,保存入库单据 判断参数是否记账
+            saveExportDocument(exportVo) ;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
 
     }
     /**
      * 更新消耗品库存
      * @param exportVo
      */
-    private void updateExportStock(ExpExportManageVo exportVo) {
+    private void updateExportStock(ExpExportManageVo exportVo) throws Exception{
 
         List<ExpExportDetail> details = exportVo.getExpExportDetailBeanChangeVo().getInserted() ;
         List<ExpExportMaster> masters = exportVo.getExpExportMasterBeanChangeVo().getInserted() ;
         String stockCode = masters.get(0).getStorage() ;
         for(ExpExportDetail detail:details){
             ExpStock expStock = this.getExpStock(stockCode,detail.getExpCode(),detail.getExpSpec(),detail.getBatchNo(), detail.getFirmId(),detail.getPackageSpec(),detail.getHospitalId()) ;
-            ExpProvideApplication expProvideApplication = get(ExpProvideApplication.class, detail.getId());
+            ExpProvideApplication expProvideApplication = null ;
+            if(detail.getId()==null || "".equals(detail.getId())){
+
+            }else{
+                expProvideApplication= get(ExpProvideApplication.class, detail.getId());
+            }
+
             if(expStock !=null){
                 expStock.setQuantity(expStock.getQuantity() - detail.getQuantity());//更新库存
                 detail.setInventory(expStock.getQuantity() - detail.getQuantity());
@@ -697,7 +710,7 @@ public class ExpStockFacade extends BaseFacade {
      * @param portVo
      */
     @Transactional
-    public void expExportImport(ExpExportImportVo portVo) {
+    public void expExportImport(ExpExportImportVo portVo) throws Exception{
         if(null != portVo){
             ExpExportManageVo exportVo = portVo.getExportVo();
             ExpImportVo importVo = portVo.getImportVo();

@@ -169,6 +169,18 @@ $(function(){
                     cost:totalCost
                 }
             }) ;
+        },
+        onDblClickCell:function(rowIndex,field,value){
+            if(field=='minusCost'){
+                console.log(editRow||editRow==0)
+                if(editRow||editRow==0){
+                    $("#deptCostTable").datagrid('endEdit',editRow) ;
+                    editRow = rowIndex ;
+                }
+
+                $("#deptCostTable").datagrid('beginEdit',editRow) ;
+            }
+            console.log(field)
         }
     }) ;
     //设置分页
