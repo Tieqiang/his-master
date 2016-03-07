@@ -163,6 +163,7 @@ $(function(){
             staff.job= $("#job").textbox('getValue') ;
             staff.name = $("#name").textbox('getValue') ;
             staff.hospitalId=parent.config.hospitalId;
+            staff.idNo = $("#idNo").textbox('getValue');
             staff.ids=[] ;
 
             var rolesId = $("#roleIds").combobox('getValues') ;
@@ -225,6 +226,7 @@ $(function(){
         $("#confirm_password").textbox('setValue', row.password);
         $("#deptName").combobox('setValue',row.deptDict.id) ;
         $("#job").textbox('setValue', row.job);
+        $("#idNo").textbox('setValue',row.idNo);
         $("#title").textbox('setValue', row.title);
         $("#roleIds").combobox('setValues',row.roleIds) ;
         $("#roleIds").combobox('loadData',role) ;

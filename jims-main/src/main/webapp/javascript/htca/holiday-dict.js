@@ -19,7 +19,6 @@ $(function () {
                     var year = /\d{4}/.exec(span.html())[0]//得到年份
                     var month = parseInt($(this).attr('abbr'), 10) + 1; //月份
                     $("#synDate").datebox('hidePanel').datebox('setValue', year + "-" + month)
-                    setButton(year,month) ;
                 });
             }, 0)
         },
@@ -42,35 +41,8 @@ $(function () {
 
         }//配置formatter，只返回年月
     });
-    //设置按钮的使用状态
-    var setButton = function(year,month){
-        var yearM = undefined ;
-        if(month==0){
-            year = year -1 ;
-            month = 12 ;
-        }else{
-            month = month -1 ;
-        }
 
-        if(month< 10 ){
-            yearM = year+"-0"+month ;
-        }else{
-            yearM = year +"-"+month ;
-        }
-
-        $.get("/api/acct-save-record/get?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearM,function(data){
-
-            if(data=="failure"){//尚未结存
-                $(".easyui-linkbutton").linkbutton("enable") ;
-            }
-            if(data=="success"){
-                $(".easyui-linkbutton").linkbutton("disable") ;
-            }
-        })
-        //查询结存记录
-    }
-
-    $("#acctPublishTable").datagrid({
+    $("#holidayDictTable").datagrid({
         fit: true,
         fitColumns: true,
         striped: true,
@@ -87,19 +59,20 @@ $(function () {
             field: 'id',
             hidden: true
         }, {
-            title: '公布所属月份',
-            field: 'yearMonth',
-            width: '10%'
+            title: '假期名称',
+            field: 'holidayName',
+            width: '10%',
+            editor:{type:'textbox',options:{}}
         }, {
-            title: '公布类型',
-            field: 'incomeFlag',
+            title: '是否全天',
+            field: 'fullDay',
             width: '20%',
             formatter: function (value, row, index) {
                 if (value == "1") {
-                    return "收入";
+                    return "全天";
                 }
                 if (value == "0") {
-                    return "成本";
+                    return "半天";
                 }
                 return value;
             },
@@ -108,51 +81,17 @@ $(function () {
                     valueField: 'value',
                     textField: 'text',
                     data: [{
-                        value: '0',
-                        text: '成本'
-                    }, {
                         value: '1',
-                        text: '收入'
+                        text: '全天'
+                    }, {
+                        value: '0',
+                        text: '半天'
                     }]
                 }
             }
         }, {
-            title: '公布开始时间',
-            field: 'openStartDate',
-            width: '30%',
-            editor: { type:'datebox',options:{
-                parser: function (s) {//配置parser，返回选择的日期
-                    if (!s) return new Date();
-                    var arr = s.split('-');
-                    return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) -1, parseInt(arr[2], 10));
-                },
-                formatter: function (d) {
-                    var year = d.getFullYear();
-                    var month = d.getMonth();
-                    var day = d.getDate() ;
-                    var monthStr = undefined ;
-                    var dayStr = undefined ;
-                    var yearStr = undefined ;
-                    month = month +1 ;
-                    yearStr = year+"" ;
-                    if(day<10){
-                        dayStr = "0"+day ;
-                    }else{
-                        dayStr = day+"" ;
-                    }
-                    if(month <10){
-                        monthStr = "0"+month ;
-                    }else{
-                        monthStr = month +"" ;
-                    }
-
-
-                    return yearStr +"-"+monthStr +"-"+ dayStr ;
-                }
-            }}
-        }, {
-            title: '公布结束时间',
-            field: 'openEndDate',
+            title: '假期日期',
+            field: 'holiday',
             width: '30%',
             editor: {
                 type: 'datebox', options: {
@@ -189,30 +128,29 @@ $(function () {
         }]],
         onDblClickRow: function (rowIndex, rowData) {
             if (editorRow >= 0) {
-                $("#acctPublishTable").datagrid('endEdit', editorRow);
+                $("#holidayDictTable").datagrid('endEdit', editorRow);
                 editorRow = rowIndex;
             } else {
                 editorRow = rowIndex;
             }
-            $("#acctPublishTable").datagrid('beginEdit', editorRow);
+            $("#holidayDictTable").datagrid('beginEdit', editorRow);
         }
     });
 
 
     //保存
     $("#saveBtn").on('click', function () {
-        var rows = $("#acctPublishTable").datagrid('getRows');
+        var rows = $("#holidayDictTable").datagrid('getRows');
         if (editorRow >= 0) {
-            $("#acctPublishTable").datagrid('endEdit', editorRow);
+            $("#holidayDictTable").datagrid('endEdit', editorRow);
         }
         for (var i = 0; i < rows.length; i++) {
-            rows[i].hospitalId = parent.config.hospitalId;
             rows[i].operator = parent.config.loginId
-            rows[i].publishDate = new Date();
+            rows[i].operatorDate = new Date();
         }
 
         if (rows.length > 0) {
-            $.postJSON("/api/acct-pub/merge", rows, function (data) {
+            $.postJSON("/api/holiday-dict/merge", rows, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
                 $("#queryBtn").trigger('click');
             }, function (data) {
@@ -223,45 +161,33 @@ $(function () {
     //查询发布记录
     $("#queryBtn").on('click', function () {
         var yearMonth = $("#synDate").datebox('getValue');
-        if (!yearMonth) {
-            $.messager.alert('系统提示', '请选择要提取的月份', 'info');
-            return;
-        }
-
-
-        var options = $("#acctPublishTable").datagrid('options');
-        options.url = "/api/acct-pub/list?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth;
-        $("#acctPublishTable").datagrid('reload');
+        var options = $("#holidayDictTable").datagrid('options');
+        options.url = "/api/holiday-dict/list?yearMonth=" + yearMonth;
+        $("#holidayDictTable").datagrid('reload');
     });
 
     //新增项目
     $("#addBtn").on('click', function () {
-        var rows = $("#acctPublishTable").datagrid('getRows');
-        if (rows.length > 1) {
-            return;
-        }
-        var yearMonth = $("#synDate").datebox('getValue');
-        if (!yearMonth) {
-            $.messager.alert("系统提示", "请选择项目", 'info');
-            return;
-        }
-        $("#acctPublishTable").datagrid('appendRow', {yearMonth: yearMonth})
-        var rows = $("#acctPublishTable").datagrid('getRows');
+        var rows = $("#holidayDictTable").datagrid('getRows');
+
+
+        $("#holidayDictTable").datagrid('appendRow', {})
+        var rows = $("#holidayDictTable").datagrid('getRows');
         if (rows.length > 0) {
             if (editorRow == 0 || editorRow > 0) {
-                $("#acctPublishTable").datagrid('endEdit', editorRow);
-                editorRow = $("#acctPublishTable").datagrid('getRowIndex', rows[rows.length - 1]);
+                $("#holidayDictTable").datagrid('endEdit', editorRow);
+                editorRow = $("#holidayDictTable").datagrid('getRowIndex', rows[rows.length - 1]);
             } else {
-                editorRow = $("#acctPublishTable").datagrid('getRowIndex', rows[rows.length - 1]);
+                editorRow = $("#holidayDictTable").datagrid('getRowIndex', rows[rows.length - 1]);
             }
-            $("#acctPublishTable").datagrid('beginEdit', editorRow);
+            $("#holidayDictTable").datagrid('beginEdit', editorRow);
         }
     });
 
 
     //删除项目
     $("#delBtn").on('click', function () {
-        var rows = $("#acctPublishTable").datagrid('getSelected')
+        var rows = $("#holidayDictTable").datagrid('getSelected')
         if (!rows) {
             $.messager.alert("系统提示", "请选择要删除的记录", "error");
             return;
@@ -269,28 +195,24 @@ $(function () {
 
 
         if (!rows.id) {
-            var index = $("#acctPublishTable").datagrid('getRowIndex', rows);
-            var rowsTemp = $("#acctPublishTable").datagrid('getRows');
-            if (rowsTemp.length > 0) {
-                var row = rowsTemp[0];
-                var rowIndex = $("#acctPublishTable").datagrid('getRowIndex', row);
-                row.totalIncome = row.totalIncome - rows.totalIncome;
-                $("#acctPublishTable").datagrid('updateRow', {
-                    index: rowIndex,
-                    row: row
-                });
-            }
+            var index = $("#holidayDictTable").datagrid('getRowIndex', rows);
+
             $.messager.confirm('系统提示', '确定要进行删除操作吗', function (r) {
                 if (r) {
-                    $("#acctPublishTable").datagrid('deleteRow', index);
+                    $("#holidayDictTable").datagrid('deleteRow', index);
                 }
             });
 
         } else {
-            $.post("/api/acct-pub/del?id="+rows.id, function (data) {
-                $.messager.alert('系统提示', '删除成功', 'info');
-                $("#queryBtn").trigger('click');
-            })
+            $.messager.confirm('系统提示', '确定要进行删除操作吗', function (r) {
+                if (r) {
+                    $.post("/api/holiday-dict/del?id="+rows.id, function (data) {
+                        $.messager.alert('系统提示', '删除成功', 'info');
+                        $("#queryBtn").trigger('click');
+                    })
+                }
+            });
+
         }
     });
 })
