@@ -206,6 +206,7 @@ $(function () {
         }
         prices.splice(0,prices.length);
         var pricePromise =$.get("/api/exp-price-modify-profit/countList?longStartTime=" + startDate +"&longStopTime="+stopDate+"&hospitalId="+parent.config.hospitalId, function(data){
+            console.log(data);
                 $.each(data,function(index,item){
                     var price ={};
                     price.quantity = item.quantity;

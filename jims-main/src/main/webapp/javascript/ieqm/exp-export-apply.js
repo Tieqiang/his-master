@@ -44,7 +44,7 @@ $(function () {
         }
     }
     //申请开始日期
-    $('#startDate').datebox({
+    $('#startDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
@@ -53,14 +53,14 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
     });
     //申请结束日期
-    $('#endDate').datebox({
+    $('#endDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
@@ -69,14 +69,14 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
+            var time = $('#endDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#endDate').datetimebox('setText', dateTime);
             $('#endDate').datetimebox('hidePanel');
         }
     });
     //出库日期
-    $('#exportDate').datebox({
+    $('#exportDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
@@ -984,9 +984,10 @@ $(function () {
             $("#right").datagrid('endEdit', editIndex);
         }
         if(dataValid()){
-            $.messager.confirm("提示信息", "真的要保存这些项目吗？", function (r) {
+            $.messager.confirm("提示信息", "确定要进行出库操作？", function (r) {
                 if (r) {
                     var exportVo = getCommitData();
+                    console.log(exportVo)
                     $.postJSON("/api/exp-stock/exp-export-manage", exportVo, function (data) {
                         $.messager.alert('系统提示', '出库成功', 'success',function(){
                             parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');

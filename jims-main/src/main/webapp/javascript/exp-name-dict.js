@@ -66,7 +66,6 @@ $(function () {
 
     });
 
-
     //产品类型数据加载
     var expClassDictPromise = $.get("/api/exp-class-dict/list", function (data) {
         $.each(data, function (index, item) {
@@ -230,6 +229,20 @@ $(function () {
                     textField: 'name',
                     data: [{'code': '1', 'name': '是'}, {'code': '2', 'name': '否'}]
                 }
+            },
+            formatter:function(value,row,index){
+                if(value=="1"){
+                    value = "是";
+                }
+                else if(value=="2"){
+                    value="否";
+                }
+                else if(value=="S"){
+                    value = "是";
+                }else{
+                    value ="是";
+                }
+                return value;
             }
         }, {
             title: '产品范围',
@@ -243,6 +256,14 @@ $(function () {
                     textField: 'name',
                     data: [{'code': '1', 'name': '全院产品'}, {'code': '2', 'name': '普通产品'}]
                 }
+            },
+            formatter:function(value,row,index){
+                if(value=="1"){
+                    value="全院产品";
+                }else if(value == "2"){
+                    value = "普通产品";
+                }
+                return value;
             }
         }
         ]],
@@ -354,15 +375,15 @@ $(function () {
         beanChangeVo.expNameDictBeanChangeVo = expNameDictChangeVo;
         console.log(beanChangeVo);
 
-        if (beanChangeVo) {
-            $.postJSON("/api/exp-name-dict/save", beanChangeVo, function (data) {
-                $.messager.alert("系统提示", "保存成功", "info");
-                $("#clear").click();
-                codeArrays = [];
-            }, function (data) {
-                $.messager.alert('提示', data.responseJSON.errorMessage, "error");
-            })
-        }
+        //if (beanChangeVo) {
+        //    $.postJSON("/api/exp-name-dict/save", beanChangeVo, function (data) {
+        //        $.messager.alert("系统提示", "保存成功", "info");
+        //        $("#clear").click();
+        //        codeArrays = [];
+        //    }, function (data) {
+        //        $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+        //    })
+        //}
     });
 
     //生成10位代码

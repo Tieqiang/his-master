@@ -42,6 +42,11 @@ function checkRadio(){
 }
 
 $(function () {
+    //库房字典
+    var storageDept = [];
+    $.get("/api/exp-storage-dept/list?hospitalId=" + parent.config.hospitalId, function (data) {
+        storageDept = data;
+    });
     //格式化日期函数
     function formatterDate(val, row) {
         if (val != null) {
@@ -114,7 +119,14 @@ $(function () {
             title: '供货商',
             field: 'supplier',
             width: '15%',
-            editor: {type: 'textbox'}
+            formatter: function (value, row, index) {
+                for (var i = 0; i < storageDept.length; i++) {
+                    if (value == storageDept[i].storageCode) {
+                        return storageDept[i].storageName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: "应付金额",
             width: '7%',
@@ -279,7 +291,6 @@ $(function () {
         masterDataVo.searchInput = $("#searchInput").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
-        console.log(masterDataVo);
         var promise =$.get("/api/exp-import/exp-import-document-search",masterDataVo,function(data){
             for(var i = 0 ;i<data.length;i++){
                 if(data[i].accountIndicator=='1'){

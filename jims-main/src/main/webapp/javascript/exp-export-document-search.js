@@ -50,7 +50,11 @@ $(function () {
     var masters = [];//信息
     var currentDocumentNo;//当前账单号
     var flag = 0;
-
+    //库房字典
+    var storageDept = [];
+    $.get("/api/exp-storage-dept/list?hospitalId=" + parent.config.hospitalId, function (data) {
+        storageDept = data;
+    });
     //格式化日期函数
     function formatterDate(val, row) {
         if (val != null) {
@@ -112,7 +116,6 @@ $(function () {
             $('#stopDate').datetimebox('hidePanel');
         }
     });
-
     /**
     * 定义主表信息表格
     */
@@ -145,7 +148,14 @@ $(function () {
             title: '收货方',
             field: 'receiver',
             width: '15%',
-            editor: {type: 'textbox'}
+            formatter: function (value, row, index) {
+                for (var i = 0; i < storageDept.length; i++) {
+                    if (value == storageDept[i].storageCode) {
+                        return storageDept[i].storageName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: "应付金额",
             width: '9%',
@@ -376,10 +386,8 @@ $(function () {
             width: '7%'
         }]],
         onLoadSuccess:function(data){
-            console.log(data);
             flag = flag+1;
             if(flag==2){
-                console.log(flag);
                 if(data.total==0 ){
                     $.messager.alert('系统提示','库房暂无该出库单据明细','info');
                     $("#retailDialog").dialog('close');

@@ -51,7 +51,7 @@ $(function(){
     var panelHeight = $(window).height - 300 ;
 
     //出库日期
-    $('#exportDate').datebox({
+    $('#exportDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
@@ -438,27 +438,27 @@ $(function(){
         pageSize: 50,
         pageNumber: 1
     });
-    //科室字典
+    //库房字典
     var depts = {};
-    var promise = $.get("/api/dept-dict/list?hospitalId=" + parent.config.hospitalId, function (data) {
+    var promise = $.get("/api/exp-storage-dept/list?hospitalId=" + parent.config.hospitalId, function (data) {
         depts = data;
         return depts;
     });
     promise.done(function () {
         $("#receiver").combogrid({
-            idField: 'deptName',
-            textField: 'deptName',
+            idField: 'storageCode',
+            textField: 'storageName',
             data: depts,
             panelWidth: 200,
             columns: [[{
                 title: '科室名称',
-                field: 'deptName'
+                field: 'storageName'
             }, {
                 title: '科室代码',
-                field: 'deptCode'
+                field: 'storageCode'
             }, {
                 title: '输入码',
-                field: 'inputCode'
+                field: 'disburseNoPrefix'
             }]],
             filter: function (q, row) {
                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
@@ -676,7 +676,7 @@ $(function(){
             $.messager.alert("系统提示", "产品出库，发往不能为空", 'error');
             return false;
         }
-        var exportDate = $("#exportDate").datebox('calendar').calendar('options').current;
+        var exportDate = $("#exportDate").datetimebox('calendar').calendar('options').current;
         if (!exportDate) {
             $.messager.alert("系统提示", "产品出库，出库时间不能为空", 'error');
             return false;
@@ -696,7 +696,7 @@ $(function(){
         var exportMaster = {};
         exportMaster.documentNo = $("#documentNo").textbox('getValue');
         exportMaster.exportClass = $("#exportClass").combobox('getValue');
-        exportMaster.exportDate = $("#exportDate").datebox('calendar').calendar('options').current;
+        exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');
         exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
