@@ -209,7 +209,8 @@ public class ExpPriceListFacade extends BaseFacade {
                 "     c.retail_price,\n" +
                 "     c.Register_no,\n" +
                 "     c.Permit_no,\n" +
-                "     b.input_code\n" +
+                "     b.input_code,\n" +
+                "     nvl(d.quantity,0) amount_Per_Package\n" +
                 "FROM exp_dict b, exp_price_list c,exp_stock d\n" +
                 "WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "AND   b.exp_spec = c.min_spec\n" +
@@ -219,7 +220,7 @@ public class ExpPriceListFacade extends BaseFacade {
                 "AND   c.start_date <= sysdate\n" +
                 "AND   (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
                 "and   d.storage(+) like '" + StorageCode + "'||'%'\n" +
-                //"AND   b.EXP_CODE = '" + expCode + "'" +
+                "AND   nvl(d.quantity,0) > 0" +
                 "and   upper(b.input_code) like upper('" + inputCode + "%')";
         return super.createNativeQuery(sql,new ArrayList<Object>(), ExpPriceListVo.class);
     }

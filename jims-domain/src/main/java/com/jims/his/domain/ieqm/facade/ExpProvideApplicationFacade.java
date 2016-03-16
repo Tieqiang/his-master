@@ -180,7 +180,8 @@ public class ExpProvideApplicationFacade extends BaseFacade {
      * @return
      */
     public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String hospitalId, String applyStorage, String appNo){
-        String sql = "SELECT s1.storage_name provide_name," +
+        String sql = "SELECT distinct " +
+                "         s1.storage_name provide_name," +
                 "         s2.storage_name applicant_name," +
                 "         EXP_PROVIDE_APPLICATION.ITEM_NO," +
                 "         EXP_PROVIDE_APPLICATION.EXP_CODE," +
@@ -198,14 +199,17 @@ public class ExpProvideApplicationFacade extends BaseFacade {
                 "         EXP_DICT.EXP_FORM," +
                 "         EXP_PROVIDE_APPLICATION.AUDITING_OPERATOR," +
                 "         EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY" +
-                "    FROM exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION,EXP_DICT " +
+                "    FROM exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION,EXP_DICT,exp_stock s3 " +
                 "         WHERE s1.storage_code=EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE" +
                 "         and s2.storage_code=EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE" +
-                "         AND EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE  and" +
+                "         AND EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE  " +
+                "         AND EXP_PROVIDE_APPLICATION.EXP_CODE = s3.EXP_CODE  and" +
                 "         EXP_PROVIDE_APPLICATION.EXP_SPEC = EXP_DICT.EXP_SPEC and " +
+                "         EXP_PROVIDE_APPLICATION.EXP_SPEC = s3.EXP_SPEC and " +
+                "         EXP_PROVIDE_APPLICATION.QUANTITY <= s3.quantity and " +
                 "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG <> '1'";
         if (null != storageCode && !storageCode.trim().equals("")) {
-            sql += " and  EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE = '" + storageCode + "' \n";
+            sql += " and  EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE = '" + storageCode + "'    and s3.storage='"+ storageCode+"'" ;
         }
 
         if (null != hospitalId && !hospitalId.trim().equals("")) {

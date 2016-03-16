@@ -9,6 +9,7 @@ $(document).ready(function () {
     var storageDicts = [];
     //var rowDatas ;
     var storageCode;
+    var limitNumber=0;//当前可申领最大值
 
     //库房加载
     var storageDictsPromise = $.get("/api/exp-storage-dept/list?hospitalId="+parent.config.hospitalId, function (data) {
@@ -80,8 +81,9 @@ $(document).ready(function () {
                 },
                 method: 'GET',
                 columns: [[
-                    {field: 'expCode', title: '编码', width: 200, align: 'center'},
-                    {field: 'expName', title: '名称', width: 150, align: 'center'},
+                    {field: 'expCode', title: '编码', width: 100, align: 'center'},
+                    {field: 'expName', title: '名称', width: 100, align: 'center'},
+                    {field: 'amountPerPackage', title: '可申请数量', width: 50, align: 'center'},
                     {field: 'minSpec', title: '规格', width: 50, align: 'center'},
                     {field: 'units', title: '单位', width: 50, align: 'center'},
                     {field: 'firmId', title: '厂家', width: 100, align: 'center'},
@@ -90,14 +92,35 @@ $(document).ready(function () {
                 onClickRow: function (rowIndex,rowData) {
                     $("#dg").datagrid('endEdit', editRowIndex);
                     var rowDetail = $("#dg").datagrid('getData').rows[editRowIndex];
-
                     rowDetail.packageSpec = rowData.minSpec;
                     rowDetail.expCode = rowData.expCode;
                     rowDetail.packageUnits = rowData.units;
                     rowDetail.expSpec = rowData.minSpec;
+                    limitNumber = rowData.amountPerPackage;
                     $("#dg").datagrid('refreshRow', editRowIndex);
                     $("#dg").datagrid('beginEdit', editRowIndex);
-                }
+                },
+                keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+                    enter: function (e) {
+                        var row = $(this).combogrid('grid').datagrid('getSelected');
+                        $(this).combogrid('hidePanel');
+                        if (row) {
+                            $("#dg").datagrid('endEdit', editRowIndex);
+                            $('#dg').datagrid('updateRow', {
+                                index: editRowIndex,
+                                row: {
+                                    packageSpec : row.minSpec,
+                                    expCode :row.expCode,
+                                    packageUnits :row.units,
+                                    expSpec :row.minSpec,
+                                    expName:row.expName
+                                }
+                            });
+                            limitNumber = row.amountPerPackage;
+                        }
+                        $("#dg").datagrid('beginEdit', editRowIndex);
+                    }
+                })
             }}
         }, {
             title: "规格",
@@ -131,7 +154,15 @@ $(document).ready(function () {
             title:"数量",
             field:"quantity",
             width:"10%",
-            editor:{type:"numberbox"}
+            editor:{type:"numberbox"},
+            formatter: function (value, row, index) {
+                if (value > limitNumber) {
+                    $.messager.alert("提示", "第"+ (parseInt(index+1))+"行申请数量超过申领库房的数量，请重新填写申请数量。", "info");
+                    limitNumber = 0;
+                    value = 0 ;
+                }
+                return value;
+            }
         },{
             title:"申请人",
             field:"applicationMan",
@@ -222,12 +253,14 @@ $(document).ready(function () {
 
     // 保存
     $("#saveBtn").on("click", function () {
-        if (editRowIndex != undefined){
-            $("#dg").datagrid("endEdit",editRowIndex);
+        if (editRowIndex != undefined) {
+            $("#dg").datagrid("endEdit", editRowIndex);
             editRowIndex = undefined;
         }
-
-
+        if(limitNumber==0){
+            //$.messager.alert("提示", "请重新填写申请数量", "info");
+            return;
+        }
         var insertData = $("#dg").datagrid("getChanges","inserted");
         var updateData = $("#dg").datagrid("getChanges","updated");
         var deleteData = $("#dg").datagrid("getChanges","deleted");

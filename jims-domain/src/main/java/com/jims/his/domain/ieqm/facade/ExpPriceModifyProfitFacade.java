@@ -38,13 +38,13 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
      * @return
      */
     public List<ExpPriceModifyProfit> findCountAll(String longStartTime, String longStopTime,String hospitalId) {
-        String sql ="select exp_name,storage,exp_storage_dept.storage_name,exp_code,exp_spec,units,firm_id,quantity," +
+        String sql ="select distinct c.exp_name,storage,b.storage_name,a.exp_code,a.exp_spec,a.units,firm_id,quantity," +
                 "original_trade_price,trade_price_profit,current_trade_price,original_retail_price,\n" +
                 "current_retail_price,retail_price_profit,actual_efficient_date \n" +
-                "from exp_price_modify_profit,exp_storage_dept\n" +
-                "where exp_storage_dept.storage_code =exp_price_modify_profit.storage and actual_efficient_date >= to_date('"+ longStartTime+"','YYYY-MM-DD HH24:MI:SS') and " +
-                "actual_efficient_date <= to_date('"+ longStopTime+"','YYYY-MM-DD HH24:MI:SS')       and " +
-                "exp_price_modify_profit.hospital_id = '"+hospitalId+"'";
+                "from exp_price_modify_profit a,exp_storage_dept b,exp_dict c\n" +
+                "where b.storage_code =a.storage and actual_efficient_date >= to_date('"+ longStartTime+"','YYYY-MM-DD HH24:MI:SS')  " +
+                " and a.exp_code  = c.exp_code and a.exp_spec = c.exp_spec and actual_efficient_date <= to_date('"+ longStopTime+"','YYYY-MM-DD HH24:MI:SS')       and " +
+                "a.hospital_id = '"+hospitalId+"'";
         List<ExpPriceModifyProfit> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceModifyProfit.class);
         System.out.println("nativeQuery");
         return nativeQuery;

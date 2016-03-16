@@ -12,11 +12,14 @@ public class ExpExportDetialVo {
 
     private String documentNo;
     private Short itemNo;
+    private String orderBatch;
+    private String tenderNo;
     private String expName ;
     private String expCode;
     private String expSpec;
     private String units;
     private String batchNo;
+    private Date invoiceDate;
     private Date expireDate;
     private String firmId;
     private String expForm;
@@ -34,8 +37,11 @@ public class ExpExportDetialVo {
     private String subPackageUnits2;
     private String subPackageSpec2;
     private Double inventory;
+    private Double discount;
+    private Date produceDate;
     private Date producedate;
     private Date disinfectdate;
+    private Date disinfectDate;
     private Integer killflag;
     private Short recFlag;
     private String recOperator;
@@ -58,15 +64,21 @@ public class ExpExportDetialVo {
     private Double retailAmount; //零售金额
     private String fundItem;
     private String assignName;
+    private String expImportDetailRegistNo;
+    private String expImportDetailLicenceno;
+    private String invoiceNo;
 
-    public ExpExportDetialVo(String documentNo, Short itemNo, String expName, String expCode, String expSpec, String units, String batchNo, Date expireDate, String firmId, String expForm, String importDocumentNo, Double purchasePrice, Double tradePrice, Double retailPrice, String packageSpec, Double quantity, String packageUnits, Double subPackage1, String subPackageUnits1, String subPackageSpec1, Double subPackage2, String subPackageUnits2, String subPackageSpec2, Double inventory, Date producedate, Date disinfectdate, Integer killflag, Short recFlag, String recOperator, Date recDate, String assignCode, String bigCode, String bigSpec, String bigFirmId, String expSgtp, String memo, String registNo, String licenceNo, String hospitalId, Integer expIndicator, Double amount, String deptAttr, String receiver, String subStorage, Double payAmount, Double retailAmount, String fundItem, String assignName) {
+    public ExpExportDetialVo(String documentNo, Short itemNo, String orderBatch, String tenderNo, String expName, String expCode, String expSpec, String units, String batchNo, Date invoiceDate, Date expireDate, String firmId, String expForm, String importDocumentNo, Double purchasePrice, Double tradePrice, Double retailPrice, String packageSpec, Double quantity, String packageUnits, Double subPackage1, String subPackageUnits1, String subPackageSpec1, Double subPackage2, String subPackageUnits2, String subPackageSpec2, Double inventory, Double discount, Date produceDate, Date producedate, Date disinfectdate, Date disinfectDate, Integer killflag, Short recFlag, String recOperator, Date recDate, String assignCode, String bigCode, String bigSpec, String bigFirmId, String expSgtp, String memo, String registNo, String licenceNo, String hospitalId, Integer expIndicator, Double amount, String deptAttr, String receiver, String subStorage, Double payAmount, Double retailAmount, String fundItem, String assignName, String expImportDetailRegistNo, String expImportDetailLicenceno, String invoiceNo) {
         this.documentNo = documentNo;
         this.itemNo = itemNo;
+        this.orderBatch = orderBatch;
+        this.tenderNo = tenderNo;
         this.expName = expName;
         this.expCode = expCode;
         this.expSpec = expSpec;
         this.units = units;
         this.batchNo = batchNo;
+        this.invoiceDate = invoiceDate;
         this.expireDate = expireDate;
         this.firmId = firmId;
         this.expForm = expForm;
@@ -84,8 +96,11 @@ public class ExpExportDetialVo {
         this.subPackageUnits2 = subPackageUnits2;
         this.subPackageSpec2 = subPackageSpec2;
         this.inventory = inventory;
+        this.discount = discount;
+        this.produceDate = produceDate;
         this.producedate = producedate;
         this.disinfectdate = disinfectdate;
+        this.disinfectDate = disinfectDate;
         this.killflag = killflag;
         this.recFlag = recFlag;
         this.recOperator = recOperator;
@@ -108,6 +123,9 @@ public class ExpExportDetialVo {
         this.retailAmount = retailAmount;
         this.fundItem = fundItem;
         this.assignName = assignName;
+        this.expImportDetailRegistNo = expImportDetailRegistNo;
+        this.expImportDetailLicenceno = expImportDetailLicenceno;
+        this.invoiceNo = invoiceNo;
     }
 
     public ExpExportDetialVo() {
@@ -353,13 +371,7 @@ public class ExpExportDetialVo {
         this.inventory = inventory;
     }
 
-    public Date getProducedate() {
-        return producedate;
-    }
 
-    public void setProducedate(Date producedate) {
-        this.producedate = producedate;
-    }
 
     public Date getDisinfectdate() {
         return disinfectdate;
@@ -495,5 +507,85 @@ public class ExpExportDetialVo {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public String getExpImportDetailRegistNo() {
+        return expImportDetailRegistNo;
+    }
+
+    public void setExpImportDetailRegistNo(String expImportDetailRegistNo) {
+        this.expImportDetailRegistNo = expImportDetailRegistNo;
+    }
+
+    public String getExpImportDetailLicenceno() {
+        return expImportDetailLicenceno;
+    }
+
+    public void setExpImportDetailLicenceno(String expImportDetailLicenceno) {
+        this.expImportDetailLicenceno = expImportDetailLicenceno;
+    }
+
+    public String getInvoiceNo() {
+        return invoiceNo;
+    }
+
+    public void setInvoiceNo(String invoiceNo) {
+        this.invoiceNo = invoiceNo;
+    }
+
+    public Date getInvoiceDate() {
+        return invoiceDate;
+    }
+
+    public void setInvoiceDate(Date invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public Date getProduceDate() {
+        return produceDate;
+    }
+
+    public void setProduceDate(Date produceDate) {
+        this.produceDate = produceDate;
+    }
+
+    public Date getProducedate() {
+        return producedate;
+    }
+
+    public void setProducedate(Date producedate) {
+        this.producedate = producedate;
+    }
+
+    public Date getDisinfectDate() {
+        return disinfectDate;
+    }
+
+    public void setDisinfectDate(Date disinfectDate) {
+        this.disinfectDate = disinfectDate;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public String getOrderBatch() {
+        return orderBatch;
+    }
+
+    public void setOrderBatch(String orderBatch) {
+        this.orderBatch = orderBatch;
+    }
+
+    public String getTenderNo() {
+        return tenderNo;
+    }
+
+    public void setTenderNo(String tenderNo) {
+        this.tenderNo = tenderNo;
     }
 }

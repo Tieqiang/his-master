@@ -951,6 +951,13 @@ $(function () {
 
             var expImpVo = getCommitData() ;
             expImpVo.expExportDetialVoBeanChangeVo={} ;
+            for(var i =0;i<rows.length;i++){
+                rows[i].expireDate=new Date(rows[i].expireDate);
+                rows[i].invoiceDate=new Date(rows[i].invoiceDate);
+                rows[i].disinfectDate= new Date(rows[i].disinfectDate);
+                rows[i].produceDate= new Date(rows[i].produceDate);
+
+            }
             expImpVo.expExportDetialVoBeanChangeVo.updated=rows ;
             $.postJSON("/api/exp-stock/imp-batch", expImpVo, function (data) {
                 $.messager.alert('系统提示', '入库成功', 'success',function(){
@@ -970,7 +977,7 @@ $(function () {
         expImportMasterBeanChangeVo.inserted = [];
         var importMaster = {};
         importMaster.importClass = $("#importClass").combobox('getValue');
-        importMaster.importDate = $("#importDate").datebox('calendar').calendar('options').current;
+        importMaster.importDate = new Date($("#importDate").datetimebox('getValue'));
         importMaster.storage = parent.config.storageCode;
         importMaster.documentNo = $("#documentNo").textbox('getValue');
         importMaster.supplier = $("#supplier").combogrid('getValue');

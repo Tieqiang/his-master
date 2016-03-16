@@ -956,7 +956,7 @@ $(function () {
             return false;
         }
 
-        var importDate = $("#importDate").datebox('calendar').calendar('options').current;
+        var importDate = $("#importDate").datetimebox('getValue');
         if (!importDate) {
             $.messager.alert("系统提示", "产品入库，入库时间不能为空", 'error');
             return false;
@@ -970,7 +970,7 @@ $(function () {
         expImportMasterBeanChangeVo.inserted = [];
         var importMaster = {};
         importMaster.importClass = $("#importClass").combobox('getValue');
-        importMaster.importDate = $("#importDate").datebox('calendar').calendar('options').current;
+        importMaster.importDate = new Date($("#importDate").datetimebox('getValue'));
         importMaster.storage = parent.config.storageCode;
         importMaster.documentNo = $("#documentNo").textbox('getValue');
         importMaster.supplier = $("#supplier").combogrid('getValue');
