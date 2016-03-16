@@ -2,6 +2,7 @@ package com.jims.his.domain.htca.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.entity.AppConfigerParameter;
 import com.jims.his.domain.common.vo.PageEntity;
 import com.jims.his.domain.htca.entity.*;
 
@@ -11,6 +12,7 @@ import javax.xml.ws.soap.Addressing;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -174,6 +176,9 @@ public class AcctDeptCostFacade extends BaseFacade {
         String sql = acctParam.getParamSql().replace("${yearMonth}",yearMonth).replace("${hospitalId}",hospitalId) ;
         List<Object[]> resultList = createNativeQuery(sql).getResultList();
         List<AcctDeptCost> acctDeptCosts = new ArrayList<>();
+        //读取参数获取门诊护理单元
+        String outpWardHql = "from AppConfigerParameter as config where config.appName='HTCA' and config.parameterName='OUTP_WARD_ID'";
+        AppConfigerParameter outpWardParameter = createQuery(AppConfigerParameter.class, outpWardHql, new ArrayList<Object>()).getSingleResult();
         double inpOrder =0;
         double inpPerform =0;
         double ward=0;
@@ -182,7 +187,7 @@ public class AcctDeptCostFacade extends BaseFacade {
         Double outpWardRate;
         double t=0.0 ;
 
-
+        String emgWard = outpWardParameter.getParameterValue() ;
         for (Object[] objects : resultList) {
             String hql = "select cost from CostItemDict as cost,AcctReckItemClassDict as income " +
                     "where cost.id=income.costId" +
@@ -272,9 +277,16 @@ public class AcctDeptCostFacade extends BaseFacade {
 
                     }
                 } else {
-                    outpOrder = (itemDict.getOutpOrderRate()==null?0:itemDict.getOutpOrderRate())/100;
-                    outpPerformRate = (itemDict.getOutpPerformRate()==null?0:itemDict.getOutpPerformRate())/100;
-                    outpWardRate = (itemDict.getOutpWardRate()==null?0:itemDict.getOutpWardRate())/100;
+                    if(emgWard !=null && emgWard.equals((String)objects[2])){
+                        outpOrder = (itemDict.getInpOrderRate()==null?0:itemDict.getInpOrderRate()) / 100;
+                        outpPerformRate = (itemDict.getInpPerformRate()==null?0:itemDict.getInpPerformRate()) / 100;
+                        outpWardRate = (itemDict.getInpWardRate()==null?0:itemDict.getInpWardRate()) / 100;
+                    }else{
+                        outpOrder = (itemDict.getOutpOrderRate()==null?0:itemDict.getOutpOrderRate())/100;
+                        outpPerformRate = (itemDict.getOutpPerformRate()==null?0:itemDict.getOutpPerformRate())/100;
+                        outpWardRate = (itemDict.getOutpWardRate()==null?0:itemDict.getOutpWardRate())/100;
+                    }
+
                     if (outpOrder != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
                         cost.setHospitalId(hospitalId);
@@ -819,4 +831,51 @@ public class AcctDeptCostFacade extends BaseFacade {
 
     }
 
+    @Transactional
+    public void sameLastMonth(String yearMonth, String lastYearMonth, String costItemId, String hospitalId) throws Exception {
+        String incomeHql = "from ServiceDeptIncome as income where income.hospitalId = '"+hospitalId+"' and income.yearMonth = '"+lastYearMonth+"' and income.incomeTypeId='"+costItemId+"'" ;
+        String costHql = "from AcctDeptCost as cost where cost.hospitalId = '"+hospitalId+"' and cost.yearMonth = '"+lastYearMonth+"' and cost.costItemId='"+costItemId+"'" ;
+        String delIncomeHql = "delete ServiceDeptIncome as income where income.hospitalId = '"+hospitalId+"' and income.yearMonth = '"+yearMonth+"' and income.incomeTypeId='"+costItemId+"'" ;
+        String delCostHql = "delete AcctDeptCost as cost where cost.hospitalId = '"+hospitalId+"' and cost.yearMonth = '"+yearMonth+"' and cost.costItemId='"+costItemId+"'" ;
+        //createQuery(ServiceDeptIncome.class,delIncomeHql,new ArrayList<Object>()).executeUpdate() ;
+        //createQuery(AcctDeptCost.class,delCostHql,new ArrayList<Object>()).executeUpdate() ;
+        try {
+            getEntityManager().createQuery(delCostHql).executeUpdate();
+            getEntityManager().createQuery(delIncomeHql).executeUpdate();
+            List<ServiceDeptIncome> serviceDeptIncomes = createQuery(ServiceDeptIncome.class, incomeHql, new ArrayList<Object>()).getResultList();
+            for (ServiceDeptIncome income : serviceDeptIncomes) {
+                ServiceDeptIncome serviceDeptIncome = new ServiceDeptIncome();
+                serviceDeptIncome.setOutFlag(income.getOutFlag());
+                serviceDeptIncome.setHospitalId(income.getHospitalId());
+                serviceDeptIncome.setAcctDeptId(income.getAcctDeptId());
+                serviceDeptIncome.setServiceForDeptId(income.getServiceForDeptId());
+                serviceDeptIncome.setTotalIncome(income.getTotalIncome());
+                serviceDeptIncome.setConfirmStatus(income.getConfirmStatus());
+                serviceDeptIncome.setDetailIncomeId(income.getDetailIncomeId());
+                serviceDeptIncome.setYearMonth(yearMonth);
+                serviceDeptIncome.setIncomeTypeId(costItemId);
+                serviceDeptIncome.setGetWay(income.getGetWay());
+                serviceDeptIncome.setOperator(income.getOperator());
+                serviceDeptIncome.setOperatorDate(new Date());
+                merge(serviceDeptIncome);
+            }
+
+            List<AcctDeptCost> acctDeptCosts = createQuery(AcctDeptCost.class, costHql, new ArrayList<Object>()).getResultList();
+            for (AcctDeptCost acctDeptCost : acctDeptCosts) {
+                AcctDeptCost cost = new AcctDeptCost();
+                cost.setHospitalId(acctDeptCost.getHospitalId());
+                cost.setOperator(acctDeptCost.getOperator());
+                cost.setOperatorDate(new Date());
+                cost.setYearMonth(yearMonth);
+                cost.setFetchWay(acctDeptCost.getFetchWay());
+                cost.setAcctDeptId(acctDeptCost.getAcctDeptId());
+                cost.setCost(acctDeptCost.getCost());
+                cost.setCostItemId(acctDeptCost.getCostItemId());
+                cost.setMinusCost(acctDeptCost.getMinusCost());
+                merge(cost);
+            }
+        }catch (Exception e){
+            throw  e ;
+        }
+    }
 }

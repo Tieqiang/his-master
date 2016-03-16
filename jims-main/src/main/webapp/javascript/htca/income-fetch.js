@@ -259,8 +259,12 @@ $(function () {
                 }
                 $.post("/api/fetch-data/devide-income?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth,function(data){
                     $.messager.progress('close')
+                    if(data.errorMessage){
+                        $.messager.alert('系统提示',data.errorMessage,'error');
+                        return ;
+                    }
                     $("#fetchItemBtn").click();
-                })
+                },'json')
             }
         });
 

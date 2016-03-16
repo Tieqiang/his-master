@@ -77,7 +77,7 @@ public class FetchDataService {
             e.printStackTrace();
             ErrorException errorException = new ErrorException() ;
             errorException.setMessage(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            return Response.status(Response.Status.OK).entity(errorException).build() ;
         }
     }
 }

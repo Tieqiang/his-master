@@ -221,7 +221,7 @@ public class FetchDataHolidayFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<CalcIncomeDetailForHoliday> devideCalcIncome(String hospitalId, String yearMonth) {
+    public List<CalcIncomeDetailForHoliday> devideCalcIncome(String hospitalId, String yearMonth) throws Exception {
 
         double inpOrderReate = 0;
         double inpPerformReate = 0;
@@ -284,6 +284,9 @@ public class FetchDataHolidayFacade extends BaseFacade {
                     outpOrderReate = Double.parseDouble(acctReckItemClassDict.getOutpOrderedBy() == null ? "0" : acctReckItemClassDict.getOutpOrderedBy()) / 100;
                     outpPerformReate = Double.parseDouble(acctReckItemClassDict.getOutpPerformedBy() == null ? "0" : acctReckItemClassDict.getOutpPerformedBy()) / 100;
                     outpWardReate = Double.parseDouble(acctReckItemClassDict.getOutpWardCode() == null ? "0" : acctReckItemClassDict.getOutpWardCode()) / 100;
+                }else{
+                    Exception exception = new Exception("未能找到名称为：【"+detail.getIncomeItemName()+"】，编码为：【"+detail.getIncomeItemCode()+"】的分割系数") ;
+                    throw exception ;
                 }
             }
 

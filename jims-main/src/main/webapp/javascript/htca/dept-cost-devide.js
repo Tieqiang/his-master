@@ -489,6 +489,22 @@ $(function () {
             $.messager.alert('系统提示', '请选择成本项目', 'error');
             return;
         }
+
+
+        $.post("/api/acct-dept-cost/save-last?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth +
+        "&costItemId=" + costItemId, function(data){
+            //alert("Data Loaded: " + data);
+            if(data=="ok"){
+                $.messager.alert("系统提示","已经同步完成，请在成本和收入报表中查看！","info") ;
+            }else{
+                $.messager.alert("系统提示","同步失败,请尝试另外的录入方式",'info') ;
+            }
+        });
+
+
+
+
+
     })
 });
 

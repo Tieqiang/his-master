@@ -110,7 +110,12 @@ public class FetchDataFacade extends BaseFacade {
                 //设置开单科室
                 orderDept =  getAcctDeptDictId((String)objects[6],staffDicts) ;
                 if(orderDept==null || "".equals(orderDept)){
-                    calcIncomeDetail.setOrderedBy((String) objects[5]);
+                    if(objects[5]==null || "".equals(objects[5])){
+                        System.out.println("---------------------------------------------------------");
+                        calcIncomeDetail.setOrderedBy("*");
+                    }else{
+                        calcIncomeDetail.setOrderedBy((String) objects[5]);
+                    }
                 }else{
                     calcIncomeDetail.setOrderedBy(orderDept);
                     orderDept = null ;
@@ -231,7 +236,7 @@ public class FetchDataFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<CalcIncomeDetail> devideCalcIncome(String hospitalId, String yearMonth) {
+    public List<CalcIncomeDetail> devideCalcIncome(String hospitalId, String yearMonth) throws Exception {
 
         double inpOrderReate = 0;
         double inpPerformReate = 0;
@@ -294,6 +299,9 @@ public class FetchDataFacade extends BaseFacade {
                     outpOrderReate = Double.parseDouble(acctReckItemClassDict.getOutpOrderedBy() == null ? "0" : acctReckItemClassDict.getOutpOrderedBy()) / 100;
                     outpPerformReate = Double.parseDouble(acctReckItemClassDict.getOutpPerformedBy() == null ? "0" : acctReckItemClassDict.getOutpPerformedBy()) / 100;
                     outpWardReate = Double.parseDouble(acctReckItemClassDict.getOutpWardCode() == null ? "0" : acctReckItemClassDict.getOutpWardCode()) / 100;
+                }else{
+                    Exception exception = new Exception("未能找到名称为：【"+detail.getIncomeItemName()+"】，编码为：【"+detail.getIncomeItemCode()+"】的分割系数") ;
+                    throw exception ;
                 }
             }
 

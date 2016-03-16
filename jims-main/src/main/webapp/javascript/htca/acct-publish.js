@@ -113,6 +113,9 @@ $(function () {
                     }, {
                         value: '1',
                         text: '收入'
+                    },{
+                        value:'2',
+                        text:'效益'
                     }]
                 }
             }
@@ -237,7 +240,7 @@ $(function () {
     //新增项目
     $("#addBtn").on('click', function () {
         var rows = $("#acctPublishTable").datagrid('getRows');
-        if (rows.length > 1) {
+        if (rows.length > 2) {
             return;
         }
         var yearMonth = $("#synDate").datebox('getValue');

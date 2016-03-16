@@ -208,6 +208,7 @@ $(function(){
             text:'数据高效提取中，请稍后....'
         }) ;
         $.get("/api/acct-dept-cost/fetch-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth+"&fetchTypeId="+fetchTypeId,function(data){
+            console.log(data) ;
             var myData =[] ;
             var flag = false ;
 
@@ -269,6 +270,11 @@ $(function(){
         if(rows.length<=0){
             $.messager.alert("系统提示","没有要保存的数据，请县提取，然后在保存！",'error') ;
             return
+        }
+        for(var i =0 ;i<rows.length;i++){
+            rows[i].operator = parent.config.loginId ;
+            rows[i].operatorDate = new Date() ;
+            rows[i].hospitalId = parent.config.hospitalId ;
         }
         $.postJSON("/api/acct-dept-cost/save-cost",rows,function(data){
             $.messager.alert("系统提示","保存成功，在成本报表中查看各个科室的成本") ;

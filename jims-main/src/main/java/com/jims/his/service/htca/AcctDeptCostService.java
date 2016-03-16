@@ -3,12 +3,14 @@ package com.jims.his.service.htca;
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.common.vo.PageEntity;
 import com.jims.his.domain.htca.entity.AcctDeptCost;
+import com.jims.his.domain.htca.entity.ServiceDeptIncome;
 import com.jims.his.domain.htca.facade.AcctDeptCostFacade;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -230,5 +232,43 @@ public class AcctDeptCostService {
         return acctDeptCostFacade.devideAcctDeptCost(hospitalId,yearMonth,devideWay,costItemId,totalMoney,depts) ;
     }
 
+
+
+    @POST
+    @Path("save-last")
+    @Produces("text/plain")
+    public Response sameWithLastMonth(@QueryParam("yearMonth")String yearMonth,@QueryParam("hospitalId")String hospitalId,@QueryParam("costItemId")String costItemId){
+        if(yearMonth==null){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("没有获取同步的月份").build();
+        }
+        String[] yearMonths = yearMonth.split("-") ;
+        Integer month = Integer.parseInt(yearMonths[1]) ;
+        Integer lastMonth = month - 1;
+        Integer lastYear = 0 ;
+        Integer year = Integer.parseInt(yearMonths[0]) ;
+
+        if(lastMonth==0){
+            lastMonth = lastMonth + 12 ;
+            lastYear = year - 1 ;
+        }else{
+            lastYear = year  ;
+
+        }
+        String lastYearMonth = "" ;
+        if(lastMonth<10){
+            lastYearMonth = lastYear + "-0"+lastMonth ;
+        }else{
+            lastYearMonth = lastYear +"-"+lastMonth ;
+        }
+        try {
+            acctDeptCostFacade.sameLastMonth(yearMonth,lastYearMonth,costItemId,hospitalId) ;
+            return Response.status(Response.Status.OK).entity("ok").build() ;
+        }catch(Exception e){
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException.getErrorMessage()).build() ;
+        }
+
+    }
 
 }
