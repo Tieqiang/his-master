@@ -10,7 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-/**
+/**测试修改内容
  * Created by heren on 2016/3/6.
  */
 @Path("holiday-dict")
