@@ -5,6 +5,7 @@ $(function () {
     var subStorageDicts = [];
     var documentNo;
     var currentExpCode;
+    var exportFlag;
 
     var stopEdit = function () {
         if (editIndex || editIndex == 0) {
@@ -346,7 +347,9 @@ $(function () {
             width: "10%",
             editor: {
                 type: 'textbox',
-                options: {}
+                options: {
+                    editable: false,
+                    disabled: true}
             }
         }, {
             title: '产品类型',
@@ -354,7 +357,9 @@ $(function () {
             width: "7%",
             editor: {
                 type: 'textbox',
-                options: {}
+                options: {
+                    editable: false,
+                    disabled: true}
             }
         }, {
             title: '品名',
@@ -410,7 +415,9 @@ $(function () {
             width: "7%",
             editor: {
                 type: 'textbox',
-                options: {}
+                options: {
+                    editable: false,
+                    disabled: true}
             }
         }, {
             title: '包装单位',
@@ -418,7 +425,9 @@ $(function () {
             width: "7%",
             editor: {
                 type: 'textbox',
-                options: {}
+                options: {
+                    editable: false,
+                    disabled: true}
             }
         }, {
             title: '数量',
@@ -430,8 +439,18 @@ $(function () {
                     max: 99999.99,
                     size: 8,
                     maxlength: 8,
-                    precision: 2
+                    precision: 2,
+                    editable: false
                 }
+            }, formatter: function (value, row, index) {
+                if (value > row.disNum) {
+                    $.messager.alert('系统消息', '第' + (parseInt(index + 1)) + '行出库数量超过库存量，请重新填编辑。', 'info');
+                    value = 0;
+                    exportFlag = false;
+                } else {
+                    exportFlag = true;
+                }
+                return value;
             }
         }, {
             title: '单价',
@@ -439,8 +458,30 @@ $(function () {
             width: "7%",
             editor: {
                 type: 'numberbox',
-                options: {}
+                options: {
+                    editable: false,
+                    disabled: true}
             }
+        }, {
+            title: '零售价',
+            field: 'retailPrice',
+            width: "7%",
+            editor: {
+                type: 'numberbox',
+                options: {
+                    editable: false,
+                    disabled: true}
+            },
+            hidden:true
+        }, {
+            title: '进价',
+            field: 'tradePrice',
+            width: "7%",
+            editor: {
+                type: 'numberbox',
+                options: {}
+            },
+            hidden: true
         }, {
             title: '金额',
             field: 'planNumber',
@@ -448,8 +489,13 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
-                precision: '2'
+                    precision: '2',
+                    editable: false,
+                    disabled: true
                 }
+            },
+            formatter:function(value,row,index){
+                return row.purchasePrice*row.quantity;
             }
         }, {
             title: '厂家',
@@ -463,14 +509,14 @@ $(function () {
             }
         }, {
             title: '分摊方式',
-            field: 'assignName',
+            field: 'assignCode',
             width: "7%",
             editor: {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
                     url: '/api/exp-assign-dict/list',
-                    valueField: 'assignName',
+                    valueField: 'assignCode',
                     textField: 'assignName',
                     method: 'GET',
                     onLoadSuccess: function () {
@@ -533,7 +579,6 @@ $(function () {
                 editIndex = index;
             }
             $(this).datagrid('beginEdit', editIndex);
-
             currentExpCode = row.expCode;
             $("#expDetailDialog").dialog('open');
         }
@@ -592,7 +637,8 @@ $(function () {
         }, {
             title: 'id',
             field: 'applicationId',
-            width: "7%"
+            width: "7%",
+            hidden:true
         }, {
             title: '消耗品',
             field: 'expName',
@@ -620,22 +666,22 @@ $(function () {
             width: "10%"
         }, {
             title: '审核人',
-            field: 'auditingOperator',
+            field: 'name',
             width: "10%",
             editor: {
                 type: 'combogrid',
                 options: {
                     panelWidth: 500,
-                    idField: 'id',
+                    idField: 'name',
                     textField: 'name',
                     loadMsg: '数据正在加载',
                     url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
                     mode: 'remote',
                     method: 'GET',
                     columns: [[
-                        {field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+                        //{field: 'empNo', title: '员工编号', width: 150, align: 'center'},
                         {field: 'name', title: '姓名', width: 150, align: 'center'},
-                        {field: 'loginName', title: '用户名', width: 150, align: 'center'},
+                        {field: 'loginName', title: '登录名', width: 150, align: 'center'},
                         {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
                     ]],
                     pagination: false,
@@ -691,7 +737,7 @@ $(function () {
         if(rows.length<=0){
             $.messager.alert("系统提示", "请选择要作废的数据", "info");
         }else{
-            $.messager.confirm("提示信息","真的要作废这些项目吗？",function(r){
+            $.messager.confirm("提示信息","确定要作废这些项目吗？",function(r){
                 if(r){
                     $.postJSON("/api/exp-provide-application/abandon", rows, function (data) {
                         $.messager.alert("系统提示", "作废成功", "info");
@@ -708,10 +754,25 @@ $(function () {
     });
     //确定功能
     $("#confirm").on('click', function () {
+        $("#applyDatagrid").datagrid('endEdit', editIndex);
         var rows = $("#applyDatagrid").datagrid("getSelections");
+        for(var i =0 ;i<rows.length;i++){
+            if(rows[i].auditingQuantity==0){
+                $.messager.alert('系统消息','审核数量不能为0！','info');
+                return;
+            }
+            //console.log(rows[i].auditingOperator)
+            if(rows[i].name==undefined){
+                $.messager.alert('系统消息', '审核人不能为空！', 'info');
+                return;
+            }
+        }
         if (rows.length <= 0) {
-            $.messager.alert("系统提示", "请选择要作废的数据", "info");
+            $.messager.alert("系统提示", "请选择要出库的数据", "info");
         } else {
+            for(var i =0;i<rows.length;i++){
+                rows[i].quantity = rows[i].auditingQuantity;
+            }
             $("#right").datagrid("loadData", rows);
 
             $("#applyDialog").dialog('close');
@@ -734,10 +795,12 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
+            var currentSubStorage = $("#subStorage").combobox("getValue");
             $("#expDetailDatagrid").datagrid('load', {
                 storageCode: parent.config.storageCode,
                 expCode: currentExpCode,
-                hospitalId: parent.config.hospitalId
+                hospitalId: parent.config.hospitalId,
+                subStorage: currentSubStorage
             });
             $("#expDetailDatagrid").datagrid('selectRow', 0);
         }
@@ -796,7 +859,9 @@ $(function () {
             rowDetail.units = row.units;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.purchasePrice;
+            rowDetail.purchasePrice = row.retailPrice;
+            rowDetail.retailPrice = row.retailPrice;
+            rowDetail.tradePrice = row.tradePrice;
             rowDetail.memos = row.memos;
             rowDetail.firmId = row.firmId;
             rowDetail.batchNo = row.batchNo;
@@ -887,7 +952,11 @@ $(function () {
         }
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].quantity == 0) {
-                $.messager.alert("系统提示", "第" + i + "行入库数量为0 请重新填写", 'error');
+                $.messager.alert("系统提示", "第" + (parseInt(i+1)) + "行出库数量为0 请重新填写", 'error');
+                return false;
+            }
+            if(($.trim(rows[i].purchasePrice)==""|| rows[i].purchasePrice==0)|| ($.trim(rows[i].disNum)=="")|| rows[i].disNum==0){
+                $.messager.alert("系统提示", "第" + (parseInt(i + 1)) + "行出库信息不完善，请双击该行完善出库信息。", 'error');
                 return false;
             }
         }
@@ -901,7 +970,7 @@ $(function () {
         var exportMaster = {};
         exportMaster.documentNo = $("#documentNo").textbox('getValue');
         exportMaster.storage = parent.config.storageCode;
-        exportMaster.exportDate = $("#exportDate").datebox('calendar').calendar('options').current;
+        exportMaster.exportDate = new Date($("#exportDate").datebox('getValue'));
         exportMaster.receiver = $("#receiver").combogrid('getValue');
         exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
@@ -943,7 +1012,7 @@ $(function () {
             detail.expForm = rows[i].expForm;
             detail.importDocumentNo = rows[i].importDocumentNo;
             detail.purchasePrice = rows[i].purchasePrice;
-            detail.tradePrice = rows[i].retailPrice;
+            detail.tradePrice = rows[i].tradePrice;
             detail.retailPrice = rows[i].retailPrice;
             detail.packageSpec = rows[i].packageSpec;
             detail.quantity = rows[i].quantity;
@@ -954,7 +1023,7 @@ $(function () {
             detail.subPackage2 = rows[i].subPackage2;
             detail.subPackageUnits2 = rows[i].subPackageUnits2;
             detail.subPackageSpec2 = rows[i].subPackageSpec2;
-            detail.inventory = rows[i].disNum;
+            detail.inventory = rows[i].disNum-rows[i].quantity;
             detail.producedate = new Date(rows[i].producedate);
             detail.disinfectdate = new Date(rows[i].disinfectdate);
             detail.killflag = rows[i].killflag;
@@ -975,22 +1044,27 @@ $(function () {
         var exportVo = {};
         exportVo.expExportMasterBeanChangeVo = expExportMasterBeanChangeVo;
         exportVo.expExportDetailBeanChangeVo = expExportDetailBeanChangeVo;
+        console.log(exportVo);
         return exportVo;
     }
-
+    var saveFlag;
     //保存按钮操作
     $("#save").on('click', function () {
         if (editIndex || editIndex == 0) {
             $("#right").datagrid('endEdit', editIndex);
         }
+        if (!exportFlag) {
+            return;
+        }
         if(dataValid()){
             $.messager.confirm("提示信息", "确定要进行出库操作？", function (r) {
                 if (r) {
                     var exportVo = getCommitData();
-                    console.log(exportVo)
                     $.postJSON("/api/exp-stock/exp-export-manage", exportVo, function (data) {
                         $.messager.alert('系统提示', '出库成功', 'success',function(){
-                            parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
+                            saveFlag = true;
+                            $("#print").trigger('click');
+                            //parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
                             //刷新左侧列表
                             $("#search").click();
                             $("#clear").click();
@@ -1014,19 +1088,26 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-apply.cpt");
+            var printDocumentNo = $("#documentNo").textbox('getValue')
+            //$("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export.cpt");
+            $("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo=" + printDocumentNo);
         }
     })
     $("#print").on('click', function () {
-        var printData = $("#right").datagrid('getRows');
-        if (printData.length <= 0) {
-            $.messager.alert('系统提示', '请先查询数据', 'info');
-            return;
+        if (saveFlag) {
+            $("#printDiv").dialog('open');
+        } else {
+            var printData = $("#right").datagrid('getRows');
+            if (printData.length <= 0) {
+                $.messager.alert('系统提示', '请先查询数据', 'info');
+                return;
+            }
+            $("#printDiv").dialog('open');
         }
-        $("#printDiv").dialog('open');
-
     })
-
+    $("#printClose").on('click', function () {
+        parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
+    })
     //清屏按钮操作
     $("#clear").on('click', function () {
         $("#right").datagrid('loadData', {total: 0, rows: []});

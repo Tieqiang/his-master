@@ -83,9 +83,25 @@ $(function () {
         ]]
     });
 
-    var curr_time = new Date();
-    $("#overDate").datetimebox("setValue", formatterDate(curr_time));
+    //var curr_time = new Date();
+    //$("#overDate").datetimebox("setValue", formatterDate(curr_time))
+    $('#overDate').datetimebox({
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#overDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#overDate').datetimebox('setText', dateTime);
+            $('#overDate').datetimebox('hidePanel');
+        }
+    });
     //提取
+
     var expires = [];
     $("#searchBtn").on('click', function () {
         var overDate =$('#overDate').combo('getValue');

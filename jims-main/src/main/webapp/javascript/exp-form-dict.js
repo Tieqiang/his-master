@@ -5,6 +5,10 @@
  * 消耗品产品经费支出字典
  */
 $(function(){
+    var expStorageDept = [];
+    $.get("/api/exp-storage-dept/list?hospitalId="+parent.config.hospitalId , function (data) {
+        expStorageDept = data;
+    });
     var editIndex;
     var stopEdit = function () {
         if (editIndex || editIndex == 0) {
@@ -16,7 +20,7 @@ $(function(){
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
         singleSelect:true,
-        title: parent.config.storage + "--产品类别字典维护",
+        title:  "产品类别字典维护",
         columns:[[{
             title:'编号',
             field:'id',
@@ -56,6 +60,7 @@ $(function(){
                          idField:'storageCode',
                          textValue:'storageName',
                          method: 'GET',
+                         mode: 'remote',
                          url:'/api/exp-storage-dept/list?hospitalId='+parent.config.hospitalId ,
                          singleSelect:true,
                          fit:true,
@@ -80,6 +85,14 @@ $(function(){
                              }
                          })
                      }
+            },
+            formatter:function(value,row,index){
+                for(var i = 0;i<expStorageDept.length;i++){
+                    if (value == expStorageDept[i].storageCode) {
+                        return  expStorageDept[i].storageName;
+                    }
+                }
+                return value;
             }
         }]],
         onClickRow: function (index, row) {

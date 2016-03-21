@@ -136,19 +136,19 @@ $(function () {
     var subStoragePromise = $.get('/api/exp-sub-storage-dict/list-by-storage?storageCode=' + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId, function (data) {
         $.each(data, function (index, item) {
             var ec = {};
-            ec.storageCode = item.storageCode;
+            ec.id = item.id;
             ec.subStorage = item.subStorage;
             subStorages.push(ec);
         });
         var all = {};
-        all.storageCode = '全部';
+        all.id = '全部';
         all.subStorage = '全部';
         subStorages.unshift(all);
 
         $('#subStorage').combobox({
             panelHeight: 'auto',
             data: subStorages,
-            valueField: 'storageCode',
+            valueField: 'id',
             textField: 'subStorage'
         });
         $('#subStorage').combobox("select", "全部");

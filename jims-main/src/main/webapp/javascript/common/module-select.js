@@ -49,7 +49,7 @@ $(function(){
                     if (item.moduleName == "消耗品管理系统") {
                         //库房选择
                         $('#stock').combobox({
-                            panelHeight: 'auto',
+                            panelHeight: 200,
                             url: '/api/exp-storage-dept/list?hospitalId=' + $("#hospital").combobox('getValue'),
                             method: 'GET',
                             valueField: 'id',

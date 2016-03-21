@@ -20,12 +20,13 @@ public class StaffDictVo implements Serializable {
     private String hospitalId;
     private List<String> ids  ;
     private String name ;
+    private String idNo;
 
 
     public StaffDictVo() {
     }
 
-    public StaffDictVo(String id, DeptDict deptDict, String loginName, String password, String job, String title, String hospitalId, List<String> ids, String name) {
+    public StaffDictVo(String id, DeptDict deptDict, String loginName, String password, String job, String title, String hospitalId, List<String> ids, String name, String idNo) {
         this.id = id;
         this.deptDict = deptDict;
         this.loginName = loginName;
@@ -35,6 +36,7 @@ public class StaffDictVo implements Serializable {
         this.hospitalId = hospitalId;
         this.ids = ids;
         this.name = name;
+        this.idNo = idNo;
     }
 
     public String getId() {
@@ -107,5 +109,13 @@ public class StaffDictVo implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
     }
 }

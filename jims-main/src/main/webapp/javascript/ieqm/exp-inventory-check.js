@@ -63,6 +63,7 @@ $.extend($.fn.datagrid.methods, {
 
 $(function () {
     var editIndex;
+    var currentActualQuantity;
     var stopEdit = function () {
         var index = editIndex;
         if (editIndex || editIndex == 0) {
@@ -185,11 +186,13 @@ $(function () {
             title: '产品名称',
             field: 'expName',
             width: "6%"
-        }, {
+        },
+            {
             title: '包装规格',
             field: 'expSpec',
             width: "6%"
-        }, {
+        },
+            {
             title: '单位',
             field: 'units',
             width: "6%"
@@ -204,12 +207,20 @@ $(function () {
         }, {
             title: '单价',
             field: 'retailPrice',
-            width: "6%"
+            width: "6%",
+            type: 'numberbox',
+            formatter:function(value,row,index){
+                if($.trim(value)==""){
+                    return value=0;
+                }else{
+                    return value;
+                }
+            }
         }, {
-            title: '账面数',
-            field: 'accountQuantity',
-            width: "6%"
-        }, {
+                title: '账面数',
+                field: 'accountQuantity',
+                width: "6%"
+            }, {
             title: '实盘数',
             field: 'actualQuantity',
             width: "6%",
@@ -222,12 +233,26 @@ $(function () {
                     maxlength: 8,
                     precision: 2
                 }
+            },
+            formatter:function(value,row,index){
+                if(value!= currentActualQuantity&& $.trim(row.expCode)!=""){
+                    row.realAmount = value*row.retailPrice;
+                }
+                return value;
+                $("#dg").datagrid("refreshRow",index);
             }
         }, {
             title: '盈亏数',
             field: 'quantity',
             width: "6%",
-            styler: cellStyler
+            styler: cellStyler,
+            formatter: function (value, row, index) {
+                if ($.trim(value) == "") {
+                    return value = 0;
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '账面额',
             field: 'paperAmount',
@@ -241,7 +266,14 @@ $(function () {
             title: '盈亏额',
             field: 'profitAmount',
             width: "6%",
-            styler: cellStyler
+            styler: cellStyler,
+            formatter: function (value, row, index) {
+                if ($.trim(value) == "") {
+                    return value = 0;
+                } else {
+                    return value;
+                }
+            }
         }, {
             title: '批号',
             field: 'batchNo',
@@ -262,12 +294,34 @@ $(function () {
                     textField: 'name',
                     data: [{'code': 0, 'name': '暂存'}, {'code': 1, 'name': '保存'}, {'code': 2, 'name': '确认'}]
                 }
+            },
+            formatter:function(value,row,index){
+                if(value=="0"){
+                    return value='暂存';
+                }else if(value=="1"){
+                    return value='保存';
+                }else if(value=="0"){
+                    return value='确认';
+                }else{
+                    return value;
+                }
             }
-        }]],
+        }, {
+                title: '最小规格',
+                field: 'minSpec',
+                width: "6%",
+                hidden: true
+            }, {
+                title: '最小单位',
+                field: 'minUnits',
+                width: "6%",
+                hidden: true
+            }]],
         onClickRow: function (index, row) {
             stopEdit();
 
             $(this).datagrid('beginEdit', index);
+            currentActualQuantity = row.actualQuantity;
             editIndex = index;
         }
     });
@@ -319,7 +373,7 @@ $(function () {
                     actualQuantity: sumActualQuantity,
                     paperAmount: sumPaperAmount
                 });
-                $("#dg").datagrid("autoMergeCells", ['expCode']);
+                //$("#dg").datagrid("autoMergeCells", ['expCode']);
                 $("#listDialog").dialog('close');
             });
         }
@@ -353,7 +407,7 @@ $(function () {
                         actualQuantity: sumActualQuantity,
                         paperAmount: sumPaperAmount
                     });
-                    $("#dg").datagrid("autoMergeCells", ['expCode']);
+                    //$("#dg").datagrid("autoMergeCells", ['expCode']);
                 });
             }else{
                 $.messager.alert("提示","全院子库"+date+"月份的盘点记录已存在，请按检索按钮调出！")
@@ -372,10 +426,16 @@ $(function () {
             var sumRealAmount = 0.00;
             var sumProfitAmount = 0.00;
             $.each(rows, function (index, item) {
-                item.actualQuantity = item.accountQuantity;
-                item.quantity = 0.00;
-                item.realAmount = item.paperAmount;
-                item.profitAmount = 0.00;
+                if(item.actualQuantity==0){
+                    item.actualQuantity = item.accountQuantity;
+                    item.realAmount = item.paperAmount;
+                    item.quantity = 0.00;
+                    item.profitAmount = 0.00;
+                }else{
+                    item.realAmount = item.actualQuantity*item.retailPrice;
+                    item.quantity = item.actualQuantity-item.accountQuantity;
+                    item.profitAmount = item.realAmount- item.paperAmount;
+                }
                 sumAccountQuantity += item.accountQuantity;
                 sumActualQuantity += item.actualQuantity;
                 sumPaperAmount += item.paperAmount;
@@ -390,7 +450,7 @@ $(function () {
                 realAmount: sumRealAmount,
                 profitAmount: sumProfitAmount
             });
-            $("#dg").datagrid("autoMergeCells", ['expCode']);
+            //$("#dg").datagrid("autoMergeCells", ['expCode']);
         } else {
             $.messager.alert("系统提示", "数据为空，不允许操作", "error");
         }
@@ -544,7 +604,7 @@ $(function () {
     });
     //检索
     $("#search").on('click', function () {
-        var date = $("#startDate").datetimebox('getText');
+        var date = $("#startDate").datetimebox('getText').substr(0, 10);
         var storageCode = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
         $.get('/api/exp-inventory-check/inventory-list-by-time?storageCode=' + storageCode + "&checkMonth=" + date + "&hospitalId=" + hospitalId,function(data){

@@ -237,7 +237,9 @@ $(function(){
         //    fit:true
         //}) ;
         $("#uName").html(config.staffName) ;
-
+        if(config.moduleName=="消耗品管理系统"){
+            $("#storageName").html(config.storageName + "-");
+        }
         //初始化菜单
         menuPromise.done(function(){
 

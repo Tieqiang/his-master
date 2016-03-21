@@ -52,7 +52,7 @@ $(function () {
     var flag = 0;
     //库房字典
     var storageDept = [];
-    $.get("/api/exp-storage-dept/list?hospitalId=" + parent.config.hospitalId, function (data) {
+    $.get("/api/exp-storage-dept/listLevelDown?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode, function (data) {
         storageDept = data;
     });
     //格式化日期函数

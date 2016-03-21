@@ -77,9 +77,9 @@ public class ExpNameDictService {
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
+                errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
-                errorException.setErrorMessage("提交失败！");
+                errorException.setErrorMessage("保存失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
@@ -116,9 +116,9 @@ public class ExpNameDictService {
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
+                errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
-                errorException.setErrorMessage("操作失败！");
+                errorException.setErrorMessage("保存失败！");
             }
             return errorException.getErrorMessage();
         }

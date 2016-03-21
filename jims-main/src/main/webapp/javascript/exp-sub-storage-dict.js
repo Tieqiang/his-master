@@ -27,6 +27,7 @@ $(function () {
                     method: 'GET',
                     url:'/api/exp-storage-dept/list?hospitalId='+parent.config.hospitalId ,
                     singleSelect:true,
+                    mode: 'remote',
                     fit:true,
                     columns:[[{
                         field:'storageCode',title:'库房代码',width:88
@@ -104,7 +105,7 @@ $(function () {
     var loadDict = function () {
         storages.splice(0, storages.length);
         var promise = $.get("/api/exp-sub-storage-dict/list", function (data) {
-            storages = data;
+            $("#dg").datagrid('loadData', data);
         });
         return promise;
     };
@@ -203,10 +204,8 @@ $(function () {
 
         $.postJSON("/api/exp-sub-storage-dict/merge", expSubStorageDictChangeVo, function (data, status) {
             $.messager.alert("系统提示", "保存成功", "info");
-            loadDict.done(function(){
-                $("#dg").datagrid('loadData', storages);
-            });
-        }, function (error) {
+            loadDict();
+        }, function (data) {
             $.messager.alert("系统提示",data.responseJSON.errorMessage , "error");
         })
     });

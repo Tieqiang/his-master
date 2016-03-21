@@ -10,9 +10,10 @@ $(document).ready(function () {
     //var rowDatas ;
     var storageCode;
     var limitNumber=0;//当前可申领最大值
+    var appFlag;
 
     //库房加载
-    var storageDictsPromise = $.get("/api/exp-storage-dept/list?hospitalId="+parent.config.hospitalId, function (data) {
+    var storageDictsPromise = $.get("/api/exp-storage-dept/listLevelUp?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode, function (data) {
         $.each(data, function (index, item) {
             var storage = {};
             storage.storageCode = item.storageCode;
@@ -154,12 +155,14 @@ $(document).ready(function () {
             title:"数量",
             field:"quantity",
             width:"10%",
+            value:0,
             editor:{type:"numberbox"},
             formatter: function (value, row, index) {
                 if (value > limitNumber) {
                     $.messager.alert("提示", "第"+ (parseInt(index+1))+"行申请数量超过申领库房的数量，请重新填写申请数量。", "info");
-                    limitNumber = 0;
-                    value = 0 ;
+                    appFlag = true;
+                }else{
+                    appFlag = false;
                 }
                 return value;
             }
@@ -257,28 +260,41 @@ $(document).ready(function () {
             $("#dg").datagrid("endEdit", editRowIndex);
             editRowIndex = undefined;
         }
-        if(limitNumber==0){
-            //$.messager.alert("提示", "请重新填写申请数量", "info");
+        var rows = $("#dg").datagrid("getRows");
+        console.log(rows)
+        for(var i = 0 ;i<rows.length;i++){
+            if(rows[i].quantity==0 || rows[i].quantity == ""){
+                $.messager.alert('系统提示','第'+(parseInt(i+1))+'行申请数量不能为空或零，请重新填写！','error');
+                return;
+            }
+            if($.trim(rows[i].expName) == ""){
+                $.messager.alert('系统提示','第'+(parseInt(i+1))+'行申请数据不能为空，请重新填写！','error');
+                return;
+            }
+        }
+        if(appFlag){
             return;
         }
         var insertData = $("#dg").datagrid("getChanges","inserted");
         var updateData = $("#dg").datagrid("getChanges","updated");
         var deleteData = $("#dg").datagrid("getChanges","deleted");
 
+        if(insertData.length>0||updateData.length>0||deleteData.length>0){
+            var changeVo = {};
+            changeVo.inserted = insertData;
+            changeVo.updated = updateData;
+            changeVo.deleted = deleteData;
 
-        var changeVo = {};
-        changeVo.inserted = insertData;
-        changeVo.updated = updateData;
-        changeVo.deleted = deleteData;
-
-        if (changeVo) {
-            $.postJSON("/api/exp-provide-application/save", changeVo, function (data) {
-                $.messager.alert("系统提示", "保存成功", "info");
-            }, function (data) {
-                $.messager.alert('提示', "保存失败", "error");
-            })
+            if (changeVo) {
+                $.postJSON("/api/exp-provide-application/save", changeVo, function (data) {
+                    $.messager.alert("系统提示", "保存成功", "info");
+                }, function (data) {
+                    $.messager.alert('提示', "保存失败", "error");
+                })
+            }
+        }else{
+            $.messager.alert('系统消息','没有要保存的数据，请规范操作系统！','error');
         }
-
     });
 
 

@@ -69,11 +69,11 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     "         EXP_STOCK.EXP_SPEC EXP_SPEC,   \n" +
                     "         EXP_STOCK.UNITS UNITS,   \n" +
                     "         EXP_STOCK.SUB_STORAGE SUB_STORAGE,   \n" +
-                    "         EXP_STOCK.QUANTITY ACCOUNT_QUANTITY,   \n" +
-                    "         0000000000.00 ACTUAL_QUANTITY,   \n" +
-                    "         EXP_PRICE_LIST.TRADE_PRICE TRADE_PRICE,   \n" +
-                    "         EXP_PRICE_LIST.RETAIL_PRICE RETAIL_PRICE,   \n" +
-                    "         EXP_STOCK.PURCHASE_PRICE PURCHASE_PRICE,\n" +
+                    "         nvl(EXP_STOCK.QUANTITY,0) ACCOUNT_QUANTITY,   \n" +
+                    "         0.00 ACTUAL_QUANTITY,   \n" +
+                    "         nvl(EXP_PRICE_LIST.TRADE_PRICE,0) TRADE_PRICE,   \n" +
+                    "         nvl(EXP_PRICE_LIST.RETAIL_PRICE,0) RETAIL_PRICE,   \n" +
+                    "         nvl(EXP_STOCK.PURCHASE_PRICE,0) PURCHASE_PRICE,\n" +
                     "         EXP_STOCK.HOSPITAL_ID HOSPITAL_ID,\n" +
                     "         to_date('" + checkMonth + "','YYYY-MM-DD HH24:MI:SS') CHECK_YEAR_MONTH,   \n" +
                     "         0 REC_STATUS,\n" +
@@ -194,9 +194,9 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 importDetail.setTradePrice(dict.getTradePrice());
                 importDetail.setRetailPrice(dict.getRetailPrice());
                 //importDetail.setDiscount();
-                importDetail.setPackageSpec(dict.getPackageSpec());
+                importDetail.setPackageSpec(dict.getMinSpec());
                 importDetail.setQuantity(dict.getQuantity());
-                importDetail.setPackageUnits(dict.getPackageUnits());
+                importDetail.setPackageUnits(dict.getMinUnits());
                 //importDetail.setSubPackage1();
                 //importDetail.setSubPackageUnits1();
                 //importDetail.setSubPackageSpec1();
@@ -322,7 +322,6 @@ public class ExpInventoryCheckFacade extends BaseFacade {
     @Transactional
     public List<ExpInventoryCheck> save(List<ExpInventoryCheck> rows) {
         List<ExpInventoryCheck> newUpdateDict = new ArrayList<>();
-
         List<ExpInventoryCheck> exportCheckDict = new ArrayList<>();
         List<ExpInventoryCheck> importCheckDict = new ArrayList<>();
         List<ExpInventoryCheck> saveCheckDict = new ArrayList<>();
@@ -342,10 +341,10 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                         }else if (dict.getAccountQuantity() < dict.getActualQuantity()) {
                             //账面数<实盘数，入库
                             importCheckDict.add(dict);
-                        }else{
+                        }
                             //账面数=实盘数，只保存盘点数据
                             saveCheckDict.add(dict);
-                        }
+
                     }else{
                         newUpdateDict.add(merge(dict));
                     }
@@ -355,22 +354,22 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 //入库
                 ExpImportVo importVo = generateImport(importCheckDict);
                 expStockFacade.expImport(importVo);
-                for (ExpInventoryCheck dict : importCheckDict) {
-                    //设置账面数 = 实盘数
-                    dict.setAccountQuantity(dict.getActualQuantity());
-                    newUpdateDict.add(merge(dict));
-                }
+                //for (ExpInventoryCheck dict : importCheckDict) {
+                //    //设置账面数 = 实盘数
+                //    dict.setAccountQuantity(dict.getActualQuantity());
+                //    newUpdateDict.add(merge(dict));
+                //}
             }
             if (exportCheckDict.size() > 0) {
                 //出库
                 ExpExportManageVo exportVo = generateExport(exportCheckDict);
                 expStockFacade.expExportManage(exportVo);
                 //逐条保存盘点信息
-                for (ExpInventoryCheck dict : exportCheckDict) {
-                    //设置账面数 = 实盘数
-                    dict.setAccountQuantity(dict.getActualQuantity());
-                    newUpdateDict.add(merge(dict));
-                }
+                //for (ExpInventoryCheck dict : exportCheckDict) {
+                //    //设置账面数 = 实盘数
+                //    dict.setAccountQuantity(dict.getActualQuantity());
+                //    newUpdateDict.add(merge(dict));
+                //}
             }
             if (saveCheckDict.size() > 0) {
                 for (ExpInventoryCheck dict : saveCheckDict) {

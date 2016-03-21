@@ -80,4 +80,22 @@ public class ExpStorageDeptFacade extends BaseFacade {
         String hql = "from ExpStorageDept as exp where exp.hospitalId='"+hospitalId+"' and exp.storageCode ='"+storageCode+"' " ;
         return entityManager.createQuery(hql).getResultList() ;
     }
+
+    public List<ExpStorageDept> getDeptByHospitalId(String hospitalId,String storageCode) {
+        String sql = "select * from EXP_STORAGE_DEPT exp where exp.hospital_id='" + hospitalId + "'" +
+                " and exp.storage_level>(select storage_level from EXP_STORAGE_DEPT where storage_code ='"+ storageCode+"')" +
+                " and exp.storage_level<(select storage_level+2 from EXP_STORAGE_DEPT where storage_code ='"+ storageCode+"')";
+
+        return super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageDept.class);
+    }
+
+    public List<ExpStorageDept> getDeptUpByHospitalId(String hospitalId, String storageCode) {
+        String sql = "select * from EXP_STORAGE_DEPT exp where exp.hospital_id='" + hospitalId + "'" +
+                " and exp.storage_level<(select storage_level from EXP_STORAGE_DEPT where storage_code ='" + storageCode + "')" +
+                " and exp.storage_level>(select storage_level-2 from EXP_STORAGE_DEPT where storage_code ='" + storageCode + "')";
+
+        return super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageDept.class);
+
+
+    }
 }

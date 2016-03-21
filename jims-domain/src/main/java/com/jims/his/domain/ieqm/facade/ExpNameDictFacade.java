@@ -201,8 +201,12 @@ public class ExpNameDictFacade extends BaseFacade {
         String sql = "select distinct a.exp_code,\n" +
                 "       a.exp_name,\n" +
                 "       a.input_code\n" +
-                "  from EXP_NAME_DICT a\n" +
-                "  where upper(a.input_code) like upper('" + inputCode + "%')";
+                "  from EXP_NAME_DICT a,jims.exp_price_list b \n" +
+                "  where upper(a.input_code) like upper('" + inputCode + "%')" +
+                "   or(a.exp_code) like '"+inputCode+"%'" +
+                "  and a.exp_code = b.exp_code and b.start_date <= sysdate\n" +
+                "   AND (b.stop_date IS NULL OR\n" +
+                "       b.stop_date > sysdate) ";
         List<ExpNameCaVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpNameCaVo.class);
         return nativeQuery;
     }
