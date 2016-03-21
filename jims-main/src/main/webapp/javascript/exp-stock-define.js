@@ -179,7 +179,7 @@ $(document).ready(function () {
             },
             width:"7%"
         }, {
-            title: "类别",
+            title: "类型",
             field: "expForm",
             width: "10%"
         },{
@@ -280,22 +280,34 @@ $(document).ready(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid("endEdit", editIndex);
         }
+        var rows = $("#dg").datagrid("getRows");
+        for(var i = 0;i<rows.length;i++){
+            if($.trim(rows[i].expName)==""){
+                $.messager.alert('系统提示','第'+(parseInt(i+1))+'行数据为空，请规范操作本系统！','error');
+                return;
+            }
+        }
         var insertData = $("#dg").datagrid("getChanges","inserted");
         var updateData = $("#dg").datagrid("getChanges","updated");
         var deleteData = $("#dg").datagrid("getChanges","deleted");
+        if(insertData.length>0||updateData.length>0||deleteData.length>0){
+            var beanChangeVo = {};
+            beanChangeVo.inserted = insertData;
+            beanChangeVo.deleted = deleteData;
+            beanChangeVo.updated = updateData;
 
-        var beanChangeVo = {};
-        beanChangeVo.inserted = insertData;
-        beanChangeVo.deleted = deleteData;
-        beanChangeVo.updated = updateData;
-
-        if(beanChangeVo){
-            $.postJSON("/api/exp-stock-define/save", beanChangeVo, function (data) {
-                $.messager.alert("提示","保存成功","info");
-                $("#searchBtn").click();
-            }, function (data) {
-                $.messager.alert("提示",data.responseJSON.errorMessage,"error");
-            })
+            if (beanChangeVo) {
+                $.postJSON("/api/exp-stock-define/save", beanChangeVo, function (data) {
+                    $.messager.alert("提示", "保存成功", "info");
+                    $("#searchBtn").click();
+                }, function (data) {
+                    $.messager.alert("提示", data.responseJSON.errorMessage, "error");
+                })
+            }
+        }else{
+            $.messager.alert('系统消息','没有要保存的数据，请规范操作本系统！','error');
+            return;
         }
+
     });
 });

@@ -189,7 +189,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
                 "         EXP_DICT.EXP_NAME," +
                 "         EXP_PROVIDE_APPLICATION.EXP_SPEC," +
                 "         EXP_PROVIDE_APPLICATION.PACKAGE_SPEC," +
-                "         EXP_PROVIDE_APPLICATION.QUANTITY," +
+                "         nvl(EXP_PROVIDE_APPLICATION.QUANTITY,0) QUANTITY," +
                 "         EXP_PROVIDE_APPLICATION.PACKAGE_UNITS," +
                 "         EXP_PROVIDE_APPLICATION.ENTER_DATE_TIME," +
                 "         EXP_PROVIDE_APPLICATION.APPLICANT_NO," +
@@ -198,7 +198,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
                 "         EXP_PROVIDE_APPLICATION.APPLICATION_MAN," +
                 "         EXP_DICT.EXP_FORM," +
                 "         EXP_PROVIDE_APPLICATION.AUDITING_OPERATOR," +
-                "         EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY" +
+                "         nvl(EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY,0) AUDITING_QUANTITY" +
                 "    FROM exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION,EXP_DICT,exp_stock s3 " +
                 "         WHERE s1.storage_code=EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE" +
                 "         and s2.storage_code=EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE" +

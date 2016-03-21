@@ -34,6 +34,29 @@ public class ExpStorageDeptService {
     }
 
     /**
+     * 根据库房级别查询下级库房
+     * @param hospitalId
+     * @param storageCode
+     * @return
+     */
+    @GET
+    @Path("listLevelDown")
+    public List<ExpStorageDept> expStorageDeptLevelList(@QueryParam("hospitalId")String hospitalId, @QueryParam("storageCode") String storageCode) {
+        return expStorageDeptFacade.getDeptByHospitalId(hospitalId, storageCode) ;
+    }
+    /**
+     * 根据库房级别查询下级库房
+     * @param hospitalId
+     * @param storageCode
+     * @return
+     */
+    @GET
+    @Path("listLevelUp")
+    public List<ExpStorageDept> expStorageDeptLevelUpList(@QueryParam("hospitalId")String hospitalId, @QueryParam("storageCode") String storageCode) {
+        return expStorageDeptFacade.getDeptUpByHospitalId(hospitalId, storageCode) ;
+    }
+
+    /**
      * 通过库房代码、医院Id查找前后缀
      * @param hospitalId
      * @param storageCode
@@ -58,9 +81,9 @@ public class ExpStorageDeptService {
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
+                errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
-                errorException.setErrorMessage("提交失败！");
+                errorException.setErrorMessage("保存失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }

@@ -93,7 +93,7 @@ $(function () {
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[0].importClass);
+            $(this).combobox('select', data[1].importClass);
         }
     });
 
@@ -284,7 +284,10 @@ $(function () {
         columns: [[{
             title: '项目代码',
             field: 'expCode',
-            editor: {type: 'textbox'}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false
+            }}
         }, {
             title: '品名',
             field: 'expName',
@@ -336,11 +339,15 @@ $(function () {
         }, {
             title: '规格',
             field: 'packageSpec',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
         }, {
             title: '单位',
             field: 'packageUnits',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
         }, {
             title: "数量",
             field: 'quantity',
@@ -378,11 +385,16 @@ $(function () {
         }, {
             title: '批号',
             field: 'batchNo',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
         }, {
             title: '进价',
             field: 'purchasePrice',
-            editor: {type: 'numberbox', options: {precision: '2', min: "0.01"}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: false,
+                precision: '2', min: "0.01"}}
         }, {
             title: '金额',
             field: 'amount',
@@ -390,13 +402,15 @@ $(function () {
                 type: 'numberbox', options: {
                     precision: '2',
                     editable: false,
-                    disabled: true
+                    disabled: false
                 }
             }
         }, {
             title: '产品类型',
             field: 'expForm',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
         }, {
             title: '有效日期',
             field: 'expireDate',
@@ -428,15 +442,31 @@ $(function () {
         }, {
             title: '厂家',
             field: 'firmId',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
+        }, {
+            title: '最小规格',
+            field: 'expSpec',
+            hidden: false,
+            editor: {
+                type: 'textbox', options: {
+                    editable: false,
+                    disabled: false
+                }
+            }
         }, {
             title: '注册证号',
             field: 'expImportDetailRegistNo',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
         }, {
             title: '许可证号',
             field: 'expImportDetailLicenceno',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
         }, {
             title: '发票号',
             field: 'invoiceNo',
@@ -550,39 +580,42 @@ $(function () {
         }, {
             title: '现有数量',
             field: 'inventory',
-            editor: {type: 'numberbox', options: {precision: '2'}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: false,precision: '2'}}
         }, {
             title: '零售价',
             field: 'retailPrice',
             hidden: true,
-            editor: {type: 'numberbox', options: {precision: '2'}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: false,precision: '2'}}
         }, {
             title: '进货价',
             field: 'tradePrice',
             hidden: true,
-            editor: {type: 'numberbox', options: {precision: '2'}}
-        }, {
-            title: '最小规格',
-            field: 'expSpec',
-            hidden: true,
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: false,precision: '2'}}
         }, {
             title: '最小单位',
             field: 'units',
-            hidden: true,
-            editor: {type: 'textbox', options: {}}
+            hidden: false,
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: false}}
         }
         ]],
         onClickCell: function (index, field, row) {
-            if (index != editIndex) {
-                $(this).datagrid('endEdit', editIndex);
-                editIndex = index;
-            }
+            //if (index != editIndex) {
+            //    $(this).datagrid('endEdit', editIndex);
+            //    editIndex = index;
+            //}
+            //
+            //$(this).datagrid('beginEdit', editIndex);
 
-            $(this).datagrid('beginEdit', editIndex);
-
-            var ed = $(this).datagrid('getEditor', {index: index, field: field});
-            $(ed.target).focus();
+            //var ed = $(this).datagrid('getEditor', {index: index, field: field});
+            //$(ed.target).focus();
         }
     });
     /**
@@ -665,20 +698,22 @@ $(function () {
         }, {
             title: '厂家',
             field: 'firmId'
-        }, {
-            title: '注册证号',
-            field: 'expImportDetailRegistNo'
-        }, {
-            title: '许可证号',
-            field: 'expImportDetailLicenceno'
-        }, {
-            title: '发票号',
-            field: 'invoiceNo'
-        }, {
-            title: '发票日期',
-            field: 'invoiceDate',
-            formatter: formatterDate
-        }, {
+        }
+        //    , {
+        //    title: '注册证号',
+        //    field: 'expImportDetailRegistNo'
+        //}, {
+        //    title: '许可证号',
+        //    field: 'expImportDetailLicenceno'
+        //}, {
+        //    title: '发票号',
+        //    field: 'invoiceNo'
+        //}, {
+        //    title: '发票日期',
+        //    field: 'invoiceDate',
+        //    formatter: formatterDate
+        //}
+            , {
             title: '备注',
             field: 'memo'
         }, {
@@ -696,13 +731,15 @@ $(function () {
         }, {
             title: '折扣',
             field: 'discount'
-        }, {
-            title: '招标文号',
-            field: 'orderBatch'
-        }, {
-            title: '招标文号序号',
-            field: 'tenderNo'
-        }, {
+        }
+        //    , {
+        //    title: '招标文号',
+        //    field: 'orderBatch'
+        //}, {
+        //    title: '招标文号序号',
+        //    field: 'tenderNo'
+        //}
+            , {
             title: '现有数量',
             field: 'inventory'
         },{
@@ -942,7 +979,7 @@ $(function () {
         }
         return true;
     }
-
+    var saveFlag ;
     $("#saveBatchBtn").on('click',function(){
         if (editIndex || editIndex == 0) {
             $("#importDetail").datagrid('endEdit',editIndex);
@@ -961,7 +998,9 @@ $(function () {
             expImpVo.expExportDetialVoBeanChangeVo.updated=rows ;
             $.postJSON("/api/exp-stock/imp-batch", expImpVo, function (data) {
                 $.messager.alert('系统提示', '入库成功', 'success',function(){
-                    parent.updateTab('批量入库', '/his/ieqm/exp-import-batch');
+                    saveFlag = true;
+                    $("#printBtn").trigger('click');
+                    //parent.updateTab('批量入库', '/his/ieqm/exp-import-batch');
                 });
             }, function (data) {
                 $.messager.alert("系统提示", data.responseJSON.errorMessage, 'error');
@@ -1113,16 +1152,25 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
+            var printDocumentNo = $("#documentNo").textbox('getValue');
+            //console.log(printDocumentNo);
+            $("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-import.cpt&__bypagesize__=false&documentNo=" + printDocumentNo);
             $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-batch.cpt");
         }
     })
+    $("#printClose").on('click', function () {
+        parent.updateTab('批量入库', '/his/ieqm/exp-import-batch');
+    })
     $("#printBtn").on('click', function () {
-        var printData = $("#importDetail").datagrid('getRows');
-        if (printData.length <= 0) {
-            $.messager.alert('系统提示', '请先查询数据', 'info');
-            return;
+        if (saveFlag) {
+            $("#printDiv").dialog('open');
+        } else {
+            var printData = $("#importDetail").datagrid('getRows');
+            if (printData.length <= 0) {
+                $.messager.alert('系统提示', '请先查询数据', 'info');
+                return;
+            }
+            $("#printDiv").dialog('open');
         }
-        $("#printDiv").dialog('open');
-
     })
 })

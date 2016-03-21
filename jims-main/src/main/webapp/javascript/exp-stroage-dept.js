@@ -109,7 +109,18 @@ $(function(){
                         value:'3',
                         text:'三级库房'
                     }]
-                }}
+                }},
+                formatter:function(value,row,index){
+                    if(value=="1"){
+                        return "一级库房";
+                    }
+                    if(value=="2"){
+                        return "二级库房";
+                    }
+                    if(value=="3"){
+                        return "三级库房";
+                    }
+                }
             },{
                 title:'付款单前缀',
                 field:'disburseNoPrefix',

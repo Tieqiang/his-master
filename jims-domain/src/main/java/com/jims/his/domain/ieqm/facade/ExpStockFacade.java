@@ -3,6 +3,8 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.common.entity.AppConfigerParameter;
+import com.jims.his.domain.common.facade.AppConfigerParameterFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.*;
 import com.jims.his.domain.ieqm.vo.*;
@@ -26,15 +28,16 @@ public class ExpStockFacade extends BaseFacade {
     private EntityManager entityManager;
     private ExpSubStorageDictFacade expSubStorageDictFacade ;//子库房维护
     private ExpExportDetailFacade expExportDetailFacade ;
-
+    private AppConfigerParameterFacade appConfigerParameterFacade;
 
     private ExpPriceModifyProfitFacade expPriceModifyProfitFacade ;//价格调整
 
     @Inject
-    public ExpStockFacade(EntityManager entityManager, ExpSubStorageDictFacade expSubStorageDictFacade, ExpExportDetailFacade expExportDetailFacade, ExpPriceModifyProfitFacade expPriceModifyProfitFacade) {
+    public ExpStockFacade(EntityManager entityManager, ExpSubStorageDictFacade expSubStorageDictFacade, ExpExportDetailFacade expExportDetailFacade, AppConfigerParameterFacade appConfigerParameterFacade, ExpPriceModifyProfitFacade expPriceModifyProfitFacade) {
         this.entityManager = entityManager;
         this.expSubStorageDictFacade = expSubStorageDictFacade;
         this.expExportDetailFacade = expExportDetailFacade;
+        this.appConfigerParameterFacade = appConfigerParameterFacade;
         this.expPriceModifyProfitFacade = expPriceModifyProfitFacade;
     }
 
@@ -151,9 +154,13 @@ public class ExpStockFacade extends BaseFacade {
         List<ExpImportDetail> details = importVo.getExpImportDetailBeanChangeVo().getInserted() ;
         ExpImportMaster masters = importVo.getExpImportMasterBeanChangeVo().getInserted().get(0) ;
         for(ExpImportDetail importDetail :details){
-            ExpPriceModifyProfit priceModifyProfit = expPriceModifyProfitFacade.calcExpPriceModifyPriceProfit(masters.getStorage(), importDetail.getExpCode(), importDetail.getExpSpec(), importDetail.getFirmId(), importDetail.getUnits(), importDetail.getQuantity(),importDetail.getHospitalId());
-            if(priceModifyProfit !=null){
-                merge(priceModifyProfit) ;
+            List<AppConfigerParameter> appConfigerParameters = appConfigerParameterFacade.findCurParameterList(importDetail.getHospitalId(), "DO_ACCT");
+            String accountIndicator = appConfigerParameters.get(0).getParameterValue();
+            if(accountIndicator.equals("1")){
+                ExpPriceModifyProfit priceModifyProfit = expPriceModifyProfitFacade.calcExpPriceModifyPriceProfit(masters.getStorage(), importDetail.getExpCode(), importDetail.getExpSpec(), importDetail.getFirmId(), importDetail.getUnits(), importDetail.getQuantity(), importDetail.getHospitalId());
+                if (priceModifyProfit != null) {
+                    merge(priceModifyProfit);
+                }
             }
         }
     }
@@ -164,49 +171,55 @@ public class ExpStockFacade extends BaseFacade {
      */
     private void updateStock(ExpImportVo importVo) {
 
+
         List<ExpImportDetail> details = importVo.getExpImportDetailBeanChangeVo().getInserted() ;
         List<ExpImportMaster> masters = importVo.getExpImportMasterBeanChangeVo().getInserted() ;
         String stockCode = masters.get(0).getStorage() ;
         String subStorage = masters.get(0).getSubStorage() ;
         for(ExpImportDetail detail:details){
-            ExpStock expStock = this.getExpStock(stockCode,detail.getExpCode(),detail.getExpSpec(),detail.getBatchNo(), detail.getFirmId(),detail.getPackageSpec(),detail.getHospitalId()) ;
-            if(expStock !=null){
-                expStock.setQuantity(expStock.getQuantity() + detail.getQuantity());//更新库存
-                expStock.setDiscount(detail.getDiscount());
-                expStock.setSubStorage(subStorage);
-                expStock.setDocumentNo(detail.getDocumentNo());
-                expStock.setSupplyIndicator(1);
-                expStock.setProducedate(detail.getProducedate());
-                expStock.setDisinfectdate(detail.getDisinfectdate());
-                expStock.setKillflag(detail.getKillflag());
-                expStock.setHospitalId(detail.getHospitalId());
-                detail.setInventory(expStock.getQuantity() + detail.getQuantity());
-                merge(expStock) ;
-            }else{
-                ExpStock stock = new ExpStock() ;
-                stock.setStorage(stockCode);
-                stock.setSubStorage(subStorage);
-                stock.setExpCode(detail.getExpCode());
-                stock.setExpSpec(detail.getExpSpec());
-                stock.setUnits(detail.getUnits());
-                stock.setBatchNo(detail.getBatchNo());
-                stock.setExpireDate(detail.getExpireDate());
-                stock.setFirmId(detail.getFirmId());
-                stock.setPackageSpec(detail.getPackageSpec());
-                stock.setQuantity(detail.getQuantity());
-                stock.setPackageUnits(detail.getPackageUnits());
-                stock.setDocumentNo(detail.getDocumentNo());
-                stock.setPurchasePrice(detail.getPurchasePrice());
-                stock.setDiscount(detail.getDiscount());
-                stock.setProducedate(detail.getProducedate());
-                stock.setDisinfectdate(detail.getDisinfectdate());
-                stock.setHospitalId(detail.getHospitalId());
-
-                //设置结存量
-                detail.setInventory(detail.getQuantity());
-                merge(stock) ;
+            List<AppConfigerParameter> appConfigerParameters= appConfigerParameterFacade.findCurParameterList(detail.getHospitalId(), "DO_ACCT");
+            String accountIndicator = appConfigerParameters.get(0).getParameterValue();
+            if(accountIndicator.equals("1")){
+                ExpStock expStock = this.getExpStock(stockCode, detail.getExpCode(), detail.getExpSpec(), detail.getBatchNo(), detail.getFirmId(), detail.getPackageSpec(), detail.getHospitalId(), subStorage);
+                if (expStock != null) {
+                    expStock.setQuantity(expStock.getQuantity() + detail.getQuantity());//更新库存
+                    expStock.setDiscount(detail.getDiscount());
+                    expStock.setSubStorage(subStorage);
+                    expStock.setDocumentNo(detail.getDocumentNo());
+                    expStock.setSupplyIndicator(1);
+                    expStock.setProducedate(detail.getProducedate());
+                    expStock.setDisinfectdate(detail.getDisinfectdate());
+                    expStock.setKillflag(detail.getKillflag());
+                    expStock.setHospitalId(detail.getHospitalId());
+                    expStock.setDisinfectdate(detail.getDisinfectdate());
+                    expStock.setProducedate(detail.getProducedate());
+                    detail.setInventory(expStock.getQuantity() + detail.getQuantity());
+                    merge(expStock);
+                } else {
+                    ExpStock stock = new ExpStock();
+                    stock.setStorage(stockCode);
+                    stock.setSubStorage(subStorage);
+                    stock.setExpCode(detail.getExpCode());
+                    stock.setExpSpec(detail.getExpSpec());
+                    stock.setUnits(detail.getUnits());
+                    stock.setBatchNo(detail.getBatchNo());
+                    stock.setExpireDate(detail.getExpireDate());
+                    stock.setFirmId(detail.getFirmId());
+                    stock.setPackageSpec(detail.getPackageSpec());
+                    stock.setQuantity(detail.getQuantity());
+                    stock.setPackageUnits(detail.getPackageUnits());
+                    stock.setDocumentNo(detail.getDocumentNo());
+                    stock.setPurchasePrice(detail.getPurchasePrice());
+                    stock.setDiscount(detail.getDiscount());
+                    stock.setProducedate(detail.getProducedate());
+                    stock.setDisinfectdate(detail.getDisinfectdate());
+                    stock.setHospitalId(detail.getHospitalId());
+                    stock.setSupplyIndicator(1);
+                    //设置结存量
+                    detail.setInventory(detail.getQuantity());
+                    merge(stock);
+                }
             }
-
         }
 
     }
@@ -220,6 +233,13 @@ public class ExpStockFacade extends BaseFacade {
         ExpSubStorageDict subStorage = expSubStorageDictFacade.getSubStorage(expImportMaster.getStorage(), expImportMaster.getSubStorage(), expImportMaster.getHospitalId());
         subStorage.setImportNoAva(subStorage.getImportNoAva() +1 );
         merge(subStorage) ;//当前的单据号加1
+        List<AppConfigerParameter> appConfigerParameters = appConfigerParameterFacade.findCurParameterList(expImportMaster.getHospitalId(), "DO_ACCT");
+        String accountIndicator = appConfigerParameters.get(0).getParameterValue();
+        if(accountIndicator.equals("0")){
+            expImportMaster.setAccountIndicator(0);
+            expImportMaster.setAcctoperator("");
+            expImportMaster.setAcctdate(null);
+        }
         merge(expImportMaster) ;
         List<ExpImportDetail> details = importVo.getExpImportDetailBeanChangeVo().getInserted() ;
         for(ExpImportDetail detail:details){
@@ -236,12 +256,13 @@ public class ExpStockFacade extends BaseFacade {
      * @param firmId 消耗品厂家
      * @param packageSpec 消耗品包装规格
      * @param hospitalId
+     * @param subStorage
      * @return
      */
-    public ExpStock getExpStock(String storageCode, String expCode, String expSpec, String batchNo, String firmId, String packageSpec, String hospitalId){
+    public ExpStock getExpStock(String storageCode, String expCode, String expSpec, String batchNo, String firmId, String packageSpec, String hospitalId, String subStorage){
 
         String hql = "from ExpStock as stock where stock.storage ='"+storageCode+"' and stock.expCode = '"+expCode+"' and expSpec = '"+expSpec+"'" +
-                " and stock.batchNo = '"+batchNo+"' and stock.firmId = '"+firmId+"' and stock.packageSpec = '"+packageSpec+"' and stock.hospitalId = '"+hospitalId+"'" ;
+                " and stock.batchNo = '"+batchNo+"' and stock.firmId = '"+firmId+"' and stock.packageSpec = '"+packageSpec+"' and stock.hospitalId = '"+hospitalId+"' and stock.subStorage = '"+subStorage+"'" ;
 
         Query query = entityManager.createQuery(hql) ;
 
@@ -596,7 +617,7 @@ public class ExpStockFacade extends BaseFacade {
         return nativeQuery;
     }
 
-    public List<ExpStockRecord> expExportStockRe(String storageCode, String hospitalId, String expCode) {
+    public List<ExpStockRecord> expExportStockRe(String storageCode, String hospitalId, String expCode,String subStorage) {
         String sql="SELECT          exp_name,\n" +
                 "                   exp_price_list.min_spec,\n" +
                 "                   exp_price_list.exp_code,\n" +
@@ -634,7 +655,8 @@ public class ExpStockFacade extends BaseFacade {
                 "AND   exp_stock.SUPPLY_INDICATOR(+) = 1\n" +
                 "and   exp_stock.storage = '"+storageCode+"'\n" +
                 "and   exp_stock.hospital_id = '"+hospitalId+"'\n" +
-                "AND   exp_dict.exp_code = '"+expCode+"'";
+                "AND   exp_dict.exp_code = '"+expCode+"'" +
+                "and   exp_stock.sub_storage = '"+subStorage+"'";
         List<ExpStockRecord> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStockRecord.class);
         return nativeQuery;
     }
@@ -667,7 +689,7 @@ public class ExpStockFacade extends BaseFacade {
         List<ExpExportMaster> masters = exportVo.getExpExportMasterBeanChangeVo().getInserted() ;
         String stockCode = masters.get(0).getStorage() ;
         for(ExpExportDetail detail:details){
-            ExpStock expStock = this.getExpStock(stockCode,detail.getExpCode(),detail.getExpSpec(),detail.getBatchNo(), detail.getFirmId(),detail.getPackageSpec(),detail.getHospitalId()) ;
+            ExpStock expStock = this.getExpStock(stockCode,detail.getExpCode(),detail.getExpSpec(),detail.getBatchNo(), detail.getFirmId(),detail.getPackageSpec(),detail.getHospitalId(), masters.get(0).getSubStorage()) ;
             ExpProvideApplication expProvideApplication = null ;
             if(detail.getId()==null || "".equals(detail.getId())){
 
@@ -677,11 +699,13 @@ public class ExpStockFacade extends BaseFacade {
 
             if(expStock !=null){
                 expStock.setQuantity(expStock.getQuantity() - detail.getQuantity());//更新库存
-                detail.setInventory(expStock.getQuantity() - detail.getQuantity());
+                //detail.setInventory(expStock.getQuantity() - detail.getQuantity());
                 merge(expStock) ;
             }
             if(expProvideApplication !=null){
                 expProvideApplication.setProvideFlag("1");//更新出库标志
+                expProvideApplication.setAuditingOperator(masters.get(0).getOperator());
+                expProvideApplication.setAuditingQuantity(detail.getQuantity());
                 merge(expProvideApplication) ;
             }
 
@@ -846,5 +870,64 @@ public class ExpStockFacade extends BaseFacade {
                 + " and FIRM_ID ='"+firmId+"'";
         List result = super.createNativeQuery(sql).getResultList();
         return ((BigDecimal) result.get(0)).intValue();
+    }
+
+    public List<ExpStockRecord> expExportImportStockRe(String storageCode, String hospitalId, String expCode) {
+        String sql = "SELECT          exp_name,\n" +
+                "                   exp_price_list.min_spec,\n" +
+                "                   exp_price_list.exp_code,\n" +
+                "                   exp_price_list.min_units,\n" +
+                "                   batch_no,\n" +
+                "                   expire_date,\n" +
+                "                   exp_price_list.firm_id,\n" +
+                "                   nvl(purchase_price,0) purchase_price,\n" +
+                "                   discount,\n" +
+                "                   exp_price_list.exp_spec,\n" +
+                "                   nvl(quantity,0) quantity,\n" +
+                "                   exp_price_list.units,\n" +
+                "                   document_no,\n" +
+                "                   sub_package_1,\n" +
+                "                   sub_package_units_1,\n" +
+                "                   sub_package_spec_1,\n" +
+                "                   sub_package_2,\n" +
+                "                   sub_package_units_2,\n" +
+                "                   sub_package_spec_2,\n" +
+                "                   Sign(expire_date - sysdate) indicator ,\n" +
+                "                   ProduceDate,\n" +
+                "                   DisinfectDate,\n" +
+                "                   KillFlag,\n" +
+                "                   nvl(trade_price,0) trade_price,\n" +
+                "                   nvl(retail_price,0) retail_price,\n" +
+                "                   exp_dict.exp_form,\n" +
+                "                   nvl(exp_dict.single_group_indicator,'S') single_group_indicator\n" +
+                "FROM  exp_stock,exp_dict,exp_price_list\n" +
+                "WHERE exp_price_list.exp_code = exp_dict.exp_code\n" +
+                "and   exp_price_list.exp_code(+) =exp_stock.exp_code \n" +
+                "and   exp_price_list.exp_spec(+) =exp_stock.exp_spec \n" +
+                "and   exp_price_list.firm_id(+)  =exp_stock.firm_id \n" +
+                "AND   exp_price_list.start_date <= sysdate\n" +
+                "AND   (exp_price_list.stop_date IS NULL OR exp_price_list.stop_date > sysdate)\n" +
+                //"AND   exp_stock.SUPPLY_INDICATOR(+) = 1\n" +
+                //"and   exp_stock.storage = '" + storageCode + "'\n" +
+                "and   exp_price_list.hospital_id = '" + hospitalId + "'\n" +
+                "AND   exp_dict.exp_code = '" + expCode + "'";
+        List<ExpStockRecord> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStockRecord.class);
+        return nativeQuery;
+
+    }
+
+    public void expCurrentStockBalance(String storageCode, String startDate, String stopDate) {
+        Integer num = countStockBalance(storageCode, startDate, stopDate);
+        if(num==0){
+            insertExpStockBalance(storageCode,startDate,stopDate);
+        }else{
+            String sql ="DELETE FROM ExpStockBalance as balance WHERE balance.storage ='"+ storageCode+"'   and  balance.yearMonth>= to_date('"+startDate+"','yyyy-mm-dd HH24:Mi:ss') and  balance.yearMonth<= to_date('"+ stopDate+"','yyyy-mm-dd HH24:Mi:ss')";
+            this.getEntityManager().createQuery(sql).executeUpdate();
+            insertExpStockBalance(storageCode, startDate, stopDate);
+        }
+    }
+    public void insertExpStockBalance (String storageCode, String startDate, String stopDate){
+        String sql = "";
+        this.getEntityManager().createQuery(sql).executeUpdate();
     }
 }

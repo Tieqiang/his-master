@@ -65,7 +65,7 @@ public class ExpExportFacade extends BaseFacade {
                 "( EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
                 "         ( EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC ) and\n" +
                 "( EXP_EXPORT_DETAIL.EXP_SGTP in ('1','3')) and \n" +
-                "         ( EXP_EXPORT_MASTER.EXPORT_CLASS in (" + exportClasses + ")) and\n" +
+                "         ( EXP_EXPORT_MASTER.EXPORT_CLASS in(select export_class from exp_export_class_dict )) and\n" +
                 "         ( EXP_EXPORT_MASTER.RECEIVER = '" + stockName + "' ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.ACCOUNT_INDICATOR = 1 ) AND  \n" +
                 "( EXP_EXPORT_MASTER.DOC_STATUS = 0 ) AND \n" +
@@ -296,7 +296,8 @@ public class ExpExportFacade extends BaseFacade {
             sql += " AND EXP_EXPORT_MASTER.EXPORT_DATE <= to_date('" + endDate + "','YYYY-MM-DD HH24:MI:SS')\n";
         }
         if (null != receiver && !receiver.trim().equals("")) {
-            sql += " AND EXP_EXPORT_MASTER.RECEIVER='" + receiver + "'\n";
+            sql += " and (EXP_EXPORT_MASTER.RECEIVER = '"+receiver+"'\n" +
+                    "   or EXP_EXPORT_MASTER.RECEIVER = (select storage_code from exp_storage_dept where storage_name like'%"+receiver+"%'))\n";
         }
 
         sql +="GROUP BY EXP_EXPORT_MASTER.SUB_STORAGE , \n" +
@@ -522,7 +523,7 @@ public class ExpExportFacade extends BaseFacade {
         String sql="select b.exp_form,a.fund_item,c.assign_name,sum(b.purchase_price*b.quantity) pay_Amount\n" +
                 "from exp_export_master a,exp_export_detail b ,exp_assign_dict c\n" +
                 "where a.document_no = b.document_no\n" +
-                "and   b.assign_code = c.assign_code\n" +
+                "and   (b.assign_code = c.assign_code or b.assign_code = c.assign_name)\n" +
                 "and   a.acctdate between to_date('"+s1+"','yyyy-mm-dd hh24:mi:ss') and to_date('"+s2+"','yyyy-mm-dd hh24:mi:ss')\n" +
                 "and   a.storage = '"+storage+"'\n" +
                 "and   a.hospital_id = '"+hospitalId+"'\n" +

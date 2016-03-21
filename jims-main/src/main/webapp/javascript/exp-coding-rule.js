@@ -94,9 +94,9 @@ $(function () {
     });
 
     var loadDict = function () {
-        var name = $("#name").textbox("getValue");
+        //var name = $("#name").textbox("getValue");
 
-        $.get("/api/exp-coding-rule/list?name=" + name, function (data) {
+        $.get("/api/exp-coding-rule/list?" , function (data) {
             $("#dg").datagrid('loadData', data);
         });
     }

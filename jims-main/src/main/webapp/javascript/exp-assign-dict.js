@@ -113,9 +113,9 @@ $(function(){
     });
 
     var loadDict = function(){
-        var name = $("#name").textbox("getValue");
+        //var name = $("#name").textbox("getValue");
 
-        $.get("/api/exp-assign-dict/list?name=" + name, function (data) {
+        $.get("/api/exp-assign-dict/list", function (data) {
             $("#dg").datagrid('loadData',data) ;
         }) ;
     }

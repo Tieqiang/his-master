@@ -9,15 +9,13 @@ $(function () {
      * 供货方
      *
      */
-    var suppliers = [];//供应商
-
+    var receiver = [];//供应商
     var staffs = [];//员工信息
-
     var documentNo;//入库单号
-
     var editIndex;
     var currentExpCode;
     var flag;
+    var saveFlag;
 
     var setDefaultDate = function () {
         var date = new Date();
@@ -76,7 +74,9 @@ $(function () {
         columns: [[{
             title: '项目代码',
             field: 'expCode',
-            editor: {type: 'textbox'}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '品名',
             field: 'expName',
@@ -128,11 +128,15 @@ $(function () {
         }, {
             title: '规格',
             field: 'packageSpec',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '单位',
             field: 'packageUnits',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: "数量",
             field: 'quantity',
@@ -170,11 +174,16 @@ $(function () {
         }, {
             title: '批号',
             field: 'batchNo',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '进价',
             field: 'purchasePrice',
-            editor: {type: 'numberbox', options: {precision: '2', min: "0.01"}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: true,
+                precision: '2', min: "0.01"}}
         }, {
             title: '金额',
             field: 'amount',
@@ -188,7 +197,9 @@ $(function () {
         }, {
             title: '产品类型',
             field: 'expForm',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '有效日期',
             field: 'expireDate',
@@ -220,15 +231,22 @@ $(function () {
         }, {
             title: '厂家',
             field: 'firmId',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '注册证号',
             field: 'expImportDetailRegistNo',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}
+            }
         }, {
             title: '许可证号',
             field: 'expImportDetailLicenceno',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '发票号',
             field: 'invoiceNo',
@@ -342,22 +360,30 @@ $(function () {
         }, {
             title: '现有数量',
             field: 'inventory',
-            editor: {type: 'numberbox', options: {precision: '2'}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: true,precision: '2'}}
         }, {
             title: '零售价',
             field: 'retailPrice',
             //hidden: true,
-            editor: {type: 'numberbox', options: {precision: '2'}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: true,precision: '2'}}
         }, {
             title: '进货价',
             field: 'tradePrice',
             //hidden: true,
-            editor: {type: 'numberbox', options: {precision: '2'}}
+            editor: {type: 'numberbox', options: {
+                editable: false,
+                disabled: true,precision: '2'}}
         }, {
             title: '最小规格',
             field: 'expSpec',
             hidden: true,
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '最小单位',
             field: 'units',
@@ -370,9 +396,7 @@ $(function () {
                 $(this).datagrid('endEdit', editIndex);
                 editIndex = index;
             }
-
             $(this).datagrid('beginEdit', editIndex);
-
             var ed = $(this).datagrid('getEditor', {index: index, field: field});
             $(ed.target).focus();
         }
@@ -386,7 +410,7 @@ $(function () {
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[0].importClass);
+            $(this).combobox('select', data[1].importClass);
         }
     });
 
@@ -559,7 +583,7 @@ $(function () {
         pageSize: 50,
         pageNumber: 1
     });
-
+    var suppliers = [];
     var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
         suppliers = data;
     });
@@ -580,10 +604,7 @@ $(function () {
             }, {
                 title: '输入码',
                 field: 'inputCode', width: 50, align: 'center'
-            }]],
-            filter: function (q, row) {
-                return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
-            }
+            }]]
         })
     });
 
@@ -961,7 +982,6 @@ $(function () {
             $.messager.alert("系统提示", "产品入库，入库时间不能为空", 'error');
             return false;
         }
-        console.log(importDate);
         return true;
     }
 
@@ -977,7 +997,6 @@ $(function () {
         importMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
         importMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         importMaster.additionalFee = $("#additionalFee").numberbox('getValue');
-        importMaster.importClass = $("#importClass").combobox('getValue');
         importMaster.subStorage = $("#subStorage").combobox('getValue');
         importMaster.accountIndicator = 0;
         importMaster.docStatus = 0;
@@ -1000,10 +1019,9 @@ $(function () {
 
         for (var i = 0; i < rows.length; i++) {
             var detail = {};
+            var rowIndex = $("#importDetail").datagrid('getRowIndex', rows[i]);
             detail.documentNo = importMaster.documentNo;
             detail.itemNo = i;
-            var rowIndex = $("#importDetail").datagrid('getRowIndex', rows[i]);
-
             detail.expCode = rows[i].expCode;
             detail.expSpec = rows[i].expSpec;
             detail.units = rows[i].units;
@@ -1012,13 +1030,12 @@ $(function () {
             detail.quantity = rows[i].quantity;
             detail.batchNo = rows[i].batchNo;
             detail.purchasePrice = rows[i].purchasePrice;
-
             detail.expireDate = new Date(rows[i].expireDate);
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
+            detail.inventory = rows[i].quantity+rows[i].inventory;
             detail.tradePrice = rows[i].tradePrice;
-
             detail.killflag = rows[i].killflag;
             detail.discount = rows[i].discount;
             detail.orderBatch = rows[i].orderBatch;
@@ -1046,12 +1063,12 @@ $(function () {
             $("#importDetail").datagrid('endEdit', editIndex);
         }
         if (dataValid()) {
-            console.log("validate.....")
             var importVo = getCommitData() ;
-            console.log(importVo) ;
             $.postJSON("/api/exp-stock/imp", importVo, function (data) {
-                $.messager.alert('系统提示', '入库成功', 'success');
-                newDocument() ;
+                $.messager.alert('系统提示', '入库成功', 'success',function(){
+                    saveFlag = true;
+                    $("#printBtn").trigger('click');
+                });
             }, function (data) {
                 $.messager.alert("系统提示", data.errorMessage, 'error');
             })
@@ -1075,7 +1092,7 @@ $(function () {
      * 新单
      */
     $("#newBtn").on('click',function(){
-        newDocument() ;
+        parent.updateTab('入库处理', '/his/ieqm/exp-import');
     })
 
     //打印
@@ -1085,18 +1102,29 @@ $(function () {
         height: 520,
         catch: false,
         modal: true,
+        buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import.cpt");
+            var printDocumentNo = $("#documentNo").textbox('getValue');
+            //console.log(printDocumentNo);
+            $("#report").prop("src",  "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-import.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
+            //$("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import.cpt");
         }
     })
+    $("#printClose").on('click',function(){
+        parent.updateTab('入库处理', '/his/ieqm/exp-import');
+    })
     $("#printBtn").on('click', function () {
+        if(saveFlag){
+            $("#printDiv").dialog('open');
+        }else{
         var printData = $("#importDetail").datagrid('getRows');
         if (printData.length <= 0) {
             $.messager.alert('系统提示', '请先查询数据', 'info');
             return;
         }
         $("#printDiv").dialog('open');
+    }
 
     })
 })

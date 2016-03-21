@@ -175,20 +175,25 @@ $(function () {
     });
     promise.done(function () {
         $("#supplier").combogrid({
-            idField: 'supplierName',
-            textField: 'supplierName',
+            idField: 'supplierCode',
+            textField: 'supplierCode',
             data: suppliers,
             panelWidth: 500,
             fitColumns: true,
             columns: [[{
                 title: '供应商名称', field: 'supplierName', width: 200, align: 'center'
             }, {
-                title: '供应商代码', field: 'supplierCode', width: 150, align: 'center'
+                title: '厂商', field: 'supplierCode', width: 150, align: 'center'
             }, {
                 title: '输入码', field: 'inputCode', width: 50, align: 'center'
             }]],
             filter: function (q, row) {
-                return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+                var opts = $(this).combogrid('options');
+                if(row[opts.textField].indexOf(q) == 0){
+                    return true;
+                }else{
+                    return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+                }
             }
         })
     });

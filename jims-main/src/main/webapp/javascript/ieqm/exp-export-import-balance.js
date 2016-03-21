@@ -5,6 +5,7 @@ $(function () {
     var subStorageDicts = [];
     var documentNo;
     var currentExpCode;
+    var saveFlag;
 
     var stopEdit = function () {
         if (editIndex || editIndex == 0) {
@@ -170,7 +171,7 @@ $(function () {
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[0].importClass);
+            $(this).combobox('select', data[1].importClass);
         }
     });
 
@@ -271,7 +272,7 @@ $(function () {
     //发往库房数据加载
     $('#receiver').combogrid({
         panelWidth: 500,
-        idField: 'storageName',
+        idField: 'storageCode',
         textField: 'storageName',
         loadMsg: '数据正在加载',
         url: '/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId,
@@ -471,7 +472,7 @@ $(function () {
         singleSelect: true,
         fit: true,
         fitColumns: true,
-        url: '/api/exp-stock/stock-export-record/',
+        url: '/api/exp-stock/stock-record/',
         method: 'GET',
         columns: [[{
             title: '代码',
@@ -550,7 +551,21 @@ $(function () {
             field: 'expForm'
         }, {
             title: '是否包装',
-            field: 'singleGroupIndicator'
+            field: 'singleGroupIndicator',
+            formatter: function (value, row, index) {
+                if (value == "1") {
+                    value = "是";
+                }
+                else if (value == "2") {
+                    value = "否";
+                }
+                else if (value == "S") {
+                    value = "是";
+                } else {
+                    value = "是";
+                }
+                return value;
+            }
         }, {
             title: '注册证号',
             field: 'registerNo'
@@ -568,7 +583,7 @@ $(function () {
             rowDetail.packageSpec = row.expSpec;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.purchasePrice;
+            rowDetail.purchasePrice = row.retailPrice;
             rowDetail.amount = 0;
             rowDetail.firmId = row.firmId;
             rowDetail.batchNo = row.batchNo;
@@ -697,7 +712,9 @@ $(function () {
                     max: 99999.99,
                     size: 8,
                     maxlength: 8,
-                    precision: 2
+                    precision: 2,
+                    editable: false,
+                    disabled: true
                 }
             }
         }, {
@@ -707,7 +724,14 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
-                    precision: '2'
+                    precision: '2',
+                    editable: false,
+                    disabled: true
+                }
+            },
+            formatter:function(value,row,index){
+                if(row.quantity){
+                    return row.quantity * row.purchasePrice;
                 }
             }
         }, {
@@ -732,14 +756,14 @@ $(function () {
             width: '7%'
         }, {
             title: '分摊方式',
-            field: 'assignName',
+            field: 'assignCode',
             width: '7%',
             editor: {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
                     url: '/api/exp-assign-dict/list',
-                    valueField: 'assignName',
+                    valueField: 'assignCode',
                     textField: 'assignName',
                     method: 'GET',
                     onLoadSuccess: function () {
@@ -752,12 +776,16 @@ $(function () {
             title: '注册证号',
             field: 'expImportDetailRegistNo',
             width: '7%',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '许可证号',
             field: 'expImportDetailLicenceno',
             width: '7%',
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
         }, {
             title: '备注',
             field: 'memos',
@@ -809,12 +837,58 @@ $(function () {
             title: '生产日期',
             field: 'producedate',
             width: '7%',
-            formatter: formatterDate
+            formatter: formatterDate,
+            editor: {
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#dg").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'producedate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
+                    }
+                }
+            }
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
             width: '7%',
-            formatter: formatterDate
+            formatter: formatterDate,
+            editor: {
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#dg").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'disinfectdate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
+                    }
+                }
+            }
         }, {
             title: '灭菌标识',
             field: 'killflag',
@@ -1120,8 +1194,8 @@ $(function () {
             detail.inventory = rows[i].inventory;
             detail.registerNo = rows[i].registerNo;
             detail.permitNo = rows[i].permitNo;
-            detail.recFlag = 0;
-            detail.expSgtp = "1";
+            //detail.recFlag = 0;
+            //detail.expSgtp = "1";
 
             expImportDetailBeanChangeVo.inserted.push(detail);
         }
@@ -1136,6 +1210,12 @@ $(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
+        $.get("/api/app-configer-parameter/list?hospitalId="+parent.config.hospitalId+"&name=DO_ACCT",function(data){
+            if(data[0].parameterValue=='0'){
+                $.messager.alert('系统消息','此消耗品不能对消入出库！','error');
+                return;
+            }
+        })
         if (dataValid()) {
 
             $.messager.confirm("提示信息", "真的要保存这些项目吗？", function (r) {
@@ -1148,7 +1228,9 @@ $(function () {
 
                     $.postJSON("/api/exp-stock/exp-export-import", exportImportVo, function (data) {
                         $.messager.alert("系统提示", "数据保存成功", "info", function () {
-                            parent.updateTab('对消入出库', '/his/ieqm/exp-export-import-balance');
+                            saveFlag = true;
+                            $("#print").trigger('click');
+                            //parent.updateTab('对消入出库', '/his/ieqm/exp-export-import-balance');
                         });
                     }, function (data) {
                         $.messager.alert('提示', data.responseJSON.errorMessage, "error");
@@ -1165,19 +1247,29 @@ $(function () {
         height: 520,
         catch: false,
         modal: true,
+        buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-import-balance.cpt");
+            var importDocumentNo = ("#documentNoIn").textbox("getValue");
+            var exportDocumentNo = ("#documentNo").textbox("getValue");
+            $("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export-import-balance.cpt&__bypagesize__=false&importDocumentNo="+importDocumentNo+"&exportDocumentNo="+exportDocumentNo);
+            //$("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-import-balance.cpt");
         }
     })
+    $("#printClose").on('click', function () {
+        parent.updateTab('对消入出库', '/his/ieqm/exp-export-import-balance');
+    })
     $("#print").on('click', function () {
-        var printData = $("#dg").datagrid('getRows');
-        if (printData.length <= 0) {
-            $.messager.alert('系统提示', '请先查询数据', 'info');
-            return;
+        if (saveFlag) {
+            $("#printDiv").dialog('open');
+        } else {
+            var printData = $("#dg").datagrid('getRows');
+            if (printData.length <= 0) {
+                $.messager.alert('系统提示', '请先查询数据', 'info');
+                return;
+            }
+            $("#printDiv").dialog('open');
         }
-        $("#printDiv").dialog('open');
-
     })
     //清屏按钮操作
     $("#clear").on('click', function () {

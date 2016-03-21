@@ -85,9 +85,9 @@ $(function(){
     }) ;
 
     var loadDict = function(){
-        var name = $("#name").textbox("getValue");
+        //var name = $("#name").textbox("getValue");
 
-        $.get("/api/exp-fund-item-dict/list?name=" + name, function (data) {
+        $.get("/api/exp-fund-item-dict/list", function (data) {
             $("#dg").datagrid('loadData', data);
         });
     }

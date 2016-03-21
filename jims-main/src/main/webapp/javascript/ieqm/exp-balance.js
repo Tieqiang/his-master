@@ -262,10 +262,34 @@ $(function () {
         var checkMonth = $("#checkMonth").datetimebox('getText');
         var storageCode = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
-        $.get("/api/exp-stock/count-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
-
+        $.post("/api/exp-stock/count-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
+            console.log(data);
+            if(data=="no"){
+                $.messager.confirm('系统提示','本月已经月结，是否重新计算月结',function(r){
+                    if(r){
+                        $.post("/api/exp-stock/exp-current-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
+                            if(data=="ok"){
+                                $("#search").trigger('click');
+                            }else{
+                                $.messager.alert('系统提示','月结失败','error');
+                            }
+                        });
+                    }else{
+                        $("#search").trigger('click');
+                    }
+                });
+            }else{
+                $.post("/api/exp-stock/exp-current-balance?storageCode=" + storageCode + "&checkMonth=" + checkMonth, function (data) {
+                    if (data == "ok") {
+                        $("#search").trigger('click');
+                    } else {
+                        $.messager.alert('系统提示', '月结失败', 'error');
+                    }
+                });
+            }
         });
     });
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',

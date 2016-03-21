@@ -43,12 +43,8 @@ $(function () {
             }
         }
     });
-    //设置时间
-    var curr_time = new Date();
-    $("#startDate").datetimebox("setValue", formatterDate(curr_time));
-    $("#stopDate").datetimebox("setValue", formatterDate(curr_time));
     //开始日期
-    $('#startDate').datebox({
+    $('#startDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
@@ -64,7 +60,7 @@ $(function () {
         }
     });
     //结束日期
-    $('#stopDate').datebox({
+    $('#stopDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',

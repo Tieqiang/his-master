@@ -33,6 +33,8 @@ $(document).ready(function () {
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
                 + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
             return dateTime
+        }else{
+            return "";
         }
     }
 
@@ -412,20 +414,24 @@ $(document).ready(function () {
         var insertData = $("#dg").datagrid("getChanges", "inserted");
         var updateDate = $("#dg").datagrid("getChanges", "updated");
         var deleteDate = $("#dg").datagrid("getChanges", "deleted");
+        if(insertData.length>0 || updateDate.length>0 || deleteDate.length>0){
+            var beanChangeVo = {};
+            beanChangeVo.inserted = insertData;
+            beanChangeVo.deleted = deleteDate;
+            beanChangeVo.updated = updateDate;
 
-        var beanChangeVo = {};
-        beanChangeVo.inserted = insertData;
-        beanChangeVo.deleted = deleteDate;
-        beanChangeVo.updated = updateDate;
-
-        if (beanChangeVo) {
-            $.postJSON("/api/exp-supplier-catalog/merge", beanChangeVo, function (data, status) {
-                $.messager.alert("系统提示", "保存成功", "info");
-                $("#searchBtn").click();
-            }, function (data) {
-                $.messager.alert('提示', data.responseJSON.errorMessage, "error");
-            })
+            if (beanChangeVo) {
+                $.postJSON("/api/exp-supplier-catalog/merge", beanChangeVo, function (data, status) {
+                    $.messager.alert("系统提示", "保存成功", "info");
+                    $("#searchBtn").click();
+                }, function (data) {
+                    $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+                })
+            }
+        }else{
+            $.messager.alert('系统消息','没有要保存的信息，请规范操作系统！','info')
         }
+
 
     });
     

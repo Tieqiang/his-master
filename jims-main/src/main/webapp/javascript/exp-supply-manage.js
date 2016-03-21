@@ -61,6 +61,15 @@ $(function () {
                     textField: 'name',
                     data: [{'code': '1', 'name': '可供应'}, {'code': '0', 'name': '不可供'}]
                 }
+            },
+            formatter:function(value,row,index){
+                if(value=="1"){
+                    return value="可供应";
+                }else if(value=="0"){
+                    return value="不可供";
+                }else{
+                    return value;
+                }
             }
         }
         ]],onClickRow: function (rowIndex,rowData) {
@@ -115,10 +124,10 @@ $(function () {
                         if(radio == flag2){
                             endStocks.push(stocks[i]);
                         }
-                        if(stocks[i].supplyIndicator == flag1 && radio == flag1 ){
+                        else if(stocks[i].supplyIndicator == flag1 && radio == flag1 ){
                             endStocks.push(stocks[i]);
                         }
-                        if(stocks[i].supplyIndicator == flag0 && radio == flag0 ){
+                        else if((stocks[i].supplyIndicator == flag0 && radio == flag0)||  (stocks[i].supplyIndicator==null && radio == flag0) ){
                             endStocks.push(stocks[i]);
                         }
                     }
@@ -129,10 +138,10 @@ $(function () {
                     if(radio == flag2){
                         endStocks.push(stocks[i]);
                     }
-                    if(stocks[i].supplyIndicator == flag1 && radio == flag1 ){
+                    else if(stocks[i].supplyIndicator == flag1 && radio == flag1 ){
                         endStocks.push(stocks[i]);
                     }
-                    if(stocks[i].supplyIndicator == flag0 && radio == flag0 ){
+                    else if(stocks[i].supplyIndicator == flag0 && radio == flag0 || (stocks[i].supplyIndicator == null && radio == flag0)){
                         endStocks.push(stocks[i]);
                     }
                 }
@@ -150,7 +159,7 @@ $(function () {
     //loadDict();
     //保存
     $("#saveBtn").on('click', function () {
-        if (editRowIndex) {
+        if (editRowIndex!=undefined) {
             $("#dg").datagrid('endEdit', editRowIndex);
             editRowIndex = undefined;
         }
@@ -158,8 +167,9 @@ $(function () {
         console.log(updateData);
         if (updateData && updateData.length > 0) {
             $.postJSON("/api/exp-supply-manage/save", updateData, function (data) {
-                $.messager.alert('系统提示', '保存成功', "info");
-                loadDict();
+                $.messager.alert('系统提示', '保存成功', "success",function(){
+                    loadDict();
+                });
                 endStocks.splice(0,endStocks.length);
             }, function (data) {
                 $.messager.alert("系统提示", '保存失败', "error");

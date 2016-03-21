@@ -56,8 +56,21 @@ public class ExpStockService {
     @GET
     @Path("stock-export-record")
     public List<ExpStockRecord> expExportStockRecord(@QueryParam("storageCode")String storageCode,@QueryParam("expCode")String expCode,
+                                                     @QueryParam("hospitalId")String hospitalId,@QueryParam("subStorage")String subStorage){
+        return expStockFacade.expExportStockRe(storageCode,hospitalId,expCode, subStorage);
+    }
+    /**
+     * 查询对消入出库记录根据库房代码，消耗品代码，医院Id进行查询
+     * @param storageCode
+     * @param expCode
+     * @param hospitalId
+     * @return
+     */
+    @GET
+    @Path("stock-export-import-balance")
+    public List<ExpStockRecord> expExportImportStockRecord(@QueryParam("storageCode")String storageCode,@QueryParam("expCode")String expCode,
                                                      @QueryParam("hospitalId")String hospitalId){
-        return expStockFacade.expExportStockRe(storageCode,hospitalId,expCode);
+        return expStockFacade.expExportImportStockRe(storageCode,hospitalId,expCode);
     }
 
 
@@ -117,9 +130,9 @@ public class ExpStockService {
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
+                errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
-                errorException.setErrorMessage("提交失败！");
+                errorException.setErrorMessage("保存失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
@@ -140,9 +153,9 @@ public class ExpStockService {
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
+                errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
-                errorException.setErrorMessage("操作失败！");
+                errorException.setErrorMessage("保存失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
@@ -165,9 +178,9 @@ public class ExpStockService {
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
+                errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
-                errorException.setErrorMessage("操作失败！");
+                errorException.setErrorMessage("保存失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
@@ -251,9 +264,9 @@ public class ExpStockService {
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
-                errorException.setErrorMessage("数据已存在，提交失败！");
+                errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
-                errorException.setErrorMessage("操作失败！");
+                errorException.setErrorMessage("保存失败！");
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
@@ -284,12 +297,48 @@ public class ExpStockService {
      * @param checkMonth
      * @return
      */
-    @GET
+    @POST
     @Path("count-balance")
-    public int countStockBalance(@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth) {
-        String startDate = checkMonth + "-01 00:00:00";
-        String stopDate = getStopDate(startDate);
-        return expStockFacade.countStockBalance(storageCode, startDate, stopDate);
+    @Produces("text/html")
+    public Response countStockBalance(@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth) {
+        String over;
+        try {
+
+            String startDate = checkMonth + "-01 00:00:00";
+            String stopDate = getStopDate(startDate);
+            Integer num = expStockFacade.countStockBalance(storageCode, startDate, stopDate);
+            if(num==0){
+               over = "ok";
+            }else{
+                over = "no";
+            }
+            return Response.status(Response.Status.OK).entity(over).build();
+        } catch (Exception e) {
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build();
+        }
+    }
+    /**
+     * 产品月结，根据月结月份查询月结记录数目
+     * @param storageCode
+     * @param checkMonth
+     * @return
+     */
+    @POST
+    @Path("exp-current-balance")
+    @Produces("text/html")
+    public Response expCurrentStockBalance(@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth) {
+        try {
+            String startDate = checkMonth + "-01 00:00:00";
+            String stopDate = getStopDate(startDate);
+            expStockFacade.expCurrentStockBalance(storageCode, startDate, stopDate);
+            return Response.status(Response.Status.OK).entity("ok").build();
+        } catch (Exception e) {
+            ErrorException errorException = new ErrorException();
+            errorException.setMessage(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build();
+        }
     }
 
     /**

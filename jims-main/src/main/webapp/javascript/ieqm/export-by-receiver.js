@@ -73,16 +73,16 @@ $(function () {
     //发往库房数据加载
     $('#receiver').combogrid({
         panelWidth: 500,
-        idField: 'storageCode',
-        textField: 'storageName',
+        idField: 'supplierCode',
+        textField: 'supplierName',
         loadMsg: '数据正在加载',
-        url: '/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId,
-        mode: 'remote',
+        url: '/api/exp-supplier-catalog/list-with-dept?hospitalId=' + parent.config.hospitalId,
+        //mode: 'remote',
         method: 'GET',
         columns: [[
-            {field: 'storageCode', title: '编码', width: 100, align: 'center'},
-            {field: 'storageName', title: '名称', width: 200, align: 'center'},
-            {field: 'disburseNoPrefix', title: '拼音码', width: 100, align: 'center'}
+            {field: 'supplierCode', title: '编码', width: 100, align: 'center'},
+            {field: 'supplierName', title: '名称', width: 200, align: 'center'},
+            {field: 'inputCode', title: '拼音码', width: 100, align: 'center'}
         ]],
         pagination: false,
         fitColumns: true,

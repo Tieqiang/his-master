@@ -442,6 +442,9 @@ $(function () {
         } else {
             $('#tab1').datagrid('deleteRow', index);
             editIndex = undefined;
+            var clear = [];
+            $('#tab2').datagrid('loadData',clear);
+            $('#tab2').datagrid('loadData',{total:0,rows:[]});
         }
     });
 

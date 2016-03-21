@@ -1,8 +1,6 @@
-/**
- * Created by heren on 2015/9/16.
- */
+
 /***
- * 消耗品出库分类字典维护
+ * 消耗品类别字典维护
  */
 $(function(){
     var editIndex;
@@ -13,7 +11,7 @@ $(function(){
         }
     }
     $("#dg").datagrid({
-        title:'消耗品出库分类字典维护',
+        title:'消耗品类别字典维护',
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
         singleSelect:true,
@@ -22,11 +20,16 @@ $(function(){
             field:'id',
             hidden:'true'
         },{
+            title:'类别代码',
+            field:'classCode',
+            width:"20%",
+            editor: 'textbox'
+        },{
             title:'类别名称',
-            field:'exportClass',
-            width:"50%",
-            editor:{type:'text',options:{
-                required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字'}
+            field:'className',
+            width:"30%",
+            editor:{type:'textbox',options:{
+                required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字'}
             }}]],
         onClickRow: function (index, row) {
             stopEdit();
@@ -82,10 +85,11 @@ $(function(){
     }) ;
 
     var loadDict = function(){
+        //var name = $("#name").textbox("getValue");
 
-        $.get("/api/exp-export-class-dict/list",function(data){
-            $("#dg").datagrid('loadData',data) ;
-        }) ;
+        $.get("/api/exp-class-dict/list", function (data) {
+            $("#dg").datagrid('loadData', data);
+        });
     }
 
     loadDict() ;
@@ -104,25 +108,19 @@ $(function(){
         var insertData = $("#dg").datagrid("getChanges", "inserted");
         var updateDate = $("#dg").datagrid("getChanges", "updated");
         var deleteDate = $("#dg").datagrid("getChanges", "deleted");
-        if(insertData.length>0|| updateDate.length>0 || deleteDate.length>0){
-            var beanChangeVo = {};
-            beanChangeVo.inserted = insertData;
-            beanChangeVo.deleted = deleteDate;
-            beanChangeVo.updated = updateDate;
 
+        var beanChangeVo = {};
+        beanChangeVo.inserted = insertData;
+        beanChangeVo.deleted = deleteDate;
+        beanChangeVo.updated = updateDate;
 
-            if (beanChangeVo) {
-                $.postJSON("/api/exp-export-class-dict/merge", beanChangeVo, function (data, status) {
-                    $.messager.alert("系统提示", "保存成功", "info");
-                    loadDict();
-                }, function (data) {
-                    $.messager.alert('提示', data.responseJSON.errorMessage, "error");
-                })
-            }
-        }else{
-            $.messager.alert('系统提示','没有要保存的内容请按正确步骤操作','info');
-            return;
+        if (beanChangeVo) {
+            $.postJSON("/api/exp-class-dict/merge", beanChangeVo, function (data, status) {
+                $.messager.alert("系统提示", "保存成功", "info");
+                loadDict();
+            }, function (data) {
+                $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+            })
         }
-
     }) ;
 })

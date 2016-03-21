@@ -99,7 +99,7 @@ $(function () {
         expCategorys.unshift(all);
 
         $('#expCategory').combobox({
-            panelHeight: 'auto',
+            panelHeight: 200,
             width: 200,
             data: expCategorys,
             valueField: 'formCode',
@@ -159,7 +159,7 @@ $(function () {
             editor: {
                 type: 'combobox',
                 options: {
-                    panelHeight: 'auto',
+                    panelHeight: 200,
                     valueField: 'measuresName',
                     textField: 'measuresName',
                     method: 'get',
@@ -173,7 +173,7 @@ $(function () {
             editor: {
                 type: 'combobox',
                 options: {
-                    panelHeight: 'auto',
+                    panelHeight: 200,
                     valueField: 'formName',
                     textField: 'formName',
                     method: 'get',
@@ -187,7 +187,7 @@ $(function () {
             editor: {
                 type: 'combobox',
                 options: {
-                    panelHeight: 'auto',
+                    panelHeight: 200,
                     valueField: 'toxiProperty',
                     textField: 'toxiProperty',
                     method: 'get',
@@ -206,7 +206,7 @@ $(function () {
             editor: {
                 type: 'combobox',
                 options: {
-                    panelHeight: 'auto',
+                    panelHeight: 200,
                     valueField: 'measuresName',
                     textField: 'measuresName',
                     method: 'get',
@@ -347,43 +347,56 @@ $(function () {
         var insertNameData = $("#expNameDict").datagrid("getChanges", "inserted");
         var updateNameData = $("#expNameDict").datagrid('getChanges', "updated");
         var deleteNameData = $("#expNameDict").datagrid('getChanges', "deleted");
-        $.each(insertNameData,function(index,item){
-            item.stdIndicator = 1;
-        });
-        $.each(updateNameData,function(index,item){
-            item.stdIndicator = 1;
-        })
-        console.log(insertData);
-        console.log(updateNameData);
+        if(insertNameData.length>0||updateNameData.length>0||deleteNameData.length>0){
+            $.each(insertNameData, function (index, item) {
+                item.stdIndicator = 1;
+            });
+            $.each(updateNameData, function (index, item) {
+                item.stdIndicator = 1;
+            })
+            console.log(insertData);
+            console.log(updateNameData);
 
-        var insertData = $("#expDict").datagrid("getChanges", "inserted");
-        var updateData = $("#expDict").datagrid('getChanges', "updated");
-        var deleteData = $("#expDict").datagrid('getChanges', "deleted");
+            var insertData = $("#expDict").datagrid("getChanges", "inserted");
+            var updateData = $("#expDict").datagrid('getChanges', "updated");
+            var deleteData = $("#expDict").datagrid('getChanges', "deleted");
 
-        var expNameDictChangeVo = {};
-        expNameDictChangeVo.inserted = insertNameData;
-        expNameDictChangeVo.updated = updateNameData;
-        expNameDictChangeVo.deleted = deleteNameData;
+            var expNameDictChangeVo = {};
+            expNameDictChangeVo.inserted = insertNameData;
+            expNameDictChangeVo.updated = updateNameData;
+            expNameDictChangeVo.deleted = deleteNameData;
 
-        var expDictChangeVo = {};
-        expDictChangeVo.inserted = insertData;
-        expDictChangeVo.updated = updateData;
-        expDictChangeVo.deleted = deleteData;
+            var expDictChangeVo = {};
+            expDictChangeVo.inserted = insertData;
+            expDictChangeVo.updated = updateData;
+            expDictChangeVo.deleted = deleteData;
 
-        var beanChangeVo = {};
-        beanChangeVo.expDictBeanChangeVo = expDictChangeVo;
-        beanChangeVo.expNameDictBeanChangeVo = expNameDictChangeVo;
-        console.log(beanChangeVo);
+            var beanChangeVo = {};
+            beanChangeVo.expDictBeanChangeVo = expDictChangeVo;
+            beanChangeVo.expNameDictBeanChangeVo = expNameDictChangeVo;
+            console.log(beanChangeVo);
 
-        //if (beanChangeVo) {
-        //    $.postJSON("/api/exp-name-dict/save", beanChangeVo, function (data) {
-        //        $.messager.alert("系统提示", "保存成功", "info");
-        //        $("#clear").click();
-        //        codeArrays = [];
-        //    }, function (data) {
-        //        $.messager.alert('提示', data.responseJSON.errorMessage, "error");
-        //    })
-        //}
+            if (beanChangeVo) {
+                $.postJSON("/api/exp-name-dict/save", beanChangeVo, function (data) {
+                    $.messager.confirm("系统提示", "保存成功,请维护价格信息！", function(r){
+                        if(r){
+                            $("#listPrice").trigger('click');
+                        }else{
+                            $("#clear").click();
+                            codeArrays = [];
+                        }
+                    });
+
+
+                }, function (data) {
+                    $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+                })
+            }
+        }else{
+            $.messager.alert('系统提示','没有需要保存的信息，请规范操作系统！','info');
+            return;
+        }
+
     });
 
     //生成10位代码
@@ -436,14 +449,18 @@ $(function () {
     //增加ExpNameDict
     $("#addExpName").on('click',function(){
         stopEdit();
-
+        var rowLength = $('#expNameDict').datagrid("getRows");
+        if(rowLength.length==1){
+            $.messager.alert('系统消息','同时只能维护一条价格信息','info');
+            return;
+        }
         var getMax = newExpCode();
         console.log("getMax:" + getMax);
         if (getMax != "") {
             getMax.done(function () {
 
                 if (newCode != '') {
-                    newCode = existCode();
+                    //newCode = existCode();
                     console.log("newCode:" + newCode);
                     $('#expNameDict').datagrid('appendRow', {
                         expCode: newCode, expName: ''
@@ -472,6 +489,7 @@ $(function () {
                     $.messager.alert("提示", "已经存在该产品的价格等信息，不允许删除！", "info");
                 } else {
                     $('#expNameDict').datagrid('deleteRow', index);
+                    $("#expDict").datagrid('loadData', {total: 0, rows: []});
                     editIndex = undefined;
                 }
             })
@@ -532,9 +550,10 @@ $(function () {
             setCookie("exp_code", code);
             setCookie("exp_name", name);
             parent.addTab('产品价格维护', '/his/ieqm/exp-price-list');
-
+            $("#clear").click();
+            codeArrays = [];
         } else {
-            $.messager.alert("提示", "请提取查询价格的行", "info");
+            $.messager.alert("提示", "请选取维护价格的行", "info");
         }
     });
 
