@@ -131,10 +131,11 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，保存失败！");
-            } else {
-                errorException.setErrorMessage("保存失败！");
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            //else {
+            //    errorException.setErrorMessage("保存失败！");
+            //}
+            return Response.status(Response.Status.OK).entity(errorException).build() ;
         }
     }
     /**
@@ -154,10 +155,11 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，保存失败！");
-            } else {
-                errorException.setErrorMessage("保存失败！");
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            //else {
+            //    errorException.setErrorMessage("保存失败！");
+            //}
+            return Response.status(Response.Status.OK).entity(errorException).build() ;
         }
 
     }
@@ -179,10 +181,11 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，保存失败！");
-            } else {
-                errorException.setErrorMessage("保存失败！");
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
+            //else {
+            //    errorException.setErrorMessage("保存失败！");
+            //}
+            return Response.status(Response.Status.OK).entity(errorException).build() ;
         }
 
     }
@@ -265,10 +268,11 @@ public class ExpStockService {
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，保存失败！");
-            } else {
-                errorException.setErrorMessage("保存失败！");
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+            //else {
+            //    errorException.setErrorMessage("保存失败！");
+            //}
+            return Response.status(Response.Status.OK).entity(errorException).build();
         }
 
     }

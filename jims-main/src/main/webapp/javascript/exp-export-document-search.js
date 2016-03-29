@@ -116,6 +116,12 @@ $(function () {
             $('#stopDate').datetimebox('hidePanel');
         }
     });
+    //供应商
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     /**
     * 定义主表信息表格
     */
@@ -149,9 +155,9 @@ $(function () {
             field: 'receiver',
             width: '15%',
             formatter: function (value, row, index) {
-                for (var i = 0; i < storageDept.length; i++) {
-                    if (value == storageDept[i].storageCode) {
-                        return storageDept[i].storageName;
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
                     }
                 }
                 return value;
@@ -240,23 +246,28 @@ $(function () {
     });
     promise.done(function () {
         $("#depts").combogrid({
-            idField: 'deptName',
-            textField: 'deptName',
-            data: depts,
+            idField: 'supplierName',
+            textField: 'supplierName',
+            data: suppliers,
             panelWidth: 500,
             fitColumns: true,
             columns: [[{
                 title: '科室名称',
-                field: 'deptName', width: 200, align: 'center'
+                field: 'supplierName', width: 200, align: 'center'
             }, {
                 title: '科室代码',
-                field: 'deptCode', width: 150, align: 'center'
+                field: 'supplierCode', width: 150, align: 'center'
             }, {
                 title: '输入码',
                 field: 'inputCode', width: 50, align: 'center'
             }]],
             filter: function (q, row) {
-                return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+                if($.startWith(row.inputCode.toUpperCase(), q.toUpperCase())){
+                    return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+                }
+                var opts = $(this).combogrid('options');
+                return row[opts.textField].indexOf(q) == 0;
+
             }
         })
     });
@@ -398,24 +409,24 @@ $(function () {
     });
 
     //打印
-    $("#printDiv").dialog({
-        title: '打印预览',
-        width: 1000,
-        height: 520,
-        catch: false,
-        modal: true,
-        closed: true,
-        onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-document-search.cpt");
-        }
-    })
-    $("#printBtn").on('click', function () {
-        var printData = $("#exportMaster").datagrid('getRows');
-        if (printData.length <= 0) {
-            $.messager.alert('系统提示', '请先查询数据', 'info');
-            return;
-        }
-        $("#printDiv").dialog('open');
-
-    })
+    //$("#printDiv").dialog({
+    //    title: '打印预览',
+    //    width: 1000,
+    //    height: 520,
+    //    catch: false,
+    //    modal: true,
+    //    closed: true,
+    //    onOpen: function () {
+    //        $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-document-search.cpt");
+    //    }
+    //})
+    //$("#printBtn").on('click', function () {
+    //    var printData = $("#exportMaster").datagrid('getRows');
+    //    if (printData.length <= 0) {
+    //        $.messager.alert('系统提示', '请先查询数据', 'info');
+    //        return;
+    //    }
+    //    $("#printDiv").dialog('open');
+    //
+    //})
 })

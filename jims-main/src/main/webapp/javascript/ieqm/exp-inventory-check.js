@@ -62,6 +62,8 @@ $.extend($.fn.datagrid.methods, {
 });
 
 $(function () {
+    var printFlag;
+    var printDate;
     var editIndex;
     var currentActualQuantity;
     var stopEdit = function () {
@@ -349,33 +351,44 @@ $(function () {
         }]],
         onClickRow: function (index, row) {
             //$("#listDialog").dialog('close');
-            var date = row.checkYearMonth;
-            var subStorage = $("#subStorage").combobox("getText");
-            var storageCode = parent.config.storageCode;
-            var hospitalId = parent.config.hospitalId;
-            $.get("/api/exp-inventory-check/get-inventory?type=search&storageCode=" + storageCode + "&hospitalId=" + hospitalId +"&checkMonth=" + formatterDate(date) + "&subStorage=" + subStorage, function (data) {
-                //账面额=账面数*单价
-                var sumAccountQuantity = 0.00;
-                var sumActualQuantity = 0.00;
-                var sumPaperAmount = 0.00;
+            if(printFlag){
 
-                $.each(data, function (index, item) {
-                    item.no = index + 1;
-                    item.paperAmount = item.retailPrice * item.accountQuantity;
-                    sumAccountQuantity += item.accountQuantity;
-                    sumActualQuantity += item.actualQuantity;
-                    sumPaperAmount += item.paperAmount;
+                printDate = formatterDate(row.checkYearMonth);
+                printFlag = false;
+                $("#printDiv").dialog('open');
+                return;
+            }else{
+                var date = row.checkYearMonth;
+                var subStorage = $("#subStorage").combobox("getText");
+                var storageCode = parent.config.storageCode;
+                var hospitalId = parent.config.hospitalId;
+                $.get("/api/exp-inventory-check/get-inventory?type=search&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&checkMonth=" + formatterDate(date) + "&subStorage=" + subStorage, function (data) {
+                    //账面额=账面数*单价
+                    var sumAccountQuantity = 0.00;
+                    var sumActualQuantity = 0.00;
+                    var sumPaperAmount = 0.00;
+
+                    $.each(data, function (index, item) {
+                        item.no = index + 1;
+                        item.paperAmount = item.retailPrice * item.accountQuantity;
+                        item.quantity = item.actualQuantity - item.accountQuantity;
+                        item.profitAmount = item.quantity* item.retailPrice;
+                        sumAccountQuantity += item.accountQuantity;
+                        sumActualQuantity += item.actualQuantity;
+                        sumPaperAmount += item.paperAmount;
+                    });
+                    $("#count").textbox("setText", data.length);
+                    $("#dg").datagrid('loadData', data);
+                    $('#dg').datagrid('appendRow', {
+                        accountQuantity: sumAccountQuantity,
+                        actualQuantity: sumActualQuantity,
+                        paperAmount: sumPaperAmount
+                    });
+                    //$("#dg").datagrid("autoMergeCells", ['expCode']);
+                    $("#listDialog").dialog('close');
                 });
-                $("#count").textbox("setText", data.length);
-                $("#dg").datagrid('loadData', data);
-                $('#dg').datagrid('appendRow', {
-                    accountQuantity: sumAccountQuantity,
-                    actualQuantity: sumActualQuantity,
-                    paperAmount: sumPaperAmount
-                });
-                //$("#dg").datagrid("autoMergeCells", ['expCode']);
-                $("#listDialog").dialog('close');
-            });
+            }
+
         }
     });
     //生成
@@ -631,18 +644,18 @@ $(function () {
         height: 520,
         catch: false,
         modal: true,
+        buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-inventory-check.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-inventory-check.cpt&checkYearMonth="+printDate);
         }
     })
     $("#print").on('click', function () {
-        var printData = $("#dg").datagrid('getRows');
-        if (printData.length <= 0) {
-            $.messager.alert('系统提示', '请先查询数据', 'info');
-            return;
-        }
-        $("#printDiv").dialog('open');
-
+        $("#search").click();
+        printFlag = true;
+    })
+    $("#printClose").on('click', function () {
+        $("#printDiv").dialog('close')
+        $("#dg").datagrid('loadData', {total: 0, rows: []});
     })
 });

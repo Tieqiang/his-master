@@ -78,7 +78,7 @@ public class ReportDict implements java.io.Serializable {
         this.ip = ip;
     }
 
-    @Column(name = "PORT", length = 20)
+    @Column(name = "PORT", length = 100)
     public String getPort() {
         return port;
     }

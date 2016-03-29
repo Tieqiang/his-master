@@ -177,7 +177,82 @@ $(function () {
         }, {
             title: '代码',
             field: 'expCode',
-            width: "15%"
+            width: "15%",
+            editor: {
+                type: 'combogrid', options: {
+                    url: '/api/buy-exp-plan/list-exp-name-by-input',
+                    singleSelect: true,
+                    method: 'GET',
+                    panelWidth: 200,
+                    idField: 'expName',
+                    textField: 'expName',
+                    columns: [[{
+                        title: '代码',
+                        field: 'expCode',
+                        width: "30%"
+                    }, {
+                        title: '品名',
+                        field: 'expName',
+                        width: "40%",
+                        editor: {type: 'text', options: {required: true}}
+                    }, {
+                        title: '代码',
+                        field: 'inputCode',
+                        width: "40%",
+                        editor: {type: 'text', options: {required: true}}
+                    }]],
+                    onClickRow: function (index, row) {
+                        $("#right").datagrid('updateRow', {
+                                index: editIndex,
+                                row: {
+                                    //buyNo: '新名称',
+                                    expCode: row.expCode,
+                                    expName:row.expName,
+                                    firmId: row.firmId,
+                                    expSpec: row.expSpec,
+                                    wantNumber: 0,
+                                    purchasePrice: row.purchasePrice,
+                                    planNumber: 0,
+                                    expForm: row.expForm,
+                                    storer: parent.config.staffName,
+                                    retailPrice: row.retailPrice
+                                }
+                            }
+                        );
+                        //$(this).combogrid('hidePanel');
+                    },
+                    keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+                        enter: function (e) {
+                            var row = $(this).combogrid('grid').datagrid('getSelected');
+                            $(this).combogrid('hidePanel');
+                            if (row) {
+                                console.log(row)
+                                $("#right").datagrid('updateRow', {
+                                    index: editIndex,
+                                    row: {
+                                        //buyNo: '新名称',
+                                        expCode: row.expCode,
+                                        expName: row.expName,
+                                        firmId: row.firmId,
+                                        expSpec: row.expSpec,
+                                        units: row.units,
+                                        wantNumber: 0,
+                                        purchasePrice: row.purchasePrice,
+                                        planNumber: 0,
+                                        expForm: row.expForm,
+                                        storer: parent.config.staffName,
+                                        retailPrice: row.retailPrice
+                                    }
+                                });
+
+                            }
+                        }
+                    }), filter: function (q, row) {
+                        var opts = $(this).combogrid('options');
+                        return row[opts.textField].indexOf(q) == 0;
+                    }
+                }
+            }
         }, {
             title: '物品名称',
             field: 'expName',
@@ -232,7 +307,8 @@ $(function () {
         }, {
             title: '仓管员',
             field: 'storer',
-            width: "5%"
+            width: "5%",
+            value:parent.config.staffName
         }, {
             title: '库存参考数',
             field: 'stockquantityRef',
@@ -322,7 +398,7 @@ $(function () {
     //新增按钮功能
     $("#add").on('click', function () {
         stopEdit();
-
+        $("#getNum").linkbutton("disable");
         var rows = $('#right').datagrid("getRows");
 
 
@@ -353,6 +429,7 @@ $(function () {
     });
     //加入按钮功能
     $("#join").on('click', function () {
+        $("#getNum").linkbutton("enable");
         var leftRows = $("#left").datagrid('getSelections');
         if (leftRows.length == 0) {
             $.messager.alert("系统提示", "请先选择消耗品待选数据", 'error');
@@ -391,6 +468,7 @@ $(function () {
     });
     //全部加入按钮功能
     $("#joinAll").on('click', function () {
+        $("#getNum").linkbutton("enable");
         var leftRows = $("#left").datagrid('getRows');
         var rows = $('#right').datagrid('getRows');
         var buyNo = 0;
@@ -422,6 +500,7 @@ $(function () {
     });
     //新建按钮功能
     $("#new").on('click', function () {
+        $("#getNum").linkbutton("enable");
         $.get("/api/buy-exp-plan/get-buy-id", function (buyId) {
             newBuyId = buyId;
             console.log("getBuyId" + newBuyId);
@@ -440,7 +519,8 @@ $(function () {
         }
         for (var i = 0; i < rows.length; i++) {
             //删除空行
-            if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
+            console.log(rows[i])
+            if ($.trim(rows[i].expCode) == '' || $.trim(rows[i].expName) == '' || $.trim(rows[i].firmId) == '' ) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
                 $("#right").datagrid('selectRow', i);
                 return false;
@@ -517,7 +597,7 @@ $(function () {
     //暂存按钮操作
     $("#ts").on('click', function () {
         stopEdit();
-
+        $("#getNum").linkbutton("enable");
         var rows = $("#right").datagrid('getRows');
         if (rows.length == 0) {
             $.messager.alert("系统提示", "采购计划为空，不允许保存", 'error');
@@ -571,6 +651,7 @@ $(function () {
     //保存按钮操作
     $("#save").on('click', function () {
         stopEdit();
+        $("#getNum").linkbutton("enable");
         var rows = $("#right").datagrid('getRows');
         if (rows.length == 0) {
             $.messager.alert("系统提示", "采购计划为空，不允许保存", 'error');
@@ -630,7 +711,7 @@ $(function () {
 
             //var hospitalId = parent.config.hospitalId;
             //var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/buy-exp-plan.cpt");
+            $("#report").prop("src",parent.config.defaultReportPath + "buy-exp-plan.cpt");
         }
     })
     $("#print").on('click',function(){

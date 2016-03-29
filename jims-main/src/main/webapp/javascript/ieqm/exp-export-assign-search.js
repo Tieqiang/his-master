@@ -109,7 +109,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-assign-search.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-export-assign-search.cpt");
         }
     });
     $("#printBtn").on('click', function () {

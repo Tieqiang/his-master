@@ -14,6 +14,7 @@ public class ExpPriceListVo implements Serializable {
     private String expCode;
     private String expName;
     private Integer amountPerPackage;
+    private Integer supplyIndicator;
     private String expSpec;
     private String units;
     private String firmId;
@@ -49,7 +50,7 @@ public class ExpPriceListVo implements Serializable {
     public ExpPriceListVo() {
     }
 
-    public ExpPriceListVo(String inputCode,String expName, String expCode, String expSpec, String firmId,
+    public ExpPriceListVo(Integer supplyIndicator, String inputCode, String expName, String expCode, String expSpec, String firmId,
                           String units, Double tradePrice, Double retailPrice, Integer amountPerPackage,
                           String minSpec, String minUnits, String classOnInpRcpt, String classOnOutpRcpt,
                           String classOnReckoning, String subjCode, String classOnMr, Date startDate,
@@ -57,6 +58,7 @@ public class ExpPriceListVo implements Serializable {
                           String operator, String permitNo, Date permitDate, String registerNo,
                           Date registerDate, String fdaOrCeNo, Date fdaOrCeDate, String otherNo,
                           Date otherDate, String priceRatio, String stopPrice, String columnProtect, String hospitalId) {
+        this.supplyIndicator = supplyIndicator;
         this.inputCode = inputCode;
         this.expName = expName;
         this.expCode = expCode;
@@ -363,5 +365,13 @@ public class ExpPriceListVo implements Serializable {
 
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    public Integer getSupplyIndicator() {
+        return supplyIndicator;
+    }
+
+    public void setSupplyIndicator(Integer supplyIndicator) {
+        this.supplyIndicator = supplyIndicator;
     }
 }

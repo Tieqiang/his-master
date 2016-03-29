@@ -43,7 +43,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "         EXP_IMPORT_DETAIL.EXPIRE_DATE,   \n" +
                 "         EXP_IMPORT_DETAIL.FIRM_ID,\n" +
                 "\t       EXP_IMPORT_MASTER.SUPPLIER,   \n" +
-                "\t       EXP_IMPORT_MASTER.account_receivable,   \n" +
+                "\t       EXP_IMPORT_DETAIL.retail_price*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
                 "         EXP_IMPORT_DETAIL.PURCHASE_PRICE,   \n" +
                 "         EXP_IMPORT_DETAIL.DISCOUNT,   \n" +
                 "         EXP_IMPORT_DETAIL.PACKAGE_SPEC,   \n" +
@@ -244,7 +244,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "       EXP_IMPORT_DETAIL.package_units = exp_dict.units and" +
                 "       EXP_IMPORT_DETAIL.exp_code = exp_dict.exp_code " ;
         if (billRadio != null && billRadio.trim().length() > 0) {
-            sql += " and EXP_IMPORT_MASTER.ACCOUNT_INDICATOR ='" + billRadio + "'";
+            sql += " and EXP_IMPORT_DETAIL.TALLY_FLAG ='" + billRadio + "'";
         }
         if (imClass != null && imClass.trim().length() > 0) {
             sql += " and EXP_IMPORT_MASTER.import_Class='" + imClass + "'";
@@ -281,17 +281,15 @@ public class ExpImportDetailFacade extends BaseFacade {
     public void saveDoAccountDict(ExpImportVo importVo) {
         List<ExpImportMaster> masters = importVo.getExpImportMasterBeanChangeVo().getUpdated();
         List<ExpImportDetail> details = importVo.getExpImportDetailBeanChangeVo().getUpdated();
-        for(ExpImportMaster master :masters){
-            String id  =  master.getId();
-            ExpImportMaster master1 = get(ExpImportMaster.class,id);
-            master1.setAccountIndicator((Integer)(master.getAccountIndicator()));
-            merge(master1);
-        }
+
         for(ExpImportDetail detail :details){
             String id  =  detail.getId();
             ExpImportDetail del = get(ExpImportDetail.class,id);
             del.setInvoiceNo(detail.getInvoiceNo());
             del.setInvoiceDate(detail.getInvoiceDate());
+            del.setTallyFlag(detail.getTallyFlag());
+            del.setTallyDate(detail.getTallyDate());
+            detail.setTallyOpertor(detail.getTallyOpertor());
             merge(del);
         }
     }

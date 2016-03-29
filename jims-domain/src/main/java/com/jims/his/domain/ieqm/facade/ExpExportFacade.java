@@ -120,7 +120,7 @@ public class ExpExportFacade extends BaseFacade {
             hql += " and dict.exportDate<=to_date ( '" + stopDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
         if (receiver != null && receiver.trim().length() > 0) {
-            hql += " and dict.receiver='" + receiver + "'";
+            hql += " and (dict.receiver='" + receiver + "' or dict.receiver=(select storageCode from ExpStorageDept where storageName like '%"+ receiver+"%' ) or dict.receiver=(select supplierId from ExpSupplierCatalog where supplier like '%"+receiver+"%')) ";
         }
         if (searchInput != null && searchInput.trim().length() > 0) {
             hql += " and dc.expCode='" + searchInput + "' \n" +
@@ -155,7 +155,7 @@ public class ExpExportFacade extends BaseFacade {
                 "         EXP_EXPORT_DETAIL.EXPIRE_DATE,   \n" +
                 "         EXP_EXPORT_DETAIL.FIRM_ID,\n" +
                 "\t       EXP_EXPORT_MASTER.RECEIVER,   \n" +
-                "\t       EXP_EXPORT_MASTER.account_receivable,   \n" +
+                "\t       EXP_EXPORT_DETAIL.QUANTITY*EXP_EXPORT_DETAIL.retail_price account_receivable,   \n" +
                 "         EXP_EXPORT_DETAIL.PURCHASE_PRICE,   \n" +
                 "         EXP_EXPORT_DETAIL.PACKAGE_SPEC,   \n" +
                 "         EXP_EXPORT_DETAIL.QUANTITY,   \n" +
@@ -297,7 +297,8 @@ public class ExpExportFacade extends BaseFacade {
         }
         if (null != receiver && !receiver.trim().equals("")) {
             sql += " and (EXP_EXPORT_MASTER.RECEIVER = '"+receiver+"'\n" +
-                    "   or EXP_EXPORT_MASTER.RECEIVER = (select storage_code from exp_storage_dept where storage_name like'%"+receiver+"%'))\n";
+                    "   or EXP_EXPORT_MASTER.RECEIVER = (select storage_code from exp_storage_dept where storage_name like'"+receiver+"%')\n " +
+                    "   or exp_export_master.receiver =  (select exp_supplier_catalog.supplier_id from exp_supplier_catalog where exp_supplier_catalog.supplier like '"+receiver+"%'  ))";
         }
 
         sql +="GROUP BY EXP_EXPORT_MASTER.SUB_STORAGE , \n" +
@@ -385,16 +386,16 @@ public class ExpExportFacade extends BaseFacade {
                 "         EXP_EXPORT_MASTER.SUB_STORAGE,   \n" +
                 "         EXP_EXPORT_DETAIL.EXP_CODE,   \n" +
                 "         EXP_EXPORT_DETAIL.EXP_FORM,   \n" +
-                "         DEPT_CLINIC_ATTR_DICT.CLINIC_ATTR_NAME dept_ATTR  \n" +
+                "         DEPT_CLINIC_ATTR_DICT.base_name dept_ATTR  \n" +
                 "    FROM EXP_EXPORT_DETAIL,   \n" +
-                "         EXP_EXPORT_MASTER, DEPT_CLINIC_ATTR_DICT , \n" +
+                "         EXP_EXPORT_MASTER, base_dict DEPT_CLINIC_ATTR_DICT , \n" +
                 "         EXP_DICT,   \n" +
                 "         DEPT_DICT  \n" +
                 "   WHERE ( EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO ) and  \n" +
                 "         ( EXP_EXPORT_MASTER.DOC_STATUS <> 1) and\n" +
                 "         ( EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
-                "         ( EXP_EXPORT_MASTER.RECEIVER = DEPT_DICT.DEPT_NAME ) and  \n" +
-                "         DEPT_CLINIC_ATTR_DICT.CLINIC_ATTR_CODE = dept_dict.dept_ATTR and "+
+                "         ( EXP_EXPORT_MASTER.RECEIVER = DEPT_DICT.DEPT_NAME or EXP_EXPORT_MASTER.RECEIVER =  DEPT_DICT.DEPT_code) and  \n" +
+
                 "         ( EXP_DICT.EXP_SPEC = EXP_EXPORT_DETAIL.EXP_SPEC ) and \n" +
 //                "('B' = 'L' and exp_sgtp in ('2','3') or\n" +
 //                " 'B' = 'B' and exp_sgtp in ('1','3')) and\n" +
@@ -402,7 +403,7 @@ public class ExpExportFacade extends BaseFacade {
                 "         ( EXP_EXPORT_MASTER.STORAGE = '"+storage+"' ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE >= TO_DATE('"+s1+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE <= TO_DATE('"+s2+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
-                "         ( EXP_EXPORT_DETAIL.hospital_id = '"+hospitalId+"' ) " ;
+                "         ( EXP_EXPORT_DETAIL.hospital_id = '"+hospitalId+"' ) AND DEPT_CLINIC_ATTR_DICT.base_type = 'DEPT_CLINIC_ATTR_DICT'" ;
         if (null != expCode && !expCode.trim().equals("")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_CODE='" + expCode + "'\n";
         }
@@ -410,7 +411,7 @@ public class ExpExportFacade extends BaseFacade {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != deptAttr && !deptAttr.trim().equals("")) {
-            sql += " AND DEPT_DICT.dept_attr='" + deptAttr + "'\n";
+            sql += "  and  DEPT_CLINIC_ATTR_DICT.base_code = dept_dict.dept_ATTR and  DEPT_DICT.dept_attr='" + deptAttr + "' and  DEPT_DICT.DEPT_ATTR = DEPT_CLINIC_ATTR_DICT.base_code\n";
         }
         List<ExpExportDetialVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpExportDetialVo.class);
         return result;

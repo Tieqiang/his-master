@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="/style/common.css">
     <style>
         select {
-            width: 139px
+            width: 100px
         }
 
         input {
-            width: 135px;
+            width: 100px;
         }
 
         .narrowInput {
@@ -73,14 +73,14 @@
             <label for="receiver">&nbsp;&nbsp;发往：</label>
             <input id="receiver" class="easyui-combobox" required="required">
             <label for="accountReceivable">&nbsp;应收款：</label>
-            <input type="text" id="accountReceivable" class="easyui-numberbox narrowInput" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+            <input type="text" id="accountReceivable" class="easyui-numberbox narrowInput" value="0.00" data-options="max: 9999999.99,size: 11,maxlength: 11,precision: 2">
             <label for="accountPayed">已收款：</label>
             <input type="text" id="accountPayed" class="easyui-numberbox narrowInput" value="0.00"
-                   data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+                   data-options="max: 9999999.99,size: 11,maxlength: 11,precision: 2">
         </div>
         <div class="row">
             <label for="additionalFee">&nbsp;附加费：</label>
-            <input type="text" id="additionalFee" class="easyui-numberbox" value="0.00" data-options="max: 99999.99,size: 8,maxlength: 8,precision: 2">
+            <input type="text" id="additionalFee" class="easyui-numberbox" value="0.00" data-options="max: 9999999.99,size: 11,maxlength: 11,precision: 2">
             <label for="fundItem">开支类别：</label>
             <select id="fundItem" class="easyui-combogrid"></select>
             <label for="memos">&nbsp;&nbsp;备注：</label>

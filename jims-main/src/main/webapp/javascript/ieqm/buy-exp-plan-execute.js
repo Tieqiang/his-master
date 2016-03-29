@@ -299,7 +299,7 @@ $(function () {
 
             //var hospitalId = parent.config.hospitalId;
             //var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/buy-exp-plan-execute.cpt");
+            $("#report").prop("src",parent.config.defaultReportPath + "buy-exp-plan-execute.cpt");
         }
     })
     $("#print").on('click',function(){

@@ -53,7 +53,12 @@ public class ErrorException extends WebApplicationException {
             stringBuffer.append(mat.group()) ;
         }
 
-        this.setErrorMessage(stringBuffer.toString());
+        if(stringBuffer.length()<=0){
+            this.setErrorMessage(errorInfo.substring(0,200));
+        }else{
+
+            this.setErrorMessage(stringBuffer.toString());
+        }
 
     }
 

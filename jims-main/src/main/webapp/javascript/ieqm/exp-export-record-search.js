@@ -291,7 +291,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export-record-search.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-export-record-search.cpt");
         }
     })
     $("#printBtn").on('click', function () {

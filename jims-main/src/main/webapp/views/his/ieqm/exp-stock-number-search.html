@@ -19,9 +19,9 @@
             <input type="radio" id="okPrint" name="radioOne" checked value="0"/>显示零库存
         </div>
         <div class="row">
-            <input type="checkbox" id="stockClass" name="checkboxOne"  onclick="checkRadio()" />库房类别
+            <input type="checkbox" id="stockClass" name="checkboxOne"  onclick="checkRadio()" />子库房
             <input type="text" id="subStorageClass"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
-            <input type="checkbox" id="supply" name="checkboxOne"  onclick="checkRadio()" />供&nbsp;货&nbsp;商
+            <input type="checkbox" id="supply" name="checkboxOne"  onclick="checkRadio()" />供&nbsp;货&nbsp;者
             <input type="text" id="supplier"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
             <input type="radio" id="noPrint" name="radioOne"  value="" />不显示零库存
         </div>
@@ -47,6 +47,11 @@
     <iframe width="1100px" height="520px" id="report">
     </iframe>
 </div>
+</div>
+<div id="printft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel'" id="printClose">关闭</a>
+</div>
+
 <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>

@@ -232,7 +232,7 @@ $(function () {
             var radio = $("#detailForm input[name='radioOne']:checked").val();
             var hospitalId = parent.config.hospitalId;
             var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-search.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&documentNo="+documentNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&radio="+radio+"&searchInput="+searchInput+"&loginId="+parent.config.loginId);
+            $("#report").prop("src",parent.config.defaultReportPath + "exp-pay-search.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&documentNo="+documentNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&radio="+radio+"&searchInput="+searchInput+"&loginId="+parent.config.loginId);
         }
     })
     $("#printBtn").on('click',function(){

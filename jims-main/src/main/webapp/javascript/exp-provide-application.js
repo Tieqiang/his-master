@@ -92,20 +92,27 @@ $(document).ready(function () {
                 ]],
                 onClickRow: function (rowIndex,rowData) {
                     $("#dg").datagrid('endEdit', editRowIndex);
-                    var rowDetail = $("#dg").datagrid('getData').rows[editRowIndex];
-                    rowDetail.packageSpec = rowData.minSpec;
-                    rowDetail.expCode = rowData.expCode;
-                    rowDetail.packageUnits = rowData.units;
-                    rowDetail.expSpec = rowData.minSpec;
-                    limitNumber = rowData.amountPerPackage;
-                    $("#dg").datagrid('refreshRow', editRowIndex);
-                    $("#dg").datagrid('beginEdit', editRowIndex);
+                    if(rowData.amountPerPackage>0&&rowData.supplyIndicator==1){
+                        var rowDetail = $("#dg").datagrid('getData').rows[editRowIndex];
+                        rowDetail.packageSpec = rowData.minSpec;
+                        rowDetail.expCode = rowData.expCode;
+                        rowDetail.packageUnits = rowData.units;
+                        rowDetail.expSpec = rowData.minSpec;
+                        limitNumber = rowData.amountPerPackage;
+                        $("#dg").datagrid('refreshRow', editRowIndex);
+                        $("#dg").datagrid('beginEdit', editRowIndex);
+                    }else{
+                        $.messager.alert('系统消息','申请库房暂不供应此产品','info');
+                        $("#dg").datagrid('beginEdit', editRowIndex);
+                        return;
+                    }
+
                 },
                 keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
                     enter: function (e) {
                         var row = $(this).combogrid('grid').datagrid('getSelected');
                         $(this).combogrid('hidePanel');
-                        if (row) {
+                        if (row&& row.amountPerPackage > 0 && row.supplyIndicator == 1) {
                             $("#dg").datagrid('endEdit', editRowIndex);
                             $('#dg').datagrid('updateRow', {
                                 index: editRowIndex,
@@ -118,6 +125,9 @@ $(document).ready(function () {
                                 }
                             });
                             limitNumber = row.amountPerPackage;
+                        }else{
+                            $.messager.alert('系统消息', '申请库房暂不供应此产品', 'info');
+                            return;
                         }
                         $("#dg").datagrid('beginEdit', editRowIndex);
                     }
@@ -288,6 +298,7 @@ $(document).ready(function () {
             if (changeVo) {
                 $.postJSON("/api/exp-provide-application/save", changeVo, function (data) {
                     $.messager.alert("系统提示", "保存成功", "info");
+                    $("#newBtn").click();
                 }, function (data) {
                     $.messager.alert('提示', "保存失败", "error");
                 })
@@ -314,7 +325,7 @@ $(document).ready(function () {
         onOpen: function () {
             var applicationStorage = $("#storage").combobox("getValue");
             var applicantNo = $("#applicantNo").textbox("getValue");
-            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-provide-application.cpt&storageCode="+parent.config.storageCode+"&appNo="+applicantNo+"&applyStorage="+applicationStorage);
+            $("#report").prop("src",parent.config.defaultReportPath + "exp-provide-application.cpt&storageCode="+parent.config.storageCode+"&appNo="+applicantNo+"&applyStorage="+applicationStorage);
         }
     })
     $("#printBtn").on('click',function(){

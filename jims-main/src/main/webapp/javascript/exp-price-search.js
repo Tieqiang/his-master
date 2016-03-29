@@ -186,7 +186,7 @@ $(function () {
         closed: true,
         onOpen: function () {
             var expCode = $("#search").combogrid('getValue')
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-price-search.cpt&expCode=" + expCode);
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-price-search.cpt&expCode=" + expCode);
         }
     })
     $("#printBtn").on('click', function () {

@@ -4,6 +4,7 @@ import com.jims.his.common.expection.ErrorException;
 import com.jims.his.common.util.EnscriptAndDenScript;
 import com.jims.his.domain.common.entity.*;
 import com.jims.his.domain.common.facade.ModuleDictFacade;
+import com.jims.his.domain.common.facade.ReportDictFacade;
 import com.jims.his.domain.common.facade.RoleDictFacade;
 import com.jims.his.domain.common.facade.StaffDictFacade;
 import com.jims.his.domain.common.vo.Config;
@@ -44,11 +45,12 @@ public class LoginService {
     private HttpServletResponse resp;
     private HttpServletRequest request;
     private AcctDeptDictFacade acctDeptDictFacade ;
+    private ReportDictFacade reportDictFacade;
 
 
 
     @Inject
-    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade, AcctDeptDictFacade acctDeptDictFacade) {
+    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade, AcctDeptDictFacade acctDeptDictFacade, ReportDictFacade reportDictFacade) {
         this.moduleDictFacade = moduleDictFacade;
         this.staffDictFacade = staffDictFacade;
         this.roleDictFacade = roleDictFacade;
@@ -56,6 +58,7 @@ public class LoginService {
         this.resp = resp;
         this.request = request;
         this.acctDeptDictFacade = acctDeptDictFacade;
+        this.reportDictFacade = reportDictFacade;
     }
 
     /**
@@ -284,6 +287,7 @@ public class LoginService {
     public Config getLoginInfo(){
         Config config = new Config() ;
         HttpSession session = request.getSession();
+        ReportDict reportDict = reportDictFacade.getByHospitalId((String) session.getAttribute("hospitalId"));
         config.setHospitalId((String) session.getAttribute("hospitalId"));
         config.setHospitalName((String)session.getAttribute("hospitalName"));
         config.setModuleName((String)session.getAttribute("moduleName"));
@@ -294,7 +298,7 @@ public class LoginService {
         config.setStorageCode((String) session.getAttribute("storageCode"));
         config.setStorageName((String) session.getAttribute("storageName"));
         config.setAcctDeptId((String)session.getAttribute("acctDeptId"));
-        config.setDefaultReportPath("http://192.168.6.68:8080/webReport/ReportServer?reportlet=");
+        config.setDefaultReportPath("http://"+ reportDict.getIp() + reportDict.getPort());
         return config ;
     }
 }

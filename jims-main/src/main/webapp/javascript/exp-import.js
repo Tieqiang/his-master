@@ -204,7 +204,6 @@ $(function () {
             title: '有效日期',
             field: 'expireDate',
             width:'7%',
-            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -255,7 +254,6 @@ $(function () {
             title: '发票日期',
             field: 'invoiceDate',
             width:'7%',
-            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -287,7 +285,6 @@ $(function () {
             title: '生产日期',
             field: 'produceDate',
             width:'7%',
-            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -315,7 +312,6 @@ $(function () {
             title: '消毒日期',
             field: 'disinfectDate',
             width:'7%',
-            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -690,7 +686,7 @@ $(function () {
             if(flag==1){
                 if(data.total==0 && editIndex!=undefined){
                     //$("#exportDetail").datagrid('endEdit', editIndex);
-                    $.messager.alert('系统提示','库房暂无该产品,请重置产品名称','info');
+                    $.messager.alert('系统提示','无法获取产品的价格信息！','info');
                     $("#stockRecordDialog").dialog('close');
                     //$("#exportDetail").datagrid('beginEdit', editIndex);
                 }
@@ -842,7 +838,7 @@ $(function () {
             if(flag==1){
                 if(data.total==0 && editIndex!=undefined){
                     //$("#exportDetail").datagrid('endEdit', editIndex);
-                    $.messager.alert('系统提示','库房暂无该产品,请重置产品名称','info');
+                    $.messager.alert('系统提示','无法获取产品的价格信息！','info');
                     $("#stockRecordDialog").dialog('close');
                     //$("#exportDetail").datagrid('beginEdit', editIndex);
                 }
@@ -998,7 +994,7 @@ $(function () {
         importMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         importMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         importMaster.subStorage = $("#subStorage").combobox('getValue');
-        importMaster.accountIndicator = 0;
+        importMaster.accountIndicator = 1;
         importMaster.docStatus = 0;
         importMaster.memos = $('#memos').textbox('getValue');
         importMaster.operator = parent.config.staffName;
@@ -1034,7 +1030,7 @@ $(function () {
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
-            detail.inventory = rows[i].quantity+rows[i].inventory;
+            detail.tallyFlag = 0;
             detail.tradePrice = rows[i].tradePrice;
             detail.killflag = rows[i].killflag;
             detail.discount = rows[i].discount;
@@ -1065,12 +1061,19 @@ $(function () {
         if (dataValid()) {
             var importVo = getCommitData() ;
             $.postJSON("/api/exp-stock/imp", importVo, function (data) {
+                console.log(data.errorMessage)
+                //console.log(data.responseJSON.errorMessage)
+                console.log(data)
+                if(data.errorMessage){
+                    $.messager.alert("系统提示", data.errorMessage, 'error');
+                    return;
+                }
                 $.messager.alert('系统提示', '入库成功', 'success',function(){
                     saveFlag = true;
                     $("#printBtn").trigger('click');
                 });
             }, function (data) {
-                $.messager.alert("系统提示", data.errorMessage, 'error');
+                $.messager.alert("系统提示", data.responseJSON.errorMessage, 'error');
             })
         }
     });
@@ -1107,8 +1110,8 @@ $(function () {
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue');
             //console.log(printDocumentNo);
-            $("#report").prop("src",  "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-import.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
-            //$("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import.cpt");
+            //$("#report").prop("src",  "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-import.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-import.cpt&documentNo=" + printDocumentNo);
         }
     })
     $("#printClose").on('click',function(){

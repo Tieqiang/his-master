@@ -19,10 +19,23 @@ function checkRadio(){
 }
 $(document).ready(function () {
     var editRowIndex;
-
     //格式化日期函数
     function formatterDate(val, row) {
-        if (val != null) {
+        if (val != null ) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+    function formatterDate1(val, row) {
+        if (val != null&& val!=undefined && val.length>11) {
             var date = new Date(val);
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -104,11 +117,12 @@ $(document).ready(function () {
                     }]
                     }
                 },formatter: function(value,row,index){
-                if (row.suppbound='1'){
+                if (row.suppbound=='1'){
                     return '全院产品';
-                }else{
+                }else if(row.suppbound =='2'){
                     return '普通产品';
                 }
+                return value;
             }
             },{
                 title:"输入码",
@@ -154,6 +168,7 @@ $(document).ready(function () {
                 field:"licenceDate",
                 width:"11%",
                 formatter: formatterDate,
+                parser: w3,
                 editor: {
                     type: 'datetimebox',
                     options: {
@@ -187,6 +202,7 @@ $(document).ready(function () {
                 field:"permitDate",
                 width:"11%",
                 formatter: formatterDate,
+                parser: w3,
                 editor: {
                     type: 'datetimebox',
                     options: {
@@ -225,6 +241,7 @@ $(document).ready(function () {
                 field:"fdaOrCeDate",
                 width:"11%",
                 formatter: formatterDate,
+                parser: w3,
                 editor: {
                     type: 'datetimebox',
                     options: {
@@ -242,7 +259,6 @@ $(document).ready(function () {
                             var d = date.getDate();
                             var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
                             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
                             $(dateEd.target).textbox('setValue', dateTime);
                             $(this).datetimebox('hidePanel');
                         }
@@ -256,8 +272,9 @@ $(document).ready(function () {
             },{
                 title:"其它日期",
                 field:"otherDate",
-                width:"11%",
                 formatter: formatterDate,
+                parser: w3,
+                width:"11%",
                 editor: {
                     type: 'datetimebox',
                     options: {
@@ -275,7 +292,6 @@ $(document).ready(function () {
                             var d = date.getDate();
                             var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
                             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
                             $(dateEd.target).textbox('setValue', dateTime);
                             $(this).datetimebox('hidePanel');
                         }
@@ -284,11 +300,13 @@ $(document).ready(function () {
             }
         ]],
         onClickRow: function (rowIndex,rowData) {
-            if (editRowIndex || editRowIndex == 0){
+            if (editRowIndex!= rowIndex ){
                 $(this).datagrid("endEdit",editRowIndex);
+                editRowIndex = rowIndex;
             }
             $(this).datagrid("beginEdit",rowIndex);
-            editRowIndex = rowIndex;
+
+
         }
     });
     //供应商检索
@@ -344,7 +362,6 @@ $(document).ready(function () {
                 if(data.length<=0){
                     $.messager.alert('系统消息','数据库暂无数据','info')
                 }
-                console.log(data);
                 $("#dg").datagrid("loadData",data);
             });
 
@@ -358,6 +375,9 @@ $(document).ready(function () {
     });
     //添加按钮
     $("#addBtn").on("click", function () {
+        if(editRowIndex!=undefined){
+            $("#dg").datagrid("endEdit", editRowIndex);
+        }
         $("#dg").datagrid("appendRow",{});
         var rows = $("#dg").datagrid("getRows"); //得到所有行
         var row = rows[rows.length - 1];//获得最后一行
@@ -410,10 +430,36 @@ $(document).ready(function () {
         if (editRowIndex || editRowIndex == 0) {
             $("#dg").datagrid("endEdit", editRowIndex);
         }
-
         var insertData = $("#dg").datagrid("getChanges", "inserted");
         var updateDate = $("#dg").datagrid("getChanges", "updated");
         var deleteDate = $("#dg").datagrid("getChanges", "deleted");
+        console.log(insertData)
+        console.log(updateDate)
+        console.log(deleteDate)
+        if(insertData.length>0){
+            for (var i = 0; i < insertData.length; i++) {
+                insertData[i].licenceDate = new Date(insertData[i].licenceDate);
+                insertData[i].permitDate = new Date(insertData[i].permitDate);
+                insertData[i].fdaOrCeDate = new Date(insertData[i].fdaOrCeDate);
+                insertData[i].otherDate = new Date(insertData[i].otherDate);
+            }
+        }
+        if(updateDate.length>0){
+            for (var i = 0; i < updateDate.length; i++) {
+                updateDate[i].licenceDate = new Date(updateDate[i].licenceDate);
+                updateDate[i].permitDate = new Date(updateDate[i].permitDate);
+                updateDate[i].fdaOrCeDate = new Date(updateDate[i].fdaOrCeDate);
+                updateDate[i].otherDate = new Date(updateDate[i].otherDate);
+            }
+        }
+        if(deleteDate.length>0){
+            for (var i = 0; i < insertData.length; i++) {
+                deleteDate[i].licenceDate = new Date(deleteDate[i].licenceDate);
+                deleteDate[i].permitDate = new Date(deleteDate[i].permitDate);
+                deleteDate[i].fdaOrCeDate = new Date(deleteDate[i].fdaOrCeDate);
+                deleteDate[i].otherDate = new Date(deleteDate[i].otherDate);
+            }
+        }
         if(insertData.length>0 || updateDate.length>0 || deleteDate.length>0){
             var beanChangeVo = {};
             beanChangeVo.inserted = insertData;

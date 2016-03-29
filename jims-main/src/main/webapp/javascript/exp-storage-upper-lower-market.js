@@ -153,7 +153,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-storage-upper-lower-market.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-storage-upper-lower-market.cpt");
         }
     });
     $("#printBtn").on('click', function () {

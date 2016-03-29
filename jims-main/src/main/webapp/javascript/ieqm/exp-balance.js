@@ -299,7 +299,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-balance.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-balance.cpt");
         }
     })
     $("#print").on('click', function () {

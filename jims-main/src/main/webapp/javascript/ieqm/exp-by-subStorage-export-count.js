@@ -181,7 +181,7 @@ $(function () {
         $('#subStorage').combobox({
             panelHeight: 'auto',
             data: subStorages,
-            valueField: 'storageCode',
+            valueField: 'subStorage',
             textField: 'subStorage'
         });
         $('#subStorage').combobox("select", "全部");
@@ -284,7 +284,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-by-subStorage-export-count.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-by-subStorage-export-count.cpt");
         }
     });
     $("#printBtn").on('click', function () {

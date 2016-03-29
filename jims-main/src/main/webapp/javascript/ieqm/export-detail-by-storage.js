@@ -30,6 +30,12 @@ $(function () {
         }
     }
 
+    //供应商
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     $('#startDate').datetimebox({
         required: true,
         showSeconds: true,
@@ -94,7 +100,15 @@ $(function () {
         columns: [[{
             title: '去向库房',
             field: 'receiver',
-            width: "30%"
+            width: "30%",
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: '产品类别',
             field: 'expForm',
@@ -151,7 +165,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/export-detail-by-storage.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "export-detail-by-storage.cpt");
         }
     });
     $("#print").on('click', function () {

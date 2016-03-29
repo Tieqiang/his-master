@@ -498,7 +498,9 @@ $(function () {
         if (expPriceModifyProfitVo) {
             $.postJSON("/api/exp-price-modify/save-modify-confirm", expPriceModifyProfitVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
-                loadDict();
+                //loadDict();
+                $("#tab1").datagrid('loadData',{total:0,rows:[]})
+                $("#tab2").datagrid('loadData',{total:0,rows:[]})
             }, function (data) {
                 $.messager.alert('提示', "保存失败", "error");
             })

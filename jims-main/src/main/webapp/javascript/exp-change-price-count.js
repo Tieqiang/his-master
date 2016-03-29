@@ -124,7 +124,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-change-price-count.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-change-price-count.cpt");
         }
     })
     $("#printBtn").on('click', function () {
