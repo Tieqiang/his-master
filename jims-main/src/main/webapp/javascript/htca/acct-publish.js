@@ -101,6 +101,9 @@ $(function () {
                 if (value == "0") {
                     return "成本";
                 }
+                if(value=='2'){
+                    return '效益'
+                }
                 return value;
             },
             editor: {
@@ -122,7 +125,7 @@ $(function () {
         }, {
             title: '公布开始时间',
             field: 'openStartDate',
-            width: '30%',
+            width: '60%',
             editor: { type:'datebox',options:{
                 parser: function (s) {//配置parser，返回选择的日期
                     if (!s) return new Date();
@@ -156,6 +159,7 @@ $(function () {
         }, {
             title: '公布结束时间',
             field: 'openEndDate',
+            hidden:true,
             width: '30%',
             editor: {
                 type: 'datebox', options: {
