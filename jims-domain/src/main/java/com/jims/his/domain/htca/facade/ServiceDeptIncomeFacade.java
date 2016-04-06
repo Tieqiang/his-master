@@ -25,10 +25,12 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
             String lowValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_LOW_VALUE_RATE' ";//低值耗材计入成本率
             String medValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_MED_RATE' ";//医用耗材成本率
             String officeValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_OFFICE_LEVEL_RATE' ";//通用物资计入率
+            String highValueHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_HIGH_LEVEL_RATE' ";//高值耗材
 
             String lowIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_LOW_VALUE_ID' ";
             String medIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_MED_ID' ";
             String officeIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_OFFICE_LEVEL_ID' ";
+            String higIdHql = "from AppConfigerParameter as p  where p.appName='HTCA' and p.parameterName = 'EXP_HIGH_LEVEL_ID' ";
 
             //读取提取成本中材料费的成本和计入成参数
             AppConfigerParameter lowParameter = createQuery(AppConfigerParameter.class, lowValueHql, new ArrayList<Object>()).getSingleResult();
@@ -37,6 +39,8 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
             AppConfigerParameter medIdParamter = createQuery(AppConfigerParameter.class, medIdHql, new ArrayList<Object>()).getSingleResult();
             AppConfigerParameter officeIdParamter = createQuery(AppConfigerParameter.class, officeIdHql, new ArrayList<Object>()).getSingleResult();
             AppConfigerParameter lowIdParamter = createQuery(AppConfigerParameter.class, lowIdHql, new ArrayList<Object>()).getSingleResult();
+            AppConfigerParameter highIdParamter = createQuery(AppConfigerParameter.class, higIdHql, new ArrayList<Object>()).getSingleResult();
+            AppConfigerParameter highParamter = createQuery(AppConfigerParameter.class, highValueHql, new ArrayList<Object>()).getSingleResult();
 
 
             Boolean flag = false  ;
@@ -66,6 +70,14 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
                             String paraValue = officeIdParamter.getParameterValue();
                             if (paraValue.equals(income.getIncomeTypeId())) {
                                 acctDeptCost.setCost(income.getTotalIncome() * Double.parseDouble(officeParamter.getParameterValue()));
+                                flag=true ;
+                            }
+                        }
+
+                        if (highIdParamter != null) {
+                            String paraValue = highIdParamter.getParameterValue();
+                            if (paraValue.equals(income.getIncomeTypeId())) {
+                                acctDeptCost.setCost(income.getTotalIncome() * Double.parseDouble(highParamter.getParameterValue()));
                                 flag=true ;
                             }
                         }
