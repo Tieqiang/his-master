@@ -163,8 +163,10 @@ $(function () {
         textField: 'exportClass',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            if (data.length > 0) {
-                $(this).combobox('select', data[0].exportClass);
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].exportClass == "发放出库") {
+                    $(this).combobox('select', data[i].exportClass);
+                }
             }
         }
     });
@@ -424,9 +426,9 @@ $(function () {
                             totalAmount += Number(rows[i].planNumber);
                         }
                         if (totalAmount) {
-                            totalAmount += newValue * row.purchasePrice;
+                            totalAmount += newValue * row.retailPrice;
                         } else {
-                            totalAmount = newValue * row.purchasePrice;
+                            totalAmount = newValue * row.retailPrice;
                         }
                         $("#accountReceivable").numberbox('setValue', totalAmount);
                     },
@@ -483,8 +485,8 @@ $(function () {
                 }
             },
             formatter:function(value,row,index){
-                if($.trim(row.purchasePrice)!=""){
-                    return row.purchasePrice * row.quantity;
+                if($.trim(row.retailPrice)!=""){
+                    return row.retailPrice * row.quantity;
                 }
             }
         }, {
@@ -849,7 +851,7 @@ $(function () {
             rowDetail.units = row.units;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.retailPrice;
+            rowDetail.purchasePrice = row.tradePrice;
             rowDetail.retailPrice = row.retailPrice;
             rowDetail.tradePrice = row.tradePrice;
             rowDetail.memos = row.memos;

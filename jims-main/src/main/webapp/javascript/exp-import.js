@@ -216,7 +216,7 @@ $(function () {
                             index: editIndex,
                             field: 'expireDate'
                         });
-                        var y = date.getFullYear();
+                        var y = date.getFullYear()+1;
                         var m = date.getMonth() + 1;
                         var d = date.getDate();
                         var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
@@ -283,7 +283,7 @@ $(function () {
             editor: {type: 'textbox', options: {}}
         }, {
             title: '生产日期',
-            field: 'produceDate',
+            field: 'producedate',
             width:'7%',
             editor: {
                 type: 'datetimebox',
@@ -295,7 +295,7 @@ $(function () {
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
-                            field: 'produceDate'
+                            field: 'producedate'
                         });
                         var y = date.getFullYear();
                         var m = date.getMonth() + 1;
@@ -310,7 +310,7 @@ $(function () {
             }
         }, {
             title: '消毒日期',
-            field: 'disinfectDate',
+            field: 'disinfectdate',
             width:'7%',
             editor: {
                 type: 'datetimebox',
@@ -322,7 +322,7 @@ $(function () {
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
-                            field: 'disinfectDate'
+                            field: 'disinfectdate'
                         });
                         var y = date.getFullYear();
                         var m = date.getMonth() + 1;
@@ -406,7 +406,11 @@ $(function () {
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[1].importClass);
+            for(var i = 0 ;i<data.length;i++){
+                if(data[i].importClass=="正常入库"){
+                    $(this).combobox('select', data[i].importClass);
+                }
+            }
         }
     });
 
@@ -748,10 +752,10 @@ $(function () {
 
             var invoiceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'invoiceDate'});
             $(invoiceDateEd.target).textbox('setValue', setDefaultDate());
-            var produceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'produceDate'});
-            $(produceDateEd.target).textbox('setValue', setDefaultDate());
-            var disinfectDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'disinfectDate'});
-            $(disinfectDateEd.target).textbox('setValue', setDefaultDate());
+            var producedateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'producedate'});
+            $(producedateEd.target).textbox('setValue', setDefaultDate());
+            var disinfectdateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'disinfectdate'});
+            $(disinfectdateEd.target).textbox('setValue', setDefaultDate());
 
             var discountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'discount'});
             $(discountEd.target).textbox('setValue', '100');
@@ -760,10 +764,10 @@ $(function () {
             $(orderBatchEd.target).textbox('setValue', 'x');
 
             var retailedEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
-            $(retailedEd.target).numberbox('setValue', 'x');
+            $(retailedEd.target).numberbox('setValue', row.retailPrice);
 
             var tradePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'tradePrice'});
-            $(tradePriceEd.target).numberbox('setValue', 'x');
+            $(tradePriceEd.target).numberbox('setValue', row.tradePrice);
 
             $("#stockRecordDialog").dialog('close');
         }
@@ -900,10 +904,10 @@ $(function () {
 
             var invoiceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'invoiceDate'});
             $(invoiceDateEd.target).textbox('setValue', setDefaultDate());
-            var produceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'produceDate'});
-            $(produceDateEd.target).textbox('setValue', setDefaultDate());
-            var disinfectDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'disinfectDate'});
-            $(disinfectDateEd.target).textbox('setValue', setDefaultDate());
+            var producedateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'producedate'});
+            $(producedateEd.target).textbox('setValue', setDefaultDate());
+            var disinfectdateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'disinfectdate'});
+            $(disinfectdateEd.target).textbox('setValue', setDefaultDate());
 
             var discountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'discount'});
             $(discountEd.target).textbox('setValue', '100');

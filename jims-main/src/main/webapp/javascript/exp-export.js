@@ -49,6 +49,7 @@ $(function(){
     var editIndex;
     var currentExpCode;
     var exportFlag;
+    var upStorageFlag ;
     var panelHeight = $(window).height - 300 ;
     //库房字典
     var depts = [];
@@ -174,19 +175,32 @@ $(function(){
                         $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
                         var rows = $("#exportDetail").datagrid('getRows');
                         var totalAmount = 0;
+                        var backAmount = 0;
                         for (var i = 0; i < rows.length; i++) {
                             var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
                             if (rowIndex == editIndex) {
                                 continue;
                             }
-                            totalAmount += Number(rows[i].amount);
+                            totalAmount += Number(rows[i].retailPrice*rows[i].quantity);
+                            backAmount += Number(rows[i].purchasePrice*rows[i].quantity);
                         }
                         if (totalAmount) {
-                            totalAmount += newValue * row.purchasePrice;
+                            totalAmount += newValue * row.retailPrice;
                         } else {
-                            totalAmount = newValue * row.purchasePrice;
+                            totalAmount = newValue * row.retailPrice;
                         }
-                        $("#accountReceivable").numberbox('setValue', totalAmount);
+                        if (backAmount) {
+                            backAmount += newValue * row.purchasePrice;
+                        } else {
+                            backAmount = newValue * row.purchasePrice;
+                        }
+                        if($.trim($("#exportClass").combobox('getValue'))=="退货出库"&& upStorageFlag==true){
+                            $("#accountReceivable").numberbox('setValue', backAmount);
+                            upStorageFlag=false;
+                        }else{
+                            $("#accountReceivable").numberbox('setValue', totalAmount);
+                            upStorageFlag = false;
+                        }
                     }
                 }
             },formatter:function(value,row,index){
@@ -338,7 +352,11 @@ $(function(){
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[0].exportClass);
+            for(var i = 0;i<data.length;i++){
+                if(data[i].exportClass=="发放出库"){
+                    $(this).combobox('select', data[i].exportClass);
+                }
+            }
         },
         onChange:function(newValue,oldValue){
             if(newValue=="退货出库"){
@@ -346,6 +364,7 @@ $(function(){
                 $.messager.confirm('系统消息', '您要“退货出库”给供应商吗？', function (r) {
                     if (r) {
                         depts = new Array;
+                        upStorageFlag = true;
                         for(var i = 0 ;i< suppliers.length;i++){
                             var dept = {};
                             dept.storageName = suppliers[i].supplierName;
@@ -572,7 +591,7 @@ $(function(){
                     title: '厂家',
                     field: 'firmId'
                 }, {
-                    title: '进价价',
+                    title: '进货价',
                     field: 'purchasePrice'
                 }, {
                     title: '批发价',

@@ -89,11 +89,16 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
      */
     public List<ExpSupplierVo> listExpSupplierWithDept(String hospitalId) {
         List<ExpSupplierCatalog> supplierCatalogs = this.findSupplierBySupplierClass("供应商");
+        List<ExpSupplierCatalog> supplierCatalogs1 = this.findSupplierBySupplierClass("生产商");
         List<ExpSupplierVo> expSupplierVos = new ArrayList<>() ;
         //List<DeptDict> deptDicts = deptDictFacade.findByHospitalId(hospitalId);
         List<ExpStorageDept> expStorageDepts = expStorageDeptFacade.getByHospitalId(hospitalId,null,null) ;
 
         for (ExpSupplierCatalog catalog:supplierCatalogs){
+            ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(),catalog.getSupplierId(),catalog.getInputCode()) ;
+            expSupplierVos.add(vo) ;
+        }
+        for (ExpSupplierCatalog catalog: supplierCatalogs1){
             ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(),catalog.getSupplierId(),catalog.getInputCode()) ;
             expSupplierVos.add(vo) ;
         }

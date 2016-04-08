@@ -173,7 +173,11 @@ $(function () {
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[1].importClass);
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].importClass == "采购入库") {
+                    $(this).combobox('select', data[i].importClass);
+                }
+            }
         }
     });
 
@@ -242,8 +246,10 @@ $(function () {
         textField: 'exportClass',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            if (data.length > 0) {
-                $(this).combobox('select', data[0].exportClass);
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].exportClass == "发放出库") {
+                    $(this).combobox('select', data[i].exportClass);
+                }
             }
         }
     });
@@ -501,7 +507,7 @@ $(function () {
             title: '厂家',
             field: 'firmId'
         }, {
-            title: '进价价',
+            title: '进货价',
             field: 'purchasePrice'
         }, {
             title: '批发价',
@@ -515,7 +521,29 @@ $(function () {
         }, {
             title: '有效期',
             field: 'expireDate',
-            formatter: formatterDate
+            editor: {
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#importDetail").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'expireDate'
+                        });
+                        var y = date.getFullYear() + 1;
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
+                    }
+                }
+            }
         }, {
             title: '入库单号',
             field: 'documentNo'
@@ -540,11 +568,55 @@ $(function () {
         }, {
             title: '生产日期',
             field: 'producedate',
-            formatter: formatterDate
+            editor: {
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#importDetail").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'producedate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
+                    }
+                }
+            }
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
-            formatter: formatterDate
+            editor: {
+                type: 'datetimebox',
+                options: {
+                    value: 'dateTime',
+                    showSeconds: true,
+                    formatter: formatterDate,
+                    parser: w3,
+                    onSelect: function (date) {
+                        var dateEd = $("#importDetail").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'disinfectDate'
+                        });
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
+                    }
+                }
+            }
         }, {
             title: '灭菌标识',
             field: 'killflag'
@@ -585,7 +657,7 @@ $(function () {
             rowDetail.packageSpec = row.expSpec;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.retailPrice;
+            rowDetail.purchasePrice = row.tradePrice;
             rowDetail.amount = 0;
             rowDetail.firmId = row.firmId;
             rowDetail.batchNo = "X";
@@ -702,19 +774,27 @@ $(function () {
                         var row = $("#dg").datagrid('getData').rows[editIndex];
                         var rows = $("#dg").datagrid('getRows');
                         var totalAmount = 0;
+                        var exportAmount = 0;
                         for (var i = 0; i < rows.length; i++) {
                             var rowIndex = $("#dg").datagrid('getRowIndex', rows[i]);
                             if (rowIndex == editIndex) {
                                 continue;
                             }
                             totalAmount += Number(rows[i].planNumber);
+                            exportAmount+= Number(Number(rows[i].quantity)*Number(rows[i].retailPrice));
                         }
+
                         if (totalAmount) {
                             totalAmount += newValue * row.purchasePrice;
                         } else {
                             totalAmount = newValue * row.purchasePrice;
                         }
-                        $("#accountReceivable").numberbox('setValue', totalAmount);
+                        if (exportAmount) {
+                            exportAmount += newValue * row.retailPrice;
+                        } else {
+                            exportAmount = newValue * row.retailPrice;
+                        }
+                        $("#accountReceivable").numberbox('setValue', exportAmount);
                         $("#accountReceivableIn").numberbox('setValue', totalAmount);
                     },
                     max: 99999.99,
@@ -758,7 +838,9 @@ $(function () {
         }, {
             title: '零售价',
             field: 'retailPrice',
-            hidden: 'true'
+            type:'numberbox'
+            //,
+            //hidden: 'true'
         }, {
             title: '最小规格',
             field: 'expSpec',
@@ -1044,6 +1126,7 @@ $(function () {
     var dataValid = function () {
 
         var rows = $("#dg").datagrid('getRows');
+        console.log(rows);
         if (rows.length == 0) {
             $.messager.alert("系统提示", "明细记录为空，不允许保存", 'error');
             return false;

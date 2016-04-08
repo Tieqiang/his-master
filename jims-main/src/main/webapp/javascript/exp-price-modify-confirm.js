@@ -532,7 +532,7 @@ $(function () {
         $.postJSON("/api/exp-price-modify-profit/calc-profit",rows, function (data) {
             if (data) {
                 $("#tab2").datagrid('loadData', data);
-                $("#tab2").datagrid("autoMergeCells", ['storageName', 'expCode','expName', 'expSpec','units','firmId']);
+                //$("#tab2").datagrid("autoMergeCells", ['storageName', 'expCode','expName', 'expSpec','units','firmId']);
             }
         });
     }

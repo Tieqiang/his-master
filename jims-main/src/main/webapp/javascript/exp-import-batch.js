@@ -92,7 +92,11 @@ $(function () {
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[1].importClass);
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].importClass == "正常入库") {
+                    $(this).combobox('select', data[i].importClass);
+                }
+            }
         }
     });
 
@@ -354,14 +358,14 @@ $(function () {
             editor: {
                 type: 'numberbox', options: {
                     onChange: function (newValue, oldValue) {
-                        var purchasePriceEd = $("#importDetail").datagrid('getEditor', {
+                        var retailPriceEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
-                            field: 'purchasePrice'
+                            field: 'retailPrice'
                         });
-                        var purchasePrice = $(purchasePriceEd.target).textbox('getValue');
+                        var retailPrice = $(retailPriceEd.target).textbox('getValue');
 
                         var amountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
-                        $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
+                        $(amountEd.target).numberbox('setValue', newValue * retailPrice);
 
                         var rows = $("#importDetail").datagrid('getRows');
                         var totalAmount = 0;
@@ -373,9 +377,9 @@ $(function () {
                             totalAmount += Number(rows[i].amount);
                         }
                         if (totalAmount) {
-                            totalAmount += newValue * purchasePrice;
+                            totalAmount += newValue * retailPrice;
                         } else {
-                            totalAmount = newValue * purchasePrice;
+                            totalAmount = newValue * retailPrice;
                         }
                         $("#accountReceivable").numberbox('setValue', totalAmount);
                     }
@@ -413,6 +417,7 @@ $(function () {
         }, {
             title: '有效日期',
             field: 'expireDate',
+            formatter: formatterDate,
             width:'7%',
             editor: {
                 type: 'datetimebox',
@@ -482,6 +487,7 @@ $(function () {
         }, {
             title: '发票日期',
             field: 'invoiceDate',
+            formatter: formatterDate,
             width:'7%',
             editor: {
                 type: 'datetimebox',
@@ -513,6 +519,7 @@ $(function () {
         }, {
             title: '生产日期',
             field: 'produceDate',
+            formatter: formatterDate,
             width:'7%',
             editor: {
                 type: 'datetimebox',
@@ -540,6 +547,7 @@ $(function () {
         }, {
             title: '消毒日期',
             field: 'disinfectDate',
+            formatter: formatterDate,
             width:'7%',
             editor: {
                 type: 'datetimebox',
@@ -742,8 +750,9 @@ $(function () {
             field: 'inventory'
         },{
             title:'零售价',
-            field:'retailPrice',
-            hidden:true
+            field:'retailPrice'
+                //,
+            //hidden:true
         },{
             title:'进货价',
             field:'tradePrice',
@@ -898,10 +907,10 @@ $(function () {
             $(orderBatchEd.target).textbox('setValue', 'x');
 
             var retailedEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
-            $(retailedEd.target).numberbox('setValue', 'x');
+            $(retailedEd.target).numberbox('setValue', row.retailPrice);
 
             var tradePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'tradePrice'});
-            $(tradePriceEd.target).numberbox('setValue', 'x');
+            $(tradePriceEd.target).numberbox('setValue',row.tradePrice);
 
             $("#stockRecordDialog").dialog('close');
         }
@@ -930,7 +939,7 @@ $(function () {
         var rows = $("#expExportDatagrid").datagrid('getSelections') ;
         var totals =0;
         for(var i = 0 ;i<rows.length ;i++){
-            rows[i].amount = rows[i].quantity * rows[i].purchasePrice ;
+            rows[i].amount = rows[i].quantity * rows[i].retailPrice ;
             totals += rows[i].amount ;
             datas.push(rows[i]) ;
             console.log(rows[i].documentNo);

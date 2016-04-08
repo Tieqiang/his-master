@@ -156,10 +156,12 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
+                    panelMaxHeight:'200',
+                    panelWidth:'100',
                     valueField: 'supplierId',
                     textField: 'supplier',
                     method: 'get',
-                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '供应商'
+                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '生产商'
                 }
             }
         }, {

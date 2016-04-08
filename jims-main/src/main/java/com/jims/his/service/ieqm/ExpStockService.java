@@ -92,6 +92,7 @@ public class ExpStockService {
                 "       c.min_UNITS,\n" +
                 "       c.FIRM_ID,\n" +
                 "       c.TRADE_PRICE,\n" +
+                "       c.TRADE_PRICE purchase_Price,\n" +
                 "       c.retail_price,\n" +
                 "       c.material_code,\n" +
                 "       nvl(d.quantity, 0)quantity,\n" +

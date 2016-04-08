@@ -629,7 +629,7 @@ public class ExpStockFacade extends BaseFacade {
                 "                   batch_no,\n" +
                 "                   expire_date,\n" +
                 "                   exp_price_list.firm_id,\n" +
-                "                   nvl(purchase_price,0) purchase_price,\n" +
+                "                   nvl(trade_price,0) purchase_price,\n" +
                 "                   discount,\n" +
                 "                   exp_price_list.exp_spec,\n" +
                 "                   nvl(quantity,0) quantity,\n" +
