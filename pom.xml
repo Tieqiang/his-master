@@ -18,15 +18,15 @@
         <repository>
             <id>Releases</id>
             <name>nexus-public</name>
-            <url>http://127.0.0.1:8081/nexus/content/groups/public/</url>
+            <url>http://192.168.6.143:8081/nexus/content/groups/public/</url>
         </repository>
     </repositories>
     <distributionManagement>
         <snapshotRepository>
             <id>Snapshots</id>
             <name>snap-server</name>
-            <!--<url>http://127.0.0.1:8081/nexus/content/repositories/ztq-snapshot/</url>-->
-            <url>http://127.0.0.1:8081/nexus/content/groups/public/</url>
+            <!--<url>http://192.168.6.143:8081/nexus/content/repositories/ztq-snapshot/</url>-->
+            <url>http://192.168.6.143:8081/nexus/content/groups/public/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -237,27 +237,7 @@
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>1.7.5</version>
             </dependency>
-            <!--&lt;!&ndash;帆软报表&ndash;&gt;-->
-            <!--<dependency>-->
-                <!--<groupId>fakepath</groupId>-->
-                <!--<artifactId>fr-server</artifactId>-->
-                <!--<version>7.1</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>fakepath</groupId>-->
-                <!--<artifactId>fr-third</artifactId>-->
-                <!--<version>7.1</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>fakepath</groupId>-->
-                <!--<artifactId>jtds</artifactId>-->
-                <!--<version>1.2.2</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>fakepath</groupId>-->
-                <!--<artifactId>commons-codec</artifactId>-->
-                <!--<version>1.6</version>-->
-            <!--</dependency>-->
+
         </dependencies>
 
     </dependencyManagement>
