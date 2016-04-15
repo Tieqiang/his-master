@@ -42,6 +42,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 	private Date fdaOrCeDate;
 	private String otherNo;
 	private Date otherDate;
+    private String supplierCode;
 
 	// Constructors
 
@@ -51,13 +52,13 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 
 	/** full constructor */
 	public ExpSupplierCatalog(String supplierId, String supplier,
-			String supplierClass, String memo, String inputCode,
-			String inputCodeWb, String suppbound, String supplierAddres,
-			String supplierPostalcode, String artificialPerson,
-			String linkphone, String licenceNo, Date licenceDate,
-			String permitNo, Date permitDate, String registerNo,
-			Date registerDate, String fdaOrCeNo, Date fdaOrCeDate,
-			String otherNo, Date otherDate) {
+                              String supplierClass, String memo, String inputCode,
+                              String inputCodeWb, String suppbound, String supplierAddres,
+                              String supplierPostalcode, String artificialPerson,
+                              String linkphone, String licenceNo, Date licenceDate,
+                              String permitNo, Date permitDate, String registerNo,
+                              Date registerDate, String fdaOrCeNo, Date fdaOrCeDate,
+                              String otherNo, Date otherDate, String supplierCode) {
 		this.supplierId = supplierId;
 		this.supplier = supplier;
 		this.supplierClass = supplierClass;
@@ -79,7 +80,8 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.fdaOrCeDate = fdaOrCeDate;
 		this.otherNo = otherNo;
 		this.otherDate = otherDate;
-	}
+        this.supplierCode = supplierCode;
+    }
 
 	// Property accessors
 	@GenericGenerator(name = "generator", strategy = "uuid.hex")
@@ -278,7 +280,16 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.otherNo = otherNo;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "SUPPLIER_CODE", length = 100)
+    public String getSupplierCode() {
+        return supplierCode;
+    }
+
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "OTHER_DATE", length = 7)
 	public Date getOtherDate() {
 		return this.otherDate;

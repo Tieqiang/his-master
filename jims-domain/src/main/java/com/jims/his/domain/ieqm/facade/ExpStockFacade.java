@@ -135,7 +135,7 @@ public class ExpStockFacade extends BaseFacade {
      * @param importVo
      */
     @Transactional
-    public void expImport(ExpImportVo importVo) {
+    public void expImport(ExpImportVo importVo) throws Exception{
 
         //1，更新库存信息
         updateStock(importVo) ;
@@ -169,7 +169,7 @@ public class ExpStockFacade extends BaseFacade {
      * 更新消耗品库存
      * @param importVo
      */
-    private void updateStock(ExpImportVo importVo) {
+    private void updateStock(ExpImportVo importVo)throws Exception{
 
 
         List<ExpImportDetail> details = importVo.getExpImportDetailBeanChangeVo().getInserted() ;
@@ -178,6 +178,9 @@ public class ExpStockFacade extends BaseFacade {
         String subStorage = masters.get(0).getSubStorage() ;
         for(ExpImportDetail detail:details){
             List<AppConfigerParameter> appConfigerParameters= appConfigerParameterFacade.findCurParameterList(detail.getHospitalId(), "DO_ACCT");
+            if(appConfigerParameters.size()<=0){
+                throw new Exception("获取记账参数失败") ;
+            }
             String accountIndicator = appConfigerParameters.get(0).getParameterValue();
             if(accountIndicator.equals("1")){
                 ExpStock expStock = this.getExpStock(stockCode, detail.getExpCode(), detail.getExpSpec(), detail.getBatchNo(), detail.getFirmId(), detail.getPackageSpec(), detail.getHospitalId(), subStorage);
@@ -193,7 +196,7 @@ public class ExpStockFacade extends BaseFacade {
                     expStock.setHospitalId(detail.getHospitalId());
                     expStock.setDisinfectdate(detail.getDisinfectdate());
                     expStock.setProducedate(detail.getProducedate());
-                    detail.setInventory(expStock.getQuantity() + detail.getQuantity());
+                    detail.setInventory(expStock.getQuantity());
                     merge(expStock);
                 } else {
                     ExpStock stock = new ExpStock();
@@ -280,7 +283,7 @@ public class ExpStockFacade extends BaseFacade {
      * @param importVo
      */
     @Transactional
-    public void expImportBatch(ExpImportVo importVo) {
+    public void expImportBatch(ExpImportVo importVo) throws Exception{
         //1，更新库存信息
         updateStock(importVo) ;
         //2,保存入库单据 判断参数是否记账
@@ -618,14 +621,15 @@ public class ExpStockFacade extends BaseFacade {
     }
 
     public List<ExpStockRecord> expExportStockRe(String storageCode, String hospitalId, String expCode,String subStorage) {
-        String sql="SELECT          exp_name,\n" +
+        String sql="SELECT          distinct " +
+                "                   exp_name,\n" +
                 "                   exp_price_list.min_spec,\n" +
                 "                   exp_price_list.exp_code,\n" +
                 "                   exp_price_list.min_units,\n" +
                 "                   batch_no,\n" +
                 "                   expire_date,\n" +
                 "                   exp_price_list.firm_id,\n" +
-                "                   nvl(purchase_price,0) purchase_price,\n" +
+                "                   nvl(trade_price,0) purchase_price,\n" +
                 "                   discount,\n" +
                 "                   exp_price_list.exp_spec,\n" +
                 "                   nvl(quantity,0) quantity,\n" +
@@ -735,12 +739,13 @@ public class ExpStockFacade extends BaseFacade {
      */
     @Transactional
     public void expExportImport(ExpExportImportVo portVo) throws Exception{
+
         if(null != portVo){
             ExpExportManageVo exportVo = portVo.getExportVo();
             ExpImportVo importVo = portVo.getImportVo();
             if(null != importVo) {
                 //1，更新库存信息
-                updateStock(importVo);
+                //updateStock(importVo);
                 //2,保存入库单据 判断参数是否记账
                 saveDocument(importVo);
                 //3 ，计算并保存盈亏信息
@@ -748,13 +753,16 @@ public class ExpStockFacade extends BaseFacade {
             }
             if(null != exportVo){
                 //1，更新库存信息
-                updateExportStock(exportVo);
+                //updateExportStock(exportVo);
                 //2,保存入库单据 判断参数是否记账
                 saveExportDocument(exportVo);
             }
+            List<ExpImportDetail> importDetails = importVo.getExpImportDetailBeanChangeVo().getInserted();
+            for (ExpImportDetail detail : importDetails) {
+                detail.setQuantity(0.0);
+            }
+            updateStock(importVo);
         }
-
-
     }
 
     /**

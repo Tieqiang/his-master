@@ -5,5 +5,5 @@
  * 按开支类别汇总
  */
 $(function(){
-    $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_stock/exp_class_summarizing.cpt&stockCode="+parent.config.storageCode);
+    $("#report").prop("src",parent.config.defaultReportPath + "exp_class_summarizing.cpt&stockCode="+parent.config.storageCode);
 });

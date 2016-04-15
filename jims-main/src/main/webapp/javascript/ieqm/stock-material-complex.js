@@ -5,5 +5,5 @@
  * 按开支类别出库查询
  */
 $(function(){
-    $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_ie/stock_material_complex.cpt&storage="+parent.config.storageCode);
+    $("#report").prop("src",parent.config.defaultReportPath + "stock_material_complex.cpt&storage="+parent.config.storageCode);
 });

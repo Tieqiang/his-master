@@ -23,6 +23,15 @@ public class ReportDictFacade extends BaseFacade {
     }
 
     /**
+     * 通过hospitalId查询当前医院的报表路径信息
+     * @param hospitalId
+     * @return
+     */
+    public ReportDict getByHospitalId(String hospitalId){
+        String sql = " from ReportDict a where a.hospitalId = '"+hospitalId+"' ";
+        return createQuery(ReportDict.class, sql, new ArrayList<Object>()).getResultList().get(0);
+    }
+    /**
      * 保存增删改
      * @param beanChangeVo
      * @return

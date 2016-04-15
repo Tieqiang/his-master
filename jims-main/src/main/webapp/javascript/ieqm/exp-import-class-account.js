@@ -183,7 +183,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-class-account.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-import-class-account.cpt");
         }
     });
     $("#printBtn").on('click', function () {

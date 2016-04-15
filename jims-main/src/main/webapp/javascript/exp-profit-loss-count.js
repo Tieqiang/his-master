@@ -183,7 +183,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-profit-loss-count.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-profit-loss-count.cpt");
         }
     })
     $("#printBtn").on('click', function () {

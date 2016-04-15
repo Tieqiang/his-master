@@ -381,6 +381,18 @@ $(function () {
                         //var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'units'});
                         //$(edu.target).combobox('setValue', row.units);
                     },
+                keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+                    enter: function (e) {
+                        var row = $(this).combogrid('grid').datagrid('getSelected');
+                        if (row) {
+                            var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+                            $(ed.target).val(row.expCode);
+                            expCode = row.expCode;
+                            $("#stockRecordDialog").dialog('open');
+                        }
+                        $(this).combogrid('hidePanel');
+                    }
+                }),
                     pagination: false,
                     fitColumns: true,
                     rowNumber: true,
@@ -477,7 +489,6 @@ $(function () {
             title: '通知生效日期',
             field: 'noticeEfficientDate',
             width: "15%",
-            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {

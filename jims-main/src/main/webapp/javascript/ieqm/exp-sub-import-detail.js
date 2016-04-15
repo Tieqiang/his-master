@@ -279,7 +279,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-sub-import-detail.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-sub-import-detail.cpt");
         }
     });
     $("#print").on('click', function () {

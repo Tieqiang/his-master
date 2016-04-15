@@ -20,7 +20,7 @@ $(function(){
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
         singleSelect:true,
-        title:  "产品类别字典维护",
+        title:  "产品类型字典维护",
         columns:[[{
             title:'编号',
             field:'id',
@@ -55,10 +55,10 @@ $(function(){
             title:'库存管理单位',
             field:'storageCode',
             width:"20%",
-            editor:{type:'combogrid',
+            editor:{type:'combobox',
                      options:{
-                         idField:'storageCode',
-                         textValue:'storageName',
+                         valueField:'storageCode',
+                         textField:'storageName',
                          method: 'GET',
                          mode: 'remote',
                          url:'/api/exp-storage-dept/list?hospitalId='+parent.config.hospitalId ,
@@ -68,6 +68,8 @@ $(function(){
                              field:'storageCode',title:'库房代码',width:102
                          },{
                              field:'storageName',title:'库房名称',width:102
+                         },{
+                             field:'inputCode',title:'输入码',width:102
                          }]],
                          onClickRow:function(index,row){
                              var ed = $("#dg").datagrid('getEditor',{index:editRowIndex,field:'storageCode'}) ;
@@ -83,7 +85,14 @@ $(function(){
                                  }
                                  $(this).combogrid('hidePanel') ;
                              }
-                         })
+                         }),
+                         filter: function (q, row) {
+                             if ($.startWith(row.inputCode.toUpperCase(), q.toUpperCase())) {
+                                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+                             }
+                             var opts = $(this).combobox('options');
+                             return row[opts.textField].indexOf(q) == 0;
+                         }
                      }
             },
             formatter:function(value,row,index){

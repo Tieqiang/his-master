@@ -95,7 +95,12 @@ function w3(s) {
 $(function () {
     var masterDataVo = {};//主表vo
     var masters = [];//信息
-
+    //供应商
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     /**
      * 定义主表信息表格
      */
@@ -113,7 +118,15 @@ $(function () {
         columns: [[{
             title: '去向库房',
             field: 'receiver',
-            width: '10%'
+            width: '10%',
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         },{
             title: '代码',
             field: 'expCode',
@@ -170,7 +183,7 @@ $(function () {
         $('#subStorage').combobox({
             panelHeight: 'auto',
             data: subStorages,
-            valueField: 'storageCode',
+            valueField: 'subStorage',
             textField: 'subStorage'
         });
         $('#subStorage').combobox("select", "全部");
@@ -244,7 +257,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/storage-exp-go-count.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "storage-exp-go-count.cpt");
         }
     });
     $("#printBtn").on('click', function () {

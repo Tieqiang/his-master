@@ -378,7 +378,7 @@ $(function () {
             var supplier = $("#supplier").combogrid("getText");
             var hospitalId = parent.config.hospitalId;
             var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-document-print-approving.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier);
+            $("#report").prop("src",parent.config.defaultReportPath + "exp-pay-document-print-approving.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier);
         }
     })
     $("#printAccBtn").on('click',function(){

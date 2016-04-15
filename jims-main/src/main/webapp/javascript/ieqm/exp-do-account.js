@@ -163,7 +163,6 @@ $(function () {
             title: '发票日期',
             width: '9%',
             field: 'invoiceDate',
-
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -189,7 +188,7 @@ $(function () {
         }, {
             title: '上账：',
             width: '5%',
-            field: 'accountIndicator'
+            field: 'tallyFlag'
         }, {
             width: '4%',
             field: 'key',
@@ -198,22 +197,22 @@ $(function () {
         onLoadSuccess:function(data){
             if(data){
                 $.each(data.rows, function(index, item){
-                    if(item.accountIndicator=='已记账'){
+                    if(item.tallyFlag=='已记账'){
                         $('#importMaster').datagrid('checkRow', index);
                     }
                 });
             }
         },onClickRow:function(rowIndex,rowData){
-            if(rowData.accountIndicator=='未记账'){
+            if(rowData.tallyFlag=='未记账'){
                 stopEdit();
                 $(this).datagrid("beginEdit",rowIndex);
                 editRowIndex = rowIndex;
             }
         },onUncheck:function(rowIndex,rowData){
-            rowData.accountIndicator='未记账'
+            rowData.tallyFlag='未记账'
             $(this).datagrid("refreshRow",rowIndex);
         },onCheck:function(rowIndex,rowData){
-            rowData.accountIndicator='已记账'
+            rowData.tallyFlag='已记账'
             $(this).datagrid("refreshRow",rowIndex);
         }
     });
@@ -331,7 +330,8 @@ $(function () {
             var expCode = $("#searchInput").combogrid("getValue");
             var hospitalId = parent.config.hospitalId;
             var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-do-account.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&imClass="+imClass+"&startBill="+startBill+"&stopBill="+stopBill+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&billRadio="+billRadio+"&expCode="+expCode+"&loginId="+parent.config.loginId);
+
+            $("#report").prop("src",parent.config.defaultReportPath + "exp-do-account.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&imClass="+imClass+"&startBill="+startBill+"&stopBill="+stopBill+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&billRadio="+billRadio+"&expCode="+expCode+"&loginId="+parent.config.loginId);
         }
     })
     $("#printBtn").on('click',function(){
@@ -368,11 +368,11 @@ $(function () {
         console.log(masterDataVo);
         var promise =$.get("/api/exp-import/exp-do-account",masterDataVo,function(data){
             for(var i = 0 ;i<data.length;i++){
-                if(data[i].accountIndicator=='1'){
-                    data[i].accountIndicator='已记账';
+                if(data[i].tallyFlag=='1'){
+                    data[i].tallyFlag='已记账';
                 }
-                if(data[i].accountIndicator=='0'|| data[i].accountIndicator==null ){
-                    data[i].accountIndicator='未记账';
+                if(data[i].tallyFlag=='0'|| data[i].tallyFlag==null ){
+                    data[i].tallyFlag='未记账';
                 }
                 data[i].invoiceDate=myFormatter2(data[i].invoiceDate);
             }
@@ -408,7 +408,7 @@ $(function () {
         importVo.expImportDetailBeanChangeVo = expImportDetailBeanChangeVo;
         for(var i =0; i<checkedItems.length;i++){
             for(var j =0; j<checkedItems.length;j++){
-                if(checkedItems[i].documentNo==checkedItems[j].documentNo&&checkedItems[i].accountIndicator!=checkedItems[j].accountIndicator){
+                if(checkedItems[i].documentNo==checkedItems[j].documentNo&&checkedItems[i].tallyFlag!=checkedItems[j].tallyFlag){
                     $.messager.alert('系统提示','同一账单的上账状态必须一致','info');
                     return;
                 }
@@ -424,11 +424,13 @@ $(function () {
             detailVo.itemNo = checkedItems[i].itemNo;
             detailVo.id = checkedItems[i].detailId;
             saveVo.id = checkedItems[i].id;
-            if(checkedItems[i].accountIndicator=='已记账'){
-                saveVo.accountIndicator=1;
+            if(checkedItems[i].tallyFlag=='已记账'){
+                detailVo.tallyFlag=1;
+                detailVo.tallyDate=new Date();
+                detailVo.tallyOpertor=parent.config.staffName;
             }
-            if(checkedItems[i].accountIndicator=='未记账'){
-                saveVo.accountIndicator=0;
+            if(checkedItems[i].tallyFlag=='未记账'){
+                detailVo.tallyFlag=0;
             }
             expImportMasterBeanChangeVo.updated.push(saveVo);
             expImportDetailBeanChangeVo.updated.push(detailVo);

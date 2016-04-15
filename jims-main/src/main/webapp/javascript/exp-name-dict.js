@@ -116,7 +116,10 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
-            width: "30%"
+            width: "30%",
+            onchange:function(newValue,oldValue){
+
+            }
         }, {
             title: '品名',
             field: 'expName',
@@ -300,8 +303,9 @@ $(function () {
 
     //提取
     $("#filter").on('click',function(){
+        $("#clear").click();
         var val = $(':radio:checked').next().combogrid('getValue');
-
+        $("#listPrice").linkbutton("enable");
         if (val) {
             //expNameDict数据添加
             $.get('/api/exp-name-dict/list?expCode=' + val, function (data) {
@@ -354,13 +358,16 @@ $(function () {
             $.each(updateNameData, function (index, item) {
                 item.stdIndicator = 1;
             })
-            console.log(insertData);
-            console.log(updateNameData);
-
             var insertData = $("#expDict").datagrid("getChanges", "inserted");
+            for(var i=0;i<insertData.length;i++){
+                if($.trim(insertData[i].expSpec)==""|| $.trim(insertData[i].expName) == ""|| $.trim(insertData[i].units) == ""|| $.trim(insertData[i].expForm) == ""|| $.trim(insertData[i].dosePerUnit) == ""|| $.trim(insertData[i].doseUnits) == ""|| $.trim(insertData[i].singleGroupIndicator) == ""|| $.trim(insertData[i].expIndicator) == ""){
+                    $.messager.alert('系统提示', '请检查数据完整型！', 'info');
+                    return;
+                }
+            }
             var updateData = $("#expDict").datagrid('getChanges', "updated");
             var deleteData = $("#expDict").datagrid('getChanges', "deleted");
-
+            if (insertData.length > 0 || updateData.length > 0 || deleteData.length > 0) {
             var expNameDictChangeVo = {};
             expNameDictChangeVo.inserted = insertNameData;
             expNameDictChangeVo.updated = updateNameData;
@@ -380,6 +387,7 @@ $(function () {
                 $.postJSON("/api/exp-name-dict/save", beanChangeVo, function (data) {
                     $.messager.confirm("系统提示", "保存成功,请维护价格信息！", function(r){
                         if(r){
+                            $("#listPrice").linkbutton("enable");
                             $("#listPrice").trigger('click');
                         }else{
                             $("#clear").click();
@@ -391,6 +399,10 @@ $(function () {
                 }, function (data) {
                     $.messager.alert('提示', data.responseJSON.errorMessage, "error");
                 })
+            }
+            } else {
+                $.messager.alert('系统提示', '没有需要保存的信息，请规范操作系统！', 'info');
+                return;
             }
         }else{
             $.messager.alert('系统提示','没有需要保存的信息，请规范操作系统！','info');
@@ -449,9 +461,10 @@ $(function () {
     //增加ExpNameDict
     $("#addExpName").on('click',function(){
         stopEdit();
+        $("#listPrice").linkbutton("disable");
         var rowLength = $('#expNameDict').datagrid("getRows");
         if(rowLength.length==1){
-            $.messager.alert('系统消息','同时只能维护一条价格信息','info');
+            $.messager.alert('系统消息','请维护好之前的产品之后再点击新增！','info');
             return;
         }
         var getMax = newExpCode();
@@ -499,6 +512,7 @@ $(function () {
     //添加ExpDict
     $("#appendExp").on('click',function(){
         stopEdit();
+        $("#listPrice").linkbutton("disable");
         var allRowsTop = $('#expNameDict').datagrid("getRows");
         var allRowsBottom = $('#expDict').datagrid("getRows");
         var code = "";

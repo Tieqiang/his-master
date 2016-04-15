@@ -185,7 +185,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-supply-manage.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-supply-manage.cpt");
         }
     });
     $("#printBtn").on('click', function () {

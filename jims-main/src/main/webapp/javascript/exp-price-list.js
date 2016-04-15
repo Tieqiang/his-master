@@ -100,65 +100,42 @@ $(function () {
             title: '包装数量',
             field: 'amountPerPackage',
             width: "5%",
-            editor:'numberbox'
+            editor: {
+                type: 'numberbox'
+                //,
+                //options: {
+                //    onChange:function(newValue,oldValue){
+                //        var row = $('#dg').datagrid('getData').rows[editIndex];
+                //        var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
+                //
+                //        //console.log(row.minSpec)
+                //        console.log(row)
+                //        $(ed.target).textbox('setValue', newValue+'*'+ row.minSpec);
+                //    }
+                //}
+            }
         }, {
             title: '包装规格',
             field: 'expSpec',
             width: "10%",
-            editor: {
-                type: 'combogrid',
-                options: {
-                    panelHeight: 'auto',
-                    idField: 'expSpec',
-                    textValue: 'expSpec',
-                    singleSelect: true,
-                    method: 'GET',
-                    url: '/api/exp-dict/list-query',
-                    mode: 'remote',
-                    onBeforeLoad: function (para) {
-                        para.expCode = expCode;
-                    },
-                    columns: [[{
-                        field: 'expSpec', title: '包装规格', width: "50%"
-                    }, {
-                        field: 'units', title: '包装单位', width: "50%"
-                    }]],
-                    onClickRow: function (index, row) {
-                        var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-                        $(ed.target).combogrid('setValue', row.expSpec);
-                        var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'units'});
-                        $(edu.target).textbox('setValue', row.units);
-                        var minSpec = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-                        $(minSpec.target).textbox('setValue', row.expSpec);
-                        var minUnits = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-                        $(minUnits.target).textbox('setValue', row.units);
-                    },
-                    keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
-                        enter: function (e) {
-
-                            var row = $(this).combogrid('grid').datagrid('getSelected');
-                            if (row) {
-                                var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-                                $(ed.target).combogrid('setValue', row.expSpec);
-                                var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'units'});
-                                $(edu.target).textbox('setValue', row.units);
-                                var minSpec = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-                                $(minSpec.target).textbox('setValue', row.expSpec);
-                                var minUnits = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-                                $(minUnits.target).textbox('setValue', row.units);
-                            }
-                            $(this).combogrid('hidePanel');
-                        }
-                    })
+            formatter:function(value,row,index){
+                if($.trim(row.amountPerPackage)!=''&& $.trim(row.minSpec)!=''){
+                    return row.amountPerPackage+"*"+ row.minSpec;
                 }
+                return value;
             }
         }, {
             title: '包装单位',
             field: 'units',
             width: "5%",
-            editor: {type:'textbox',
-                options:{
-                    editable:false
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 200,
+                    valueField: 'measuresName',
+                    textField: 'measuresName',
+                    method: 'get',
+                    url: '/api/measures-dict/list'
                 }
             }
             //editor: {
@@ -179,10 +156,12 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
+                    panelMaxHeight:'200',
+                    panelWidth:'100',
                     valueField: 'supplierId',
                     textField: 'supplier',
                     method: 'get',
-                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '供应商'
+                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '生产商'
                 }
             }
         }, {
@@ -329,10 +308,15 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    valueField: 'baseCode',
+                    panelMaxHeight: 200,
+                    valueField: 'baseName',
                     textField: 'baseName',
                     method: 'get',
-                    url: '/api/base-dict/list-by-type?baseType=INP_RCPT_FEE_DICT'
+                    url: '/api/base-dict/list-by-type?baseType=INP_RCPT_FEE_DICT',
+                    filter: function (q, row) {
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField].indexOf(q) == 0;
+                    }
                 }
             }
         }, {
@@ -343,10 +327,15 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    valueField: 'baseCode',
+                    panelMaxHeight: 200,
+                    valueField: 'baseName',
                     textField: 'baseName',
                     method: 'get',
-                    url: '/api/base-dict/list-by-type?baseType=OUTP_RCPT_FEE_DICT'
+                    url: '/api/base-dict/list-by-type?baseType=OUTP_RCPT_FEE_DICT',
+                    filter: function (q, row) {
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField].indexOf(q) == 0;
+                    }
                 }
             }
         }, {
@@ -357,10 +346,15 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    valueField: 'baseCode',
+                    panelMaxHeight: 200,
+                    valueField: 'baseName',
                     textField: 'baseName',
                     method: 'get',
-                    url: '/api/base-dict/list-by-type?baseType=RECK_ITEM_CLASS_DICT'
+                    url: '/api/base-dict/list-by-type?baseType=RECK_ITEM_CLASS_DICT',
+                    filter: function (q, row) {
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField].indexOf(q) == 0;
+                    }
                 }
             }
         }, {
@@ -371,10 +365,15 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    valueField: 'baseCode',
+                    panelMaxHeight:200,
+                    valueField: 'baseName',
                     textField: 'baseName',
                     method: 'get',
-                    url: '/api/base-dict/list-by-type?baseType=TALLY_SUBJECT_DICT&length=3'
+                    url: '/api/base-dict/list-by-type?baseType=TALLY_SUBJECT_DICT&length=3',
+                    filter: function (q, row) {
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField].indexOf(q) == 0;
+                    }
                 }
             }
         }, {
@@ -385,10 +384,15 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    valueField: 'baseCode',
+                    panelMaxHeight: 200,
+                    valueField: 'baseName',
                     textField: 'baseName',
                     method: 'get',
-                    url: '/api/base-dict/list-by-type?baseType=MR_FEE_CLASS_DICT'
+                    url: '/api/base-dict/list-by-type?baseType=MR_FEE_CLASS_DICT',
+                    filter: function (q, row) {
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField].indexOf(q) == 0;
+                    }
                 }
             }
         }, {
@@ -565,7 +569,7 @@ $(function () {
         closed: true,
         onOpen: function () {
             expCode = $('#expName').combogrid('getValue');
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-price-list.cpt&expCode=" + expCode);
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-price-list.cpt&expCode=" + expCode);
         }
     })
     $("#print").on('click', function () {

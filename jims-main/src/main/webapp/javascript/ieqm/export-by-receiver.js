@@ -69,7 +69,12 @@ $(function () {
             $('#endDate').datetimebox('hidePanel');
         }
     });
-
+//供应商
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     //发往库房数据加载
     $('#receiver').combogrid({
         panelWidth: 500,
@@ -89,7 +94,15 @@ $(function () {
         rowNumber: true,
         autoRowHeight: false,
         pageSize: 50,
-        pageNumber: 1
+        pageNumber: 1,
+        filter: function (q, row) {
+        if ($.startWith(row.inputCode.toUpperCase(), q.toUpperCase())) {
+            return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+        }
+        var opts = $(this).combogrid('options');
+        return row[opts.textField].indexOf(q) == 0;
+
+    }
     });
 
     $("#dg").datagrid({
@@ -105,7 +118,15 @@ $(function () {
         }, {
             title: '去向',
             field: 'receiver',
-            width: "10%"
+            width: "10%",
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: '产品编码',
             field: 'expCode',
@@ -175,7 +196,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/export-by-receiver.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "export-by-receiver.cpt");
         }
     });
     $("#print").on('click', function () {

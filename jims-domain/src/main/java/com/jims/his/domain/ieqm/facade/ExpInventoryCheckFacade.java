@@ -161,9 +161,9 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     importMaster.setStorage(dict.getStorage());
                     importMaster.setImportDate(dict.getCheckYearMonth());
                     //importMaster.setSupplier();
-                    //importMaster.setAccountReceivable();
-                    //importMaster.setAccountPayed();
-                    //importMaster.setAdditionalFee();
+                    importMaster.setAccountReceivable(dict.getQuantity()*dict.getPurchasePrice());
+                    importMaster.setAccountPayed(0.0);
+                    importMaster.setAdditionalFee(0.0);
                     importMaster.setImportClass("盘盈入库");
                     importMaster.setSubStorage(dict.getSubStorage());
                     importMaster.setAccountIndicator(1);
@@ -259,11 +259,11 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     exportMaster.setExportClass("盘亏出库");
                     exportMaster.setExportDate(dict.getCheckYearMonth());
                     exportMaster.setReceiver(dict.getStorage());
-                    //exportMaster.setAccountReceivable();
-                    //exportMaster.setAccountPayed();
-                    //exportMaster.setAdditionalFee();
+                    exportMaster.setAccountReceivable(-dict.getQuantity()*dict.getPurchasePrice());
+                    exportMaster.setAccountPayed(0.0);
+                    exportMaster.setAdditionalFee(0.0);
                     exportMaster.setSubStorage(dict.getSubStorage());
-                    //exportMaster.setAccountIndicator(i);
+                    //exportMaster.setAccountIndicator();
                     //exportMaster.setMemos();
                     //exportMaster.setFundItem();
                     //exportMaster.setOperator();
@@ -291,16 +291,16 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 exportDetail.setPurchasePrice(dict.getPurchasePrice());
                 exportDetail.setTradePrice(dict.getTradePrice());
                 exportDetail.setRetailPrice(dict.getRetailPrice());
-                exportDetail.setPackageSpec(dict.getPackageSpec());
-                exportDetail.setQuantity(dict.getQuantity());
-                exportDetail.setPackageUnits(dict.getPackageUnits());
+                exportDetail.setPackageSpec(dict.getMinSpec());
+                exportDetail.setQuantity(-dict.getQuantity());
+                exportDetail.setPackageUnits(dict.getMinUnits());
                 ////exportDetail.setSubPackage1();
                 ////exportDetail.setSubPackageSpec1();
                 ////exportDetail.setSubPackageUnits1();
                 ////exportDetail.setSubPackage2();
                 ////exportDetail.setSubPackageSpec2();
                 ////exportDetail.setSubPackageUnits2();
-                //exportDetail.setInventory();
+                exportDetail.setInventory(dict.getActualQuantity());
                 //exportDetail.setProducedate();
                 //exportDetail.setDisinfectdate();
                 //exportDetail.setKillflag();
@@ -320,7 +320,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
         return exportVo;
     }
     @Transactional
-    public List<ExpInventoryCheck> save(List<ExpInventoryCheck> rows) {
+    public List<ExpInventoryCheck> save(List<ExpInventoryCheck> rows) throws Exception{
         List<ExpInventoryCheck> newUpdateDict = new ArrayList<>();
         List<ExpInventoryCheck> exportCheckDict = new ArrayList<>();
         List<ExpInventoryCheck> importCheckDict = new ArrayList<>();

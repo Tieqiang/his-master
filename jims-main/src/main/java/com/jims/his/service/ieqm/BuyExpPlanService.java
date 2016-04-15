@@ -6,6 +6,7 @@ import com.jims.his.domain.ieqm.entity.BuyExpPlan;
 import com.jims.his.domain.ieqm.entity.ExpClassDict;
 import com.jims.his.domain.ieqm.facade.BuyExpPlanFacade;
 import com.jims.his.domain.ieqm.vo.BuyExpPlanVo;
+import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -37,6 +38,18 @@ public class BuyExpPlanService {
     @Produces({MediaType.APPLICATION_JSON})
     public List<ExpClassDict> listBuyId(@QueryParam("storageCode") String storageCode, @QueryParam("expNo") String expNo){
         return buyExpPlanFacade.listBuyId(storageCode, expNo);
+    }
+
+    /**
+     * 新增需要采购的消耗品
+     * @param q
+     * @return
+     */
+    @GET
+    @Path("list-exp-name-by-input")
+    public List<BuyExpPlanVo> listBuyExpPlanCa(@QueryParam("q") String q) {
+        List<BuyExpPlanVo> expBuyExpPlanCaVos = buyExpPlanFacade.listBuyExpPlanCaByInputCode(q);
+        return expBuyExpPlanCaVos;
     }
 
     /**

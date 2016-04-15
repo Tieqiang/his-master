@@ -6,6 +6,7 @@ import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.BuyExpPlan;
 import com.jims.his.domain.ieqm.entity.ExpClassDict;
 import com.jims.his.domain.ieqm.vo.BuyExpPlanVo;
+import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -305,6 +306,7 @@ public class BuyExpPlanFacade extends BaseFacade {
             String endDate="";
             double consume = 0.00;
             double amount = 0.00;
+            double quanty = 0.00;
             int dayIndex = 0;
             while (ite.hasNext()) {
                 BuyExpPlan temp = ite.next();
@@ -335,9 +337,9 @@ public class BuyExpPlanFacade extends BaseFacade {
                             "      And package_spec = '"+temp.getPackSpec()+"'";
                     List quantityList = super.createNativeQuery(stockSql).getResultList();
                     if (quantityList != null && quantityList.size() > 0) {
-                        double quanty = ((BigDecimal) quantityList.get(0)).doubleValue();
+                        double quantity = ((BigDecimal) quantityList.get(0)).doubleValue();
                         //然后计算这段时间内的消耗量
-                        String consumeSql = "SELECT nvl(sum("+ quanty+" * exp_price_list.AMOUNT_PER_PACKAGE),0)\n" +
+                        String consumeSql = "SELECT nvl(sum(exp_export_detail.quantity * exp_price_list.AMOUNT_PER_PACKAGE),0)\n" +
                                 "\t\t\tFROM  exp_export_master,exp_export_detail,exp_price_list\n" +
                                 "\t\t\tWHERE exp_export_detail.document_no= exp_export_master.document_no\n" +
                                 "\t\t\tAND\texp_export_detail.EXP_code = exp_price_list.EXP_code\n" +
@@ -367,6 +369,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                         quanty = quanty > 0.00 ? quanty : 0.00;
                         temp.setWantNumber(quanty);
                         temp.setExportquantityRef(quanty);
+                        temp.setStockquantityRef(quantity);
                     }
                 }
 
@@ -466,5 +469,17 @@ public class BuyExpPlanFacade extends BaseFacade {
         List<BuyExpPlan> result = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlan.class);
 
         return result;
+    }
+
+    public List<BuyExpPlanVo> listBuyExpPlanCaByInputCode(String q) {
+        String sql = "select distinct a.firm_id,a.exp_code, a.retail_price,b.exp_name ,a.exp_spec pack_spec,a.units pack_unit,b.exp_form,a.min_spec exp_spec,a.min_units units,a.trade_price purchase_Price,b.input_code\n" +
+                "  from exp_price_list a ,exp_dict b\n" +
+                " where  a.exp_code = b.exp_code\n" +
+                "   and a.exp_spec = b.exp_spec\n" +
+                "   and (start_date < sysdate and\n" +
+                "       (stop_date >= sysdate or stop_date is null)) ";
+        List<BuyExpPlanVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlanVo.class);
+        return nativeQuery;
+
     }
 }

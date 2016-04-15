@@ -114,7 +114,7 @@ $(function () {
     promiseName.done(function(){
         $('#subStorageClass').combogrid({
             panelWidth:400,
-            idField:'storageCode',
+            idField:'subStorage',
             textField:'subStorage',
             data:sName,
             fitColumns: true,
@@ -202,7 +202,7 @@ $(function () {
         promiseStock.done(function(){
             if(stocksData.length<=0){
                 $.messager.alert('系统提示','数据库暂无数据','info');
-                $("#expStockCol").datagrid('loadData',[]);
+                $("#expStockCol").datagrid('loadData',{total:0,rows:[]});
                 return;
             }
             $("#expStockCol").datagrid('loadData',stocksData);
@@ -216,11 +216,24 @@ $(function () {
         height: 520,
         catch: false,
         modal: true,
+        buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-stock-number-search.cpt");
+            var printExpName = $("#searchInput").combogrid('getValue');
+            var printFormClass = $("#formClass").combobox('getText');
+            if(printFormClass=="全部"){
+                printFormClass="";
+            }
+            var printSubStorageClass = $("#subStorageClass").combogrid('getText');
+            var printSupplier = $("#supplier").combogrid('getText');
+            var url = parent.config.defaultReportPath + "exp-stock-number-search.cpt&expName=" + printExpName + "&hospitalId=" + parent.config.hospitalId + "&supplier=" + printSupplier + "&subStorage=" +printSubStorageClass + "&storageCode="+parent.config.storageCode+"&formClass=" + printFormClass ;
+            $("#report").prop("src", url);
         }
     });
+    $("#printClose").on('click', function () {
+        $("#printDiv").dialog('close');
+        $("#expStockCol").datagrid('loadData', {total: 0, rows: []});
+    })
     $("#printBtn").on('click', function () {
         var printData = $("#expStockCol").datagrid('getRows');
         if (printData.length <= 0) {
@@ -228,7 +241,6 @@ $(function () {
             return;
         }
         $("#printDiv").dialog('open');
-
     });
     var loadDict = function(){
         stockDataVo.formClass = $("#formClass").combobox("getText");

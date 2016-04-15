@@ -49,6 +49,7 @@ $(function(){
     var editIndex;
     var currentExpCode;
     var exportFlag;
+    var upStorageFlag ;
     var panelHeight = $(window).height - 300 ;
     //库房字典
     var depts = [];
@@ -174,19 +175,32 @@ $(function(){
                         $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
                         var rows = $("#exportDetail").datagrid('getRows');
                         var totalAmount = 0;
+                        var backAmount = 0;
                         for (var i = 0; i < rows.length; i++) {
                             var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
                             if (rowIndex == editIndex) {
                                 continue;
                             }
-                            totalAmount += Number(rows[i].amount);
+                            totalAmount += Number(rows[i].retailPrice*rows[i].quantity);
+                            backAmount += Number(rows[i].purchasePrice*rows[i].quantity);
                         }
                         if (totalAmount) {
-                            totalAmount += newValue * row.purchasePrice;
+                            totalAmount += newValue * row.retailPrice;
                         } else {
-                            totalAmount = newValue * row.purchasePrice;
+                            totalAmount = newValue * row.retailPrice;
                         }
-                        $("#accountReceivable").numberbox('setValue', totalAmount);
+                        if (backAmount) {
+                            backAmount += newValue * row.purchasePrice;
+                        } else {
+                            backAmount = newValue * row.purchasePrice;
+                        }
+                        if($.trim($("#exportClass").combobox('getValue'))=="退货出库"&& upStorageFlag==true){
+                            $("#accountReceivable").numberbox('setValue', backAmount);
+                            upStorageFlag=false;
+                        }else{
+                            $("#accountReceivable").numberbox('setValue', totalAmount);
+                            upStorageFlag = false;
+                        }
                     }
                 }
             },formatter:function(value,row,index){
@@ -320,7 +334,15 @@ $(function(){
             title: '批发价',
             field: 'tradePrice',
             hidden:'true'
-        }]]
+        }]],
+        onClickCell: function (index, field, row) {
+            if (index != editIndex) {
+                $(this).datagrid('endEdit', editIndex);
+                editIndex = index;
+            }
+            $(this).datagrid('beginEdit', editIndex);
+            var ed = $(this).datagrid('getEditor', {index: index, field: field});
+        }
     }) ;
     //出库类别
     $("#exportClass").combobox({
@@ -330,7 +352,11 @@ $(function(){
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            $(this).combobox('select', data[0].exportClass);
+            for(var i = 0;i<data.length;i++){
+                if(data[i].exportClass=="发放出库"){
+                    $(this).combobox('select', data[i].exportClass);
+                }
+            }
         },
         onChange:function(newValue,oldValue){
             if(newValue=="退货出库"){
@@ -338,6 +364,7 @@ $(function(){
                 $.messager.confirm('系统消息', '您要“退货出库”给供应商吗？', function (r) {
                     if (r) {
                         depts = new Array;
+                        upStorageFlag = true;
                         for(var i = 0 ;i< suppliers.length;i++){
                             var dept = {};
                             dept.storageName = suppliers[i].supplierName;
@@ -407,7 +434,7 @@ $(function(){
     //开支类别
     $("#fundItem").combobox({
         url: '/api/exp-fund-item-dict/list',
-        valueField: 'id',
+        valueField: 'fundItem',
         textField: 'fundItem',
         method: 'GET',
         onLoadSuccess: function () {
@@ -564,7 +591,7 @@ $(function(){
                     title: '厂家',
                     field: 'firmId'
                 }, {
-                    title: '进价价',
+                    title: '进货价',
                     field: 'purchasePrice'
                 }, {
                     title: '批发价',
@@ -639,7 +666,7 @@ $(function(){
                         dat= $("#stockRecordDatagrid").datagrid('getData');
                         if(dat.total==0 && editIndex!=undefined){
                             $("#exportDetail").datagrid('endEdit', editIndex);
-                            $.messager.alert('系统提示','库房暂无该产品,请重置产品名称','info');
+                            $.messager.alert('系统提示','该子库房暂无此产品,请重置产品名称或子库房！','info');
                             $("#stockRecordDialog").dialog('close');
                             $("#exportDetail").datagrid('beginEdit', editIndex);
                         }
@@ -653,6 +680,8 @@ $(function(){
                     rowDetail.expForm = row.expForm;
                     rowDetail.expCode = row.expCode;
                     rowDetail.packageSpec = row.expSpec;
+                    rowDetail.expSpec = row.minSpec;
+                    rowDetail.units = row.minUnits;
                     rowDetail.packageUnits = row.units;
                     rowDetail.disNum = row.quantity;
                     rowDetail.purchasePrice = row.purchasePrice;
@@ -767,7 +796,7 @@ $(function(){
         exportMaster.accountIndicator =1;
         exportMaster.docStatus = 0;
         exportMaster.memos = $('#memos').textbox('getValue');
-        exportMaster.fundItem = $('#fundItem').combogrid('getValue');
+        exportMaster.fundItem = $('#fundItem').combobox('getValue');
         exportMaster.operator = parent.config.staffName;
         exportMaster.principal = $("#principal").combogrid('getText');
         exportMaster.storekeeper = $("#storekeeper").combogrid('getText');
@@ -865,6 +894,10 @@ $(function(){
         if (dataValid()) {
             var importVo = getCommitData() ;
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
+                if (data.errorMessage) {
+                    $.messager.alert("系统提示", data.errorMessage, 'error');
+                    return;
+                }
                 $.messager.alert('系统提示', '出库成功', 'success',function(){
                     saveFlag = true;
                     $("#printBtn").trigger('click');
@@ -894,8 +927,8 @@ $(function(){
         buttons: '#printft',
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue')
-            //$("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export.cpt");
-            $("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-export.cpt&documentNo=" + printDocumentNo);
+            //$("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
         }
     })
     $("#printClose").on('click', function () {

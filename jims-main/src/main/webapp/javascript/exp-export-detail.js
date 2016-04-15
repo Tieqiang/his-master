@@ -5,5 +5,5 @@
  * 按开支类别出库查询
  */
 $(function(){
-    $("#report").prop("src",parent.config.defaultReportPath + "/exp/exp_stock/exp_export_detail.cpt&stockCode="+parent.config.storageCode);
+    $("#report").prop("src",parent.config.defaultReportPath + "exp_export_detail.cpt&stockCode="+parent.config.storageCode);
 });

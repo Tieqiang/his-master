@@ -17,10 +17,6 @@ $(function () {
             field: 'expCode',
             width: "7%"
         }, {
-            title: '物价编码',
-            field: 'materialCode',
-            width: "7%"
-        }, {
             title: '产品名称',
             field: 'expName',
             width: "6%"
@@ -69,6 +65,10 @@ $(function () {
             field: 'stopDate',
             width: "11%",
             formatter : formatterDate
+        }, {
+            title: '物价编码',
+            field: 'materialCode',
+            width: "7%"
         },{
             title: '备注',
             field: 'memos',
@@ -114,10 +114,10 @@ $(function () {
     //提取
     $("#searchBtn").on('click', function () {
         var expName =$('#search').combo('getValue');
-        if (!expName) {
-            $.messager.alert("系统提醒", "请选择产品名称", "error");
-            return;
-        }
+        //if (!expName) {
+        //    $.messager.alert("系统提醒", "请选择产品名称", "error");
+        //    return;
+        //}
         var promise = loadDict() ;
         promise.done(function(){
             if(prices.length<=0){
@@ -132,10 +132,10 @@ $(function () {
     //现行价格
     $("#nowPriceBtn").on('click',function(){
         var expName =$('#search').combo('getValue');
-        if (!expName) {
-            $.messager.alert("系统提醒", "请选择产品名称", "error");
-            return;
-        }
+        //if (!expName) {
+        //    $.messager.alert("系统提醒", "请选择产品名称", "error");
+        //    return;
+        //}
         var promise = loadDict();
         promise.done(function(){
             for(var i = 0 ;i<prices.length;i++){
@@ -156,10 +156,10 @@ $(function () {
     //历史价格
     $("#oldPriceBtn").on('click',function(){
         var expName =$('#search').combo('getValue');
-        if (!expName) {
-            $.messager.alert("系统提醒", "请选择产品名称", "error");
-            return;
-        }
+        //if (!expName) {
+        //    $.messager.alert("系统提醒", "请选择产品名称", "error");
+        //    return;
+        //}
         var promise =loadDict();
         promise.done(function(){
             for(var i = 0 ;i<prices.length;i++){
@@ -186,7 +186,7 @@ $(function () {
         closed: true,
         onOpen: function () {
             var expCode = $("#search").combogrid('getValue')
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-price-search.cpt&expCode=" + expCode);
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-price-search.cpt&expCode=" + expCode);
         }
     })
     $("#printBtn").on('click', function () {
@@ -202,7 +202,7 @@ $(function () {
     var loadDict = function () {
         var expCode = $("#search").combogrid('getValue');
         prices.splice(0,prices.length);
-        var pricePromise =   $.get("/api/exp-price-search/list?expCode=" + expCode+"&hospitalId="+parent.config.hospitalId, function(data){
+        var pricePromise =   $.get("/api/exp-price-list/list?expCode=" + expCode+"&hospitalId="+parent.config.hospitalId, function(data){
             $.each(data,function(index,item){
                 var price ={};
                 price.expCode = item.expCode;

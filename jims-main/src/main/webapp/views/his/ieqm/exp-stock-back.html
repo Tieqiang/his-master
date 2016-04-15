@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>消耗品备货处理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+        select{
+            width:139px
+        }
+        input{
+            width:135px;
+        }
+        label{
+            width:40px;
+            margin:2px;
+        }
+        .row{
+            margin-left:10px;
+            margin-top:5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="expBackFormDiv">
+    <form id="masterForm" class="easyui-form">
+        <div class="row">
+            <label for="expName">产品名称：</label>
+            <select id="expName" class="easyui-combobox"></select>
+            <label for="supplier">&nbsp;供货商：</label>
+            <select id="supplier" class="easyui-combogrid"></select>
+            <label for="produce">&nbsp;生产商：</label>
+            <select id="produce" class="easyui-combogrid"></select>
+            <label for="importDate">有效日期：</label>
+            <input type="text" id="importDate" class="easyui-datetimebox" required="required">
+
+        </div>
+    </form>
+</div>
+
+<div class="easyui-datagrid" id="backDetail">
+
+</div>
+
+<div id="ft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-search'" id="search">查询</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'" id="addRow">追加</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'" id="saveBtn">保存</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cut'" id="delRow">删除</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'" id="searchBtn">定义新的耗材</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'" id="newSupplier">定义新供应商</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'" id="printBtn">打印</a>
+</div>
+<div id="printft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel'" id="printClose">关闭</a>
+</div>
+
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px" id="report">
+    </iframe>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-stock-back.js"></script>
+</body>
+</html>

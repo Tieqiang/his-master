@@ -69,6 +69,12 @@ $(function () {
             $('#endDate').datetimebox('hidePanel');
         }
     });
+    //供应商
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
 
     //定义expName
     $('#expCode').combogrid({
@@ -129,7 +135,15 @@ $(function () {
         }, {
             title: '去向库房',
             field: 'receiver',
-            width: "10%"
+            width: "10%",
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }]]
     });
 
@@ -171,7 +185,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/export-by-exp-code.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "export-by-exp-code.cpt");
         }
     });
     $("#print").on('click', function () {

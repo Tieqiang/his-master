@@ -75,9 +75,10 @@ $(function () {
         height: 520,
         catch: false,
         modal: true,
+        buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-menu-search.cpt&storageCode=" + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId);
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-menu-search.cpt&storageCode=" + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId);
         }
     })
     //打印
@@ -89,6 +90,10 @@ $(function () {
         }
         $("#printDiv").dialog('open');
     });
+    $("#printClose").on('click', function () {
+        $("#printDiv").dialog('close');
+        $("#dg").datagrid("loadData", {total:0,rows: []});
+    })
     var loadDict = function () {
         $.get("/api/exp-menu-search/list?storageCode=" +parent.config.storageCode+"&hospitalId="+parent.config.hospitalId, function (data) {
             if (data.length == 0) {

@@ -140,7 +140,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-storage-zero-manage.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-storage-zero-manage.cpt");
         }
     });
     $("#printBtn").on('click', function () {

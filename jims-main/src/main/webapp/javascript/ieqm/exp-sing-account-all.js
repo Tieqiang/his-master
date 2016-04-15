@@ -31,7 +31,12 @@ function w3(s) {
     }
 }
 $(function () {
-
+    //供应商
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     /**
      * 定义明细表格
      */
@@ -63,7 +68,15 @@ $(function () {
         }, {
             title: "科室",
             width: '7%',
-            field: 'ourName'
+            field: 'ourName',
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: '单位',
             field: 'packageUnits',
@@ -163,7 +176,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-single-account-all.cpt");
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-single-account-all.cpt");
         }
     });
     $("#printBtn").on('click', function () {

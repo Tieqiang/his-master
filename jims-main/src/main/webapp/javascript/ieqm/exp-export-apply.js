@@ -163,8 +163,10 @@ $(function () {
         textField: 'exportClass',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
-            if (data.length > 0) {
-                $(this).combobox('select', data[0].exportClass);
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].exportClass == "发放出库") {
+                    $(this).combobox('select', data[i].exportClass);
+                }
             }
         }
     });
@@ -344,23 +346,11 @@ $(function () {
         },{
             title: '产品代码',
             field: 'expCode',
-            width: "10%",
-            editor: {
-                type: 'textbox',
-                options: {
-                    editable: false,
-                    disabled: true}
-            }
+            width: "10%"
         }, {
             title: '产品类型',
             field: 'expForm',
-            width: "7%",
-            editor: {
-                type: 'textbox',
-                options: {
-                    editable: false,
-                    disabled: true}
-            }
+            width: "7%"
         }, {
             title: '品名',
             field: 'expName',
@@ -412,23 +402,11 @@ $(function () {
         }, {
             title: '规格',
             field: 'expSpec',
-            width: "7%",
-            editor: {
-                type: 'textbox',
-                options: {
-                    editable: false,
-                    disabled: true}
-            }
+            width: "7%"
         }, {
             title: '包装单位',
             field: 'packageUnits',
-            width: "7%",
-            editor: {
-                type: 'textbox',
-                options: {
-                    editable: false,
-                    disabled: true}
-            }
+            width: "7%"
         }, {
             title: '数量',
             field: 'quantity',
@@ -436,6 +414,24 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
+                    onChange: function (newValue, oldValue) {
+                        var row = $("#right").datagrid('getData').rows[editIndex];
+                        var rows = $("#right").datagrid('getRows');
+                        var totalAmount = 0;
+                        for (var i = 0; i < rows.length; i++) {
+                            var rowIndex = $("#right").datagrid('getRowIndex', rows[i]);
+                            if (rowIndex == editIndex) {
+                                continue;
+                            }
+                            totalAmount += Number(rows[i].planNumber);
+                        }
+                        if (totalAmount) {
+                            totalAmount += newValue * row.retailPrice;
+                        } else {
+                            totalAmount = newValue * row.retailPrice;
+                        }
+                        $("#accountReceivable").numberbox('setValue', totalAmount);
+                    },
                     max: 99999.99,
                     size: 8,
                     maxlength: 8,
@@ -455,13 +451,7 @@ $(function () {
         }, {
             title: '单价',
             field: 'purchasePrice',
-            width: "7%",
-            editor: {
-                type: 'numberbox',
-                options: {
-                    editable: false,
-                    disabled: true}
-            }
+            width: "7%"
         }, {
             title: '零售价',
             field: 'retailPrice',
@@ -495,18 +485,14 @@ $(function () {
                 }
             },
             formatter:function(value,row,index){
-                return row.purchasePrice*row.quantity;
+                if($.trim(row.retailPrice)!=""){
+                    return row.retailPrice * row.quantity;
+                }
             }
         }, {
             title: '厂家',
             field: 'firmId',
-            width: "7%",
-            editor: {
-                type: 'textbox',
-                options: {
-                    editable: false
-                }
-            }
+            width: "7%"
         }, {
             title: '分摊方式',
             field: 'assignCode',
@@ -581,6 +567,11 @@ $(function () {
             $(this).datagrid('beginEdit', editIndex);
             currentExpCode = row.expCode;
             $("#expDetailDialog").dialog('open');
+        },
+        onClickRow:function(rowIndex, rowData){
+            $(this).datagrid('endEdit', rowIndex);
+            $(this).datagrid('endEdit', editIndex);
+            editIndex = rowIndex;
         }
     });
 
@@ -778,6 +769,7 @@ $(function () {
             $("#applyDialog").dialog('close');
             //$("#expDetailDialog").dialog('open');
             //$("#expDetailDatagrid").datagrid('selectRow', 0);
+            $.messager.alert('系统提示','请双击数据选择对应的规格！','info');
         }
     });
     //取消功能
@@ -859,7 +851,7 @@ $(function () {
             rowDetail.units = row.units;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.retailPrice;
+            rowDetail.purchasePrice = row.tradePrice;
             rowDetail.retailPrice = row.retailPrice;
             rowDetail.tradePrice = row.tradePrice;
             rowDetail.memos = row.memos;
@@ -869,14 +861,18 @@ $(function () {
             rowDetail.producedate = row.producedate;
             rowDetail.disinfectdate = row.disinfectdate;
             rowDetail.killflag = row.killflag;
-
             $("#right").datagrid('refreshRow', editIndex);
             $("#expDetailDialog").dialog('close');
             $("#right").datagrid('beginEdit', editIndex);
-
-
+        },
+        onLoadSuccess: function (data) {
+            if (data.total == 0 && (editIndex!=undefined)) {
+                $("#right").datagrid('endEdit', editIndex);
+                $.messager.alert('系统提示', '当前子库房暂无该产品,请重置子库房后再进行查询！', 'info');
+                $("#expDetailDialog").dialog('close');
+                //$("#exportDetail").datagrid('beginEdit', editIndex);
+            }
         }
-
     });
 
 
@@ -899,6 +895,14 @@ $(function () {
     //追加功能
     $("#addRow").on('click', function () {
         $('#right').datagrid('appendRow', {});
+        var rows = $("#right").datagrid('getRows');
+        var appendRowIndex = $("#right").datagrid('getRowIndex', rows[rows.length - 1]);
+
+        if (editIndex || editIndex == 0) {
+            $("#right").datagrid('endEdit', editIndex);
+        }
+        editIndex = appendRowIndex;
+        $("#right").datagrid('beginEdit', editIndex);
     });
 
     //删除按钮功能
@@ -1061,12 +1065,16 @@ $(function () {
                 if (r) {
                     var exportVo = getCommitData();
                     $.postJSON("/api/exp-stock/exp-export-manage", exportVo, function (data) {
+                        if (data.errorMessage) {
+                            $.messager.alert("系统提示", data.errorMessage, 'error');
+                            return;
+                        }
                         $.messager.alert('系统提示', '出库成功', 'success',function(){
                             saveFlag = true;
                             $("#print").trigger('click');
                             //parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
                             //刷新左侧列表
-                            $("#search").click();
+                            //$("#search").click();
                             $("#clear").click();
                         }, function (data) {
                             $.messager.alert('提示', data.responseJSON.errorMessage, "error");
@@ -1089,8 +1097,8 @@ $(function () {
         closed: true,
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue')
-            //$("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-export.cpt");
-            $("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo=" + printDocumentNo);
+            $("#report").prop("src", parent.config.defaultReportPath + "exp-export.cpt&documentNo=" + printDocumentNo);
+            //$("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo=" + printDocumentNo);
         }
     })
     $("#print").on('click', function () {
