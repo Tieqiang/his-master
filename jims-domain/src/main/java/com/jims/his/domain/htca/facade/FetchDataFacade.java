@@ -51,20 +51,20 @@ public class FetchDataFacade extends BaseFacade {
         String orderDept  = null ;//定义执行科室
 
         if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8) {
-            startDate = strings[0] + "-" + month + "-01 00:00:00";
-            endDate = strings[0] + "-" + month + "-31 23:59:59";
+            startDate = strings[0] + "-0" + month + "-01 00:00:00";
+            endDate = strings[0] + "-0" + month + "-31 23:59:59";
         } else if (month == 12 || month == 10) {
             startDate = strings[0] + "-" + month + "-01 00:00:00";
             endDate = strings[0] + "-" + month + "-31 23:59:59";
         } else if (month == 4 || month == 6 || month == 9) {
-            startDate = strings[0] + month + "-01 00:00:00";
-            endDate = strings[0] + month + "-30 23:59:59";
+            startDate = strings[0] + "-0"+ month + "-01 00:00:00";
+            endDate = strings[0] + "-0"+ month + "-30 23:59:59";
         } else if (month == 11) {
             startDate = strings[0] + "-" + month + "-01 00:00:00";
             endDate = strings[0] + "-" + month + "-30 23:59:59";
 
         } else {
-            startDate = strings[0] + "-" + 2 + "-01 00:00:00";
+            startDate = strings[0] + "-0" + 2 + "-01 00:00:00";
             if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
                 endDate = strings[0] + "-02-29 23:59:59";
             }else{
