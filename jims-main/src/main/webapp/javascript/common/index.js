@@ -20,7 +20,7 @@ window.addTab = function (title, href) {
         var content = undefined ;
         if($.startWith(href,'http')){
             if(href.indexOf("reportlet")){
-                href = href+"&dept_id="+config.acctDeptId ;
+                href = href+"&dept_id="+config.acctDeptId+"&emp_no="+config.loginId+"&user_name="+config.loginName ;
                 console.log(href) ;
             }
             content= '<iframe scrolling="auto" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>' ;
