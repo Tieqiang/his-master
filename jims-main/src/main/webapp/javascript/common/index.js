@@ -19,20 +19,30 @@ window.addTab = function (title, href) {
     }else{
         var content = undefined ;
         if($.startWith(href,'http')){
-            if(href.indexOf("reportlet")){
-                href = href+"&dept_id="+config.acctDeptId ;
-                console.log(href) ;
+            if(href.indexOf("reportlet")>=0){
+                href = href+"&dept_id="+config.acctDeptId+"&emp_no="+config.loginId+"&user_name="+config.loginName ;
             }
+
+            if(href.indexOf("OA")>=0){
+                var userName = config.loginName.replace(/\b(0+)/gi,"");
+                userName = userName.toLocaleLowerCase();
+                href = String.format(href,userName,config.password);
+            }
+            console.log(href)
             content= '<iframe scrolling="auto" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>' ;
         }else{
             content= '<iframe scrolling="auto" frameborder="0"  src="views'+href+'.html" style="width:100%;height:100%;"></iframe>'
         }
+        if(href.indexOf("OA")>=0){
+            window.open(href);
+        }else{
+            $("#mainContent").tabs('add',{
+                title:title,
+                content:content,
+                closable:true
+            });
+        }
 
-        $("#mainContent").tabs('add',{
-            title:title,
-            content:content,
-            closable:true
-        });
     }
 }
 
@@ -67,7 +77,14 @@ $(function(){
         $('#dlg').dialog('close');
     })
     $("#reLogin").on('click',function(){
-        location.href="/login1.html"
+        $.get("/api/login/log-out",function(data,status){
+            if(data=="ok"){
+                location.href="/login1.html"
+            }else{
+                $.messager.alert("退出登录失败！");
+            }
+        })
+
     })
     $("#changeLogin").on('click',function(){
         location.href="/views/his/common/module-select.html"
@@ -179,7 +196,7 @@ $(function(){
         $("#logwindow").window("open") ;
     })
 
-    var promise = $.get('/api/login/get-login-info',function(data){
+    var promise = $.get('/api/login/get-login-info?date='+new Date(),function(data){
         config =data ;
     })
 

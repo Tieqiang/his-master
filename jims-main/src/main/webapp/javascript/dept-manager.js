@@ -138,8 +138,9 @@ $(function () {
                     treeDepts.push(depts[i])
                 }
             }
-
+            console.log(treeDepts);
             $("#tt").treegrid('loadData', treeDepts);
+
         })
     }
 

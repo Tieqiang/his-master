@@ -14,6 +14,7 @@ import com.jims.his.domain.htca.facade.AcctDeptDictFacade;
 import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.facade.ExpStorageDeptFacade;
 import org.codehaus.jettison.json.JSONArray;
+import org.eclipse.persistence.mappings.PropertyAssociation;
 
 
 import javax.imageio.ImageIO;
@@ -61,6 +62,46 @@ public class LoginService {
         this.reportDictFacade = reportDictFacade;
     }
 
+
+    @Path("sso")
+    @GET
+    public void ssoLogin(@QueryParam("username")String userName ,@QueryParam("password")String password,
+                         @QueryParam("moduleId")String moduleId,@QueryParam("hospitalId")String hospitalId) throws IOException {
+        if("".equals(userName)||"".equals(password)||"".equals(moduleId)||"".equals(hospitalId)){
+
+            resp.sendRedirect("/login1.html?error=参数不允许为空");
+        }else{
+            if(userName.length()<6){
+                int i = 6-userName.length() ;
+                for(int j=0;j<i;j++){
+                    userName = "0"+userName ;
+                }
+            }
+            if(password.length()<6){
+                int i = 6-password.length() ;
+                for(int j=0;j<i;j++){
+                    password = "0"+password ;
+                }
+            }
+
+            Response response = this.loing(userName, password) ;
+            Object object = response.getEntity() ;
+            if(object instanceof StaffDict){
+                //用户名和密码校验成功
+                Config config = new Config() ;
+                config.setHospitalId(hospitalId);
+                config.setModuleId(moduleId);
+                config.setPassword(password);
+                addLoginInfo(config);
+                resp.sendRedirect("/index.html");
+            }else{
+                resp.sendRedirect("/login1.html");
+            }
+        }
+
+
+    }
+
     /**
      * 根据用户名密码医院查找用户
      * @param loginName
@@ -82,6 +123,8 @@ public class LoginService {
     public Response loing(@QueryParam("loginName")String loginName ,@QueryParam("password")String password){
         try{
             StaffDict staffDict= staffDictFacade.findByLoginName(loginName) ;
+            HttpSession session = request.getSession() ;
+
             if(staffDict==null){
                 ErrorMessager errorMessager = new ErrorMessager("错误的用户名", "系统登录");
                 return Response.status(Response.Status.OK).entity(errorMessager).build() ;
@@ -91,11 +134,12 @@ public class LoginService {
                 ErrorMessager errorMessager = new ErrorMessager("错误的密码", "系统登录");
                 return Response.status(Response.Status.OK).entity(errorMessager).build() ;
             }else{
-                HttpSession session = request.getSession() ;
+
                 session.setAttribute("loginName",staffDict.getLoginName());
                 session.setAttribute("staffName", staffDict.getName());
                 session.setAttribute("loginId",staffDict.getId());
                 session.setAttribute("deptId",staffDict.getDeptDict().getId());
+                session.setAttribute("password",password);
                 return Response.status(Response.Status.OK).entity(staffDict).build() ;
             }
         }catch(Exception e){
@@ -287,19 +331,38 @@ public class LoginService {
     public Config getLoginInfo(){
         Config config = new Config() ;
         HttpSession session = request.getSession();
-        ReportDict reportDict = reportDictFacade.getByHospitalId((String) session.getAttribute("hospitalId"));
+        //ReportDict reportDict = reportDictFacade.getByHospitalId((String) session.getAttribute("hospitalId"));
         config.setHospitalId((String) session.getAttribute("hospitalId"));
-        config.setHospitalName((String)session.getAttribute("hospitalName"));
-        config.setModuleName((String)session.getAttribute("moduleName"));
-        config.setModuleId((String)session.getAttribute("moduleId"));
-        config.setLoginId((String)session.getAttribute("loginId"));
-        config.setLoginName((String)session.getAttribute("loginName"));
+        config.setHospitalName((String) session.getAttribute("hospitalName"));
+        config.setModuleName((String) session.getAttribute("moduleName"));
+        config.setModuleId((String) session.getAttribute("moduleId"));
+        config.setLoginId((String) session.getAttribute("loginId"));
+        config.setLoginName((String) session.getAttribute("loginName"));
         config.setStaffName((String) session.getAttribute("staffName"));
         config.setStorageCode((String) session.getAttribute("storageCode"));
         config.setStorageName((String) session.getAttribute("storageName"));
-        config.setAcctDeptId((String)session.getAttribute("acctDeptId"));
-        config.setDefaultReportPath("http://"+ reportDict.getIp() + reportDict.getPort());
+        config.setAcctDeptId((String) session.getAttribute("acctDeptId"));
+        config.setPassword((String) session.getAttribute("password"));
+        //config.setDefaultReportPath("http://"+ reportDict.getIp() + reportDict.getPort());
         return config ;
+    }
+
+    /**
+     * 取消登录
+     * @return
+     */
+    @GET
+    @Path("log-out")
+    @Produces("text/html")
+    public String logOut(){
+        HttpSession session = request.getSession();
+        try {
+            session.invalidate();
+            return "ok";
+        }catch (Exception e){
+            e.printStackTrace();
+            return  "false";
+        }
     }
 }
 

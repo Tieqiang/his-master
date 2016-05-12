@@ -6,6 +6,32 @@
 ;
 (function ($) {
 
+    //V1 method
+    String.prototype.format = function()
+    {
+        var args = arguments;
+        return this.replace(/\{(\d+)\}/g,
+            function(m,i){
+                return args[i];
+            });
+    }
+
+
+
+//V2 static
+    String.format = function() {
+        if( arguments.length == 0 )
+            return null;
+
+        var str = arguments[0];
+        for(var i=1;i<arguments.length;i++) {
+            var re = new RegExp('\\{' + (i-1) + '\\}','gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+
+
     var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
         a256 = '',
         r64 = [256],
@@ -129,80 +155,82 @@ $.fn.datebox.defaults.formatter = function(date){
     return y+'-'+m+'-'+d;
 }
 
+$(function(){
 
-$.extend({
-    postJSON: function (url, data, callback, error) {
-        return jQuery.ajax({
-            'type': 'POST',
-            'url': url,
-            'contentType': 'application/json',
-            'data': JSON.stringify(data),
-            'dataType': 'json',
-            'success': callback,
-            'error': error
-        });
-    },
-    putJSON: function (url, data, callback, error) {
-        return jQuery.ajax({
-            'type': 'PUT',
-            'url': url,
-            'contentType': 'application/json',
-            'data': JSON.stringify(data),
-            'dataType': 'json',
-            'success': callback,
-            'error': error
-        });
-    },
-    delete: function (url, callback) {
-        return jQuery.ajax({
-            'type': 'DELETE',
-            'url': url,
-            'success': callback
-        });
-    },
-    getJSON: function (url, data, callback, error) {
-        return jQuery.ajax({
-            'type': 'GET',
-            'url': url,
-            'contentType': 'application/json',
-            'data': JSON.stringify(data),
-            'dataType': 'json',
-            'success': callback
-        });
-    },
+    $.extend({
+        postJSON: function (url, data, callback, error) {
+            return jQuery.ajax({
+                'type': 'POST',
+                'url': url,
+                'contentType': 'application/json',
+                'data': JSON.stringify(data),
+                'dataType': 'json',
+                'success': callback,
+                'error': error
+            });
+        },
+        putJSON: function (url, data, callback, error) {
+            return jQuery.ajax({
+                'type': 'PUT',
+                'url': url,
+                'contentType': 'application/json',
+                'data': JSON.stringify(data),
+                'dataType': 'json',
+                'success': callback,
+                'error': error
+            });
+        },
+        delete: function (url, callback) {
+            return jQuery.ajax({
+                'type': 'DELETE',
+                'url': url,
+                'success': callback
+            });
+        },
+        getJSON: function (url, data, callback, error) {
+            return jQuery.ajax({
+                'type': 'GET',
+                'url': url,
+                'contentType': 'application/json',
+                'data': JSON.stringify(data),
+                'dataType': 'json',
+                'success': callback
+            });
+        },
 
-    startWith: function (str, patten) {
+        startWith: function (str, patten) {
 
-        var pLenth = patten.length;
-        var strLength = str.length;
-        if (strLength <= 0 || !str || !patten || pLenth <= 0) {
-            return false;
+            var pLenth = patten.length;
+            var strLength = str.length;
+            if (strLength <= 0 || !str || !patten || pLenth <= 0) {
+                return false;
+            }
+
+            if (str.substr(0, pLenth) == patten) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        endWith: function (str, patten) {
+            var pLenth = patten.length;
+            var strLength = str.length;
+            if (strLength <= 0 || !str || !patten || pLenth <= 0) {
+                return false;
+            }
+
+            if (str.substr(strLength - pLenth) == patten) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
-        if (str.substr(0, pLenth) == patten) {
-            return true;
-        } else {
-            return false;
-        }
-    },
 
-    endWith: function (str, patten) {
-        var pLenth = patten.length;
-        var strLength = str.length;
-        if (strLength <= 0 || !str || !patten || pLenth <= 0) {
-            return false;
-        }
-
-        if (str.substr(strLength - pLenth) == patten) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    })
 
 })
-
 
 $(function () {
     function pagerFilter(data) {
