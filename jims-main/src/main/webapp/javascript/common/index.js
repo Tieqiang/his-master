@@ -355,6 +355,36 @@ $(function(){
     }
 
 
+    //安装插件
+    function IsLoad(_url,fun){
+        $.ajax({
+            url:_url,
+            type:"get",
+            success:function(){
+                //说明请求的url存在，并且可以访问
+                if($.isFunction(fun)){
+                    fun(true);
+                }
+            },
+            error:function(){
+                //说明请求的url不存在
+                if($.isFunction(fun)){
+                    fun(false);
+                }
+            }
+
+        });
+    }
+    IsLoad("http://localhost:8987/api/hello",function(data){
+        if(data){
+            console.log("已经运行")
+        }else{
+            if (window.navigator.platform.indexOf("Mac") > -1) {
+            } else {
+                deployJava.launchWebStartApplication("jnlp/jimsplugin.jnlp");
+            }
+        }
+    })
 }) ;
 
 

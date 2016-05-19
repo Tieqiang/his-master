@@ -27,7 +27,7 @@ public class LoginFilter implements Filter {
 
         StringBuffer requestURL = httpServletRequest.getRequestURL();
         String path = requestURL.toString() ;
-        boolean login = path.contains("login")||path.contains("assert");
+        boolean login = path.contains("login")||path.contains("assert")||path.contains("jnlp");
         if(login){
             chain.doFilter(request,response);
             return ;
