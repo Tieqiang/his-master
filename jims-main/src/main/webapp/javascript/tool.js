@@ -163,7 +163,7 @@ $(function(){
                 'type': 'POST',
                 'url': url,
                 'contentType': 'application/json',
-                'data': JSON.stringify(data),
+                'data':JSON.stringify(data),
                 'dataType': 'json',
                 'success': callback,
                 'error': error

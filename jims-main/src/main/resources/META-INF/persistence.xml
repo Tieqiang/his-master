@@ -19,6 +19,7 @@
         <class>com.jims.his.domain.ieqm.entity.ExpDictImport</class>
         <class>com.jims.his.domain.ieqm.entity.ExpSubStorageDict</class>
         <class>com.jims.his.domain.common.entity.DeptDict</class>
+        <class>com.jims.his.domain.common.entity.LocalProgramSetting</class>
         <class>com.jims.his.domain.ieqm.entity.ExpPriceModify</class>
         <class>com.jims.his.domain.ieqm.entity.ExpCodingRule</class>
         <class>com.jims.his.domain.ieqm.entity.ExpInfo</class>

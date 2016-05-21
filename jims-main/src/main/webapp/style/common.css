@@ -19,3 +19,15 @@
 .fitem input{
     width:160px;
 }
+
+
+#moreAppWin {
+    background-color: #ffffff;
+    color: #000000;
+    background-image: url("../assert/images/bg.png");
+    font-size: 12px;
+}
+
+.appClass{
+    font-size: 20px;
+}

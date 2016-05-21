@@ -754,14 +754,14 @@ var deployJava = function () {
             } else if (browser == 'Netscape Family') {
 
                 launchTag = '<' +
-                    'embed type="application/x-java-applet;jpi-version=' +
+                    //'embed type="application/x-java-applet;jpi-version=' +
+                    'embed type="application/x-java-jnlp-file;jpi-version=' +
                     this.firefoxJavaVersion + '" ' +
                     'width="0" height="0" ' +
                     'launchjnlp="' + jnlp + '"' +
                     'docbase="' + jnlpDocbase + '"' +
                     ' />';
             }
-
             if (document.body == 'undefined' || document.body == null) {
                 document.write(launchTag);
                 // go back to original page, otherwise current page becomes blank

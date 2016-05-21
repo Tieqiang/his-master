@@ -11,10 +11,12 @@
     <link rel="stylesheet" href="assert/easyui/themes/color.css">
     <link rel="stylesheet" href="assert/easyui/portal.css">
     <link rel="stylesheet" href="assert/easyui/common.css">
+    <link rel="stylesheet" href="assert/metro/MetroJs.css">
     <link rel="stylesheet" href="/style/common.css">
     <!--[if lt IE 9]>
     <script src="assert/json2.js"></script>
     <![endif]-->
+
 </head>
 
 <body class="easyui-layout">
@@ -29,11 +31,13 @@
         [<strong><span id="uName"></span></strong>]，<span id="storageName"></span>欢迎你！您使用！
     </div>
     <div style="position: absolute; right: 0px; bottom: 0px; ">
-        <a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_pfMenu',iconCls:'icon-ok'">更换皮肤</a>
-        <!--<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">控制面板</a>-->
+        <a href="javascript:void(0);" class="easyui-menubutton"
+           data-options="menu:'#layout_north_pfMenu',iconCls:'icon-ok'">更换皮肤</a>
+        <a href="javascript:void(0);" class="easyui-linkbutton" id="moreApp">更多应用</a>
         <!--<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">切换库房</a>-->
         <!--<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">切换医院</a>-->
-        <a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_zxMenu',iconCls:'icon-back'">操作</a>
+        <a href="javascript:void(0);" class="easyui-menubutton"
+           data-options="menu:'#layout_north_zxMenu',iconCls:'icon-back'">操作</a>
     </div>
     <div id="layout_north_pfMenu" style="width: 120px; display: none;">
         <div onclick="changeTheme('default');">default</div>
@@ -104,6 +108,16 @@
 
 </div>
 
+<div class="easyui-window" id="moreAppWin">
+    <table id="appTable">
+    </table>
+</div>
+
+<div class="easyui-window" id="addAppWin">
+    <table id="addAppTab" class="easyui-datagrid">
+
+    </table>
+</div>
 
 
 <div data-options="region:'south',border:false">
@@ -113,17 +127,6 @@
     </div>
 </div>
 
-
-
-<script type="text/javascript" src="assert/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="assert/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="assert/deploy-java.js"></script>
-<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" src="assert/easyui/jquery.portal.js"></script>
-<script type="text/javascript" src="assert/easyui/jquery.cookie.js"></script>
-<script type="text/javascript" src="javascript/jeasyui.common.js"></script>
-<script type="text/javascript" src="javascript/tool.js"></script>
-<script type="text/javascript" src="javascript/common/index.js"></script>
 <div id="dlg" class="easyui-dialog" style="padding:10px 20px"
         >
     <div class="ftitle">修改密码</div>
@@ -161,5 +164,26 @@
     <a href="javascript:void(0)" id="closeDlg" class="easyui-linkbutton" iconCls="icon-cancel"
        style="width:90px">关闭</a>
 </div>
+
+
+
+<div id="tb" style="padding:2px 5px;">
+    <a href="#" id="addApp" class="easyui-linkbutton" iconCls="icon-add">添加本地程序</a>
+    <a href="#" id="modifyApp" class="easyui-linkbutton" iconCls="icon-edit">修改本地应用程序</a>
+    <a href="#" id="delApp" class="easyui-linkbutton" iconCls="icon-edit">删除本地应用程序</a>
+    <a href="#" id="saveApp" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+    <a href="#" id="shutWindow" class="easyui-linkbutton" iconCls="icon-remove">关闭窗口</a>
+</div>
+<script type="text/javascript" src="assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="assert/deploy-java.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="assert/easyui/jquery.portal.js"></script>
+<script type="text/javascript" src="assert/easyui/jquery.cookie.js"></script>
+<script type="text/javascript" src="javascript/jeasyui.common.js"></script>
+<script type="text/javascript" src="javascript/tool.js"></script>
+<script type="text/javascript" src="javascript/common/index.js"></script>
+<script type="text/javascript" src="assert/metro/MetroJs.js"></script>
+
 </body>
 </html>

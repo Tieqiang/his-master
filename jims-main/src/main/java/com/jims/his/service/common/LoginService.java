@@ -3,10 +3,8 @@ package com.jims.his.service.common;
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.common.util.EnscriptAndDenScript;
 import com.jims.his.domain.common.entity.*;
-import com.jims.his.domain.common.facade.ModuleDictFacade;
-import com.jims.his.domain.common.facade.ReportDictFacade;
-import com.jims.his.domain.common.facade.RoleDictFacade;
-import com.jims.his.domain.common.facade.StaffDictFacade;
+import com.jims.his.domain.common.facade.*;
+import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.common.vo.Config;
 import com.jims.his.domain.common.vo.ErrorMessager;
 import com.jims.his.domain.htca.entity.AcctDeptVsDeptDict;
@@ -47,11 +45,12 @@ public class LoginService {
     private HttpServletRequest request;
     private AcctDeptDictFacade acctDeptDictFacade ;
     private ReportDictFacade reportDictFacade;
+    private LocalProgramSettingFacade localProgramSettingFacade ;
 
 
 
     @Inject
-    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade, AcctDeptDictFacade acctDeptDictFacade, ReportDictFacade reportDictFacade) {
+    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade, AcctDeptDictFacade acctDeptDictFacade, ReportDictFacade reportDictFacade, LocalProgramSettingFacade localProgramSettingFacade) {
         this.moduleDictFacade = moduleDictFacade;
         this.staffDictFacade = staffDictFacade;
         this.roleDictFacade = roleDictFacade;
@@ -60,6 +59,7 @@ public class LoginService {
         this.request = request;
         this.acctDeptDictFacade = acctDeptDictFacade;
         this.reportDictFacade = reportDictFacade;
+        this.localProgramSettingFacade = localProgramSettingFacade;
     }
 
 
@@ -362,6 +362,39 @@ public class LoginService {
         }catch (Exception e){
             e.printStackTrace();
             return  "false";
+        }
+    }
+
+
+    @POST
+    @Path("save-app")
+    public Response saveLocalPragramSetting(BeanChangeVo<LocalProgramSetting> localProgramSettingBeanChangeVo){
+        try {
+            BeanChangeVo<LocalProgramSetting> localProgramSetting1 = localProgramSettingFacade.saveLocalApp(localProgramSettingBeanChangeVo) ;
+            return Response.status(Response.Status.OK).entity(localProgramSetting1).build();
+        }catch (Exception e){
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.OK).entity(errorException).build();
+        }
+    }
+
+    @Path("list-app")
+    @GET
+    public List<LocalProgramSetting> findLocalProgramByLoginId(@QueryParam("loginId")String loginId){
+        return localProgramSettingFacade.findLocalProgramByLoginId(loginId);
+    }
+
+    @Path("del-app")
+    @POST
+    public Response deleteProgramById(@QueryParam("id")String id){
+        try {
+            LocalProgramSetting localProgramSetting1 = localProgramSettingFacade.delLocalApp(id);
+            return Response.status(Response.Status.OK).entity(localProgramSetting1).build();
+        }catch (Exception e){
+            ErrorException errorException = new ErrorException() ;
+            errorException.setMessage(e);
+            return Response.status(Response.Status.OK).entity(errorException).build();
         }
     }
 }
