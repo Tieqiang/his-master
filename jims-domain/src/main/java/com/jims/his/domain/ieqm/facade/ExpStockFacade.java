@@ -6,6 +6,7 @@ import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.common.entity.AppConfigerParameter;
 import com.jims.his.domain.common.facade.AppConfigerParameterFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
+import com.jims.his.domain.common.vo.ErrorMessager;
 import com.jims.his.domain.ieqm.entity.*;
 import com.jims.his.domain.ieqm.vo.*;
 import com.sun.xml.internal.messaging.saaj.soap.impl.DetailImpl;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.xml.crypto.Data;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -402,8 +404,8 @@ public class ExpStockFacade extends BaseFacade {
                 "       a.quantity * a.purchase_price trade_all_price\n" +
                 "  from exp_stock a, exp_dict b ,exp_price_list c \n" +
                 "  where a.exp_code = b.exp_code \n" +
-                "  and a.package_spec = b.exp_spec\n" +
-                "  and a.package_units = b.units\n" +
+                //"  and a.package_spec = b.exp_spec\n" +
+                //"  and a.package_units = b.units\n" +
                 "  and a.exp_code = c.exp_code\n" +
                 "  and a.package_spec = c.exp_spec\n" +
                 "  and a.package_units = c.units \n" +
@@ -652,7 +654,7 @@ public class ExpStockFacade extends BaseFacade {
                 "FROM  exp_stock,exp_dict,exp_price_list\n" +
                 "WHERE exp_price_list.exp_code = exp_dict.exp_code\n" +
                 "and   exp_stock.exp_code(+) = exp_price_list.exp_code\n" +
-                "and   exp_stock.exp_spec(+) = exp_price_list.exp_spec\n" +
+                "and   exp_stock.package_spec(+) = exp_price_list.exp_spec\n" +
                 "and   exp_stock.firm_id(+)  = exp_price_list.firm_id\n" +
                 "AND   exp_price_list.start_date <= sysdate\n" +
                 "AND   (exp_price_list.stop_date IS NULL OR exp_price_list.stop_date > sysdate)\n" +
@@ -670,7 +672,7 @@ public class ExpStockFacade extends BaseFacade {
      * @param exportVo
      */
     @Transactional
-    public void expExportManage(ExpExportManageVo exportVo){
+    public void expExportManage(ExpExportManageVo exportVo) throws Exception {
 
         try{
             //1，更新库存信息
@@ -678,7 +680,7 @@ public class ExpStockFacade extends BaseFacade {
             //2,保存入库单据 判断参数是否记账
             saveExportDocument(exportVo) ;
         }catch(Exception e){
-            e.printStackTrace();
+            throw e ;
         }
 
 
@@ -705,6 +707,9 @@ public class ExpStockFacade extends BaseFacade {
                 expStock.setQuantity(expStock.getQuantity() - detail.getQuantity());//更新库存
                 //detail.setInventory(expStock.getQuantity() - detail.getQuantity());
                 merge(expStock) ;
+            }else{
+                Exception exception= new Exception("更新库存出错！") ;
+                throw  exception;
             }
             if(expProvideApplication !=null){
                 expProvideApplication.setProvideFlag("1");//更新出库标志

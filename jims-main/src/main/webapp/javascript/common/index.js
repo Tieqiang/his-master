@@ -467,7 +467,7 @@ $(function () {
     }
     var initLocalApp = function () {
 
-        var promise = $.get("/api/login/list-app?loginId=" + config.loginId, function (data) {
+        var promise = $.get("/api/login/list-app?loginId=" + config.loginId+"&date="+new Date(), function (data) {
             localApps = data;
             var objs = [];
             for (var i = 0; i < data.length; i++) {

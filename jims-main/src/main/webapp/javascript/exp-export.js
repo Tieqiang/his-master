@@ -821,7 +821,7 @@ $(function(){
             detail.itemNo = i;
             var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
             detail.expCode = rows[i].expCode;
-            detail.expSpec = rows[i].packageSpec;
+            detail.expSpec = rows[i].expSpec;
             detail.units = rows[i].units;
             detail.batchNo = rows[i].batchNo;
             detail.importDocumentNo = rows[i].importDocumentNo;

@@ -157,9 +157,6 @@ public class ExpStockService {
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，保存失败！");
             }
-            //else {
-            //    errorException.setErrorMessage("保存失败！");
-            //}
             return Response.status(Response.Status.OK).entity(errorException).build() ;
         }
 
