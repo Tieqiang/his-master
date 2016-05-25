@@ -37,71 +37,71 @@ $(function () {
      * 定义库存表格
      */
     $("#expStockCol").datagrid({
-        title: "库存量查询",
+//        title: "库存量查询",
         footer: '#ft',
-        toolbar:'#tb',
+//        toolbar:'#tb',
         fit: true,
         fitColumns: true,
         singleSelect: true,
         showFooter:true,
-        rownumbers:true,
+//        rownumbers:true,
         columns: [[{
-            title: '子库房',
+            title: '库房名称',
             field: 'subStorage',
-            width: '8%',
+            width: '7%',
             editor: {type: 'textbox'}
         }, {
-            title: '类别',
+            title: '产品类别',
             field: 'expForm',
-            width: '8%'
+            width: '7%'
 
         }, {
-            title: '代码',
+            title: '产品代码',
             field: 'expCode',
-            width: '8%',
+            width: '11%',
             editor: {type: 'textbox'}
         }, {
             title: '产品名称',
             field: 'expName',
-            width: '8%',
+            width: '11%',
             editor: {type: 'textbox'}
         }, {
-            title: "规格",
-            width: '8%',
+            title: "产品规格",
+            width: '11%',
             field: 'packageSpec'
         }, {
-            title: '厂家',
+            title: '生产厂家',
             field: 'firmId',
-            width: '8%',
+            width: '11%',
             editor: {type: 'textbox'}
         }, {
-            title: '单位',
+            title: '产品单位',
             field: 'packageUnits',
-            width: '8%'
+            width: '7%'
         }, {
-            title: '数量',
-            width: '8%',
+            title: '库存数量',
+            width: '7%',
             field: 'quantity',
             editor: {type: 'numberbox'}
 
         }, {
             title: '进货单价',
-            width: '8%',
+            width: '7%',
             field: 'purchasePrice',
             editor: {type: 'numberbox'}
         }, {
             title: '零售单价',
-            width: '8%',
+            width: '7%',
             field: 'retailPrice',
             editor: {type: 'numberbox'}
         }, {
             title: '进货金额',
-            width: '8%',
+            width: '7%',
             field: 'tradeAllPrice',
             editor: {type: 'numberbox'}
         }, {
             title: '零售金额',
-            width: '8%',
+            width: '7%',
             field: 'retailAllPrice',
             editor: {type: 'numberbox'}
         }]]
