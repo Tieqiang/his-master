@@ -329,7 +329,7 @@ public class ExpStockFacade extends BaseFacade {
      * @param hospitalId
      * @return
      */
-    public List<ExpStorageProfileVo> searchWarningStock(String storage, String hospitalId) {
+    public List<ExpStorageProfileVo> searchWarningStock(String storage, String hospitalId,String expName) {
         Date day = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String startTime = formatter.format(day.getTime());
@@ -359,6 +359,9 @@ public class ExpStockFacade extends BaseFacade {
                 "   and a.firm_id = d.firm_id\n" +
                 "   and ((to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) > d.start_date and to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) < d.stop_date) or\n" +
                 "       d.stop_date is null)";
+        if(expName!=null&&!"".equals(expName)){
+            sql+=" and c.exp_name like '%"+expName+"%'";
+        }
         List<ExpStorageProfileVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageProfileVo.class);
         return nativeQuery;
     }
