@@ -40,8 +40,8 @@ public class ExpStorageZeroManageService {
     @GET
     @Path("list")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<ExpStorageZeroManageVo> listExpSearch(@QueryParam("storageCode") String storageCode,@QueryParam("hospitalId") String hospitalId){
-        List<ExpStorageZeroManageVo> resultList = expStockFacade.findStockZeroAll(storageCode,hospitalId);
+    public List<ExpStorageZeroManageVo> listExpSearch(@QueryParam("storageCode") String storageCode,@QueryParam("hospitalId") String hospitalId,@QueryParam("expName") String expName){
+        List<ExpStorageZeroManageVo> resultList = expStockFacade.findStockZeroAll(storageCode,hospitalId,expName);
         return resultList;
     }
 
