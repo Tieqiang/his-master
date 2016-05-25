@@ -164,14 +164,16 @@ public class ExpStockFacade extends BaseFacade {
         ExpImportMaster masters = importVo.getExpImportMasterBeanChangeVo().getInserted().get(0);
         for (ExpImportDetail importDetail : details) {
             List<AppConfigerParameter> appConfigerParameters = appConfigerParameterFacade.findCurParameterList(importDetail.getHospitalId(), "DO_ACCT");
-            String accountIndicator = appConfigerParameters.get(0).getParameterValue();
-            if (accountIndicator.equals("1")) {
-                ExpPriceModifyProfit priceModifyProfit = expPriceModifyProfitFacade.calcExpPriceModifyPriceProfit(masters.getStorage(), importDetail.getExpCode(), importDetail.getExpSpec(), importDetail.getFirmId(), importDetail.getUnits(), importDetail.getQuantity(), importDetail.getHospitalId());
-                if (priceModifyProfit != null) {
-                    merge(priceModifyProfit);
+            if(appConfigerParameters!=null&&!appConfigerParameters.isEmpty()){
+                String accountIndicator = appConfigerParameters.get(0).getParameterValue();
+                if (accountIndicator.equals("1")) {
+                    ExpPriceModifyProfit priceModifyProfit = expPriceModifyProfitFacade.calcExpPriceModifyPriceProfit(masters.getStorage(), importDetail.getExpCode(), importDetail.getExpSpec(), importDetail.getFirmId(), importDetail.getUnits(), importDetail.getQuantity(), importDetail.getHospitalId());
+                    if (priceModifyProfit != null) {
+                        merge(priceModifyProfit);
+                    }
                 }
             }
-        }
+         }
     }
 
     /**
@@ -248,11 +250,14 @@ public class ExpStockFacade extends BaseFacade {
         subStorage.setImportNoAva(subStorage.getImportNoAva() + 1);
         merge(subStorage);//当前的单据号加1
         List<AppConfigerParameter> appConfigerParameters = appConfigerParameterFacade.findCurParameterList(expImportMaster.getHospitalId(), "DO_ACCT");
-        String accountIndicator = appConfigerParameters.get(0).getParameterValue();
-        if (accountIndicator.equals("0")) {
-            expImportMaster.setAccountIndicator(0);
-            expImportMaster.setAcctoperator("");
-            expImportMaster.setAcctdate(null);
+
+        if(appConfigerParameters!=null&&!appConfigerParameters.isEmpty()){
+            String accountIndicator = appConfigerParameters.get(0).getParameterValue();
+            if (accountIndicator.equals("0")) {
+                expImportMaster.setAccountIndicator(0);
+                expImportMaster.setAcctoperator("");
+                expImportMaster.setAcctdate(null);
+            }
         }
         merge(expImportMaster);
         List<ExpImportDetail> details = importVo.getExpImportDetailBeanChangeVo().getInserted();
