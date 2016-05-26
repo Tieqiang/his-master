@@ -45,6 +45,7 @@
         <freemarker.version>2.3.19</freemarker.version>
         <spring.version>3.2.5.RELEASE</spring.version>
         <guava.version>14.0.1</guava.version>
+        <oauth.version>1.0.0</oauth.version>
     </properties>
 
     <dependencyManagement>
@@ -237,7 +238,22 @@
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>1.7.5</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.oltu.commons</groupId>
+                <artifactId>org.apache.oltu.commons.encodedtoken</artifactId>
+                <version>${oauth.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>org.apache.oltu.commons</groupId>
+                <artifactId>org.apache.oltu.commons.json</artifactId>
+                <version>${oauth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.2.5</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>

@@ -288,7 +288,7 @@ $(function () {
     //左侧列表初始化
     $("#left").datagrid({
         title: '出库申请单',
-        singleSelect: false,
+        singleSelect: true,
         fit: true,
         nowrap: false,
         url: '',
@@ -328,6 +328,8 @@ $(function () {
                     $("#left").datagrid("unselectRow",index);
                 }
             }
+
+
 
         }
     });
