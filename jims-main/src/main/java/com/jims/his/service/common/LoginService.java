@@ -215,6 +215,7 @@ public class LoginService {
         if(null != config.getModuleId() && !config.getModuleId().trim().equals("")){
             ModulDict modulDict = staffDictFacade.get(ModulDict.class, config.getModuleId());
             session.setAttribute("moduleId", modulDict.getId());
+            session.setAttribute("firstPage",modulDict.getModuleLoad());
             session.setAttribute("moduleName", modulDict.getModuleName());
             if("全成本核算系统".equals(modulDict.getModuleName())){
                 AcctDeptVsDeptDict dict = acctDeptDictFacade.getAcctDeptVsDeptDict((String)session.getAttribute("deptId")) ;
@@ -250,6 +251,7 @@ public class LoginService {
         config.setStorageName((String) session.getAttribute("storageName"));
         config.setAcctDeptId((String) session.getAttribute("acctDeptId"));
         config.setPassword((String) session.getAttribute("password"));
+        config.setFirstPage((String)session.getAttribute("firstPage"));
         //config.setDefaultReportPath("http://"+ reportDict.getIp() + reportDict.getPort());
         return config ;
     }
