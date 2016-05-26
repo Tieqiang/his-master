@@ -2,6 +2,16 @@
  * Created by heren on 2015/10/23.
  */
 $(function(){
+    function formatterYMD(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            return dateTime
+        }
+    }
     //格式化日期函数
     function formatterDate(val, row) {
         if (val != null) {
@@ -172,7 +182,17 @@ $(function(){
                     onChange: function (newValue, oldValue) {
                         var row = $("#exportDetail").datagrid('getData').rows[editIndex];
                         var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
-                        $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+                        var value= $('#receiver').combobox('getValue');
+                        if(value!=null&&value!=""){
+                            if(value=="退货出库"){//进价
+                                $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+                            }else{//
+                                $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+                            }
+                        }else{
+                            alert("请选择发往目的地！");
+                        }
+
                         var rows = $("#exportDetail").datagrid('getRows');
                         var totalAmount = 0;
                         var backAmount = 0;
@@ -574,7 +594,7 @@ $(function(){
                     field: 'expName'
                 }, {
                     title: '包装规格',
-                    field: 'expSpec'
+                    field: 'packageSpec'
                 }, {
                     title: '数量',
                     field: 'quantity'
@@ -605,18 +625,18 @@ $(function(){
                 }, {
                     title: '有效期',
                     field: 'expireDate',
-                    formatter:formatterDate
+                    formatter:formatterYMD
                 }, {
                     title: '入库单号',
                     field: 'documentNo'
                 }, {
                     title: '生产日期',
                     field: 'producedate',
-                    formatter:formatterDate
+                    formatter:formatterYMD
                 }, {
                     title: '消毒日期',
                     field: 'disinfectdate',
-                    formatter:formatterDate
+                    formatter:formatterYMD
                 }, {
                     title: '产品类别',
                     field: 'expForm'
@@ -679,12 +699,23 @@ $(function(){
                     rowDetail.expName = row.expName;
                     rowDetail.expForm = row.expForm;
                     rowDetail.expCode = row.expCode;
-                    rowDetail.packageSpec = row.expSpec;
+                    rowDetail.packageSpec = row.packageSpec;
                     rowDetail.expSpec = row.minSpec;
                     rowDetail.units = row.minUnits;
                     rowDetail.packageUnits = row.units;
                     rowDetail.disNum = row.quantity;
-                    rowDetail.purchasePrice = row.purchasePrice;
+                    /**
+                     * 默认放的是进价
+                     * @type {purchasePrice|*|.row.purchasePrice|detail.purchasePrice}
+                     */
+                    var value=$("#receiver").combobox("getValue");
+                    if(value.trim()!=null&&value.trim()!=""){
+                        if(value.trim()=="退货出库"){
+                            rowDetail.purchasePrice = row.purchasePrice;//出库走林售价
+                        }else{
+                            rowDetail.purchasePrice = row.retailPrice;//出库走林售价
+                        }
+                    }
                     rowDetail.amount = 0;
                     rowDetail.firmId = row.firmId;
                     rowDetail.batchNo = row.batchNo;
