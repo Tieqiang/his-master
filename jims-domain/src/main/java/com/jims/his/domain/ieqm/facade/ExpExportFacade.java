@@ -76,6 +76,11 @@ public class ExpExportFacade extends BaseFacade {
                 "order by  EXP_EXPORT_DETAIL.DOCUMENT_NO  \n" +
                 " \n";
         List<ExpExportDetialVo> nativeQuery = createNativeQuery(sql, new ArrayList<Object>(), ExpExportDetialVo.class);
+        if(nativeQuery!=null&&!nativeQuery.isEmpty()){
+            for(ExpExportDetialVo e:nativeQuery){
+                e.setAmount(e.getRetailPrice()*e.getQuantity());
+            }
+        }
         return nativeQuery;
 
     }

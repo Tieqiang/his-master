@@ -37,7 +37,17 @@ $(function () {
             return dateTime;
         }
     }
-
+    //格式化日期函数
+    function formatterYMD(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            return dateTime;
+        }
+    }
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -393,7 +403,7 @@ $(function () {
                 disabled: false}}
         }, {
             title: '进价',
-            field: 'purchasePrice',
+            field: 'retailPrice',
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: false,
@@ -518,8 +528,8 @@ $(function () {
             editor: {type: 'textbox', options: {}}
         }, {
             title: '生产日期',
-            field: 'produceDate',
-            formatter: formatterDate,
+            field: 'producedate',
+            formatter: formatterYMD,
             width:'7%',
             editor: {
                 type: 'datetimebox',
@@ -546,15 +556,15 @@ $(function () {
             }
         }, {
             title: '消毒日期',
-            field: 'disinfectDate',
-            formatter: formatterDate,
+            field: 'disinfectdate',
+            formatter: formatterYMD,
             width:'7%',
             editor: {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
+                    formatter: formatterYMD,
                     parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
@@ -574,7 +584,7 @@ $(function () {
             }
         }, {
             title: '灭菌标志',
-            field: 'killFlag',
+            field: 'killflag',
             editor: {type: 'checkbox', options: {}}
         }, {
             title: '折扣',
@@ -628,7 +638,7 @@ $(function () {
      * 出库记录弹出框
      */
     $("#expExportDialog").dialog({
-        title: '消耗品接受',
+        title: '消耗品接收',
         width: 900,
         height: 300,
         catch: false,
@@ -659,6 +669,8 @@ $(function () {
             $("#expExportDatagrid").datagrid('selectRow', 0)
         }
     });
+
+//    ???
     $("#expExportDatagrid").datagrid({
         fit: true,
         fitColumns: true,
@@ -677,21 +689,23 @@ $(function () {
             field: 'expName',
             width: '10%'
         }, {
-            title: '规格',
+            title: '包装规格',
             field: 'packageSpec'
         }, {
             title: '单位',
             field: 'packageUnits'
         }, {
             title: "数量",
-            field: 'quantity'
+            field: 'quantity',
+            hidden:true
         }, {
             title: '批号',
             field: 'batchNo'
         }, {
             title: '进价',
-            field: 'purchasePrice'
-        }, {
+            field: 'retailPrice',
+            hidden:true
+         }, {
             title: '金额',
             field: 'amount'
         }, {
@@ -700,60 +714,33 @@ $(function () {
         }, {
             title: '有效日期',
             field: 'expireDate',
-            formatter: formatterDate
+            formatter: formatterYMD
         }, {
             title: '厂家',
             field: 'firmId'
         }
-        //    , {
-        //    title: '注册证号',
-        //    field: 'expImportDetailRegistNo'
-        //}, {
-        //    title: '许可证号',
-        //    field: 'expImportDetailLicenceno'
-        //}, {
-        //    title: '发票号',
-        //    field: 'invoiceNo'
-        //}, {
-        //    title: '发票日期',
-        //    field: 'invoiceDate',
-        //    formatter: formatterDate
-        //}
+
             , {
             title: '备注',
             field: 'memo'
         }, {
             title: '生产日期',
-            field: 'produceDate',
-            formatter: formatterDate
+            field: 'producedate',
+            formatter: formatterYMD
 
         }, {
             title: '消毒日期',
-            field: 'disinfectDate',
-            formatter: formatterDate
+            field: 'disinfectdate',
+            formatter: formatterYMD
         }, {
             title: '灭菌标志',
-            field: 'killFlag'
-        }, {
-            title: '折扣',
-            field: 'discount'
+            field: 'killflag'
         }
-        //    , {
-        //    title: '招标文号',
-        //    field: 'orderBatch'
-        //}, {
-        //    title: '招标文号序号',
-        //    field: 'tenderNo'
-        //}
-            , {
-            title: '现有数量',
-            field: 'inventory'
-        },{
+        ,{
             title:'零售价',
-            field:'retailPrice'
-                //,
-            //hidden:true
-        },{
+            field:'retailPrice',
+             hidden:true
+         },{
             title:'进货价',
             field:'tradePrice',
             hidden:true
