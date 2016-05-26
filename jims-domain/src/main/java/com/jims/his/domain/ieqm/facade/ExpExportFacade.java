@@ -544,7 +544,7 @@ public class ExpExportFacade extends BaseFacade {
      */
     public List<ExpProvideApplicationVo> findExpProvideApplication(String startDate, String endDate, String applyStorage, String storage, String hospitalId){
         String sql = "SELECT DISTINCT EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE,   \n" +
-                "         to_char(EXP_PROVIDE_APPLICATION.ENTER_DATE_TIME,'yyyy-mm-dd') enter_date,   \n" +
+                "         to_char(EXP_PROVIDE_APPLICATION.ENTER_DATE_TIME,'YYYY-MM-DD HH24:MI:SS') enter_date,   \n" +
                 "         DEPT_DICT.DEPT_NAME,   \n" +
                 "         EXP_PROVIDE_APPLICATION.APPLICANT_NO,\n" +
                 "         DEPT_DICT.ID DEPT_ID \n" +

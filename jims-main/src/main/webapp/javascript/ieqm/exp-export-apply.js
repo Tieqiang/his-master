@@ -14,8 +14,9 @@ $(function () {
         }
     }
 
-    //格式化日期函数
+    //格式化日期(方法)
     function formatterDate(val, row) {
+//        2016/5/26 9:29:19
         if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
@@ -26,7 +27,7 @@ $(function () {
             var s = date.getSeconds();
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
                 + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-            return dateTime;
+            return dateTime
         }
     }
 
