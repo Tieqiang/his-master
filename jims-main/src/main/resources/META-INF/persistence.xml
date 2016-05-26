@@ -86,12 +86,6 @@
         <class>com.jims.his.domain.common.entity.ReportDict</class>
         <!-- 提供商——Hibernate -->
 
-        <!--oauth2-->
-        <class>com.jims.his.domain.oauth2.entity.AccessLog</class>
-        <class>com.jims.his.domain.oauth2.entity.App</class>
-        <class>com.jims.his.domain.oauth2.entity.AppProfile</class>
-        <class>com.jims.his.domain.oauth2.entity.Authority</class>
-        <class>com.jims.his.domain.oauth2.entity.RefreshToken</class>
 
         <!--基础对照-->
         <class>com.jims.his.domain.common.entity.ModulDict</class>
