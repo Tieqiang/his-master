@@ -188,12 +188,16 @@ public class ExpStockFacade extends BaseFacade {
         List<ExpImportMaster> masters = importVo.getExpImportMasterBeanChangeVo().getInserted();
         String stockCode = masters.get(0).getStorage();
         String subStorage = masters.get(0).getSubStorage();
+        String accountIndicator="";
         for (ExpImportDetail detail : details) {
             List<AppConfigerParameter> appConfigerParameters = appConfigerParameterFacade.findCurParameterList(detail.getHospitalId(), "DO_ACCT");
-            if (appConfigerParameters.size() <= 0) {
-                throw new Exception("获取记账参数失败");
+            if(appConfigerParameters!=null&&!appConfigerParameters.isEmpty()){
+                if (appConfigerParameters.size() <= 0) {
+                    throw new Exception("获取记账参数失败");
+                }
+                  accountIndicator = appConfigerParameters.get(0).getParameterValue();
             }
-            String accountIndicator = appConfigerParameters.get(0).getParameterValue();
+
             if (accountIndicator.equals("1")) {
                 ExpStock expStock = this.getExpStock(stockCode, detail.getExpCode(), detail.getExpSpec(), detail.getBatchNo(), detail.getFirmId(), detail.getPackageSpec(), detail.getHospitalId(), subStorage);
                 if (expStock != null) {
@@ -656,7 +660,7 @@ public class ExpStockFacade extends BaseFacade {
                 "                   exp_price_list.firm_id,\n" +
                 "                   nvl(trade_price,0) purchase_price,\n" +
                 "                   discount,\n" +
-                "                   exp_price_list.exp_spec,\n" +
+                "                   exp_price_list.exp_spec as package_spec,\n" +
                 "                   nvl(quantity,0) quantity,\n" +
                 "                   exp_price_list.units,\n" +
                 "                   document_no,\n" +
@@ -677,7 +681,7 @@ public class ExpStockFacade extends BaseFacade {
                 "FROM  exp_stock,exp_dict,exp_price_list\n" +
                 "WHERE exp_price_list.exp_code = exp_dict.exp_code\n" +
                 "and   exp_stock.exp_code(+) = exp_price_list.exp_code\n" +
-                "and   exp_stock.exp_spec(+) = exp_price_list.exp_spec\n" +
+                "and   exp_stock.package_spec(+) = exp_price_list.exp_spec\n" +
                 "and   exp_stock.firm_id(+)  = exp_price_list.firm_id\n" +
                 "AND   exp_price_list.start_date <= sysdate\n" +
                 "AND   (exp_price_list.stop_date IS NULL OR exp_price_list.stop_date > sysdate)\n" +

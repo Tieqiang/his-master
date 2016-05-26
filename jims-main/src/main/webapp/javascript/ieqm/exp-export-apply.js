@@ -400,8 +400,8 @@ $(function () {
                 }
             }
         }, {
-            title: '规格',
-            field: 'expSpec',
+            title: '包装规格',
+            field: 'packageSpec',
             width: "7%"
         }, {
             title: '包装单位',
@@ -634,9 +634,9 @@ $(function () {
             title: '消耗品',
             field: 'expName',
             width: "10%"
-        }, {
+        },{
             title: '规格',
-            field: 'expSpec',
+            field: 'packageSpec',
             width: "10%"
         }, {
             title: '数量',
@@ -747,6 +747,7 @@ $(function () {
     $("#confirm").on('click', function () {
         $("#applyDatagrid").datagrid('endEdit', editIndex);
         var rows = $("#applyDatagrid").datagrid("getSelections");
+        console.info("************"+rows);
         for(var i =0 ;i<rows.length;i++){
             if(rows[i].auditingQuantity==0){
                 $.messager.alert('系统消息','审核数量不能为0！','info');
@@ -802,6 +803,9 @@ $(function () {
         singleSelect: true,
         fit: true,
         fitColumns: true,
+        ////
+        //
+//        ？？
         url: '/api/exp-stock/stock-export-record/',
         method: 'GET',
         columns: [[{
@@ -814,8 +818,8 @@ $(function () {
             title: '数量',
             field: 'quantity'
         }, {
-            title: '规格',
-            field: 'expSpec'
+            title: '包装规格',
+            field: 'packageSpec'
         }, {
             title: '最小规格',
             field: 'minSpec'
@@ -846,7 +850,7 @@ $(function () {
             var rowDetail = $("#right").datagrid('getData').rows[editIndex];
             rowDetail.expName = row.expName;
             rowDetail.expForm = row.expForm;
-            rowDetail.expSpec = row.expSpec;
+            rowDetail.packageSpec = row.packageSpec;
             rowDetail.expCode = row.expCode;
             rowDetail.units = row.units;
             rowDetail.packageUnits = row.units;

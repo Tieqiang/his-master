@@ -676,7 +676,7 @@ $(function () {
             rowDetail.tradePrice = row.tradePrice;
 
 
-            rowDetail.expSpec = row.expSpec;
+            rowDetail.expSpec = row.minSpec;
             rowDetail.units = row.units;
             rowDetail.memos = row.memos;
             rowDetail.expImportDetailRegistNo = row.expImportDetailRegistNo;
@@ -1195,7 +1195,7 @@ $(function () {
         expExportDetailBeanChangeVo.inserted = [];
 
         var rows = $("#dg").datagrid('getRows');
-
+        console.info(rows);
         for (var i = 0; i < rows.length; i++) {
             var rowIndex = $("#dg").datagrid('getRowIndex', rows[i]);
 
@@ -1337,11 +1337,13 @@ $(function () {
             $("#dg").datagrid('endEdit', editIndex);
         }
         $.get("/api/app-configer-parameter/list?hospitalId="+parent.config.hospitalId+"&name=DO_ACCT",function(data){
-            if(data[0].parameterValue=='0'){
-                $.messager.alert('系统消息','此消耗品不能对消入出库！','error');
-                return;
+            if(data!=null&&data!=""){
+                if(data[0].parameterValue=='0'){
+                    $.messager.alert('系统消息','此消耗品不能对消入出库！','error');
+                    return;
+                }
             }
-        })
+         })
         if (dataValid()) {
 
             $.messager.confirm("提示信息", "确定要进行对消入出库操作？", function (r) {
