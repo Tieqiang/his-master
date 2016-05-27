@@ -214,9 +214,9 @@ $(function () {
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
-                            field: 'expireDate'
+                            field: 'invoiceDate'
                         });
-                        var y = date.getFullYear()+1;
+                        var y = date.getFullYear();
                         var m = date.getMonth() + 1;
                         var d = date.getDate();
                         var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
