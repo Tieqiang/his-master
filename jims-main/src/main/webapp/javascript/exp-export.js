@@ -2,6 +2,9 @@
  * Created by heren on 2015/10/23.
  */
 $(function(){
+
+    var exportToFlag =undefined ;//退库的时候，标志，用于区分是否退货给供应商。
+
     function formatterYMD(val, row) {
         if (val != null) {
             var date = new Date(val);
@@ -184,13 +187,13 @@ $(function(){
                         var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
                         var value= $('#receiver').combobox('getValue');
                         if(value!=null&&value!=""){
-                            if(value=="退货出库"){//进价
+                            if(exportToFlag=="toSupplier"){//进价
                                 $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
                             }else{//
                                 $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
                             }
                         }else{
-                            alert("请选择发往目的地！");
+                            $.messager.alert("系统提示","请选择出库单位","error");
                         }
 
                         var rows = $("#exportDetail").datagrid('getRows');
@@ -234,10 +237,15 @@ $(function(){
                 return value;
             }
         },{
-            title:'单价',
+            title:'进价',
             field:'purchasePrice',
             width:"5%",
             precision: '2'
+        },{
+            title:'售价',
+            field:'retailPrice',
+            width:'5%',
+            precision:'2'
         },{
             title:'金额',
             field:'amount',
@@ -356,10 +364,13 @@ $(function(){
             hidden:'true'
         }]],
         onClickCell: function (index, field, row) {
-            if (index != editIndex) {
+            if(editIndex==undefined){
+                editIndex = index ;
+            }else{
                 $(this).datagrid('endEdit', editIndex);
                 editIndex = index;
             }
+
             $(this).datagrid('beginEdit', editIndex);
             var ed = $(this).datagrid('getEditor', {index: index, field: field});
         }
@@ -379,10 +390,13 @@ $(function(){
             }
         },
         onChange:function(newValue,oldValue){
-            if(newValue=="退货出库"){
+            if(newValue.indexOf("退")>=0){
                 $('#receiver').combogrid('enable');
-                $.messager.confirm('系统消息', '您要“退货出库”给供应商吗？', function (r) {
+                $.messager.defaults.ok="供货商";
+                $.messager.defaults.cancel="上级库房";
+                $.messager.confirm('系统消息', '请选择退货对象', function (r) {
                     if (r) {
+                        exportToFlag="toSupplier" ;
                         depts = new Array;
                         upStorageFlag = true;
                         for(var i = 0 ;i< suppliers.length;i++){
@@ -393,14 +407,17 @@ $(function(){
                             depts.push(dept)
                         }
                         $('#receiver').combogrid('grid').datagrid('loadData', depts);
+                    }else{
+                        exportToFlag="toHigherStorage"
                     }
+                    $.messager.defaults.ok="确定";
+                    $.messager.defaults.cancel = "取消";
                 });
             } else if(newValue=="盘亏出库"){
                 $('#receiver').combogrid('disable');
             }else{
                 $('#receiver').combogrid('enable');
                 depts = deptsBack;
-                //console.log(depts);
             }
             $('#receiver').combogrid('grid').datagrid('loadData', depts);
     }
@@ -855,7 +872,7 @@ $(function(){
             detail.batchNo = rows[i].batchNo;
             detail.importDocumentNo = rows[i].importDocumentNo;
             detail.retailPrice = rows[i].retailPrice;
-            detail.tradePrice = rows[i].retailPrice;
+            detail.tradePrice = rows[i].tradePrice;
             detail.packageSpec = rows[i].packageSpec;
             detail.packageUnits = rows[i].packageUnits;
             detail.quantity = rows[i].quantity;

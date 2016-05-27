@@ -661,7 +661,7 @@ $(function () {
             rowDetail.packageSpec = row.expSpec;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.tradePrice;
+            rowDetail.purchasePrice = row.purchasePrice;
             rowDetail.amount = 0;
             rowDetail.firmId = row.firmId;
             rowDetail.batchNo = "X";
