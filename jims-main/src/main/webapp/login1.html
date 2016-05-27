@@ -72,7 +72,7 @@
                     alert("密码不能为空")
                     return ;
                 }
-                userName = leftZeroPad(userName,6) ;
+//                userName = leftZeroPad(userName,6) ;
                 password = leftZeroPad(password,6) ;
                 $.post("/api/login/check-login?loginName="+userName+"&password="+password,function(data){
                     console.log(data) ;

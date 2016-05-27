@@ -130,7 +130,7 @@ public class StaffDictFacade extends BaseFacade {
 
     public StaffDict findByLoginName(String loginName) {
 
-        String hql ="from StaffDict as sf where sf.loginName = upper('"+loginName+"')" ;
+        String hql ="from StaffDict as sf where sf.loginName = '"+loginName+"'" ;
         List result = super.createQuery(StaffDict.class, hql, new ArrayList()).getResultList();
         if(result.size()>0){
             return (StaffDict)result.get(0);
