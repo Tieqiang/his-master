@@ -9,8 +9,6 @@ $(function(){
             $("#baseDictDg").datagrid('endEdit',editIndex) ;
             editIndex = undefined ;
         }
-
-
     }
     $("#baseDictDg").datagrid({
         title:'基础字典维护',
@@ -28,17 +26,17 @@ $(function(){
             title:'键值',
             field:'baseCode',
             width:"20%",
-            editor:'textbox'
+            editor:'text'
         },{
             title:'键名',
             field:'baseName',
             width:'30%',
-            editor:'textbox'
+            editor:'text'
         },{
             title:'字典名称',
             field:'baseType',
             width:'30%',
-            editor:'textbox'
+            editor:'text'
         },{
             title:'输入码',
             field:'inputCode',
@@ -52,6 +50,14 @@ $(function(){
 
     });
 
+    var loadDict = function () {
+        //var name = $("#name").textbox("getValue");
+
+        $.get('/api/base-dict/list-by-type', function (data) {
+            $("#baseDictDg").datagrid('loadData', data);
+        });
+    }
+    loadDict();
 
     /**
      * 添加字典
@@ -151,10 +157,32 @@ $(function(){
         baseDictBeanChangeVo.deleted = deleted ;
         baseDictBeanChangeVo.updated = updated ;
 
+        if(baseDictBeanChangeVo.inserted.length > 0){
+            for(var i = 0 ; i < baseDictBeanChangeVo.inserted.length ; i++){
+                var baseCode = baseDictBeanChangeVo.inserted[i].baseCode;
+                var baseName = baseDictBeanChangeVo.inserted[i].baseName;
+                var baseType = baseDictBeanChangeVo.inserted[i].baseType;
+                if(baseCode.length == 0){
+                    $.messager.alert('提示','键值不能为空!','error');
+                    return ;
+                }
+                if (baseName.length == 0) {
+                    $.messager.alert('提示', '键名不能为空!', 'error');
+                    return;
+                }
+                if (baseType.length == 0) {
+                    $.messager.alert('提示', '字典名称不能为空!', 'error');
+                    return;
+                }
+            }
+        }
+
         $.postJSON("/api/base-dict/merge",baseDictBeanChangeVo,function(data,status){
             $.messager.alert("系统提示","保存成功","info");
+            loadDict();
         },function(error){
             $.messager.alert("系统提示","保存失败","error");
+            loadDict();
         })
 
     }) ;
