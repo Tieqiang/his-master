@@ -176,6 +176,25 @@ $(function(){
                 }
             }
         }
+        if (baseDictBeanChangeVo.updated.length > 0) {
+            for (var i = 0; i < baseDictBeanChangeVo.updated.length; i++) {
+                var baseCode = baseDictBeanChangeVo.updated[i].baseCode;
+                var baseName = baseDictBeanChangeVo.updated[i].baseName;
+                var baseType = baseDictBeanChangeVo.updated[i].baseType;
+                if (baseCode.length == 0) {
+                    $.messager.alert('提示', '键值不能为空!', 'error');
+                    return;
+                }
+                if (baseName.length == 0) {
+                    $.messager.alert('提示', '键名不能为空!', 'error');
+                    return;
+                }
+                if (baseType.length == 0) {
+                    $.messager.alert('提示', '字典名称不能为空!', 'error');
+                    return;
+                }
+            }
+        }
 
         $.postJSON("/api/base-dict/merge",baseDictBeanChangeVo,function(data,status){
             $.messager.alert("系统提示","保存成功","info");
