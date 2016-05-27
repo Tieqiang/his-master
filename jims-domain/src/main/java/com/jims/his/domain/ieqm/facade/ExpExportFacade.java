@@ -373,29 +373,27 @@ public class ExpExportFacade extends BaseFacade {
         String s1 = formatter.format(startDate.getTime());
         String s2 = formatter.format(stopDate.getTime());
         String sql  = "\n" +
-                "   SELECT " +
-                "         EXP_EXPORT_DETAIL.BATCH_NO,   \n" +
-                "         EXP_EXPORT_DETAIL.EXPIRE_DATE,   \n" +
-                "         EXP_EXPORT_DETAIL.FIRM_ID,   \n" +
-                "         EXP_EXPORT_DETAIL.PURCHASE_PRICE,   \n" +
-                "         EXP_EXPORT_DETAIL.PURCHASE_PRICE*EXP_EXPORT_DETAIL.QUANTITY  pay_Amount,   \n" +
-                "         EXP_EXPORT_DETAIL.PACKAGE_SPEC,   \n" +
-                "         EXP_EXPORT_DETAIL.QUANTITY,   \n" +
-                "         EXP_EXPORT_DETAIL.PACKAGE_UNITS,   \n" +
-                "         EXP_EXPORT_DETAIL.IMPORT_DOCUMENT_NO,   \n" +
-                "         EXP_EXPORT_DETAIL.DOCUMENT_NO,   \n" +
-                "         EXP_EXPORT_DETAIL.RETAIL_PRICE,   \n" +
-                "         EXP_EXPORT_DETAIL.RETAIL_PRICE*EXP_EXPORT_DETAIL.QUANTITY retail_Amount,   \n" +
-                "         EXP_EXPORT_MASTER.RECEIVER,   \n" +
-                "         EXP_DICT.EXP_NAME,   \n" +
-                "         EXP_EXPORT_MASTER.SUB_STORAGE,   \n" +
-                "         EXP_EXPORT_DETAIL.EXP_CODE,   \n" +
-                "         EXP_EXPORT_DETAIL.EXP_FORM,   \n" +
-                "         DEPT_CLINIC_ATTR_DICT.base_name dept_ATTR  \n" +
-                "    FROM EXP_EXPORT_DETAIL,   \n" +
-                "         EXP_EXPORT_MASTER, base_dict DEPT_CLINIC_ATTR_DICT , \n" +
-                "         EXP_DICT,   \n" +
-                "         DEPT_DICT  \n" +
+                "   SELECT DISTINCT" +
+                "         EXP_EXPORT_DETAIL.BATCH_NO,\n" +
+                "                EXP_EXPORT_DETAIL.EXPIRE_DATE,\n" +
+                "                EXP_EXPORT_DETAIL.FIRM_ID,\n" +
+                "                EXP_EXPORT_DETAIL.PURCHASE_PRICE,\n" +
+                "                EXP_EXPORT_DETAIL.PURCHASE_PRICE *\n" +
+                "                EXP_EXPORT_DETAIL.QUANTITY pay_Amount,\n" +
+                "                EXP_EXPORT_DETAIL.PACKAGE_SPEC,\n" +
+                "                EXP_EXPORT_DETAIL.QUANTITY,\n" +
+                "                EXP_EXPORT_DETAIL.PACKAGE_UNITS,\n" +
+                "                EXP_EXPORT_DETAIL.IMPORT_DOCUMENT_NO,\n" +
+                "                EXP_EXPORT_DETAIL.DOCUMENT_NO,\n" +
+                "                EXP_EXPORT_DETAIL.RETAIL_PRICE,\n" +
+                "                EXP_EXPORT_DETAIL.RETAIL_PRICE * EXP_EXPORT_DETAIL.QUANTITY retail_Amount,\n" +
+                "                EXP_EXPORT_MASTER.RECEIVER,\n" +
+                "                EXP_DICT.EXP_NAME,\n" +
+                "                EXP_EXPORT_MASTER.SUB_STORAGE,\n" +
+                "                EXP_EXPORT_DETAIL.EXP_CODE,\n" +
+                "                EXP_EXPORT_DETAIL.EXP_FORM，" +
+                "                BASE_DICT.base_name dept_ATTR  \n" +
+                "    FROM EXP_EXPORT_DETAIL, EXP_EXPORT_MASTER, base_dict, EXP_DICT, DEPT_DICT" +
                 "   WHERE ( EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO ) and  \n" +
                 "         ( EXP_EXPORT_MASTER.DOC_STATUS <> 1) and\n" +
                 "         ( EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
@@ -408,7 +406,7 @@ public class ExpExportFacade extends BaseFacade {
                 "         ( EXP_EXPORT_MASTER.STORAGE = '"+storage+"' ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE >= TO_DATE('"+s1+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE <= TO_DATE('"+s2+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
-                "         ( EXP_EXPORT_DETAIL.hospital_id = '"+hospitalId+"' ) AND DEPT_CLINIC_ATTR_DICT.base_type = 'DEPT_CLINIC_ATTR_DICT'" ;
+                "         ( EXP_EXPORT_DETAIL.hospital_id = '"+hospitalId+"' ) " ;
         if (null != expCode && !expCode.trim().equals("")) {
             sql += " AND EXP_EXPORT_DETAIL.EXP_CODE='" + expCode + "'\n";
         }
@@ -416,7 +414,9 @@ public class ExpExportFacade extends BaseFacade {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != deptAttr && !deptAttr.trim().equals("")) {
-            sql += "  and  DEPT_CLINIC_ATTR_DICT.base_code = dept_dict.dept_ATTR and  DEPT_DICT.dept_attr='" + deptAttr + "' and  DEPT_DICT.DEPT_ATTR = DEPT_CLINIC_ATTR_DICT.base_code\n";
+            sql += "   AND (base_dict.base_type = 'DEPT_CLINIC_ATTR_DICT')\n" +
+                    "         and (base_dict.base_code = dept_dict.dept_attr)\n" +
+                    "   and (base_dict.base_code = '"+deptAttr+"')";
         }
         List<ExpExportDetialVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpExportDetialVo.class);
         return result;
