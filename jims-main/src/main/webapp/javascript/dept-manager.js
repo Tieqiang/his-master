@@ -138,7 +138,7 @@ $(function () {
                     treeDepts.push(depts[i])
                 }
             }
-            console.log(treeDepts);
+//            console.log(treeDepts);
             $("#tt").treegrid('loadData', treeDepts);
 
         })
@@ -227,6 +227,7 @@ $(function () {
         deptDict.deptClass = $("#deptClass").combobox('getValue') ;
         deptDict.deptType = $("#deptType").combobox('getValue') ;
         deptDict.endDept = $("#endDept").combobox('getValue') ;
+        deptDict.deptAttr=$("#deptAttr").val();
 
 
         deptDict.hospitalDict.id = parent.config.hospitalId;
@@ -253,7 +254,7 @@ $(function () {
         $("#deptName").textbox('setValue', "");
         $("#deptAlis").textbox('setValue', "");
         $("#deptOutpInp").combobox('setValue', "");
-        //$("#deptDevideAttr").textbox('setValue',"") ;
+        $("#deptAttr").textbox('setValue',"") ;
         $("#deptLocation").textbox('setValue', "");
         $("#deptStopFlag").combobox('setValue', "");
         $("#parentId").textbox('setValue', "");
