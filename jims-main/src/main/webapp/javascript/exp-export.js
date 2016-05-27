@@ -686,7 +686,7 @@ $(function(){
         onClickRow: function (index, row) {
             var rows = $("#exportDetail").datagrid('getRows') ;
             for(var i = 0;i<rows.length;i++){
-                if(rows[i].expCode == row.expCode && rows[i].packageSpec==row.expSpec && rows[i].batchNo ==row.batchNo && rows[i].firmId ==row.firmId){
+                if(rows[i].expCode == row.expCode && rows[i].packageSpec==row.packageSpec && rows[i].batchNo ==row.batchNo && rows[i].firmId ==row.firmId){
                     $.messager.alert("系统提示","同批次、同厂商、同规格的【"+row.expName+"】记录已经存在，请不要重复添加",'info');
                     return ;
                 }
@@ -697,7 +697,7 @@ $(function(){
             rowDetail.expName = row.expName;
             rowDetail.expForm = row.expForm;
             rowDetail.expCode = row.expCode;
-            rowDetail.packageSpec = row.expSpec;
+            rowDetail.packageSpec = row.packageSpec;
             rowDetail.expSpec = row.minSpec;
             rowDetail.units = row.minUnits;
             rowDetail.packageUnits = row.units;
