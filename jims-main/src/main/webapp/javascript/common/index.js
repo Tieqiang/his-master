@@ -27,8 +27,14 @@ window.addTab = function (title, href) {
                 var userName = config.loginName.replace(/\b(0+)/gi, "");
                 userName = userName.toLocaleLowerCase();
                 href = String.format(href, userName, config.password);
+
             }
-            console.log(href)
+
+            if(href.indexOf("?")>=0){
+                href = href+"&date="+new Date() ;
+            }else{
+                href=href +"?date="+new Date();
+            }
             content = '<iframe scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>';
         } else {
             content = '<iframe scrolling="auto" frameborder="0"  src="views' + href + '.html" style="width:100%;height:100%;"></iframe>'
@@ -298,7 +304,10 @@ $(function () {
                 }
                 localProgram.children.push(m);
             }
-            menuTreeData.push(localProgram);
+
+            if(localProgram.children.length){
+                menuTreeData.push(localProgram);
+            }
         });
 
 

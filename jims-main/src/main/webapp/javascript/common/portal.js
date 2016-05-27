@@ -7,7 +7,7 @@ $(function () {
     var startLocalApp = function (app) {
         var program = {};
         program.appName = app.appName;
-        program.appUrl = app.appLocalPath + " " + config.loginName + ";" + config.password;
+        program.appUrl = app.appLocalPath + " " + parent.config.loginName + ";" + parent.config.password;
         var path = 'http://127.0.0.1:8987/api/local-listener/start?appName=' + program.appName + "&appUrl=" + program.appUrl
         path = encodeURI(path);
         $.post(path, {}, function (data,status) {
@@ -383,7 +383,7 @@ $(function () {
             console.log("已经运行")
         }else{
             if(deployJava.getBrowser()=="MSIE"){
-                deployJava.launchWebStartApplication("jnlp/jimsplugin.jnlp");
+                deployJava.launchWebStartApplication("/jnlp/jimsplugin.jnlp");
             }else{
                 $.messager.alert("系统提示","非IE系列浏览器，不能够加载本地插件，无法使用部分功能","info");
             }

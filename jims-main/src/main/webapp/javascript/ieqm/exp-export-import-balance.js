@@ -491,10 +491,7 @@ $(function () {
         }, {
             title: '包装规格',
             field: 'expSpec'
-        }, {
-            title: '数量',
-            field: 'quantity'
-        }, {
+        },  {
             title: '包装单位',
             field: 'units'
         }, {
@@ -649,6 +646,13 @@ $(function () {
         }]],
         onDblClickRow: function (index, row) {
             $("#dg").datagrid('endEdit', editIndex);
+            var rows = $("#dg").datagrid('getRows') ;
+            for(var i = 0;i<rows.length;i++){
+                if(rows[i].expCode == row.expCode && rows[i].packageSpec==row.expSpec && rows[i].firmId ==row.firmId){
+                    $.messager.alert("系统提示","同批次、同厂商、同规格的【"+row.expName+"】记录已经存在，请不要重复添加",'info');
+                    return ;
+                }
+            }
             var rowDetail = $("#dg").datagrid('getData').rows[editIndex];
 
             rowDetail.expName = row.expName;
