@@ -98,7 +98,30 @@ $(function(){
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
-
+        if(beanChangeVo.inserted.length > 0){
+            for(var i= 0;i<beanChangeVo.inserted.length;i++){
+                var measuresName = beanChangeVo.inserted[i].measuresName;
+                if(measuresName.length == 0){
+                    $.messager.alert('提示','新增的名称不能为空!!','error');
+                    return ;
+                }else if(measuresName.length > 8){
+                    $.messager.alert('提示', '名称超过长度,请输入四个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var measuresName = beanChangeVo.updated[i].measuresName;
+                if (measuresName.length == 0) {
+                    $.messager.alert('提示', '名称不能改为空!!', 'error');
+                    return;
+                } else if (measuresName.length > 8) {
+                    $.messager.alert('提示', '名称超过长度,请输入四个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
         if (beanChangeVo) {
             $.postJSON("/api/measures-dict/merge", beanChangeVo, function (data, status) {
                 $.messager.alert("系统提示", "保存成功", "info");
