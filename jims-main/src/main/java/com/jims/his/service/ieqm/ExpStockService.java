@@ -95,18 +95,14 @@ public class ExpStockService {
                 "       c.TRADE_PRICE purchase_Price,\n" +
                 "       c.retail_price,\n" +
                 "       c.material_code,\n" +
-                "       nvl(d.quantity, 0)quantity,\n" +
                 "       c.Register_no,\n" +
+                "       0 quantity," +
                 "       c.Permit_no\n" +
-                "  FROM exp_dict b, exp_price_list c, exp_stock d\n" +
+                "  FROM exp_dict b, exp_price_list c\n" +
                 " WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "   AND b.exp_spec = c.min_spec\n" +
-                "   and c.EXP_CODE = d.exp_code(+)\n" +
-                "   and c.min_SPEC = d.exp_spec(+)\n" +
-                "   and c.firm_id = d.firm_id(+)\n" +
                 "   AND c.start_date <= sysdate\n" +
                 "   AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
-                "   and d.storage(+) like '"+storageCode+"' || '%'\n" +
                 "   AND b.EXP_CODE = '"+expCode+"'" +
                 "   and c.hospital_id = '"+hospitalId+"'" ;
 

@@ -550,6 +550,160 @@ $(function(){
 
 
     });
+    $("#stockRecordDatagrid").datagrid({
+        singleSelect: true,
+        fit: true,
+        fitColumns: true,
+        url: '/api/exp-stock/stock-export-record/',
+        method: 'GET',
+        columns: [[{
+            title: '代码',
+            field: 'expCode'
+        }, {
+            title: '名称',
+            field: 'expName'
+        }, {
+            title: '包装规格',
+            field: 'expSpec'
+        }, {
+            title: '数量',
+            field: 'quantity'
+        }, {
+            title: '包装单位',
+            field: 'units'
+        }, {
+            title: '基本规格',
+            field: 'minSpec'
+        }, {
+            title: '基本单位',
+            field: 'minUnits'
+        }, {
+            title: '厂家',
+            field: 'firmId'
+        }, {
+            title: '进货价',
+            field: 'purchasePrice'
+        }, {
+            title: '批发价',
+            field: 'tradePrice'
+        }, {
+            title: '零售价',
+            field: 'retailPrice'
+        }, {
+            title: '批号',
+            field: 'batchNo'
+        }, {
+            title: '有效期',
+            field: 'expireDate',
+            formatter:formatterDate
+        }, {
+            title: '入库单号',
+            field: 'documentNo'
+        }, {
+            title: '生产日期',
+            field: 'producedate',
+            formatter:formatterDate
+        }, {
+            title: '消毒日期',
+            field: 'disinfectdate',
+            formatter:formatterDate
+        }, {
+            title: '产品类别',
+            field: 'expForm'
+        }, {
+            title: '是否包装',
+            field: 'singleGroupIndicator',
+            formatter: function (value, row, index) {
+                if (value == "1") {
+                    value = "是";
+                }
+                else if (value == "2") {
+                    value = "否";
+                }
+                else if (value == "S") {
+                    value = "是";
+                } else {
+                    value = "是";
+                }
+                return value;
+            }
+        }, {
+            title: '子包装1',
+            field: 'subPackage1'
+        }, {
+            title: '子单位1',
+            field: 'subPackageUnits1'
+        }, {
+            title: '子规格1',
+            field: 'subPackageSpec1'
+        }, {
+            title: '子包装2',
+            field: 'subPackage2'
+        }, {
+            title: '子单位2',
+            field: 'subPackageUnits2'
+        }, {
+            title: '子规格2',
+            field: 'subPackageSpec2'
+        }, {
+            title: '灭菌标识',
+            field: 'killflag'
+        }]],
+        onLoadSuccess:function(data){
+            flag = flag+1;
+            if(flag==2){
+                var dat ={};
+                dat= $("#stockRecordDatagrid").datagrid('getData');
+                if(dat.total==0 && editIndex!=undefined){
+                    $("#exportDetail").datagrid('endEdit', editIndex);
+                    $.messager.alert('系统提示','该子库房暂无此产品,请重置产品名称或子库房！','info');
+                    $("#stockRecordDialog").dialog('close');
+                    $("#exportDetail").datagrid('beginEdit', editIndex);
+                }
+                flag=0;
+            }
+        },
+        onClickRow: function (index, row) {
+            var rows = $("#exportDetail").datagrid('getRows') ;
+            for(var i = 0;i<rows.length;i++){
+                if(rows[i].expCode == row.expCode && rows[i].packageSpec==row.expSpec && rows[i].batchNo ==row.batchNo && rows[i].firmId ==row.firmId){
+                    $.messager.alert("系统提示","同批次、同厂商、同规格的【"+row.expName+"】记录已经存在，请不要重复添加",'info');
+                    return ;
+                }
+            }
+
+            $("#exportDetail").datagrid('endEdit', editIndex);
+            var rowDetail = $("#exportDetail").datagrid('getData').rows[editIndex];
+            rowDetail.expName = row.expName;
+            rowDetail.expForm = row.expForm;
+            rowDetail.expCode = row.expCode;
+            rowDetail.packageSpec = row.expSpec;
+            rowDetail.expSpec = row.minSpec;
+            rowDetail.units = row.minUnits;
+            rowDetail.packageUnits = row.units;
+            rowDetail.disNum = row.quantity;
+            rowDetail.purchasePrice = row.purchasePrice;
+            rowDetail.amount = 0;
+            rowDetail.firmId = row.firmId;
+            rowDetail.batchNo = row.batchNo;
+            rowDetail.expireDate = row.expireDate;
+            rowDetail.producedate = row.producedate;
+            rowDetail.disinfectdate = row.disinfectdate;
+            rowDetail.killflag = row.killflag;
+            rowDetail.subPackage1 = row.subPackage1;
+            rowDetail.subPackageUnits1 = row.subPackageUnits1;
+            rowDetail.subPackageSpec1 = row.subPackageSpec1;
+            rowDetail.subPackage2 = row.subPackage2;
+            rowDetail.subPackageUnits2 = row.subPackageUnits2;
+            rowDetail.subPackageSpec2 = row.subPackageSpec2;
+            rowDetail.importDocumentNo = row.documentNo;
+            rowDetail.retailPrice = row.retailPrice;
+            rowDetail.tradePrice = row.tradePrice;
+            $("#exportDetail").datagrid('refreshRow',editIndex);
+            $("#stockRecordDialog").dialog('close');
+            $("#exportDetail").datagrid('beginEdit', editIndex);
+        }
+    });
     $("#stockRecordDialog").dialog({
         title: '选择规格',
         //style="width:500px;height:300px;
@@ -560,152 +714,7 @@ $(function(){
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#stockRecordDatagrid").datagrid({
-                singleSelect: true,
-                fit: true,
-                fitColumns: true,
-                url: '/api/exp-stock/stock-export-record/',
-                method: 'GET',
-                columns: [[{
-                    title: '代码',
-                    field: 'expCode'
-                }, {
-                    title: '名称',
-                    field: 'expName'
-                }, {
-                    title: '包装规格',
-                    field: 'expSpec'
-                }, {
-                    title: '数量',
-                    field: 'quantity'
-                }, {
-                    title: '包装单位',
-                    field: 'units'
-                }, {
-                    title: '基本规格',
-                    field: 'minSpec'
-                }, {
-                    title: '基本单位',
-                    field: 'minUnits'
-                }, {
-                    title: '厂家',
-                    field: 'firmId'
-                }, {
-                    title: '进货价',
-                    field: 'purchasePrice'
-                }, {
-                    title: '批发价',
-                    field: 'tradePrice'
-                }, {
-                    title: '零售价',
-                    field: 'retailPrice'
-                }, {
-                    title: '批号',
-                    field: 'batchNo'
-                }, {
-                    title: '有效期',
-                    field: 'expireDate',
-                    formatter:formatterDate
-                }, {
-                    title: '入库单号',
-                    field: 'documentNo'
-                }, {
-                    title: '生产日期',
-                    field: 'producedate',
-                    formatter:formatterDate
-                }, {
-                    title: '消毒日期',
-                    field: 'disinfectdate',
-                    formatter:formatterDate
-                }, {
-                    title: '产品类别',
-                    field: 'expForm'
-                }, {
-                    title: '是否包装',
-                    field: 'singleGroupIndicator',
-                    formatter: function (value, row, index) {
-                        if (value == "1") {
-                            value = "是";
-                        }
-                        else if (value == "2") {
-                            value = "否";
-                        }
-                        else if (value == "S") {
-                            value = "是";
-                        } else {
-                            value = "是";
-                        }
-                        return value;
-                    }
-                }, {
-                    title: '子包装1',
-                    field: 'subPackage1'
-                }, {
-                    title: '子单位1',
-                    field: 'subPackageUnits1'
-                }, {
-                    title: '子规格1',
-                    field: 'subPackageSpec1'
-                }, {
-                    title: '子包装2',
-                    field: 'subPackage2'
-                }, {
-                    title: '子单位2',
-                    field: 'subPackageUnits2'
-                }, {
-                    title: '子规格2',
-                    field: 'subPackageSpec2'
-                }, {
-                    title: '灭菌标识',
-                    field: 'killflag'
-                }]],
-                onLoadSuccess:function(data){
-                    flag = flag+1;
-                    if(flag==2){
-                        var dat ={};
-                        dat= $("#stockRecordDatagrid").datagrid('getData');
-                        if(dat.total==0 && editIndex!=undefined){
-                            $("#exportDetail").datagrid('endEdit', editIndex);
-                            $.messager.alert('系统提示','该子库房暂无此产品,请重置产品名称或子库房！','info');
-                            $("#stockRecordDialog").dialog('close');
-                            $("#exportDetail").datagrid('beginEdit', editIndex);
-                        }
-                        flag=0;
-                    }
-                },
-                onClickRow: function (index, row) {
-                    $("#exportDetail").datagrid('endEdit', editIndex);
-                    var rowDetail = $("#exportDetail").datagrid('getData').rows[editIndex];
-                    rowDetail.expName = row.expName;
-                    rowDetail.expForm = row.expForm;
-                    rowDetail.expCode = row.expCode;
-                    rowDetail.packageSpec = row.expSpec;
-                    rowDetail.expSpec = row.minSpec;
-                    rowDetail.units = row.minUnits;
-                    rowDetail.packageUnits = row.units;
-                    rowDetail.disNum = row.quantity;
-                    rowDetail.purchasePrice = row.purchasePrice;
-                    rowDetail.amount = 0;
-                    rowDetail.firmId = row.firmId;
-                    rowDetail.batchNo = row.batchNo;
-                    rowDetail.expireDate = row.expireDate;
-                    rowDetail.producedate = row.producedate;
-                    rowDetail.disinfectdate = row.disinfectdate;
-                    rowDetail.killflag = row.killflag;
-                    rowDetail.subPackage1 = row.subPackage1;
-                    rowDetail.subPackageUnits1 = row.subPackageUnits1;
-                    rowDetail.subPackageSpec1 = row.subPackageSpec1;
-                    rowDetail.subPackage2 = row.subPackage2;
-                    rowDetail.subPackageUnits2 = row.subPackageUnits2;
-                    rowDetail.subPackageSpec2 = row.subPackageSpec2;
-                    rowDetail.importDocumentNo = row.documentNo;
-                    rowDetail.retailPrice = row.retailPrice;
-                    rowDetail.tradePrice = row.tradePrice;
-                    $("#exportDetail").datagrid('refreshRow',editIndex);
-                    $("#stockRecordDialog").dialog('close');
-                    $("#exportDetail").datagrid('beginEdit', editIndex);
-                }
-            });
+
             var subStorage = $("#subStorage").combobox("getValue");
             $("#stockRecordDatagrid").datagrid('load', {
                 storageCode: parent.config.storageCode,
