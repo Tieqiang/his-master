@@ -15,6 +15,7 @@ public class ExpImportDetailVo implements Serializable {
     private String id;
     private String detailId;
     private String storage;
+    private String storageName;
     private Integer accountIndicator;
     private String documentNo;
     private Short itemNo;
@@ -82,10 +83,11 @@ public class ExpImportDetailVo implements Serializable {
     public ExpImportDetailVo() {
     }
 
-    public ExpImportDetailVo(String id, String detailId, String storage, Integer accountIndicator, String documentNo, Short itemNo, String expCode, String expSpec, String units, String batchNo, Date expireDate, String firmId, String expForm, Double purchasePrice, Double tradePrice, Double retailPrice, Double discount, String packageSpec, Double quantity, String packageUnits, Double subPackage1, String subPackageUnits1, String subPackageSpec1, Double subPackage2, String subPackageUnits2, String subPackageSpec2, String invoiceNo, Date invoiceDate, String disburseRecNo, Double disburseCount, Double inventory, String memo, String registno, String licenceno, Date producedate, Date disinfectdate, Integer killflag, Integer tallyFlag, Date tallyDate, String tallyOpertor, String orderBatch, Short tenderNo, String hospitalId, String expName, String supplier, Integer accountReceivable, Integer zeroAccount, String receiver, String exportClass, Date exportDate, Date importDate, String importClass, Double payAmount, Double sum, String subStorage, Double purchaseAmount, String way, String ioClass, String ourName, Double importNum, Double importPrice, Double exportNum, Double exportPrice, Date actionDate) {
+    public ExpImportDetailVo(String id, String detailId, String storage,String storageName, Integer accountIndicator, String documentNo, Short itemNo, String expCode, String expSpec, String units, String batchNo, Date expireDate, String firmId, String expForm, Double purchasePrice, Double tradePrice, Double retailPrice, Double discount, String packageSpec, Double quantity, String packageUnits, Double subPackage1, String subPackageUnits1, String subPackageSpec1, Double subPackage2, String subPackageUnits2, String subPackageSpec2, String invoiceNo, Date invoiceDate, String disburseRecNo, Double disburseCount, Double inventory, String memo, String registno, String licenceno, Date producedate, Date disinfectdate, Integer killflag, Integer tallyFlag, Date tallyDate, String tallyOpertor, String orderBatch, Short tenderNo, String hospitalId, String expName, String supplier, Integer accountReceivable, Integer zeroAccount, String receiver, String exportClass, Date exportDate, Date importDate, String importClass, Double payAmount, Double sum, String subStorage, Double purchaseAmount, String way, String ioClass, String ourName, Double importNum, Double importPrice, Double exportNum, Double exportPrice, Date actionDate) {
         this.id = id;
         this.detailId = detailId;
         this.storage = storage;
+        this.storageName=storageName;
         this.accountIndicator = accountIndicator;
         this.documentNo = documentNo;
         this.itemNo = itemNo;
@@ -659,5 +661,13 @@ public class ExpImportDetailVo implements Serializable {
 
     public void setPurchaseAmount(Double purchaseAmount) {
         this.purchaseAmount = purchaseAmount;
+    }
+
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
     }
 }
