@@ -12,6 +12,21 @@ import java.util.List;
  * Created by heren on 2015/9/16.
  */
 public class ExpCodingRuleFacade extends BaseFacade {
+
+    /**
+     * 根据编码级别查找数据
+     * @param codeLevel 编码级别
+     * @return
+     * @author fyg
+     */
+    public List<ExpCodingRule> findByCodeLevel(String codeLevel){
+        String hql = "from ExpCodingRule md where 1=1";
+        if(null != codeLevel && !codeLevel.trim().equals("")){
+            hql += "and md.codeLevel=" + codeLevel;
+        }
+        return entityManager.createQuery(hql).getResultList();
+    }
+
     /**
      * 名称模糊查询
      * @param name
