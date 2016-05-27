@@ -5,22 +5,23 @@
  * 零库存管理
  */
 $(function () {
-    $("#expName").searchbox({
-        searcher: function (value, name) {
-            var rows = $("#dg").datagrid("getRows");
-            for (var i = 0; i < rows.length; i++) {
-                if (rows[i].expName == value) {
-                    $("#dg").datagrid('selectRow', i);
-                }
-            }
-        }
-    });
+//    $("#expName").searchbox({
+//        searcher: function (value, name) {
+//            alert(value,+","+name);
+//            var rows = $("#dg").datagrid("getRows");
+//            for (var i = 0; i < rows.length; i++) {
+//                if (rows[i].expName == value) {
+//                    $("#dg").datagrid('selectRow', i);
+//                }
+//            }
+//        }
+//    });
     $("#dg").datagrid({
-        title: '零库存管理',
+//        title: '零库存管理',
         fit: true,//让#dg数据创铺满父类容器
         toolbar:'#ft',
         footer: '#tb',
-        rownumbers: true,
+//        rownumbers: true,
         singleSelect: false,
         ctrlSelect:true,
         columns: [[{
@@ -28,37 +29,37 @@ $(function () {
             field: 'id',
             hidden: true
         },{
-            title: '库房',
+            title: '产品所在库房',
             field: 'subStorage',
             width: "8%"
         }, {
             title: '产品名称',
             field: 'expName',
-            width: "8%"
+            width: "11%"
         }, {
-            title: '包装规格',
+            title: '产品包装规格',
             field: 'expSpec',
             width: "8%"
         }, {
-            title: '单位',
+            title: '产品单位',
             field: 'units',
-            width: "5%"
+            width: "8%"
         }, {
-            title: '厂家',
+            title: '生产厂家',
             field: 'firmId',
-            width: "8%"
+            width: "11%"
         },{
-            title: '批号',
+            title: '产品批号',
             field: 'batchNo',
-            width: "8%"
+            width: "11%"
         },{
-            title: '有效期',
+            title: '产品有效期',
             field: 'expireDate',
-            width: "8%",
+            width: "11%",
             formatter:formatterDate
 
         },{
-            title: '单价',
+            title: '产品单价',
             field: 'purchasePrice',
             width: "8%",
             editor: {
@@ -67,7 +68,7 @@ $(function () {
                 }
             }
         },{
-            title: '数量',
+            title: '产品库存数量',
             field: 'quantity',
             width: "8%",
             editor: {
@@ -76,7 +77,7 @@ $(function () {
                 }
             }
         },{
-            title: '复价',
+            title: '产品复价',
             field: 'subPackage1',
             width: "8%",
             editor: {
@@ -85,7 +86,7 @@ $(function () {
                 }
             }
         },{
-            title: '折扣',
+            title: '产品折扣',
             field: 'discount',
             width: "8%",
             editor: {
@@ -103,19 +104,21 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-            var h = date.getHours();
-            var mm = date.getMinutes();
-            var s = date.getSeconds();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
-                + (h < 10 ? ("0" + h) : h)+":"+ (mm < 10 ? ("0" + mm) : mm)+":"+ (s < 10 ? ("0" + s) : s);
+//            var h = date.getHours();
+//            var mm = date.getMinutes();
+//            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+//                + (h < 10 ? ("0" + h) : h)+":"+ (mm < 10 ? ("0" + mm) : mm)+":"+ (s < 10 ? ("0" + s) : s);
             return dateTime
         }
     }
     var loadDict = function () {
+        var expName=$("#expName").val();
+//        alert(expName+"expName");
         var dicts = {};
-        var promise = $.get("/api/exp-storage-zero-manage/list?storageCode=" +parent.config.storageCode+"&hospitalId="+parent.config.hospitalId, function(data){
+        var promise = $.get("/api/exp-storage-zero-manage/list?storageCode=" +parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&expName="+expName, function(data){
             dicts=data;
-            console.log(data);
+//            console.log(data);
             if(data.length<=0){
                 $.messager.alert("系统提示", "数据库暂无数据","info");
                 $("#dg").datagrid('loadData', []);
@@ -175,10 +178,14 @@ $(function () {
         if(!row){
             $.messager.alert("系统提醒","请选择要删除的行","error") ;
             return ;
+        }else{
+            var flag=window.confirm("确定要删除吗?");
+            if(flag){
+                var index = $("#dg").datagrid('getRowIndex',row) ;
+                $("#dg").datagrid('deleteRow',index) ;
+            }
         }
-        var index = $("#dg").datagrid('getRowIndex',row) ;
-        $("#dg").datagrid('deleteRow',index) ;
-    })
+     })
 
     $("#saveBtn").on('click',function(){
         var deleteData = $("#dg").datagrid('getChanges','deleted') ;

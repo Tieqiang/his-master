@@ -154,7 +154,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
         String sql = "select s1.storage_name provide_name,s2.storage_name applicant_name, a.applicant_storage,a.provide_storage,a.item_no,a.exp_code,a.exp_spec,a.package_spec," +
                 " a.quantity,a.package_units,a.enter_date_time,a.applicant_no,a.application_man,a.provide_flag,b.exp_name " +
                 " from exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION a , EXP_DICT b " +
-                " where s1.storage_code=a.PROVIDE_STORAGE and s2.storage_code=a.APPLICANT_STORAGE and a.exp_code = b.exp_code and a.package_spec = b.exp_spec";
+                " where s1.storage_code=a.PROVIDE_STORAGE and s2.storage_code=a.APPLICANT_STORAGE and a.exp_code = b.exp_code and a.exp_spec = b.exp_spec";
         if(null != startTime && !startTime.trim().equals("")){
             sql += " and a.enter_date_time >= to_date('" + startTime + "' , 'YYYY-MM-DD HH24:MI:SS') ";
         }

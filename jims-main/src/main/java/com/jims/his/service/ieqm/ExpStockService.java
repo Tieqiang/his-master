@@ -192,8 +192,8 @@ public class ExpStockService {
      */
     @GET
     @Path("upper-low-warning")
-    public List<ExpStorageProfileVo> searchWarningExpStock(@QueryParam("storage")String storage, @QueryParam("hospitalId")String hospitalId){
-        List<ExpStorageProfileVo> dicts =  expStockFacade.searchWarningStock(storage,hospitalId) ;
+    public List<ExpStorageProfileVo> searchWarningExpStock(@QueryParam("storage")String storage, @QueryParam("hospitalId")String hospitalId,@QueryParam("expName") String expName){
+        List<ExpStorageProfileVo> dicts =  expStockFacade.searchWarningStock(storage,hospitalId,expName) ;
         return  dicts;
     }
 

@@ -109,8 +109,12 @@ $(function () {
             width: '7%',
             hidden :true
         },{
-            title: '库房',
+            title: '库房代码',
             field: 'storage',
+            hidden: true
+        },{
+            title: '库房',
+            field: 'storageName',
             width: '7%'
         }, {
             title: '入库日期',
@@ -365,7 +369,6 @@ $(function () {
             $.messager.alert('系统提示','请选择查询参数','info');
             return;
         }
-        console.log(masterDataVo);
         var promise =$.get("/api/exp-import/exp-do-account",masterDataVo,function(data){
             for(var i = 0 ;i<data.length;i++){
                 if(data[i].tallyFlag=='1'){
@@ -376,6 +379,7 @@ $(function () {
                 }
                 data[i].invoiceDate=myFormatter2(data[i].invoiceDate);
             }
+            console.log(data);
             masters =data ;
         },'json');
         promise.done(function(){

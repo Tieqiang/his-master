@@ -85,7 +85,8 @@ $(document).ready(function () {
                     {field: 'expCode', title: '编码', width: 100, align: 'center'},
                     {field: 'expName', title: '名称', width: 100, align: 'center'},
                     {field: 'amountPerPackage', title: '可申请数量', width: 50, align: 'center'},
-                    {field: 'minSpec', title: '规格', width: 50, align: 'center'},
+                    {field: 'expSpec', title: '包装规格', width: 50, align: 'center'},
+                    {field: 'minSpec', title: '最小规格', width: 50, align: 'center'},
                     {field: 'units', title: '单位', width: 50, align: 'center'},
                     {field: 'firmId', title: '厂家', width: 100, align: 'center'},
                     {field: 'inputCode', title: '拼音码', width: 50, align: 'center'},
@@ -94,7 +95,7 @@ $(document).ready(function () {
                     $("#dg").datagrid('endEdit', editRowIndex);
                     if(rowData.amountPerPackage>0&&rowData.supplyIndicator==1){
                         var rowDetail = $("#dg").datagrid('getData').rows[editRowIndex];
-                        rowDetail.packageSpec = rowData.minSpec;
+                        rowDetail.packageSpec = rowData.expSpec;
                         rowDetail.expCode = rowData.expCode;
                         rowDetail.packageUnits = rowData.units;
                         rowDetail.expSpec = rowData.minSpec;
@@ -134,7 +135,7 @@ $(document).ready(function () {
                 })
             }}
         }, {
-            title: "规格",
+            title: "最小规格",
             field: "expSpec",
             width: "10%",
             editor: {

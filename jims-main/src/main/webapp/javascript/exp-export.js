@@ -2,6 +2,16 @@
  * Created by heren on 2015/10/23.
  */
 $(function(){
+    function formatterYMD(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+            return dateTime
+        }
+    }
     //格式化日期函数
     function formatterDate(val, row) {
         if (val != null) {
@@ -172,7 +182,17 @@ $(function(){
                     onChange: function (newValue, oldValue) {
                         var row = $("#exportDetail").datagrid('getData').rows[editIndex];
                         var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
-                        $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+                        var value= $('#receiver').combobox('getValue');
+                        if(value!=null&&value!=""){
+                            if(value=="退货出库"){//进价
+                                $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+                            }else{//
+                                $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+                            }
+                        }else{
+                            alert("请选择发往目的地！");
+                        }
+
                         var rows = $("#exportDetail").datagrid('getRows');
                         var totalAmount = 0;
                         var backAmount = 0;
