@@ -584,7 +584,7 @@ $(function(){
             field: 'expName'
         }, {
             title: '包装规格',
-            field: 'expSpec'
+            field: 'packageSpec'
         }, {
             title: '数量',
             field: 'quantity'

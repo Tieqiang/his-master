@@ -67,72 +67,6 @@
       </root>
     </artifact>
   </component>
-  <component name="ArtifactManager">
-    <artifact type="exploded-war" name="exp">
-      <output-path>$PROJECT_DIR$/out/artifacts/exp</output-path>
-      <root id="root">
-        <element id="dir-copy" path="$PROJECT_DIR$/jims-main/src/main/webapp" />
-        <element id="directory" name="WEB-INF">
-          <element id="directory" name="lib">
-            <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
-            <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
-            <element id="library" level="project" name="Maven: asm:asm:3.1" />
-            <element id="library" level="project" name="Maven: com.google.guava:guava:13.0.1" />
-            <element id="library" level="project" name="Maven: com.google.inject.extensions:guice-persist:3.0" />
-            <element id="library" level="project" name="Maven: com.google.inject.extensions:guice-servlet:3.0" />
-            <element id="library" level="project" name="Maven: com.google.inject:guice:3.0" />
-            <element id="library" level="project" name="Maven: com.oracle:ojdbc6:11.2.0.1.0" />
-            <element id="library" level="project" name="Maven: com.sun.jersey.contribs:jersey-guice:1.17" />
-            <element id="library" level="project" name="Maven: com.sun.jersey.contribs:jersey-moxy:1.17" />
-            <element id="library" level="project" name="Maven: com.sun.jersey:jersey-core:1.17" />
-            <element id="library" level="project" name="Maven: com.sun.jersey:jersey-json:1.17" />
-            <element id="library" level="project" name="Maven: com.sun.jersey:jersey-server:1.17" />
-            <element id="library" level="project" name="Maven: com.sun.jersey:jersey-servlet:1.17" />
-            <element id="library" level="project" name="Maven: com.sun.xml.bind:jaxb-impl:2.2.3-1" />
-            <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
-            <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
-            <element id="library" level="project" name="Maven: javax.inject:javax.inject:1" />
-            <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
-            <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
-            <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.2.2" />
-            <element id="library" level="project" name="Maven: javax.xml.stream:stax-api:1.0-2" />
-            <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
-            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9" />
-            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-jaxrs:1.9.2" />
-            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.2" />
-            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-xc:1.9.2" />
-            <element id="library" level="project" name="Maven: org.codehaus.jettison:jettison:1.1" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-http:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-io:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-security:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-server:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-servlet:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-util:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-webapp:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-xml:9.2.0.v20140526" />
-            <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.antlr:2.3.2" />
-            <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.asm:2.3.2" />
-            <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.core:2.3.2" />
-            <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.moxy:2.3.2" />
-            <element id="library" level="project" name="Maven: org.hibernate.common:hibernate-commons-annotations:4.0.2.Final" />
-            <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.2.5.Final" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-entitymanager:4.2.5.Final" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:4.3.0.Final" />
-            <element id="library" level="project" name="Maven: org.javassist:javassist:3.15.0-GA" />
-            <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.1.0.GA" />
-            <element id="library" level="project" name="Maven: org.jboss.spec.javax.transaction:jboss-transaction-api_1.1_spec:1.0.1.Final" />
-            <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.5" />
-            <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.5" />
-          </element>
-          <element id="directory" name="classes">
-            <element id="module-output" name="jims-domain" />
-            <element id="module-output" name="jims-main" />
-          </element>
-        </element>
-      </root>
-    </artifact>
-  </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
     <resourceExtensions />
@@ -1046,6 +980,17 @@
         <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.6/commons-lang-2.6-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: commons-logging:commons-logging:1.1.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: dom4j:dom4j:1.6.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/" />
@@ -1154,6 +1099,50 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.httpcomponents:httpclient:4.2.5">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.httpcomponents:httpcore:4.2.4">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.oltu.commons:org.apache.oltu.commons.encodedtoken:1.0.0">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.encodedtoken/1.0.0/org.apache.oltu.commons.encodedtoken-1.0.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.encodedtoken/1.0.0/org.apache.oltu.commons.encodedtoken-1.0.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.encodedtoken/1.0.0/org.apache.oltu.commons.encodedtoken-1.0.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.oltu.commons:org.apache.oltu.commons.json:1.0.0">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.json/1.0.0/org.apache.oltu.commons.json-1.0.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.json/1.0.0/org.apache.oltu.commons.json-1.0.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.json/1.0.0/org.apache.oltu.commons.json-1.0.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9">
@@ -1440,6 +1429,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/jboss/spec/javax/transaction/jboss-transaction-api_1.1_spec/1.0.1.Final/jboss-transaction-api_1.1_spec-1.0.1.Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.json:json:20131018">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/json/json/20131018/json-20131018.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/json/json/20131018/json-20131018-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/json/json/20131018/json-20131018-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:jul-to-slf4j:1.7.5">
