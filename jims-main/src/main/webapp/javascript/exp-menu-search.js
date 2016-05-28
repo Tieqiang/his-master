@@ -44,12 +44,12 @@ $(function () {
             field: 'retailPrice',
             width: "10%",
             editor: 'numberbox'
-        },{
+        }/*{
             title: '数量',
             field: 'quantity',
             width: "10%",
             editor: 'numberbox'
-        },{
+        }*/,{
             title: '产品范围',
             field: 'expIndicator',
             width: "10%"
