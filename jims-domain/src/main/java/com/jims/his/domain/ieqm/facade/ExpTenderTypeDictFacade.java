@@ -2,6 +2,7 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
+import com.jims.his.common.util.PinYin2Abbreviation;
 import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpImportClassDict;
 import com.jims.his.domain.ieqm.entity.ExpTenderTypeDict;
@@ -36,11 +37,13 @@ public class ExpTenderTypeDictFacade extends BaseFacade {
         List<ExpTenderTypeDict> updated = beanChangeVo.getUpdated();
         List<ExpTenderTypeDict> deleted = beanChangeVo.getDeleted();
         for (ExpTenderTypeDict dict : inserted) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getTenderTypeName()));
             ExpTenderTypeDict merge = merge(dict);
             newUpdateDict.add(merge);
         }
 
         for (ExpTenderTypeDict dict : updated) {
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getTenderTypeName()));
             ExpTenderTypeDict merge = merge(dict);
             newUpdateDict.add(merge);
         }
