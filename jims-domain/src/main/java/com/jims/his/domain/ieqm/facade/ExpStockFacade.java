@@ -422,7 +422,7 @@ public class ExpStockFacade extends BaseFacade {
                 "       b.exp_name,\n" +
                 "       a.package_spec,\n" +
                 "       a.firm_id,\n" +
-                "       a.package_units,\n" +
+                "       a.units,\n" +
                 "       a.quantity,\n" +
                 "       a.purchase_price,\n" +
                 "       c.retail_price,\n" +
