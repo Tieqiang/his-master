@@ -51,15 +51,15 @@ $(document).ready(function () {
             textField:"formName"
         });
     });
-    //产品包装单位查询
-    var expPackageUnitPromise = $.get("/api/measures-dict/list", function (data) {
-        $.each(data, function (index,item) {
-            var expPackageUnit ={};
-            expPackageUnit.measuresCode = item.measuresName;
-            expPackageUnit.measuresName = item.measuresName;
-            packageUnits.push(expPackageUnit);
-        })
-    });
+//    //产品包装单位查询
+//    var expPackageUnitPromise = $.get("/api/measures-dict/list", function (data) {
+//        $.each(data, function (index,item) {
+//            var expPackageUnit ={};
+//            expPackageUnit.measuresCode = item.measuresName;
+//            expPackageUnit.measuresName = item.measuresName;
+//            packageUnits.push(expPackageUnit);
+//        })
+//    });
     $('#inputCode').combogrid({
         panelWidth: 500,
         idField: 'expCode',
@@ -180,17 +180,17 @@ $(document).ready(function () {
         },{
             title:"常规包装数量",
             field:"amountPerPackage",
-            width:"10%",
-            editor:{type:"validatebox"}
+            width:"10%"
+//            editor:{type:"validatebox"}
         },{
             title:"常规包装单位",
             field:"packageUnits",
-            width:"10%",
-            editor:{type:"combobox",options:{
-                data:packageUnits,
-                valueField:"measuresCode",
-                textField:"measuresName"
-            }}
+            width:"10%"
+//            editor:{type:"combobox",options:{
+//                data:packageUnits,
+//                valueField:"measuresCode",
+//                textField:"measuresName"
+//            }}
         },{
             title:"高位水平",
             field:"upperLevel",
@@ -367,7 +367,7 @@ $(document).ready(function () {
             field: 'permitNo'
         },{
             title: '常规包装数量',
-            field: 'amountPerpackage'
+            field: 'amountPerPackage'
         }]],
         onLoadSuccess:function(data){
             flag = flag+1;
@@ -398,12 +398,12 @@ $(document).ready(function () {
                         expForm: row.expForm,
                         upperLevel: 0,
                         lowLevel: 0,
-                        amountPerPackage: row.amountPerpackage,
-                        packageUnits:row.UNITS,
+                        amountPerPackage: row.amountPerPackage,
+                        packageUnits:row.units,
                         storage: parent.config.storageCode,
                         expCode: row.expCode,
-                        location: row.expCode
-//                        units: row.units
+                        location: row.expCode,
+                        units: row.units
                     }
                 });
                 //currentExpCode = row.expCode;
