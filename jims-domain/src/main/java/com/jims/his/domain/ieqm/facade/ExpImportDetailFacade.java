@@ -3,14 +3,14 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
-import com.jims.his.domain.ieqm.entity.ExpDisburseRecDetail;
 import com.jims.his.domain.ieqm.entity.ExpImportDetail;
 import com.jims.his.domain.ieqm.entity.ExpImportMaster;
-import com.jims.his.domain.ieqm.vo.*;
+import com.jims.his.domain.ieqm.vo.ExpDisburseRecVo;
+import com.jims.his.domain.ieqm.vo.ExpImportDetailVo;
+import com.jims.his.domain.ieqm.vo.ExpImportVo;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -124,9 +124,9 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "   WHERE M.STORAGE = '"+storage+"' " +
                 "          AND M.HOSPITAL_ID = '"+hospitalId+"' " +
                 "          AND M.DOCUMENT_NO(+) = D.DOCUMENT_NO   \n" +
-                "          AND D.package_spec = A.exp_spec   \n" +
+                "          AND D.exp_spec = A.exp_spec   \n" +
                 "          AND D.exp_code = A.exp_code   \n" +
-                "          AND D.package_units = A.units   \n" +
+                "          AND D.units = A.units   \n" +
 //                "          AND M.storage = A.storage_code   \n" +
                 "\t        AND D.QUANTITY > NVL(D.DISBURSE_COUNT,0)\n";
         if (s1 != null) {
@@ -216,6 +216,7 @@ public class ExpImportDetailFacade extends BaseFacade {
         }
         String sql ="SELECT distinct EXP_IMPORT_MASTER.DOCUMENT_NO,              " +
                         "   EXP_IMPORT_MASTER.STORAGE,              " +
+                        "   EXP_STORAGE_DEPT.STORAGE_NAME,              " +
                         "   EXP_IMPORT_MASTER.id,              " +
                         "   EXP_IMPORT_DETAIL.id  detail_id,              " +
                         "   EXP_IMPORT_MASTER.IMPORT_DATE,              " +
@@ -236,9 +237,10 @@ public class ExpImportDetailFacade extends BaseFacade {
                         "EXP_IMPORT_DETAIL.PURCHASE_PRICE,              " +
                         "EXP_IMPORT_MASTER.IMPORT_CLASS ,       " +
                         "EXP_IMPORT_MASTER.ACCOUNT_INDICATOR        " +
-                "FROM EXP_IMPORT_DETAIL,EXP_IMPORT_MASTER,exp_dict       " +
+                "FROM EXP_IMPORT_DETAIL,EXP_IMPORT_MASTER,exp_dict,exp_storage_dept       " +
                 "WHERE  EXP_IMPORT_MASTER.STORAGE = '"+storage+"' and" +
                 "       EXP_IMPORT_MASTER.hospital_id = '"+hospitalId+"' and" +
+                "       EXP_IMPORT_MASTER.STORAGE=exp_storage_dept.storage_code and" +
                 "     ( EXP_IMPORT_DETAIL.DOCUMENT_NO = EXP_IMPORT_MASTER.DOCUMENT_NO ) and" +
                 "       EXP_IMPORT_DETAIL.package_spec = exp_dict.exp_spec and" +
                 "       EXP_IMPORT_DETAIL.package_units = exp_dict.units and" +
