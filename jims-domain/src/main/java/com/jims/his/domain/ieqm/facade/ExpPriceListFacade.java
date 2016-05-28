@@ -220,8 +220,8 @@ public class ExpPriceListFacade extends BaseFacade {
                 "and   c.firm_id = d.firm_id(+)\n" +
                 "AND   c.start_date <= sysdate\n" +
                 "AND   (c.stop_date IS NULL OR c.stop_date > sysdate)\n " +
-                "and   d.package_spec=c.exp_spec" +
-                "and   d.storage(+) like '" + StorageCode + "'||'%'\n" +
+                " and   d.package_spec=c.exp_spec " +
+                " and   d.storage(+) like '" + StorageCode + "'||'%'\n" +
                 //"AND   nvl(d.quantity,0) > 0" +
                 "and   upper(b.input_code) like upper('" + inputCode + "%')" +
                 " and   d.quantity>0";
