@@ -776,6 +776,9 @@ $(function () {
                 options: {
                     onChange: function (newValue, oldValue) {
                         var row = $("#dg").datagrid('getData').rows[editIndex];
+                        console.log(row);
+                        var amountEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
+                        $(amountEd.target).numberbox('setValue',newValue * row.purchasePrice)
                         var rows = $("#dg").datagrid('getRows');
                         var totalAmount = 0;
                         var exportAmount = 0;
@@ -788,16 +791,8 @@ $(function () {
                             exportAmount+= Number(Number(rows[i].quantity)*Number(rows[i].retailPrice));
                         }
 
-                        if (totalAmount) {
-                            totalAmount += newValue * row.purchasePrice;
-                        } else {
-                            totalAmount = newValue * row.purchasePrice;
-                        }
-                        if (exportAmount) {
-                            exportAmount += newValue * row.retailPrice;
-                        } else {
-                            exportAmount = newValue * row.retailPrice;
-                        }
+                        totalAmount += newValue * row.purchasePrice;
+                        exportAmount += newValue * row.retailPrice;
                         $("#accountReceivable").numberbox('setValue', exportAmount);
                         $("#accountReceivableIn").numberbox('setValue', totalAmount);
                     },
@@ -808,7 +803,7 @@ $(function () {
                 }
             }
         }, {
-            title: '单价',
+            title: '进价',
             field: 'purchasePrice',
             width: '7%',
             editor: {
