@@ -30,7 +30,10 @@ public class BaseDictFacade extends BaseFacade {
      */
     public List<BaseDict> findByBaseType(String baseType,int length) {
         if(baseType==null || "".equals(baseType.trim())){
-            return findAll(BaseDict.class) ;
+            String hql = "from BaseDict basedict0_ order by basedict0_.baseType";
+            List resultList = this.entityManager.createQuery(hql).getResultList();
+            return resultList;
+            //return findAll(BaseDict.class) ;
         }else{
             String hql = "from BaseDict as bd where upper(bd.baseType) like upper('%"+baseType.trim()+"%')" ;
             if(length > 0){
