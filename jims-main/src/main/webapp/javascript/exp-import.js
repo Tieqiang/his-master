@@ -36,29 +36,28 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-            var h = date.getHours();
-            var mm = date.getMinutes();
-            var s = date.getSeconds();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
-                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+//            var h = date.getHours();
+//            var mm = date.getMinutes();
+//            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) ;
             return dateTime;
         }
     }
 
-    function w3(s) {
-        if (!s) return new Date();
-        var y = s.substring(0, 4);
-        var m = s.substring(5, 7);
-        var d = s.substring(8, 10);
-        var h = s.substring(11, 14);
-        var min = s.substring(15, 17);
-        var sec = s.substring(18, 20);
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
-            return new Date(y, m - 1, d, h, min, sec);
-        } else {
-            return new Date();
-        }
-    }
+//    function w3(s) {
+//        if (!s) return new Date();
+//        var y = s.substring(0, 4);
+//        var m = s.substring(5, 7);
+//        var d = s.substring(8, 10);
+//        var h = s.substring(11, 14);
+//        var min = s.substring(15, 17);
+//        var sec = s.substring(18, 20);
+//        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+//            return new Date(y, m - 1, d, h, min, sec);
+//        } else {
+//            return new Date();
+//        }
+//    }
 
     /**
      * 定义明细信息表格
@@ -208,22 +207,22 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-                    showSeconds: true,
+//                    showSeconds: true,
                     formatter: formatterDate,
-                    parser: w3,
+//                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
-                            field: 'invoiceDate'
+                            field: 'expireDate'
                         });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
+//                        var y = date.getFullYear();
+//                        var m = date.getMonth() + 1;
+//                        var d = date.getDate();
+//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//
+//                        $(dateEd.target).textbox('setValue', dateTime);
+//                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -258,22 +257,22 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-                    showSeconds: true,
+//                    showSeconds: true,
                     formatter: formatterDate,
-                    parser: w3,
+//                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
                             field: 'invoiceDate'
                         });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
+//                        var y = date.getFullYear();
+//                        var m = date.getMonth() + 1;
+//                        var d = date.getDate();
+//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//
+//                        $(dateEd.target).textbox('setValue', dateTime);
+//                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -289,22 +288,22 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-                    showSeconds: true,
+//                    showSeconds: true,
                     formatter: formatterDate,
-                    parser: w3,
+//                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
                             field: 'producedate'
                         });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
+//                        var y = date.getFullYear();
+//                        var m = date.getMonth() + 1;
+//                        var d = date.getDate();
+//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//
+//                        $(dateEd.target).textbox('setValue', dateTime);
+//                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -316,22 +315,22 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-                    showSeconds: true,
+//                    showSeconds: true,
                     formatter: formatterDate,
-                    parser: w3,
+//                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
                             field: 'disinfectdate'
                         });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
+//                        var y = date.getFullYear();
+//                        var m = date.getMonth() + 1;
+//                        var d = date.getDate();
+//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//
+//                        $(dateEd.target).textbox('setValue', dateTime);
+//                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -1032,7 +1031,6 @@ $(function () {
             detail.quantity = rows[i].quantity;
             detail.batchNo = rows[i].batchNo;
             detail.purchasePrice = rows[i].purchasePrice;
-            detail.expireDate = new Date(rows[i].expireDate);
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
@@ -1042,9 +1040,14 @@ $(function () {
             detail.discount = rows[i].discount;
             detail.orderBatch = rows[i].orderBatch;
             detail.tenderNo = rows[i].tenderNo;
+
+
+            detail.expireDate =  new Date(rows[i].expireDate);
             detail.invoiceDate = new Date(rows[i].invoiceDate);
-            detail.producedate = new Date(rows[i].producedate);
-            detail.disinfectdate = new Date(rows[i].disinfectdate);
+            detail.producedate =  new Date(rows[i].producedate);
+            detail.disinfectdate =  new Date(rows[i].disinfectdate);
+
+
             detail.invoiceNo = rows[i].invoiceNo;
             detail.hospitalId = parent.config.hospitalId;
 
