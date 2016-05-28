@@ -28,9 +28,15 @@ public class IncomeItemDictService {
 
     @GET
     @Path("list-price-item")
-    public PageEntity<IncomeItemDict> listPriceItem(@QueryParam("hospitalId")String hospitalId,@QueryParam("reckCode")String reckCode){
+    public PageEntity<IncomeItemDict> listPriceItem(@QueryParam("hospitalId")String hospitalId,@QueryParam("reckCode")String reckCode) {
 
-        return incomeItemDictFacade.findPriceItem(hospitalId,reckCode) ;
+        return incomeItemDictFacade.findPriceItem(hospitalId, reckCode);
+    }
+
+    @GET
+    @Path("list-income-items")
+    public List<IncomeItemDict> listIncomeItemDict(@QueryParam("hospitalId")String hospitalId,@QueryParam("q")String q){
+        return incomeItemDictFacade.findIncomeItemByHospitalIdAndQ(hospitalId,q) ;
     }
 
     @GET
@@ -50,8 +56,8 @@ public class IncomeItemDictService {
 
     @GET
     @Path("list-reck")
-    public PageEntity<IncomeItemDict> listIncomeItemDictByReckCode(@QueryParam("hospitalId")String hospitalId,@QueryParam("reckCode")String reckCode){
-        return incomeItemDictFacade.findByHOspitalIdAndReckCode(hospitalId,reckCode) ;
+    public PageEntity<IncomeItemDict> listIncomeItemDictByReckCode(@QueryParam("hospitalId")String hospitalId,@QueryParam("reckCode")String reckCode,@QueryParam("priceItemCode")String priceItemCode){
+        return incomeItemDictFacade.findByHOspitalIdAndReckCode(hospitalId,reckCode,priceItemCode) ;
     }
 
     @POST
