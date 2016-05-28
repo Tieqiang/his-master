@@ -52,7 +52,7 @@ $(function () {
         }*/,{
             title: '产品范围',
             field: 'expIndicator',
-            width: "10%"
+            width: "20%"
         }]]
     });
 
