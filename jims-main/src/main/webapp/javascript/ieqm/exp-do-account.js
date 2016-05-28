@@ -379,7 +379,7 @@ $(function () {
                 }
                 data[i].invoiceDate=myFormatter2(data[i].invoiceDate);
             }
-            console.log(data);
+//            console.log(data);
             masters =data ;
         },'json');
         promise.done(function(){
