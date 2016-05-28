@@ -11,6 +11,7 @@ import java.util.Date;
 @XmlRootElement
 public class ExpPriceListVo implements Serializable {
 
+    private String id ;
     private String expCode;
     private String expName;
     private Integer amountPerPackage;
@@ -46,18 +47,20 @@ public class ExpPriceListVo implements Serializable {
     private String operator;
     private String inputCode;
     private String hospitalId;
+    private String packageUnits ;
 
     public ExpPriceListVo() {
     }
 
-    public ExpPriceListVo(Integer supplyIndicator, String inputCode, String expName, String expCode, String expSpec, String firmId,
+    public ExpPriceListVo(String id, Integer supplyIndicator, String inputCode, String expName, String expCode, String expSpec, String firmId,
                           String units, Double tradePrice, Double retailPrice, Integer amountPerPackage,
                           String minSpec, String minUnits, String classOnInpRcpt, String classOnOutpRcpt,
                           String classOnReckoning, String subjCode, String classOnMr, Date startDate,
                           Date stopDate, String memos, Double maxRetailPrice, String materialCode,
                           String operator, String permitNo, Date permitDate, String registerNo,
                           Date registerDate, String fdaOrCeNo, Date fdaOrCeDate, String otherNo,
-                          Date otherDate, String priceRatio, String stopPrice, String columnProtect, String hospitalId) {
+                          Date otherDate, String priceRatio, String stopPrice, String columnProtect, String hospitalId, String packageUnits) {
+        this.id = id;
         this.supplyIndicator = supplyIndicator;
         this.inputCode = inputCode;
         this.expName = expName;
@@ -93,6 +96,7 @@ public class ExpPriceListVo implements Serializable {
         this.stopPrice = stopPrice;
         this.columnProtect = columnProtect;
         this.hospitalId = hospitalId;
+        this.packageUnits = packageUnits;
     }
 
     public String getInputCode() {
@@ -373,5 +377,21 @@ public class ExpPriceListVo implements Serializable {
 
     public void setSupplyIndicator(Integer supplyIndicator) {
         this.supplyIndicator = supplyIndicator;
+    }
+
+    public String getPackageUnits() {
+        return packageUnits;
+    }
+
+    public void setPackageUnits(String packageUnits) {
+        this.packageUnits = packageUnits;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

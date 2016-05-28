@@ -654,10 +654,7 @@ $(function () {
         }, {
             title: '名称',
             field: 'expName'
-        }, {
-            title: '数量',
-            field: 'quantity'
-        }, {
+        },  {
             title: '规格',
             field: 'expSpec'
         }, {
@@ -807,9 +804,6 @@ $(function () {
             title: '名称',
             field: 'expName'
         }, {
-            title: '数量',
-            field: 'quantity'
-        }, {
             title: '规格',
             field: 'expSpec'
         }, {
@@ -841,15 +835,23 @@ $(function () {
             flag = flag+1;
             if(flag==1){
                 if(data.total==0 && editIndex!=undefined){
-                    //$("#exportDetail").datagrid('endEdit', editIndex);
                     $.messager.alert('系统提示','无法获取产品的价格信息！','info');
                     $("#stockRecordDialog").dialog('close');
-                    //$("#exportDetail").datagrid('beginEdit', editIndex);
                 }
                 flag=0;
             }
         },
         onClickRow: function (index, row) {
+
+            var rows = $("#importDetail").datagrid('getRows')
+            console.log(row)
+            for(var i = 0 ;i<rows.length;i++){
+                if(rows[i].expCode==row.expCode && rows[i].packageSpec==row.expSpec){
+                    $.messager.alert("系统提示","相同规格的产品已经存在，请选择其他规格，或其他产品！",'info');
+                    return ;
+                }
+            }
+
             var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
             $(expCodeEdit.target).textbox('setValue', row.expCode);
 

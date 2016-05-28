@@ -14,8 +14,9 @@ $(function () {
         }
     }
 
-    //格式化日期函数
+    //格式化日期(方法)
     function formatterDate(val, row) {
+//        2016/5/26 9:29:19
         if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
@@ -26,7 +27,7 @@ $(function () {
             var s = date.getSeconds();
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
                 + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-            return dateTime;
+            return dateTime
         }
     }
 
@@ -288,7 +289,7 @@ $(function () {
     //左侧列表初始化
     $("#left").datagrid({
         title: '出库申请单',
-        singleSelect: false,
+        singleSelect: true,
         fit: true,
         nowrap: false,
         url: '',
@@ -328,6 +329,8 @@ $(function () {
                     $("#left").datagrid("unselectRow",index);
                 }
             }
+
+
 
         }
     });
@@ -400,8 +403,8 @@ $(function () {
                 }
             }
         }, {
-            title: '规格',
-            field: 'expSpec',
+            title: '包装规格',
+            field: 'packageSpec',
             width: "7%"
         }, {
             title: '包装单位',
@@ -634,9 +637,9 @@ $(function () {
             title: '消耗品',
             field: 'expName',
             width: "10%"
-        }, {
+        },{
             title: '规格',
-            field: 'expSpec',
+            field: 'packageSpec',
             width: "10%"
         }, {
             title: '数量',
@@ -747,6 +750,7 @@ $(function () {
     $("#confirm").on('click', function () {
         $("#applyDatagrid").datagrid('endEdit', editIndex);
         var rows = $("#applyDatagrid").datagrid("getSelections");
+        console.info("************"+rows);
         for(var i =0 ;i<rows.length;i++){
             if(rows[i].auditingQuantity==0){
                 $.messager.alert('系统消息','审核数量不能为0！','info');
@@ -802,6 +806,9 @@ $(function () {
         singleSelect: true,
         fit: true,
         fitColumns: true,
+        ////
+        //
+//        ？？
         url: '/api/exp-stock/stock-export-record/',
         method: 'GET',
         columns: [[{
@@ -814,8 +821,8 @@ $(function () {
             title: '数量',
             field: 'quantity'
         }, {
-            title: '规格',
-            field: 'expSpec'
+            title: '包装规格',
+            field: 'packageSpec'
         }, {
             title: '最小规格',
             field: 'minSpec'
@@ -846,7 +853,7 @@ $(function () {
             var rowDetail = $("#right").datagrid('getData').rows[editIndex];
             rowDetail.expName = row.expName;
             rowDetail.expForm = row.expForm;
-            rowDetail.expSpec = row.expSpec;
+            rowDetail.packageSpec = row.packageSpec;
             rowDetail.expCode = row.expCode;
             rowDetail.units = row.units;
             rowDetail.packageUnits = row.units;

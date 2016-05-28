@@ -82,7 +82,7 @@ $(function () {
             field: 'disburseCount'
 
         }, {
-            title: '入库价',
+            title: '批发价',
             width: '5%',
             field: 'purchasePrice',
             type:'numberbox'
@@ -92,17 +92,17 @@ $(function () {
             field: 'discount',
             editor: {type: 'numberbox'}
         }, {
-            title: '进价金额',
+            title: '批发金额',
             width: '5%',
             field: 'purchaseAllPrice',
             type:'numberbox'
         }, {
-            title: '批发价',
+            title: '取货价',
             width: '5%',
             field: 'tradePrice',
             type:'numberbox'
         }, {
-            title: '批价金额',
+            title: '取货金额',
             width: '5%',
             field: 'tradeAllPrice',
             type:'numberbox'
@@ -283,6 +283,8 @@ $(function () {
                 impo.needPrice = impo.needDisburse*data[i].purchasePrice;
                 impo.disbursePrice = data[i].disburseCount*data[i].purchasePrice;
                 impo.purchaseAllPrice =data[i].purchasePrice*data[i].quantity;
+                impo.tradeAllPrice=data[i].tradePrice*data[i].quantity;
+                impo.retailAllPrice=data[i].retailPrice*data[i].quantity;
                 detailsData.push(impo);
             }
         },'json');

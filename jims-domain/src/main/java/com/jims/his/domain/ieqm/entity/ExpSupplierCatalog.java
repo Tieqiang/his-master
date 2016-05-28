@@ -42,7 +42,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 	private Date fdaOrCeDate;
 	private String otherNo;
 	private Date otherDate;
-    //private String supplierCode;
+//    private String supplierCode;
 
 	// Constructors
 
@@ -58,7 +58,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
                               String linkphone, String licenceNo, Date licenceDate,
                               String permitNo, Date permitDate, String registerNo,
                               Date registerDate, String fdaOrCeNo, Date fdaOrCeDate,
-                              String otherNo, Date otherDate, String supplierCode) {
+                              String otherNo, Date otherDate/*, String supplierCode*/) {
 		this.supplierId = supplierId;
 		this.supplier = supplier;
 		this.supplierClass = supplierClass;
@@ -80,7 +80,7 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.fdaOrCeDate = fdaOrCeDate;
 		this.otherNo = otherNo;
 		this.otherDate = otherDate;
-        //this.supplierCode = supplierCode;
+//        this.supplierCode = supplierCode;
     }
 
 	// Property accessors
@@ -280,14 +280,14 @@ public class ExpSupplierCatalog implements java.io.Serializable {
 		this.otherNo = otherNo;
 	}
 
-   /* @Column(name = "SUPPLIER_CODE", length = 100)
-    public String getSupplierCode() {
-        return supplierCode;
-    }
-
-    public void setSupplierCode(String supplierCode) {
-        this.supplierCode = supplierCode;
-    }*/
+//    @Column(name = "SUPPLIER_CODE", length = 100)
+//    public String getSupplierCode() {
+//        return supplierCode;
+//    }
+//
+//    public void setSupplierCode(String supplierCode) {
+//        this.supplierCode = supplierCode;
+//    }
 
     @Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "OTHER_DATE", length = 7)

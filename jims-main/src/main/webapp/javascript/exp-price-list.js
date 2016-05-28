@@ -102,17 +102,6 @@ $(function () {
             width: "5%",
             editor: {
                 type: 'numberbox'
-                //,
-                //options: {
-                //    onChange:function(newValue,oldValue){
-                //        var row = $('#dg').datagrid('getData').rows[editIndex];
-                //        var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-                //
-                //        //console.log(row.minSpec)
-                //        console.log(row)
-                //        $(ed.target).textbox('setValue', newValue+'*'+ row.minSpec);
-                //    }
-                //}
             }
         }, {
             title: '包装规格',
@@ -120,7 +109,8 @@ $(function () {
             width: "10%",
             formatter:function(value,row,index){
                 if($.trim(row.amountPerPackage)!=''&& $.trim(row.minSpec)!=''){
-                    return row.amountPerPackage+"*"+ row.minSpec;
+                    row.expSpec = row.amountPerPackage+"*"+ row.minSpec;
+                    return row.expSpec;
                 }
                 return value;
             }
@@ -138,16 +128,7 @@ $(function () {
                     url: '/api/measures-dict/list'
                 }
             }
-            //editor: {
-            //    type: 'combobox',
-            //    options: {
-            //        panelHeight: 'auto',
-            //        valueField: 'measuresName',
-            //        textField: 'measuresName',
-            //        method: 'get',
-            //        url: '/api/measures-dict/list'
-            //    }
-            //}
+
         }, {
             title: '厂家',
             field: 'firmId',
@@ -309,7 +290,7 @@ $(function () {
                 options: {
                     panelHeight: 'auto',
                     panelMaxHeight: 200,
-                    valueField: 'baseName',
+                    valueField: 'baseCode',
                     textField: 'baseName',
                     method: 'get',
                     url: '/api/base-dict/list-by-type?baseType=INP_RCPT_FEE_DICT',
@@ -328,7 +309,7 @@ $(function () {
                 options: {
                     panelHeight: 'auto',
                     panelMaxHeight: 200,
-                    valueField: 'baseName',
+                    valueField: 'baseCode',
                     textField: 'baseName',
                     method: 'get',
                     url: '/api/base-dict/list-by-type?baseType=OUTP_RCPT_FEE_DICT',
@@ -347,7 +328,7 @@ $(function () {
                 options: {
                     panelHeight: 'auto',
                     panelMaxHeight: 200,
-                    valueField: 'baseName',
+                    valueField: 'baseCode',
                     textField: 'baseName',
                     method: 'get',
                     url: '/api/base-dict/list-by-type?baseType=RECK_ITEM_CLASS_DICT',
@@ -366,7 +347,7 @@ $(function () {
                 options: {
                     panelHeight: 'auto',
                     panelMaxHeight:200,
-                    valueField: 'baseName',
+                    valueField: 'baseCode',
                     textField: 'baseName',
                     method: 'get',
                     url: '/api/base-dict/list-by-type?baseType=TALLY_SUBJECT_DICT&length=3',
@@ -385,7 +366,7 @@ $(function () {
                 options: {
                     panelHeight: 'auto',
                     panelMaxHeight: 200,
-                    valueField: 'baseName',
+                    valueField: 'baseCode',
                     textField: 'baseName',
                     method: 'get',
                     url: '/api/base-dict/list-by-type?baseType=MR_FEE_CLASS_DICT',
@@ -436,25 +417,42 @@ $(function () {
         stopEdit();
 
         var rows = $('#dg').datagrid("getRows");
-        var code = "";
-        var name = "";
+        console.log(rows);
+        var newRows = [];
 
         if (rows.length > 0) {
-            code = $('#dg').datagrid('getData').rows[rows.length - 1].expCode;
-            name = $('#dg').datagrid('getData').rows[rows.length - 1].expName;
+            var tempRow = $('#dg').datagrid('getData').rows[rows.length - 1] ;
+            var obj = {} ;
+            //obj = tempRow ;
+            $.extend(obj,tempRow)
+            obj.packageUnits='' ;
+            obj.expSpec='' ;
+            obj.amountPerPackage = '' ;
+            newRows.push(obj) ;
         } else {
-            code = $('#expName').combogrid('getValue');
+            var code = $('#expName').combogrid('getValue');
+            $.get("/api/exp-dict/list-query?expCode="+code,function(data){
+                $.extend(newRows,data) ;
+                for(var i = 0 ;i<newRows.length ;i++){
+                    var obj = $("#dg").datagrid('appendRow',newRows[i]) ;
+                    var rowsTemp = $("#dg").datagrid('getRows') ;
+                    console.log(rowsTemp);
+                    var addRowIndex = $("#dg").datagrid('getRowIndex',rowsTemp[rowsTemp.length -1 ]);
+                    editIndex = addRowIndex;
+                    $("#dg").datagrid('selectRow', editIndex);
+                    $("#dg").datagrid('beginEdit', editIndex);
+                }
+            })
         }
-        $('#dg').datagrid('appendRow', {
-            expCode: code,
-            expName: name,
-            hospitalId:parent.config.hospitalId
-        });
-
-        var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
-        editIndex = addRowIndex;
-        $("#dg").datagrid('selectRow', editIndex);
-        $("#dg").datagrid('beginEdit', editIndex);
+        for(var i = 0 ;i<newRows.length ;i++){
+            var obj = $("#dg").datagrid('appendRow',newRows[i]) ;
+            var rowsTemp = $("#dg").datagrid('getRows') ;
+            console.log(rowsTemp);
+            var addRowIndex = $("#dg").datagrid('getRowIndex',rowsTemp[rowsTemp.length -1 ]);
+            editIndex = addRowIndex;
+            $("#dg").datagrid('selectRow', editIndex);
+            $("#dg").datagrid('beginEdit', editIndex);
+        }
     });
 
     //删除按钮功能
@@ -539,7 +537,7 @@ $(function () {
         expDictChangeVo.inserted = insertData;
         expDictChangeVo.updated = updateData;
         expDictChangeVo.deleted = deleteData;
-
+        console.log(expDictChangeVo)
 
         if (expDictChangeVo) {
             $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {

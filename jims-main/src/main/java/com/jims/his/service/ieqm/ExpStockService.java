@@ -95,18 +95,14 @@ public class ExpStockService {
                 "       c.TRADE_PRICE purchase_Price,\n" +
                 "       c.retail_price,\n" +
                 "       c.material_code,\n" +
-                "       nvl(d.quantity, 0)quantity,\n" +
                 "       c.Register_no,\n" +
+                "       0 quantity," +
                 "       c.Permit_no\n" +
-                "  FROM exp_dict b, exp_price_list c, exp_stock d\n" +
+                "  FROM exp_dict b, exp_price_list c\n" +
                 " WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "   AND b.exp_spec = c.min_spec\n" +
-                "   and c.EXP_CODE = d.exp_code(+)\n" +
-                "   and c.min_SPEC = d.exp_spec(+)\n" +
-                "   and c.firm_id = d.firm_id(+)\n" +
                 "   AND c.start_date <= sysdate\n" +
                 "   AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
-                "   and d.storage(+) like '"+storageCode+"' || '%'\n" +
                 "   AND b.EXP_CODE = '"+expCode+"'" +
                 "   and c.hospital_id = '"+hospitalId+"'" ;
 
@@ -157,9 +153,6 @@ public class ExpStockService {
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
                 errorException.setErrorMessage("数据已存在，保存失败！");
             }
-            //else {
-            //    errorException.setErrorMessage("保存失败！");
-            //}
             return Response.status(Response.Status.OK).entity(errorException).build() ;
         }
 
@@ -199,8 +192,8 @@ public class ExpStockService {
      */
     @GET
     @Path("upper-low-warning")
-    public List<ExpStorageProfileVo> searchWarningExpStock(@QueryParam("storage")String storage, @QueryParam("hospitalId")String hospitalId){
-        List<ExpStorageProfileVo> dicts =  expStockFacade.searchWarningStock(storage,hospitalId) ;
+    public List<ExpStorageProfileVo> searchWarningExpStock(@QueryParam("storage")String storage, @QueryParam("hospitalId")String hospitalId,@QueryParam("expName") String expName){
+        List<ExpStorageProfileVo> dicts =  expStockFacade.searchWarningStock(storage,hospitalId,expName) ;
         return  dicts;
     }
 

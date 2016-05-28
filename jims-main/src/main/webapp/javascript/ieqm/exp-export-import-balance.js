@@ -491,10 +491,7 @@ $(function () {
         }, {
             title: '包装规格',
             field: 'expSpec'
-        }, {
-            title: '数量',
-            field: 'quantity'
-        }, {
+        },  {
             title: '包装单位',
             field: 'units'
         }, {
@@ -649,6 +646,13 @@ $(function () {
         }]],
         onDblClickRow: function (index, row) {
             $("#dg").datagrid('endEdit', editIndex);
+            var rows = $("#dg").datagrid('getRows') ;
+            for(var i = 0;i<rows.length;i++){
+                if(rows[i].expCode == row.expCode && rows[i].packageSpec==row.expSpec && rows[i].firmId ==row.firmId){
+                    $.messager.alert("系统提示","同批次、同厂商、同规格的【"+row.expName+"】记录已经存在，请不要重复添加",'info');
+                    return ;
+                }
+            }
             var rowDetail = $("#dg").datagrid('getData').rows[editIndex];
 
             rowDetail.expName = row.expName;
@@ -657,7 +661,7 @@ $(function () {
             rowDetail.packageSpec = row.expSpec;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.tradePrice;
+            rowDetail.purchasePrice = row.purchasePrice;
             rowDetail.amount = 0;
             rowDetail.firmId = row.firmId;
             rowDetail.batchNo = "X";
@@ -676,7 +680,7 @@ $(function () {
             rowDetail.tradePrice = row.tradePrice;
 
 
-            rowDetail.expSpec = row.expSpec;
+            rowDetail.expSpec = row.minSpec;
             rowDetail.units = row.units;
             rowDetail.memos = row.memos;
             rowDetail.expImportDetailRegistNo = row.expImportDetailRegistNo;
@@ -1195,7 +1199,7 @@ $(function () {
         expExportDetailBeanChangeVo.inserted = [];
 
         var rows = $("#dg").datagrid('getRows');
-
+        console.info(rows);
         for (var i = 0; i < rows.length; i++) {
             var rowIndex = $("#dg").datagrid('getRowIndex', rows[i]);
 
@@ -1337,11 +1341,13 @@ $(function () {
             $("#dg").datagrid('endEdit', editIndex);
         }
         $.get("/api/app-configer-parameter/list?hospitalId="+parent.config.hospitalId+"&name=DO_ACCT",function(data){
-            if(data[0].parameterValue=='0'){
-                $.messager.alert('系统消息','此消耗品不能对消入出库！','error');
-                return;
+            if(data!=null&&data!=""){
+                if(data[0].parameterValue=='0'){
+                    $.messager.alert('系统消息','此消耗品不能对消入出库！','error');
+                    return;
+                }
             }
-        })
+         })
         if (dataValid()) {
 
             $.messager.confirm("提示信息", "确定要进行对消入出库操作？", function (r) {

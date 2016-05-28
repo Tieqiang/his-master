@@ -237,6 +237,7 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
                 if (null != profileVos && profileVos.size() > 0) {
                     for(ExpStorageProfileVo pv:profileVos){
                         ExpPriceModifyProfit profit = calcExpPriceModifyPriceProfit(pv.getStorageCode(),pv.getStockQuantity().doubleValue(), modify);
+                        profit.setTradePriceProfit(Double.valueOf(String.format("%.2f", profit.getTradePriceProfit())));
                         result.add(profit);
                         //小计
                         partTradePriceProfit = partTradePriceProfit + profit.getTradePriceProfit().doubleValue();
