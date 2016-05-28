@@ -46,10 +46,10 @@ function myFormatter2(val,row) {
         var y = date.getFullYear();
         var m = date.getMonth()+1;
         var d = date.getDate();
-        var h = date.getHours();
-        var min = date.getMinutes();
-        var sec = date.getSeconds();
-        var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
+//        var h = date.getHours();
+//        var min = date.getMinutes();
+//        var sec = date.getSeconds();
+        var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)/*+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec)*/;
         return str;
     }
 }
@@ -140,7 +140,7 @@ $(function () {
             width: '7%'
         }, {
             title: '规格',
-            field: 'expSpec',
+            field: 'packageSpec',
             width: '5%'
         }, {
             title: '单位',

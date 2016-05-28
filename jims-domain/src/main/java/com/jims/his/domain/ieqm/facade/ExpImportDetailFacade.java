@@ -224,7 +224,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                         "   exp_dict.exp_name,             " +
                         " EXP_IMPORT_DETAIL.ITEM_NO,              " +
                         " EXP_IMPORT_DETAIL.EXP_CODE,              " +
-                        " EXP_IMPORT_DETAIL.EXP_SPEC,              " +
+                        " EXP_IMPORT_DETAIL.PACKAGE_SPEC,              " +
                         " EXP_IMPORT_DETAIL.UNITS,              " +
                         " EXP_IMPORT_DETAIL.BATCH_NO,              " +
                         " EXP_IMPORT_DETAIL.QUANTITY,              " +
@@ -242,8 +242,8 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "       EXP_IMPORT_MASTER.hospital_id = '"+hospitalId+"' and" +
                 "       EXP_IMPORT_MASTER.STORAGE=exp_storage_dept.storage_code and" +
                 "     ( EXP_IMPORT_DETAIL.DOCUMENT_NO = EXP_IMPORT_MASTER.DOCUMENT_NO ) and" +
-                "       EXP_IMPORT_DETAIL.package_spec = exp_dict.exp_spec and" +
-                "       EXP_IMPORT_DETAIL.package_units = exp_dict.units and" +
+                "       EXP_IMPORT_DETAIL.exp_spec = exp_dict.exp_spec and" +
+                "       EXP_IMPORT_DETAIL.units = exp_dict.units and" +
                 "       EXP_IMPORT_DETAIL.exp_code = exp_dict.exp_code " ;
         if (billRadio != null && billRadio.trim().length() > 0) {
             sql += " and EXP_IMPORT_DETAIL.TALLY_FLAG ='" + billRadio + "'";
