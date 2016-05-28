@@ -365,6 +365,9 @@ $(document).ready(function () {
         }, {
             title: '许可证号',
             field: 'permitNo'
+        },{
+            title: '常规包装数量',
+            field: 'amountPerpackage'
         }]],
         onLoadSuccess:function(data){
             flag = flag+1;
@@ -386,6 +389,7 @@ $(document).ready(function () {
             console.info(row);
             $('#dg').datagrid('endEdit',editIndex);
             if (row) {
+//                console.info(row.);
                 $('#dg').datagrid('updateRow',{
                     index: editIndex,
                     row: {
@@ -394,14 +398,12 @@ $(document).ready(function () {
                         expForm: row.expForm,
                         upperLevel: 0,
                         lowLevel: 0,
-                        amountPerPackage: 0,
-                        packageUnits:row.utits,
+                        amountPerPackage: row.amountPerpackage,
+                        packageUnits:row.UNITS,
                         storage: parent.config.storageCode,
                         expCode: row.expCode,
-                        location: row.expCode,
-
-//                        ?
-                        units: row.units
+                        location: row.expCode
+//                        units: row.units
                     }
                 });
                 //currentExpCode = row.expCode;
