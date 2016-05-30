@@ -62,7 +62,7 @@ public class ModuleDictFacade extends BaseFacade {
      * @return
      */
     public List<ModulDict> findByStaff(String staffId, String hospitalId) {
-        String sql = "select a.* from Modul_Dict a,Staff_Vs_Module b where a.id=b.module_Id";
+        String sql = "select distinct a.* from Modul_Dict a,Staff_Vs_Module b where a.id=b.module_Id";
         if (staffId != null && staffId.trim().length() > 0) {
             sql += " and b.staff_Id='" + staffId.trim() + "'";
         }
