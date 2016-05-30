@@ -9,8 +9,6 @@ $(function(){
             $("#baseDictDg").datagrid('endEdit',editIndex) ;
             editIndex = undefined ;
         }
-
-
     }
     $("#baseDictDg").datagrid({
         title:'基础字典维护',
@@ -28,17 +26,17 @@ $(function(){
             title:'键值',
             field:'baseCode',
             width:"20%",
-            editor:'textbox'
+            editor:'text'
         },{
             title:'键名',
             field:'baseName',
             width:'30%',
-            editor:'textbox'
+            editor:'text'
         },{
             title:'字典名称',
             field:'baseType',
             width:'30%',
-            editor:'textbox'
+            editor:'text'
         },{
             title:'输入码',
             field:'inputCode',
@@ -52,6 +50,13 @@ $(function(){
 
     });
 
+    var loadDict = function () {
+        //var name = $("#name").textbox("getValue");
+        $.get('/api/base-dict/list-by-type', function (data) {
+            $("#baseDictDg").datagrid('loadData', data);
+        });
+    }
+    loadDict();
 
     /**
      * 添加字典
@@ -73,29 +78,59 @@ $(function(){
      * 追加键值
      */
     $("#appendBaseDictBtn").on('click',function(){
-        stopEdit() ;
-        var rows =$("#baseDictDg").datagrid('getRows') ;
-        var lastRow ;
-        if(rows.length>0){
-            lastRow = rows[rows.length - 1] ;
-        }
+        //选中某行，在某行后面追加键值
+        if(typeof (editIndex) != "undefined"){
+            $("#baseDictDg").datagrid('endEdit', editIndex);
+            var thisRow = $("#baseDictDg").datagrid('getSelected');
+            editIndex = editIndex + 1 ;
+            $("#baseDictDg").datagrid('insertRow',{
+                index: editIndex ,
+                row: {
+                    id: '',
+                    baseCode: '',
+                    baseName: '',
+                    baseType: thisRow.baseType
+                }
+            });
+            $("#baseDictDg").datagrid('selectRow', editIndex);
+            $("#baseDictDg").datagrid('beginEdit',editIndex);
+            var dateEd = $("#baseDictDg").datagrid('getEditor', {index: editIndex, field: 'baseType'});
+            //$(dateEd.target).attr('disabled',true); //设置字典名称不可编辑
+            var col = dateEd.target;
+            col.prop('readonly',true);   //设置字典名称只读
+        }else{      //未选中任意一行，直接在最后一行追加键值
+            stopEdit();
+            var rows = $("#baseDictDg").datagrid('getRows');
+            var lastRow;
+            if (rows.length > 0) {
+                lastRow = rows[rows.length - 1];
+            }
 
-        if(lastRow){
-            $("#baseDictDg").datagrid('appendRow',{id:'',baseCode:'',baseName:'',baseType:lastRow.baseType}) ;
-            var newRows = $("#baseDictDg").datagrid('getRows') ;
-            var newRowIndex = $("#baseDictDg").datagrid('getRowIndex',newRows[newRows.length -1 ]) ;
+            if (lastRow) {
+                $("#baseDictDg").datagrid('appendRow', {id: '', baseCode: '', baseName: '', baseType: lastRow.baseType});
+                var newRows = $("#baseDictDg").datagrid('getRows');
+                var newRowIndex = $("#baseDictDg").datagrid('getRowIndex', newRows[newRows.length - 1]);
 
-            editIndex = newRowIndex ;
-            $("#baseDictDg").datagrid('selectRow',editIndex) ;
-            $("#baseDictDg").datagrid('beginEdit',editIndex) ;
-        }else{
-            $("#baseDictDg").datagrid('appendRow',{}) ;
-            var newRows = $("#baseDictDg").datagrid('getRows') ;
-            var newRowIndex = $("#baseDictDg").datagrid('getRowIndex',newRows[newRows.length -1 ]) ;
+                editIndex = newRowIndex;
+                $("#baseDictDg").datagrid('selectRow', editIndex);
+                $("#baseDictDg").datagrid('beginEdit', editIndex);
+                var dateEd = $("#baseDictDg").datagrid('getEditor', {index: editIndex, field: 'baseType'});
+                //$(dateEd.target).attr('disabled',true); //设置字典名称不可编辑
+                var col = dateEd.target;
+                col.prop('readonly', true);   //设置字典名称只读
+            } else {
+                $("#baseDictDg").datagrid('appendRow', {});
+                var newRows = $("#baseDictDg").datagrid('getRows');
+                var newRowIndex = $("#baseDictDg").datagrid('getRowIndex', newRows[newRows.length - 1]);
 
-            editIndex = newRowIndex ;
-            $("#baseDictDg").datagrid('selectRow',editIndex) ;
-            $("#baseDictDg").datagrid('beginEdit',editIndex) ;
+                editIndex = newRowIndex;
+                $("#baseDictDg").datagrid('selectRow', editIndex);
+                $("#baseDictDg").datagrid('beginEdit', editIndex);
+                var dateEd = $("#baseDictDg").datagrid('getEditor', {index: editIndex, field: 'baseType'});
+                //$(dateEd.target).attr('disabled',true); //设置字典名称不可编辑
+                var col = dateEd.target;
+                col.prop('readonly', true);   //设置字典名称只读
+            }
         }
     }) ;
 
@@ -103,7 +138,6 @@ $(function(){
      * 删除字典操作
      */
     $("#delBaseDictBtn").on('click',function(){
-
         var row = $("#baseDictDg").datagrid('getSelected') ;
         if(row){
             var rowIndex = $("#baseDictDg").datagrid('getRowIndex',row) ;
@@ -111,13 +145,9 @@ $(function(){
             if(editIndex ==rowIndex){
                 editIndex = undefined ;
             }
-
         }else{
             $.messager.alert('系统提示',"请选择要删除的行",'info') ;
         }
-
-
-
     }) ;
 
     /**
@@ -137,7 +167,6 @@ $(function(){
      * 保存修改内容
      */
     $("#saveBaseDictBtn").on('click',function(){
-
         if(editIndex||editIndex==0){
             $("#baseDictDg").datagrid('endEdit',editIndex) ;
 
@@ -151,12 +180,52 @@ $(function(){
         baseDictBeanChangeVo.deleted = deleted ;
         baseDictBeanChangeVo.updated = updated ;
 
+        if(baseDictBeanChangeVo.inserted.length > 0){
+            for(var i = 0 ; i < baseDictBeanChangeVo.inserted.length ; i++){
+                var baseCode = baseDictBeanChangeVo.inserted[i].baseCode;
+                var baseName = baseDictBeanChangeVo.inserted[i].baseName;
+                var baseType = baseDictBeanChangeVo.inserted[i].baseType;
+                if(baseCode.length == 0){
+                    $.messager.alert('提示','键值不能为空!','error');
+                    return ;
+                }
+                if (baseName.length == 0) {
+                    $.messager.alert('提示', '键名不能为空!', 'error');
+                    return;
+                }
+                if (baseType.length == 0) {
+                    $.messager.alert('提示', '字典名称不能为空!', 'error');
+                    return;
+                }
+            }
+        }
+        if (baseDictBeanChangeVo.updated.length > 0) {
+            for (var i = 0; i < baseDictBeanChangeVo.updated.length; i++) {
+                var baseCode = baseDictBeanChangeVo.updated[i].baseCode;
+                var baseName = baseDictBeanChangeVo.updated[i].baseName;
+                var baseType = baseDictBeanChangeVo.updated[i].baseType;
+                if (baseCode.length == 0) {
+                    $.messager.alert('提示', '键值不能为空!', 'error');
+                    return;
+                }
+                if (baseName.length == 0) {
+                    $.messager.alert('提示', '键名不能为空!', 'error');
+                    return;
+                }
+                if (baseType.length == 0) {
+                    $.messager.alert('提示', '字典名称不能为空!', 'error');
+                    return;
+                }
+            }
+        }
+
         $.postJSON("/api/base-dict/merge",baseDictBeanChangeVo,function(data,status){
             $.messager.alert("系统提示","保存成功","info");
+            loadDict();
         },function(error){
             $.messager.alert("系统提示","保存失败","error");
+            loadDict();
         })
-
     }) ;
 
 })

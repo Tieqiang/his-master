@@ -94,15 +94,11 @@ $(function () {
     });
 
     var loadDict = function () {
-        //var name = $("#name").textbox("getValue");
-
         $.get("/api/exp-coding-rule/list?" , function (data) {
             $("#dg").datagrid('loadData', data);
         });
     }
-
     loadDict();
-
 
     /**
      * 保存修改的内容
@@ -123,6 +119,44 @@ $(function () {
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
+        if (beanChangeVo.inserted.length > 0) {
+            for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                var className = beanChangeVo.inserted[i].className;
+                /*var codeLevel = beanChangeVo.inserted[i].codeLevel;
+                if(codeLevel.length == 0){
+                    $.messager.alert('提示', '编码级别不能为空!!', 'error');
+                    return ;
+                }
+                if(codeLevel.length > 0){
+                    $.get("/api/exp-coding-rule/find-by-codeLevel?codeLevel=" + codeLevel, function (data) {
+                        console.log("data.length:" + data.length);
+                        if(data.length > 0){
+                            $.messager.alert('提示','编码级别已经存在','error');
+                            return ;
+                        }
+                    });
+                }*/
+                if (className.length == 0) {
+                    $.messager.alert('提示', '编码级名称不能为空!!', 'error');
+                    return;
+                }else if(className.length > 8){
+                    $.messager.alert('提示','添加失败:名称超过长度,请输入四个以内的汉字!','error');
+                    return;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var className = beanChangeVo.updated[i].className;
+                if (className.length == 0) {
+                    $.messager.alert('提示', '编码级名称不能为空!!', 'error');
+                    return;
+                } else if (className.length > 8) {
+                    $.messager.alert('提示', '修改失败:名称超过长度,请输入四个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
 
         if (beanChangeVo) {
             $.postJSON("/api/exp-coding-rule/merge", beanChangeVo, function (data, status) {
@@ -130,6 +164,7 @@ $(function () {
                 loadDict();
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+                loadDict();
             })
         }
     });

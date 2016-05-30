@@ -33,6 +33,18 @@ public class ExpCodingRuleService {
     }
 
     /**
+     * 根据编码级别查找数据
+     * @param codeLevel 编码级别
+     * @return
+     * @author fyg
+     */
+    @GET
+    @Path("find-by-codeLevel")
+    public List<ExpCodingRule> findByCodeLevel(@QueryParam("codeLevel")String codeLevel){
+        return expCodingRuleFacade.findByCodeLevel(codeLevel);
+    }
+
+    /**
      * 保存增删改
      *
      * @param beanChangeVo

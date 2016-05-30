@@ -42,6 +42,7 @@ $(function(){
                 field:'storageName',
                 width:"20%",
                 editor:{type:"combogrid",options:{
+                    editable: false,
                     idField:'deptCode',
                     textValue:'deptName',
                     panelHeight:300,
@@ -96,6 +97,7 @@ $(function(){
                 field:'storageLevel',
                 width:"20%",
                 editor:{type:'combobox',options:{
+                    editable: false,
                     valueField:'value',
                     textField:'text',
                     data:[{
@@ -144,6 +146,13 @@ $(function(){
         }) ;
     })
 
+    var loadDict = function () {
+        $.get('/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId, function (data) {
+            $("#dg").datagrid('loadData', data);
+        });
+    }
+    loadDict();
+
     $("#searchBtn").on("click", function () {
         var name = $("#name").textbox("getValue");
 
@@ -187,6 +196,32 @@ $(function(){
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
+        if(beanChangeVo.inserted.length > 0){
+            for(var i = 0 ; i < beanChangeVo.inserted.length ; i++){
+                var disburseNoPrefix = beanChangeVo.inserted[i].disburseNoPrefix;
+                if(disburseNoPrefix.length == 0){
+                    $.messager.alert('提示','付款单前缀不能为空','error');
+                    return ;
+                }
+                if(disburseNoPrefix.length > 6){
+                    $.messager.alert('提示','付款单前缀最多6位!','error');
+                    return ;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var disburseNoPrefix = beanChangeVo.updated[i].disburseNoPrefix;
+                if (disburseNoPrefix.length == 0) {
+                    $.messager.alert('提示', '付款单前缀不能为空', 'error');
+                    return;
+                }
+                if (disburseNoPrefix.length > 6) {
+                    $.messager.alert('提示', '付款单前缀最多6位!', 'error');
+                    return ;
+                }
+            }
+        }
 
         if (beanChangeVo) {
             $.postJSON("/api/exp-storage-dept/merge", beanChangeVo, function (data, status) {
