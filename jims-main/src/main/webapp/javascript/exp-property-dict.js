@@ -37,8 +37,8 @@ $(function(){
         },{
             title:"拼音码",
             field:"inputCode",
-            width:"20%",
-            editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入‘属性名称’对应大写首字母',invalidMessage:'输入值不在范围'}}
+            width:"20%"
+            //editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入‘属性名称’对应大写首字母',invalidMessage:'输入值不在范围'}}
         }]],
         onClickRow: function (index, row) {
             stopEdit();
