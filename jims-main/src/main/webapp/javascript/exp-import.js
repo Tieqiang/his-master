@@ -36,28 +36,29 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-//            var h = date.getHours();
-//            var mm = date.getMinutes();
-//            var s = date.getSeconds();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) ;
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
             return dateTime;
         }
     }
 
-//    function w3(s) {
-//        if (!s) return new Date();
-//        var y = s.substring(0, 4);
-//        var m = s.substring(5, 7);
-//        var d = s.substring(8, 10);
-//        var h = s.substring(11, 14);
-//        var min = s.substring(15, 17);
-//        var sec = s.substring(18, 20);
-//        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
-//            return new Date(y, m - 1, d, h, min, sec);
-//        } else {
-//            return new Date();
-//        }
-//    }
+    function w3(s) {
+        if (!s) return new Date();
+        var y = s.substring(0, 4);
+        var m = s.substring(5, 7);
+        var d = s.substring(8, 10);
+        var h = s.substring(11, 14);
+        var min = s.substring(15, 17);
+        var sec = s.substring(18, 20);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
+            return new Date(y, m - 1, d, h, min, sec);
+        } else {
+            return new Date();
+        }
+    }
 
     /**
      * 定义明细信息表格
@@ -65,7 +66,6 @@ $(function () {
     $("#importDetail").datagrid({
         fit: true,
         fitColumns: true,
-        singleSelect: true,
         showFooter: true,
         title: "消耗品入库单",
         footer: '#ft',
@@ -143,11 +143,13 @@ $(function () {
             editor: {
                 type: 'numberbox', options: {
                     onChange: function (newValue, oldValue) {
-                        var purchasePriceEd = $("#importDetail").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'purchasePrice'
-                        });
-                        var purchasePrice = $(purchasePriceEd.target).textbox('getValue');
+                        var selectRows = $("#importDetail").datagrid('getData').rows;
+                        console.log(selectRows[editIndex]);
+                        //var purchasePriceEd = $("#importDetail").datagrid('getEditor', {
+                        //    index: editIndex,
+                        //    field: 'purchasePrice'
+                        //});
+                        var purchasePrice =selectRows[editIndex].purchasePrice;
 
                         var amountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
                         $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
@@ -207,22 +209,22 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-//                    showSeconds: true,
+                    showSeconds: true,
                     formatter: formatterDate,
-//                    parser: w3,
+                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
                             field: 'expireDate'
                         });
-//                        var y = date.getFullYear();
-//                        var m = date.getMonth() + 1;
-//                        var d = date.getDate();
-//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-//
-//                        $(dateEd.target).textbox('setValue', dateTime);
-//                        $(this).datetimebox('hidePanel');
+                        var y = date.getFullYear()+1;
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -257,22 +259,22 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-//                    showSeconds: true,
+                    showSeconds: true,
                     formatter: formatterDate,
-//                    parser: w3,
+                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
                             field: 'invoiceDate'
                         });
-//                        var y = date.getFullYear();
-//                        var m = date.getMonth() + 1;
-//                        var d = date.getDate();
-//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-//
-//                        $(dateEd.target).textbox('setValue', dateTime);
-//                        $(this).datetimebox('hidePanel');
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -288,22 +290,22 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-//                    showSeconds: true,
+                    showSeconds: true,
                     formatter: formatterDate,
-//                    parser: w3,
+                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
                             field: 'producedate'
                         });
-//                        var y = date.getFullYear();
-//                        var m = date.getMonth() + 1;
-//                        var d = date.getDate();
-//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-//
-//                        $(dateEd.target).textbox('setValue', dateTime);
-//                        $(this).datetimebox('hidePanel');
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
@@ -315,29 +317,39 @@ $(function () {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
-//                    showSeconds: true,
+                    showSeconds: true,
                     formatter: formatterDate,
-//                    parser: w3,
+                    parser: w3,
                     onSelect: function (date) {
                         var dateEd = $("#importDetail").datagrid('getEditor', {
                             index: editIndex,
                             field: 'disinfectdate'
                         });
-//                        var y = date.getFullYear();
-//                        var m = date.getMonth() + 1;
-//                        var d = date.getDate();
-//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-//
-//                        $(dateEd.target).textbox('setValue', dateTime);
-//                        $(this).datetimebox('hidePanel');
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+
+                        $(dateEd.target).textbox('setValue', dateTime);
+                        $(this).datetimebox('hidePanel');
                     }
                 }
             }
         }, {
             title: '灭菌标志',
             field: 'killFlag',
-            editor: {type: 'checkbox', options: {}}
+            editor: {type: 'combobox', options: {
+                valueField:'value',
+                textField:'title',
+                data:[{
+                    value:'1',
+                    title:'已灭菌'
+                },{
+                    title:'未灭菌',
+                    value:'0'
+                }]
+            }}
         }, {
             title: '折扣',
             field: 'discount',
@@ -589,7 +601,7 @@ $(function () {
 
     promise.done(function () {
         $("#supplier").combogrid({
-            idField: 'supplierCode',
+            idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
             panelWidth: 500,
@@ -694,6 +706,7 @@ $(function () {
             }
         },
         onClickRow: function (index, row) {
+            console.log(row);
             var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
             $(expCodeEdit.target).textbox('setValue', row.expCode);
 
@@ -727,7 +740,7 @@ $(function () {
             $(amountEd.target).textbox('setValue', 0);
 
             var expFormEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expForm'});
-            $(expFormEd.target).textbox('setValue', '消耗材料');
+            $(expFormEd.target).textbox('setValue', row.expForm);
 
             var firmIdEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'firmId'});
             $(firmIdEd.target).textbox('setValue', row.firmId);
@@ -764,6 +777,8 @@ $(function () {
 
             var tradePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'tradePrice'});
             $(tradePriceEd.target).numberbox('setValue', row.tradePrice);
+            $("#importDetail").datagrid('endEdit',editIndex);
+            $("#importDetail").datagrid('beginEdit',editIndex);
 
             $("#stockRecordDialog").dialog('close');
         }
@@ -790,142 +805,7 @@ $(function () {
         }
     });
 
-    $("#stockRecordDatagrid").datagrid({
-        singleSelect: true,
-        fit: true,
-        fitColumns: true,
-        url: '/api/exp-stock/stock-record/',
-        method: 'GET',
-        columns: [[{
-            title: '代码',
-            field: 'expCode'
-        }, {
-            title: '名称',
-            field: 'expName'
-        }, {
-            title: '规格',
-            field: 'expSpec'
-        }, {
-            title: '最小规格',
-            field: 'minSpec'
-        }, {
-            title: '单位',
-            field: 'units'
-        }, {
-            title: '最小单位',
-            field: 'minUnits'
-        }, {
-            title: '厂家',
-            field: 'firmId'
-        }, {
-            title: '批发价',
-            field: 'tradePrice'
-        }, {
-            title: '零售价',
-            field: 'retailPrice'
-        }, {
-            title: '注册证号',
-            field: 'registerNo'
-        }, {
-            title: '许可证号',
-            field: 'permitNo'
-        }]],
-        onLoadSuccess:function(data){
-            flag = flag+1;
-            if(flag==1){
-                if(data.total==0 && editIndex!=undefined){
-                    $.messager.alert('系统提示','无法获取产品的价格信息！','info');
-                    $("#stockRecordDialog").dialog('close');
-                }
-                flag=0;
-            }
-        },
-        onClickRow: function (index, row) {
 
-            var rows = $("#importDetail").datagrid('getRows')
-            console.log(row)
-            for(var i = 0 ;i<rows.length;i++){
-                if(rows[i].expCode==row.expCode && rows[i].packageSpec==row.expSpec){
-                    $.messager.alert("系统提示","相同规格的产品已经存在，请选择其他规格，或其他产品！",'info');
-                    return ;
-                }
-            }
-
-            var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
-            $(expCodeEdit.target).textbox('setValue', row.expCode);
-
-            var expNameEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expName'});
-            $(expNameEd.target).textbox('setValue', row.expName);
-
-            var packageSpecEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'packageSpec'});
-            $(packageSpecEd.target).textbox('setValue', row.expSpec);
-
-            var packageUnitsEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'packageUnits'});
-            $(packageUnitsEd.target).textbox('setValue', row.units);
-
-            var SpecEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expSpec'});
-            $(SpecEd.target).textbox('setValue', row.minSpec);
-
-            var unitsEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'units'});
-            $(unitsEd.target).textbox('setValue', row.minUnits);
-
-
-            var quantityEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'quantity'});
-            $(quantityEd.target).textbox('setValue', 0);
-            $(quantityEd.target).focus();
-
-            var batchNoEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'batchNo'});
-            $(batchNoEd.target).textbox('setValue', 'X');
-
-            var purchasePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'purchasePrice'});
-            $(purchasePriceEd.target).textbox('setValue', row.tradePrice);
-
-            var amountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
-            $(amountEd.target).textbox('setValue', 0);
-
-            var expFormEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expForm'});
-            $(expFormEd.target).textbox('setValue', '消耗材料');
-
-            var firmIdEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'firmId'});
-            $(firmIdEd.target).textbox('setValue', row.firmId);
-            var inventoryEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'inventory'});
-            $(inventoryEd.target).textbox('setValue', row.quantity);
-
-            var expImportDetailRegistNoEd = $("#importDetail").datagrid('getEditor', {
-                index: editIndex,
-                field: 'expImportDetailRegistNo'
-            });
-            $(expImportDetailRegistNoEd.target).textbox('setValue', row.registerNo);
-
-            var expImportDetailLicencenoEd = $("#importDetail").datagrid('getEditor', {
-                index: editIndex,
-                field: 'expImportDetailLicenceno'
-            });
-            $(expImportDetailLicencenoEd.target).textbox('setValue', row.permitNo);
-
-            var invoiceDateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'invoiceDate'});
-            $(invoiceDateEd.target).textbox('setValue', setDefaultDate());
-            var producedateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'producedate'});
-            $(producedateEd.target).textbox('setValue', setDefaultDate());
-            var disinfectdateEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'disinfectdate'});
-            $(disinfectdateEd.target).textbox('setValue', setDefaultDate());
-
-            var discountEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'discount'});
-            $(discountEd.target).textbox('setValue', '100');
-
-            var orderBatchEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'orderBatch'});
-            $(orderBatchEd.target).textbox('setValue', 'x');
-
-            var retailedEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
-            $(retailedEd.target).numberbox('setValue',  row.retailPrice);
-
-            var tradePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'tradePrice'});
-            $(tradePriceEd.target).numberbox('setValue', row.tradePrice);
-
-            $("#stockRecordDialog").dialog('close');
-        }
-
-    });
     /**
      * 查询
      */
@@ -1031,6 +911,7 @@ $(function () {
             detail.quantity = rows[i].quantity;
             detail.batchNo = rows[i].batchNo;
             detail.purchasePrice = rows[i].purchasePrice;
+            detail.expireDate = new Date(rows[i].expireDate);
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
@@ -1040,14 +921,9 @@ $(function () {
             detail.discount = rows[i].discount;
             detail.orderBatch = rows[i].orderBatch;
             detail.tenderNo = rows[i].tenderNo;
-
-
-            detail.expireDate =  new Date(rows[i].expireDate);
             detail.invoiceDate = new Date(rows[i].invoiceDate);
-            detail.producedate =  new Date(rows[i].producedate);
-            detail.disinfectdate =  new Date(rows[i].disinfectdate);
-
-
+            detail.producedate = new Date(rows[i].producedate);
+            detail.disinfectdate = new Date(rows[i].disinfectdate);
             detail.invoiceNo = rows[i].invoiceNo;
             detail.hospitalId = parent.config.hospitalId;
 
@@ -1130,13 +1006,13 @@ $(function () {
         if(saveFlag){
             $("#printDiv").dialog('open');
         }else{
-        var printData = $("#importDetail").datagrid('getRows');
-        if (printData.length <= 0) {
-            $.messager.alert('系统提示', '请先查询数据', 'info');
-            return;
+            var printData = $("#importDetail").datagrid('getRows');
+            if (printData.length <= 0) {
+                $.messager.alert('系统提示', '请先查询数据', 'info');
+                return;
+            }
+            $("#printDiv").dialog('open');
         }
-        $("#printDiv").dialog('open');
-    }
 
     })
 })
