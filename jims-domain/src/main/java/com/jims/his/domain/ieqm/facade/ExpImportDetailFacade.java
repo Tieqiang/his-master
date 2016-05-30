@@ -43,7 +43,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "         EXP_IMPORT_DETAIL.EXPIRE_DATE,   \n" +
                 "         EXP_IMPORT_DETAIL.FIRM_ID,\n" +
                 "\t       EXP_IMPORT_MASTER.SUPPLIER,   \n" +
-                "\t       EXP_IMPORT_DETAIL.retail_price*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
+                "\t       EXP_IMPORT_DETAIL.PURCHASE_PRICE*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
                 "         EXP_IMPORT_DETAIL.PURCHASE_PRICE,   \n" +
                 "         EXP_IMPORT_DETAIL.DISCOUNT,   \n" +
                 "         EXP_IMPORT_DETAIL.PACKAGE_SPEC,   \n" +
@@ -141,6 +141,7 @@ public class ExpImportDetailFacade extends BaseFacade {
         if (documentNo != null && documentNo.trim().length() > 0) {
             sql += " and M.document_No='" + documentNo + "'";
         }
+
         List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
         return nativeQuery;
     }

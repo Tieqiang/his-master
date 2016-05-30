@@ -428,6 +428,7 @@ $(function () {
             obj.packageUnits='' ;
             obj.expSpec='' ;
             obj.amountPerPackage = '' ;
+            obj.columnProtect = '0';
             newRows.push(obj) ;
         } else {
             var code = $('#expName').combogrid('getValue');
@@ -484,14 +485,7 @@ $(function () {
                     }else{
                         $.postJSON("/api/exp-price-list/stop-price",row, function (data) {
                             $.messager.alert("提示", "停价成功", "info");
-                            var promise = loadDict();//有价格信息
-
-                            promise.done(function () {
-                                if (prices.length > 0) {
-                                    $("#dg").datagrid('loadData', prices);
-                                    return;
-                                }
-                            });
+                            $("#dg").datagrid('deleteRow', index);
                         }, function (data) {
                             $.messager.alert("提示", data.responseJSON.errorMessage, "error");
                         })
