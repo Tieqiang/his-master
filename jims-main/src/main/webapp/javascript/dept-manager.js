@@ -194,15 +194,16 @@ $(function () {
             $.messager.alert("系统提示", "请选择要修改的科室");
             return;
         }
+//        console.info(node)
         $("#id").val(node.id);
-        $("#deptCode").textbox('setValue', node.deptCode);
-        $("#deptName").textbox('setValue', node.deptName);
-        $("#deptAlis").textbox('setValue', node.deptAlis);
+        $("#deptCode").val(node.deptCode);
+        $("#deptName").val(node.deptName);
+        $("#deptAlis").val(node.deptAlis);
         $("#deptOutpInp").combobox('setValue', node.deptOutpInp);
-        $("#deptDevideAttr").textbox('setValue', node.deptDevideAttr);
-        $("#deptLocation").textbox('setValue', node.deptLocation);
+        $("#deptDevideAttr").val(node.deptDevideAttr);
+        $("#deptLocation").val(node.deptLocation);
         $("#deptStopFlag").combobox('setValue', node.deptStopFlag);
-        $("#parentId").textbox('setValue', node.parentId);
+        $("#parentId").val(node.parentId);
 
         $("#dlg").dialog('open').dialog('setTitle',"科室修改") ;
 
@@ -216,14 +217,14 @@ $(function () {
         var deptDict = {};
         deptDict.hospitalDict = {};
         deptDict.id = $("#id").val();
-        deptDict.deptCode = $("#deptCode").textbox('getValue');
-        deptDict.deptName = $("#deptName").textbox('getValue');
-        deptDict.deptAlis = $("#deptAlis").textbox('getValue');
+        deptDict.deptCode = $("#deptCode").val();
+        deptDict.deptName = $("#deptName").val();
+        deptDict.deptAlis = $("#deptAlis").val();
         deptDict.deptOutpInp = $("#deptOutpInp").combobox('getValue');
         //deptDict.deptDevideAttr = $("#deptDevideAttr").textbox('getValue') ;
-        deptDict.deptLocation = $("#deptLocation").textbox('getValue');
+        deptDict.deptLocation = $("#deptLocation").val();
         deptDict.deptStopFlag = $("#deptStopFlag").combobox('getValue');
-        deptDict.parentId = $("#parentId").textbox('getValue');
+        deptDict.parentId = $("#parentId").val();
         deptDict.deptClass = $("#deptClass").combobox('getValue') ;
         deptDict.deptType = $("#deptType").combobox('getValue') ;
         deptDict.endDept = $("#endDept").combobox('getValue') ;
@@ -249,15 +250,15 @@ $(function () {
      * 清除输入框信息
      */
     var clearInput = function(){
-        $("#id").val();
-        $("#deptCode").textbox('setValue', "");
-        $("#deptName").textbox('setValue', "");
-        $("#deptAlis").textbox('setValue', "");
+        $("#id").val("");
+        $("#deptCode").val("");
+        $("#deptName").val("");
+        $("#deptAlis").val("");
         $("#deptOutpInp").combobox('setValue', "");
-        $("#deptAttr").textbox('setValue',"") ;
-        $("#deptLocation").textbox('setValue', "");
+        $("#deptAttr").val("");
+        $("#deptLocation").val("");
         $("#deptStopFlag").combobox('setValue', "");
-        $("#parentId").textbox('setValue', "");
+        $("#parentId").val("");
 
     }
     /**
