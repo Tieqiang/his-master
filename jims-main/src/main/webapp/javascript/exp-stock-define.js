@@ -4,7 +4,10 @@
 /**
  * 产品库存定义
  */
+
 function checkRadio(){
+
+
     if($("#productName:checked").val()){
         $("#productTypeSelect").combobox("disable");
         $("#productTypeSelect").combobox("clear");
@@ -16,8 +19,10 @@ function checkRadio(){
     }
 }
 $(document).ready(function () {
-    var currentExpCode;
     var editIndex;
+    var flag;
+//    var editIndex;
+    var currentExpCode;
     var stopEdit = function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
@@ -46,15 +51,15 @@ $(document).ready(function () {
             textField:"formName"
         });
     });
-    //产品包装单位查询
-    var expPackageUnitPromise = $.get("/api/measures-dict/list", function (data) {
-        $.each(data, function (index,item) {
-            var expPackageUnit ={};
-            expPackageUnit.measuresCode = item.measuresName;
-            expPackageUnit.measuresName = item.measuresName;
-            packageUnits.push(expPackageUnit);
-        })
-    });
+//    //产品包装单位查询
+//    var expPackageUnitPromise = $.get("/api/measures-dict/list", function (data) {
+//        $.each(data, function (index,item) {
+//            var expPackageUnit ={};
+//            expPackageUnit.measuresCode = item.measuresName;
+//            expPackageUnit.measuresName = item.measuresName;
+//            packageUnits.push(expPackageUnit);
+//        })
+//    });
     $('#inputCode').combogrid({
         panelWidth: 500,
         idField: 'expCode',
@@ -100,7 +105,7 @@ $(document).ready(function () {
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
-                    url: '/api/exp-dict/list-exp-name-define-by-input',
+                    url: '/api/exp-name-dict/list-exp-name-by-input',
                     singleSelect: true,
                     method: 'GET',
                     panelWidth: 400,
@@ -109,72 +114,54 @@ $(document).ready(function () {
                     columns: [[{
                         title: '代码',
                         field: 'expCode',
-                        width: "20%"
+                        width: "30%"
                     }, {
                         title: '品名',
                         field: 'expName',
-                        width: "20%",
+                        width: "40%",
                         editor: {type: 'text', options: {required: true}}
                     }, {
-                        title: '规格',
-                        field: 'expSpec',
-                        width: "20%"
-                    }, {
-                        title: '单位',
-                        field: 'units',
-                        width: "30%"
+                        title: '拼音码',
+                        field: 'inputCode',
+                        width: "30%",
+                        editor: 'text'
                     }]],
                     onClickRow: function (index, row) {
-                        $('#dg').datagrid('endEdit',editIndex);
-                        $('#dg').datagrid('updateRow',{
-                            index: editIndex,
-                            row: {
-                                expSpec: row.expSpec,
-                                expName: row.expName,
-                                expForm: row.expForm,
-                                upperLevel: 0,
-                                lowLevel: 0,
-                                amountPerPackage: 0,
-                                storage: parent.config.storageCode,
-                                expCode: row.expCode,
-                                location: row.expCode,
-                                units: row.units
-                            }
-                        });
+//                        var ed = $("#dg").datagrid('getEditor', {index: index, field: 'expCode'});
+//                        console.info(ed);
+//                        $(ed.target).textbox('setValue', row.expCode);
+                        currentExpCode = row.expCode;
+                        $("#stockRecordDialog").dialog('open');
+                    }
 
-                        $('#dg').datagrid('beginEdit',editIndex);
-                        //$(this).combogrid('hidePanel');
-                        //currentExpCode = row.expCode;
-                        //$("#stockRecordDialog").dialog('open');
-                    },
-                    keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
-                        enter: function (e) {
-                            var row = $(this).combogrid('grid').datagrid('getSelected');
-                            $(this).combogrid('hidePanel');
-                            $('#dg').datagrid('endEdit',editIndex);
-                            if (row) {
-                                $('#dg').datagrid('updateRow',{
-                                    index: editIndex,
-                                    row: {
-                                        expSpec: row.expSpec,
-                                        expName: row.expName,
-                                        expForm: row.expForm,
-                                        upperLevel: 0,
-                                        lowLevel: 0,
-                                        amountPerPackage: 0,
-                                        storage: parent.config.storageCode,
-                                        expCode: row.expCode,
-                                        location: row.expCode,
-                                        units: row.units
-                                    }
-                                });
-                                //currentExpCode = row.expCode;
-                                //$("#stockRecordDialog").dialog('open');
-                            }
-                            $('#dg').datagrid('beginEdit',editIndex);
-
-                        }
-                    })
+//                    keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+//                        enter: function (e) {
+//                            var row = $(this).combogrid('grid').datagrid('getSelected');
+//                            $(this).combogrid('hidePanel');
+//                            $('#dg').datagrid('endEdit',editIndex);
+//                            if (row) {
+//                                $('#dg').datagrid('updateRow',{
+//                                    index: editIndex,
+//                                    row: {
+//                                        expSpec: row.expSpec,
+//                                        expName: row.expName,
+//                                        expForm: row.expForm,
+//                                        upperLevel: 0,
+//                                        lowLevel: 0,
+//                                        amountPerPackage: 0,
+//                                        storage: parent.config.storageCode,
+//                                        expCode: row.expCode,
+//                                        location: row.expCode,
+//                                        units: row.units
+//                                    }
+//                                });
+//                                //currentExpCode = row.expCode;
+//                                //$("#stockRecordDialog").dialog('open');
+//                            }
+//                            $('#dg').datagrid('beginEdit',editIndex);
+//
+//                        }
+//                    })
                 }
             },
             width:"7%"
@@ -193,17 +180,17 @@ $(document).ready(function () {
         },{
             title:"常规包装数量",
             field:"amountPerPackage",
-            width:"10%",
-            editor:{type:"validatebox"}
+            width:"10%"
+//            editor:{type:"validatebox"}
         },{
             title:"常规包装单位",
             field:"packageUnits",
-            width:"10%",
-            editor:{type:"combobox",options:{
-                data:packageUnits,
-                valueField:"measuresCode",
-                textField:"measuresName"
-            }}
+            width:"10%"
+//            editor:{type:"combobox",options:{
+//                data:packageUnits,
+//                valueField:"measuresCode",
+//                textField:"measuresName"
+//            }}
         },{
             title:"高位水平",
             field:"upperLevel",
@@ -219,10 +206,19 @@ $(document).ready(function () {
             field:"location",
             hidden:true
         }]],
-        onClickRow: function (index, row) {
-            stopEdit();
-            $(this).datagrid('beginEdit', index);
-            editIndex = index;
+//        onClickRow: function (index, row) {
+//            stopEdit();
+//            $(this).datagrid('beginEdit', index);
+//            editIndex = index;
+//        }
+        onClickCell: function (index, field, row) {
+            if (index != editIndex) {
+                $(this).datagrid('endEdit', editIndex);
+                editIndex = index;
+            }
+            $(this).datagrid('beginEdit', editIndex);
+            var ed = $(this).datagrid('getEditor', {index: index, field: field});
+            $(ed.target).focus();
         }
     });
     var define = {};
@@ -307,6 +303,113 @@ $(document).ready(function () {
         }else{
             $.messager.alert('系统消息','没有要保存的数据，请规范操作本系统！','error');
             return;
+        }
+
+    });
+
+
+    $("#stockRecordDialog").dialog({
+        title: '选择规格',
+        width: 700,
+        height: 300,
+        closed: false,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#stockRecordDatagrid").datagrid('load', {
+                storageCode: parent.config.storageCode,
+                expCode: currentExpCode,
+                hospitalId: parent.config.hospitalId
+            });
+            $("#stockRecordDatagrid").datagrid('selectRow', 0)
+        }
+    });
+
+    $("#stockRecordDatagrid").datagrid({
+        singleSelect: true,
+        fit: true,
+        fitColumns: true,
+        url: '/api/exp-stock/stock-record/',
+        method: 'GET',
+        columns: [[{
+            title: '代码',
+            field: 'expCode'
+        }, {
+            title: '名称',
+            field: 'expName'
+        },  {
+            title: '规格',
+            field: 'expSpec'
+        }, {
+            title: '最小规格',
+            field: 'minSpec'
+        }, {
+            title: '单位',
+            field: 'units'
+        }, {
+            title: '最小单位',
+            field: 'minUnits'
+        }, {
+            title: '厂家',
+            field: 'firmId'
+        }, {
+            title: '批发价',
+            field: 'tradePrice'
+        }, {
+            title: '零售价',
+            field: 'retailPrice'
+        }, {
+            title: '注册证号',
+            field: 'registerNo'
+        }, {
+            title: '许可证号',
+            field: 'permitNo'
+        },{
+            title: '常规包装数量',
+            field: 'amountPerPackage'
+        }]],
+        onLoadSuccess:function(data){
+            flag = flag+1;
+            if(flag==1){
+                if(data.total==0 && editIndex!=undefined){
+                    //$("#exportDetail").datagrid('endEdit', editIndex);
+                    $.messager.alert('系统提示','无法获取产品的价格信息！','info');
+                    $("#stockRecordDialog").dialog('close');
+                    //$("#exportDetail").datagrid('beginEdit', editIndex);
+                }
+                flag=0;
+            }
+        },
+//
+
+        onClickRow: function (index, row) {
+//            var row = $(this).combogrid('grid').datagrid('getSelected');
+//            $(this).combogrid('hidePanel');
+            console.info(row);
+            $('#dg').datagrid('endEdit',editIndex);
+            if (row) {
+//                console.info(row.);
+                $('#dg').datagrid('updateRow',{
+                    index: editIndex,
+                    row: {
+                        expSpec: row.expSpec,
+                        expName: row.expName,
+                        expForm: row.expForm,
+                        upperLevel: 0,
+                        lowLevel: 0,
+                        amountPerPackage: row.amountPerPackage,
+                        packageUnits:row.units,
+                        storage: parent.config.storageCode,
+                        expCode: row.expCode,
+                        location: row.expCode,
+                        units: row.units
+                    }
+                });
+                //currentExpCode = row.expCode;
+                //$("#stockRecordDialog").dialog('open');
+            }
+            $("#stockRecordDialog").dialog('close');
         }
 
     });

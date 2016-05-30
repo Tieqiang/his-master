@@ -422,7 +422,7 @@ public class ExpStockFacade extends BaseFacade {
                 "       b.exp_name,\n" +
                 "       a.package_spec,\n" +
                 "       a.firm_id,\n" +
-                "       a.package_units,\n" +
+                "       a.units,\n" +
                 "       a.quantity,\n" +
                 "       a.purchase_price,\n" +
                 "       c.retail_price,\n" +
@@ -430,8 +430,8 @@ public class ExpStockFacade extends BaseFacade {
                 "       a.quantity * a.purchase_price trade_all_price\n" +
                 "  from exp_stock a, exp_dict b ,exp_price_list c \n" +
                 "  where a.exp_code = b.exp_code \n" +
-                "  and a.package_spec = b.exp_spec\n" +
-                "  and a.package_units = b.units\n" +
+                "  and a.exp_spec = b.exp_spec\n" +
+                "  and a.units = b.units\n" +
                 "  and a.exp_code = c.exp_code\n" +
                 "  and a.package_spec = c.exp_spec\n" +
                 "  and a.package_units = c.units \n" +

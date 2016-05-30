@@ -97,7 +97,7 @@ public class ExpStockService {
                 "       c.material_code,\n" +
                 "       c.Register_no,\n" +
                 "       0 quantity," +
-                "       c.Permit_no\n" +
+                "       c.Permit_no,   c.amount_per_package \n" +
                 "  FROM exp_dict b, exp_price_list c\n" +
                 " WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "   AND b.exp_spec = c.min_spec\n" +
@@ -119,6 +119,7 @@ public class ExpStockService {
     @Path("imp")
     public Response expImport(ExpImportVo importVo){
         try {
+
             expStockFacade.expImport(importVo) ;
             return Response.status(Response.Status.OK).entity(importVo).build() ;
         }catch (Exception e){

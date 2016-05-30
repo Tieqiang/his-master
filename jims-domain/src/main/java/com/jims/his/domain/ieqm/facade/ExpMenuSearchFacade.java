@@ -29,7 +29,7 @@ public class ExpMenuSearchFacade extends BaseFacade {
      * @return
      */
     public List<ExpMenuSearchVo> findAll(String storageCode,String hospitalId){
-        String sql = "SELECT EXP_PRICE_LIST.EXP_CODE,   \n" +
+        String sql = "SELECT distinct EXP_PRICE_LIST.EXP_CODE,   \n" +
                 "         EXP_DICT.EXP_NAME,   \n" +
                 "         EXP_PRICE_LIST.EXP_SPEC,   \n" +
                 "         EXP_PRICE_LIST.FIRM_ID,   \n" +
@@ -37,18 +37,18 @@ public class ExpMenuSearchFacade extends BaseFacade {
                 "         EXP_DICT.EXP_FORM,   \n" +
                 "         EXP_PRICE_LIST.TRADE_PRICE,   \n" +
                 "         EXP_PRICE_LIST.RETAIL_PRICE,\n" +
-                "      EXP_DICT.EXP_INDICATOR,\n" +
-                "      exp_quantity.quantity\n" +
-                "    FROM EXP_DICT,   \n" +
-                "         EXP_PRICE_LIST,(SELECT exp_code, PACKAGE_SPEC, firm_id, sum(QUANTITY) quantity FROM exp_stock \n" +
-                "         WHERE STORAGE = '" + storageCode + "' and \n" +
-                "               HOSPITAL_ID='"+hospitalId+"'"+
-                "      GROUP BY exp_code, PACKAGE_SPEC, firm_id) exp_quantity\n" +
+                "      EXP_DICT.EXP_INDICATOR\n" +
+//                "      exp_quantity.quantity\n" +
+                "    FROM EXP_DICT ,EXP_PRICE_LIST  \n" +
+//                "         ,(SELECT exp_code, PACKAGE_SPEC, firm_id, sum(QUANTITY) quantity FROM exp_stock \n" +
+//                "         WHERE STORAGE = '" + storageCode + "' and \n" +
+//                "               HOSPITAL_ID='"+hospitalId+"'"+
+//                "      GROUP BY exp_code, PACKAGE_SPEC, firm_id) exp_quantity\n" +
                 "   WHERE  EXP_PRICE_LIST.EXP_CODE = EXP_DICT.EXP_CODE  and  \n" +
-                "          EXP_DICT.EXP_SPEC = EXP_PRICE_LIST.EXP_SPEC  and  \n" +
-                "       EXP_PRICE_LIST.EXP_CODE = exp_quantity.exp_code(+)  and \n" +
-                "       EXP_PRICE_LIST.EXP_SPEC = exp_quantity.PACKAGE_SPEC(+)  and\n" +
-                "       EXP_PRICE_LIST.FIRM_ID = exp_quantity.firm_id(+)  and\n" +
+//                "          EXP_DICT.EXP_SPEC = EXP_PRICE_LIST.EXP_SPEC  and  \n" +
+//                "       EXP_PRICE_LIST.EXP_CODE = exp_quantity.exp_code(+)  and \n" +
+////                "       EXP_PRICE_LIST.EXP_SPEC = exp_quantity.PACKAGE_SPEC(+)  and\n" +
+//                "       EXP_PRICE_LIST.FIRM_ID = exp_quantity.firm_id(+)  and\n" +
                 "       start_date < SYSDATE  AND \n" +
                 "         ( stop_date >= SYSDATE OR stop_date IS NULL ) and\n" +
                 "       EXP_DICT.storage_code = '"+storageCode + "' and \n" +

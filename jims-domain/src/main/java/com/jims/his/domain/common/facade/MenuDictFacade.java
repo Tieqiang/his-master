@@ -76,7 +76,7 @@ public class MenuDictFacade extends BaseFacade {
                 "       module_vs_menu     d,\n" +
                 "       menu_dict          e,\n" +
                 "       role_vs_menu       f\n" +
-                " where login_name = upper('" + loginName + "')\n" +
+                " where login_name = '" + loginName + "'\n" +
                 "   and a.id = b.staff_id\n" +
                 "   and c.id = d.module_id\n" +
                 "   and d.menu_id = e.id\n" +
