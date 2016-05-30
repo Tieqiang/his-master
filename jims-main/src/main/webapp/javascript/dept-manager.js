@@ -15,7 +15,7 @@ $(function () {
                         //console.log(children[j]);
                         if ($('#tt').treegrid('isLeaf', children[j].target)) { //判断子级是否为叶子节点,即不是父节点
                             if (children[j].deptName.indexOf(value) >= 0) { //判断节点text是否包含搜索文本
-                                $('#tt').treegrid('select', children[j].target);//设置此节点为选择状态
+                                $('#tt').treegrid('select', children[j].id);//设置此节点为选择状态
                                 break;
                             }
                         }
