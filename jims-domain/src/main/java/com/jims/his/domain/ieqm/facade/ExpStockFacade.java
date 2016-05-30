@@ -431,7 +431,7 @@ public class ExpStockFacade extends BaseFacade {
                 "  from exp_stock a, exp_dict b ,exp_price_list c \n" +
                 "  where a.exp_code = b.exp_code \n" +
                 "  and a.exp_spec = b.exp_spec\n" +
-                "  and a.package_units = b.units\n" +
+                "  and a.units = b.units\n" +
                 "  and a.exp_code = c.exp_code\n" +
                 "  and a.package_spec = c.exp_spec\n" +
                 "  and a.package_units = c.units \n" +
