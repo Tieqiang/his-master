@@ -144,11 +144,17 @@ public class IncomeItemDictFacade extends BaseFacade {
 
     }
 
-    public PageEntity<IncomeItemDict> findByHOspitalIdAndReckCode(String hospitalId, String reckCode) {
+    public PageEntity<IncomeItemDict> findByHOspitalIdAndReckCode(String hospitalId, String reckCode, String priceItemCode) {
 
         PageEntity<IncomeItemDict> pageEntity = new PageEntity<>() ;
 
-        String hql = "from IncomeItemDict as dict where dict.hospitalId='"+hospitalId+"' and dict.reckItemCode = '"+reckCode+"'" ;
+        String hql = "from IncomeItemDict as dict where dict.hospitalId='"+hospitalId+"'";
+
+        if(!"".equals(priceItemCode)&&priceItemCode!=null){
+            hql += " and dict.priceItemCode='"+priceItemCode+"'";
+        }else{
+            hql +=" and dict.reckItemCode = '"+reckCode+"'" ;
+        }
 
         TypedQuery<IncomeItemDict> query = createQuery(IncomeItemDict.class, hql, new ArrayList<Object>());
         List<IncomeItemDict> resultList = query.getResultList();
@@ -156,5 +162,15 @@ public class IncomeItemDictFacade extends BaseFacade {
         pageEntity.setTotal(1);
 
         return pageEntity;
+    }
+
+    public List<IncomeItemDict> findIncomeItemByHospitalIdAndQ(String hospitalId, String q) {
+        String hql = "from IncomeItemDict as dict where dict.hospitalId='"+hospitalId+"'" ;
+        if(q !=null && !"".equals(q)){
+            hql = hql + " and upper(inputCode) like upper('"+q+"%')" ;
+        }
+
+        List<IncomeItemDict> incomeItemDicts = createQuery(IncomeItemDict.class,hql,new ArrayList<Object>()).getResultList() ;
+        return incomeItemDicts;
     }
 }

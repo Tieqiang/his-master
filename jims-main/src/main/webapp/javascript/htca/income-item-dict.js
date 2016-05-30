@@ -15,6 +15,38 @@ $(function(){
         textField:'reckItemName',
         method:'GET'
     }) ;
+
+    $("#filterInput").combogrid({
+        delay:500,
+        idField:'priceItemCode',
+        textField:'priceItemName',
+        method:'GET',
+        mode:'remote',
+        loadMsg:'数据正在加载中......',
+        panelWidth:500,
+        url:'/api/income-item/list-income-items?hospitalId='+parent.config.hospitalId,
+        columns:[[{
+            field:'priceItemCode',
+            title:'项目代码',
+            width:'40%'
+        },{
+            field:'priceItemName',
+            title:'项目名称',
+            width:'40%'
+        },{
+            field:'inputCode',
+            title:'拼音码',
+            width:'10%'
+        }]],
+        onChange:function(newValue,oldValue){
+            var reckCode = $("#reckCombo").combobox('getValue') ;
+            if(!reckCode){
+                $.messager.alert('系统提示','请选择相应的核算类别','error') ;
+                return ;
+            } ;
+        }
+    })
+
     //定义输入项目表格
     $("#incomeItemGrid").datagrid({
         fit:true,
@@ -182,9 +214,12 @@ $(function(){
         if(!reckCode){
             $.messager.alert('系统提示','请选择相应的核算类别','error') ;
             return ;
-        }
+        } ;
+        var priceItemCode = $("#filterInput").combobox('getValue') ;
+
+
         var options = $("#incomeItemGrid").datagrid('options') ;
-        options.url = '/api/income-item/list-reck?hospitalId='+parent.config.hospitalId+"&reckCode="+reckCode;
+        options.url = '/api/income-item/list-reck?hospitalId='+parent.config.hospitalId+"&reckCode="+reckCode+"&priceItemCode="+priceItemCode;
         $("#incomeItemGrid").datagrid('reload') ;
     })
 
