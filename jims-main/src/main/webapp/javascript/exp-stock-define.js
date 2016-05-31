@@ -399,7 +399,7 @@ $(document).ready(function () {
                         upperLevel: 0,
                         lowLevel: 0,
                         amountPerPackage: row.amountPerPackage,
-                        packageUnits:row.units,
+                        packageUnits:row.minUnits,
                         storage: parent.config.storageCode,
                         expCode: row.expCode,
                         location: row.expCode,
