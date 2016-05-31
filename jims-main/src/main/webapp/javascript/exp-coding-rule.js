@@ -17,6 +17,7 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         footer: '#tb',
         singleSelect: true,
+        rownumbers: true,
         columns: [[{
             title: '编号',
             field: 'id',
@@ -24,17 +25,20 @@ $(function () {
         }, {
             title: '编码级别',
             field: 'codeLevel',
-            width: "30%",
+            align: 'center',
+            width: "20%",
             editor: 'numberbox'
         }, {
             title: '编码级长度',
             field: 'levelWidth',
-            width: "30%",
+            align: 'center',
+            width: "20%",
             editor: 'numberbox'
         }, {
             title: '编码级名称',
             field: 'className',
-            width: "40%",
+            align: 'center',
+            width: "20%",
             editor: {
                 type: 'text', options: {
                     required: true, validType: 'length[0,8]', missingMessage:'请输入四个以内的汉字'}
