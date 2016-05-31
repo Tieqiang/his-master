@@ -194,47 +194,58 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         toolbar: '#ft',
         footer: '#tb',
+        rownumbers: true,
         singleSelect: false,
         nowrap: false,
         columns: [[{
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: "10%"
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: "10%"
         }, {
             title: '规格',
             field: 'packageSpec',
-            width: "10%"
+            align: 'center',
+            width: "9%"
         }, {
             title: '单位',
             field: 'packageUnits',
-            width: "10%"
+            align: 'center',
+            width: "9%"
         }, {
             title: '厂家',
             field: 'firmId',
-            width: "10%"
+            align: 'center',
+            width: "11%"
         }, {
             title: '数量',
             field: 'quantity',
+            align: 'center',
             width: "10%"
         }, {
             title: '批发价',
             field: 'tradePrice',
+            align: 'center',
             width: "10%"
         }, {
             title: '进价金额',
             field: 'payAmount',
+            align: 'center',
             width: "10%"
         }, {
             title: '零售价金额',
             field: 'purchaseAmount',
+            align: 'center',
             width: "10%"
         }, {
             title: '类别',
             field: 'expForm',
+            align: 'center',
             width: "10%"
         }]]
     });
