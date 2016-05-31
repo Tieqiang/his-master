@@ -43,7 +43,7 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
                 "current_retail_price,retail_price_profit,actual_efficient_date \n" +
                 "from exp_price_modify_profit a,exp_storage_dept b,exp_dict c,exp_price_list d \n" +
                 "where b.storage_code =a.storage and actual_efficient_date >= to_date('"+ longStartTime+"','YYYY-MM-DD HH24:MI:SS')  " +
-                " and a.exp_code  = c.exp_code and a.exp_spec = d.exp_spec and and a.exp_code=d.exp_code and actual_efficient_date <= to_date('"+ longStopTime+"','YYYY-MM-DD HH24:MI:SS')       and " +
+                " and a.exp_code  = c.exp_code and a.exp_spec = d.exp_spec  and a.exp_code=d.exp_code and actual_efficient_date <= to_date('"+ longStopTime+"','YYYY-MM-DD HH24:MI:SS')       and " +
                 "a.hospital_id = '"+hospitalId+"'";
         List<ExpPriceModifyProfit> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceModifyProfit.class);
         System.out.println("nativeQuery");
