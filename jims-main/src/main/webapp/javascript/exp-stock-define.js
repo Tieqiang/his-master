@@ -175,7 +175,7 @@ $(document).ready(function () {
             width:"10%"
         },{
             title:"单位",
-            field:"packageUnits",
+            field:"units",
             width:"10%"
         },{
             title:"常规包装数量",
@@ -399,11 +399,11 @@ $(document).ready(function () {
                         upperLevel: 0,
                         lowLevel: 0,
                         amountPerPackage: row.amountPerPackage,
-                        packageUnits:row.minUnits,
+                        packageUnits:row.units,
                         storage: parent.config.storageCode,
                         expCode: row.expCode,
                         location: row.expCode,
-                        units: row.units
+                        units: row.minUnits
                     }
                 });
                 //currentExpCode = row.expCode;
