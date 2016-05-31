@@ -179,36 +179,44 @@ $(function () {
         columns: [[{
             title: '序号',
             field: 'no',
-            width: "5%"
+            align: 'center',
+            width: "4%"
         }, {
             title: '产品编码',
             field: 'expCode',
+            align: 'center',
             width: "6%"
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: "6%"
         },
             {
             title: '包装规格',
             field: 'expSpec',
+            align: 'center',
             width: "6%"
         },
             {
             title: '单位',
             field: 'units',
+            align: 'center',
             width: "6%"
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: "6%"
         }, {
             title: '类型',
             field: 'expForm',
+            align: 'center',
             width: "6%"
         }, {
             title: '单价',
             field: 'retailPrice',
+            align: 'center',
             width: "6%",
             type: 'numberbox',
             formatter:function(value,row,index){
@@ -221,10 +229,12 @@ $(function () {
         }, {
                 title: '账面数',
                 field: 'accountQuantity',
+                align: 'center',
                 width: "6%"
             }, {
             title: '实盘数',
             field: 'actualQuantity',
+            align: 'center',
             width: "6%",
             styler: cellStyler,
             editor: {
@@ -246,6 +256,7 @@ $(function () {
         }, {
             title: '盈亏数',
             field: 'quantity',
+            align: 'center',
             width: "6%",
             styler: cellStyler,
             formatter: function (value, row, index) {
@@ -258,15 +269,18 @@ $(function () {
         }, {
             title: '账面额',
             field: 'paperAmount',
+            align: 'center',
             width: "5%"
         }, {
             title: '实盘额',
             field: 'realAmount',
+            align: 'center',
             width: "6%",
             styler: cellStyler
         }, {
             title: '盈亏额',
             field: 'profitAmount',
+            align: 'center',
             width: "6%",
             styler: cellStyler,
             formatter: function (value, row, index) {
@@ -279,18 +293,22 @@ $(function () {
         }, {
             title: '批号',
             field: 'batchNo',
+            align: 'center',
             width: "6%"
         }, {
             title: '分库房',
             field: 'subStorage',
+            align: 'center',
             width: "6%"
         }, {
             title: '状态',
             field: 'recStatus',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'combobox',
                 options: {
+                    editable: false,
                     panelHeight: 'auto',
                     valueField: 'code',
                     textField: 'name',
@@ -311,12 +329,10 @@ $(function () {
         }, {
                 title: '最小规格',
                 field: 'minSpec',
-                width: "6%",
                 hidden: true
             }, {
                 title: '最小单位',
                 field: 'minUnits',
-                width: "6%",
                 hidden: true
             }]],
         onClickRow: function (index, row) {
