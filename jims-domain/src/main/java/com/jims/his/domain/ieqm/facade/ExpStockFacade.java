@@ -343,7 +343,7 @@ public class ExpStockFacade extends BaseFacade {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String startTime = formatter.format(day.getTime());
         String sql = "select a.exp_code,\n" +
-                "       a.exp_spec,\n" +
+                "       a.package_spec,\n" +
                 "       a.package_units,\n" +
                 "       a.quantity stock_quantity,\n" +
                 "       b.upper_level,\n" +
