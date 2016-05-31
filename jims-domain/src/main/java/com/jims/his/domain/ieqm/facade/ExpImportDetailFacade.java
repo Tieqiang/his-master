@@ -3,14 +3,14 @@ package com.jims.his.domain.ieqm.facade;
 
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
-import com.jims.his.domain.ieqm.entity.ExpDisburseRecDetail;
 import com.jims.his.domain.ieqm.entity.ExpImportDetail;
 import com.jims.his.domain.ieqm.entity.ExpImportMaster;
-import com.jims.his.domain.ieqm.vo.*;
+import com.jims.his.domain.ieqm.vo.ExpDisburseRecVo;
+import com.jims.his.domain.ieqm.vo.ExpImportDetailVo;
+import com.jims.his.domain.ieqm.vo.ExpImportVo;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +43,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "         EXP_IMPORT_DETAIL.EXPIRE_DATE,   \n" +
                 "         EXP_IMPORT_DETAIL.FIRM_ID,\n" +
                 "\t       EXP_IMPORT_MASTER.SUPPLIER,   \n" +
-                "\t       EXP_IMPORT_DETAIL.retail_price*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
+                "\t       EXP_IMPORT_DETAIL.PURCHASE_PRICE*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
                 "         EXP_IMPORT_DETAIL.PURCHASE_PRICE,   \n" +
                 "         EXP_IMPORT_DETAIL.DISCOUNT,   \n" +
                 "         EXP_IMPORT_DETAIL.PACKAGE_SPEC,   \n" +
@@ -124,9 +124,9 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "   WHERE M.STORAGE = '"+storage+"' " +
                 "          AND M.HOSPITAL_ID = '"+hospitalId+"' " +
                 "          AND M.DOCUMENT_NO(+) = D.DOCUMENT_NO   \n" +
-                "          AND D.package_spec = A.exp_spec   \n" +
+                "          AND D.exp_spec = A.exp_spec   \n" +
                 "          AND D.exp_code = A.exp_code   \n" +
-                "          AND D.package_units = A.units   \n" +
+                "          AND D.units = A.units   \n" +
 //                "          AND M.storage = A.storage_code   \n" +
                 "\t        AND D.QUANTITY > NVL(D.DISBURSE_COUNT,0)\n";
         if (s1 != null) {
@@ -141,6 +141,7 @@ public class ExpImportDetailFacade extends BaseFacade {
         if (documentNo != null && documentNo.trim().length() > 0) {
             sql += " and M.document_No='" + documentNo + "'";
         }
+
         List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
         return nativeQuery;
     }
@@ -216,6 +217,7 @@ public class ExpImportDetailFacade extends BaseFacade {
         }
         String sql ="SELECT distinct EXP_IMPORT_MASTER.DOCUMENT_NO,              " +
                         "   EXP_IMPORT_MASTER.STORAGE,              " +
+                        "   EXP_STORAGE_DEPT.STORAGE_NAME,              " +
                         "   EXP_IMPORT_MASTER.id,              " +
                         "   EXP_IMPORT_DETAIL.id  detail_id,              " +
                         "   EXP_IMPORT_MASTER.IMPORT_DATE,              " +
@@ -223,7 +225,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                         "   exp_dict.exp_name,             " +
                         " EXP_IMPORT_DETAIL.ITEM_NO,              " +
                         " EXP_IMPORT_DETAIL.EXP_CODE,              " +
-                        " EXP_IMPORT_DETAIL.EXP_SPEC,              " +
+                        " EXP_IMPORT_DETAIL.PACKAGE_SPEC,              " +
                         " EXP_IMPORT_DETAIL.UNITS,              " +
                         " EXP_IMPORT_DETAIL.BATCH_NO,              " +
                         " EXP_IMPORT_DETAIL.QUANTITY,              " +
@@ -236,12 +238,13 @@ public class ExpImportDetailFacade extends BaseFacade {
                         "EXP_IMPORT_DETAIL.PURCHASE_PRICE,              " +
                         "EXP_IMPORT_MASTER.IMPORT_CLASS ,       " +
                         "EXP_IMPORT_MASTER.ACCOUNT_INDICATOR        " +
-                "FROM EXP_IMPORT_DETAIL,EXP_IMPORT_MASTER,exp_dict       " +
+                "FROM EXP_IMPORT_DETAIL,EXP_IMPORT_MASTER,exp_dict,exp_storage_dept       " +
                 "WHERE  EXP_IMPORT_MASTER.STORAGE = '"+storage+"' and" +
                 "       EXP_IMPORT_MASTER.hospital_id = '"+hospitalId+"' and" +
+                "       EXP_IMPORT_MASTER.STORAGE=exp_storage_dept.storage_code and" +
                 "     ( EXP_IMPORT_DETAIL.DOCUMENT_NO = EXP_IMPORT_MASTER.DOCUMENT_NO ) and" +
-                "       EXP_IMPORT_DETAIL.package_spec = exp_dict.exp_spec and" +
-                "       EXP_IMPORT_DETAIL.package_units = exp_dict.units and" +
+                "       EXP_IMPORT_DETAIL.exp_spec = exp_dict.exp_spec and" +
+                "       EXP_IMPORT_DETAIL.units = exp_dict.units and" +
                 "       EXP_IMPORT_DETAIL.exp_code = exp_dict.exp_code " ;
         if (billRadio != null && billRadio.trim().length() > 0) {
             sql += " and EXP_IMPORT_DETAIL.TALLY_FLAG ='" + billRadio + "'";

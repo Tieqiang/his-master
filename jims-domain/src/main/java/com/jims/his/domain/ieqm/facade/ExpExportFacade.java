@@ -387,17 +387,18 @@ public class ExpExportFacade extends BaseFacade {
                 "                EXP_EXPORT_DETAIL.DOCUMENT_NO,\n" +
                 "                EXP_EXPORT_DETAIL.RETAIL_PRICE,\n" +
                 "                EXP_EXPORT_DETAIL.RETAIL_PRICE * EXP_EXPORT_DETAIL.QUANTITY retail_Amount,\n" +
-                "                EXP_EXPORT_MASTER.RECEIVER,\n" +
+                "                exp_storage_dept.storage_name as RECEIVER,\n" +
                 "                EXP_DICT.EXP_NAME,\n" +
                 "                EXP_EXPORT_MASTER.SUB_STORAGE,\n" +
                 "                EXP_EXPORT_DETAIL.EXP_CODE,\n" +
                 "                EXP_EXPORT_DETAIL.EXP_FORM，" +
                 "                BASE_DICT.base_name dept_ATTR  \n" +
-                "    FROM EXP_EXPORT_DETAIL, EXP_EXPORT_MASTER, base_dict, EXP_DICT, DEPT_DICT" +
-                "   WHERE ( EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO ) and  \n" +
+                "    FROM EXP_EXPORT_DETAIL, EXP_EXPORT_MASTER, base_dict, EXP_DICT, DEPT_DICT, exp_storage_dept " +
+                "   WHERE   (EXP_EXPORT_MASTER.RECEIVER=exp_storage_dept.storage_code ) and " +
+                "( EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO ) and  \n" +
                 "         ( EXP_EXPORT_MASTER.DOC_STATUS <> 1) and\n" +
                 "         ( EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
-                "         ( EXP_EXPORT_MASTER.RECEIVER = DEPT_DICT.DEPT_NAME or EXP_EXPORT_MASTER.RECEIVER =  DEPT_DICT.DEPT_code) and  \n" +
+//                "         ( EXP_EXPORT_MASTER.RECEIVER = DEPT_DICT.DEPT_NAME or EXP_EXPORT_MASTER.RECEIVER =  DEPT_DICT.DEPT_code) and  \n" +
 
                 "         ( EXP_DICT.EXP_SPEC = EXP_EXPORT_DETAIL.EXP_SPEC ) and \n" +
 //                "('B' = 'L' and exp_sgtp in ('2','3') or\n" +
