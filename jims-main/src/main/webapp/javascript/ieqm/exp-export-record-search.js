@@ -92,21 +92,6 @@ function w3(s) {
     }
 }
 $(function () {
-    ////格式化日期函数
-    //function formatterDate(val, row) {
-    //    if (val != null) {
-    //        var date = new Date(val);
-    //        var y = date.getFullYear();
-    //        var m = date.getMonth() + 1;
-    //        var d = date.getDate();
-    //        var h = date.getHours();
-    //        var mm = date.getMinutes();
-    //        var s = date.getSeconds();
-    //        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
-    //            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-    //        return dateTime
-    //    }
-    //}
     var masterDataVo = {};//主表vo
     var masters = [];//信息
     $('#startDate').datetimebox({
@@ -156,74 +141,90 @@ $(function () {
         columns: [[{
             title: '子库房',
             field: 'subStorage',
+            align: 'center',
             width: '5%'
         },{
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: '6%'
         },{
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: '7%'
         },{
             title: '产品类别',
             field: 'expForm',
-            width: '5%'
+            align: 'center',
+            width: '6%'
         }, {
             title: '规格',
             field: 'packageSpec',
+            align: 'center',
             width: '4%'
         },  {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
             width: '4%'
         }, {
             title: '厂家',
-            width: '8%',
-            field: 'firmId'
-
+            field: 'firmId',
+            align: 'center',
+            width: '8%'
         }, {
             title: "数量",
-            width: '5%',
-            field: 'quantity'
+            field: 'quantity',
+            align: 'center',
+            width: '5%'
         }, {
             title: '进价',
             field: 'purchasePrice',
+            align: 'center',
             width: '5%'
         }, {
             title: '进价金额',
             field: 'payAmount',
-            width: '5%'
+            align: 'center',
+            width: '6%'
         }, {
             title: '零售价',
-            width: '5%',
-            field: 'retailPrice'
+            field: 'retailPrice',
+            align: 'center',
+            width: '5%'
         }, {
             title: '零售金额',
-            width: '5%',
-            field: 'retailAmount'
+            field: 'retailAmount',
+            align: 'center',
+            width: '6%'
         }, {
             title: '请领部门',
-            width: '8%',
-            field: 'receiver'
+            field: 'receiver',
+            align: 'center',
+            width: '6%'
         }, {
             title: '部门属性',
-            width: '6%',
-            field: 'deptAttr'
+            field: 'deptAttr',
+            align: 'center',
+            width: '6%'
         }, {
             title: '出库单号',
-            width: '6%',
             field: 'documentNo',
+            align: 'center',
+            width: '6%',
             editor: {type: 'textbox'}
         }, {
             title: '有效期',
-            width: '11%',
             field: 'expireDate',
+            align: 'center',
+            width: '9%',
             formatter: myFormatter2
         }, {
             title: '批号',
-            width: '4%',
-            field: 'batchNo'
+            field: 'batchNo',
+            align: 'center',
+            width: '4%'
         }]]
     });
     //类型字典
