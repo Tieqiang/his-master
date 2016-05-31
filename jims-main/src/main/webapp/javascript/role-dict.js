@@ -5,9 +5,15 @@
  * 消耗品产品编码描述字典维护
  */
 $(function () {
-    var editRowIndex;
     var menus = [];//菜单数组
     var menuTreeData = [];//菜单树对象
+    var editIndex;
+    var stopEdit = function () {
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid('endEdit', editIndex);
+            editIndex = undefined;
+        }
+    }
     $("#dg").datagrid({
         title: '角色名称维护',
         fit: true,//让#dg数据创铺满父类容器
@@ -29,11 +35,11 @@ $(function () {
         },{
             title:'角色权限Ids',
             field:'menuIds',
-            editor: {
-                type: 'textbox'
-            }
-            //hidden:true
-        }]]
+            hidden:true
+        }]],
+        onClickRow: function (index, row) {
+            stopEdit();
+        }
     });
 
     $("#searchBtn").on("click", function () {
@@ -45,59 +51,45 @@ $(function () {
     });
 
     $("#addBtn").on('click', function () {
-
+        stopEdit();
         $("#dg").datagrid('appendRow', {});
         var rows = $("#dg").datagrid('getRows');
-        var row = rows[rows.length - 1];
-        var index = $("#dg").datagrid('getRowIndex', row);
-
-        $("#dg").datagrid('selectRow', index);
-        if (editRowIndex == index) {
-            $("#dg").datagrid('beginEdit', editRowIndex);
-        }
-        if (editRowIndex == undefined) {
-            $("#dg").datagrid('beginEdit', index);
-            editRowIndex = index;
-        } else {
-            $("#dg").datagrid('endEdit', editRowIndex);
-            $("#dg").datagrid('beginEdit', index);
-            editRowIndex = index;
-        }
+        var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+        editIndex = addRowIndex;
+        $("#dg").datagrid('selectRow', editIndex);
+        $("#dg").datagrid('beginEdit', editIndex);
     });
 
     $("#delBtn").on('click', function () {
         var row = $("#dg").datagrid('getSelected');
-        if (!row) {
-            $.messager.alert("系统提醒", "请选择要删除的行", "error");
-            return;
+        if (row) {
+            var rowIndex = $("#dg").datagrid('getRowIndex', row);
+            $("#dg").datagrid('deleteRow', rowIndex);
+            if (editIndex == rowIndex) {
+                editIndex = undefined;
+            }
+        } else {
+            $.messager.alert('系统警告', "请选择要删除的行", 'error');
         }
-
-        var index = $("#dg").datagrid('getRowIndex', row);
-
-        if (index == editRowIndex) {
-            editRowIndex = undefined;
-        }
-        $("#dg").datagrid('deleteRow', index);
 
     });
 
     $("#editBtn").on('click', function () {
-        var row = $("#dg").datagrid('getSelected');
-        if (!row) {
-            $.messager.alert("系统提醒", "请选择要编辑的行", "error");
+        var row = $("#dg").datagrid("getSelected");
+        var index = $("#dg").datagrid("getRowIndex", row);
+
+        if (index == -1) {
+            $.messager.alert("系统警告", "请选择要修改的行！", "error");
             return;
         }
 
-        var index = $("#dg").datagrid('getRowIndex', row);
-
-        if (editRowIndex == undefined) {
-
+        if (editIndex == undefined) {
             $("#dg").datagrid("beginEdit", index);
-            editRowIndex = index;
+            editIndex = index;
         } else {
-            $("#dg").datagrid('endEdit', editRowIndex);
-            $("#dg").datagrid('beginEdit', index);
-            editRowIndex = index;
+            $("#dg").datagrid("endEdit", editIndex);
+            $("#dg").datagrid("beginEdit", index);
+            editIndex = index;
         }
     });
 
@@ -117,9 +109,8 @@ $(function () {
      * 基础字典的维护只能在基础数据维护的时候使用。
      */
     $("#saveBtn").on('click', function () {
-        if (editRowIndex) {
-            $("#dg").datagrid('endEdit', editRowIndex);
-            editRowIndex = undefined;
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid("endEdit", editIndex);
         }
         var insertData = $("#dg").datagrid('getChanges', 'inserted');
         var updateData = $("#dg").datagrid('getChanges', 'updated');
@@ -207,6 +198,7 @@ $(function () {
     loadTreeData();
 
     $("#menuAddBtn").on('click', function () {
+        clearMenuBtn();
         var row=$("#dg").datagrid('getSelected');
         if(!row){
             $.messager.alert('系统提示','请选择角色，然后在分配权限','error');

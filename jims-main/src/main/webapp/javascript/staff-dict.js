@@ -98,7 +98,7 @@ $(function(){
         formatter: function(row){
             var opts = $(this).combobox('options');
             return row[opts.textField];
-            },
+        },
         multiple:true
     }) ;
 
@@ -147,6 +147,7 @@ $(function(){
         $("#confirm_password").textbox('clear');
         $("#title").textbox('clear');
         $("#job").textbox('clear');
+        $("#idNo").textbox('clear');
         $("#roleIds").combobox('clear')
         $("#name").textbox('clear') ;
     }
@@ -172,15 +173,6 @@ $(function(){
                     staff.ids.push(rolesId[i]) ;
                 }
             }
-            var length= staff.loginName.length;
-            var  change="";
-            if(length<6){
-                for (var i=0;i<6-length;i++){
-                    change+="0";
-                }
-                staff.loginName=change+staff.loginName;
-            }
-            alert(staff.loginName+"  loginName");
             if(pwd == confirm_pwd){
                 if ($("#fm").form('validate')) {
                     $.postJSON("/api/staff-dict/add",staff,function(data){
