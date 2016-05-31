@@ -25,12 +25,14 @@ $(function(){
         },{
             title:"分摊方式代码",
             field:"assignCode",
+            align: 'center',
             width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入10个以内的字符',invalidMessage:'输入值不在范围'}}
 
         },{
             title:"分摊方式名称",
             field:"assignName",
+            align: 'center',
             width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入10个以内的汉字',invalidMessage:'输入值不在范围'}}
         }]],
