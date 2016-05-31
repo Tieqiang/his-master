@@ -60,10 +60,9 @@ $(function () {
             title: "类别",
             field: "supplierClass",
             align: 'center',
-            width: "10%",
+            width: "8%",
             editor: {
                 type: "combobox", options: {
-                    editable: false,
                     valueField: "value",
                     textField: "text",
                     data: [
@@ -80,7 +79,7 @@ $(function () {
         }, {
             title: "产品范围",
             field: "suppbound",
-            width: "10%",
+            width: "8%",
             align: 'center',
             editor: {
                 type: "combobox", options: {
@@ -106,7 +105,7 @@ $(function () {
         }, {
             title: "输入码",
             field: "inputCode",
-            width: "10%",
+            width: "8%",
             align: 'center',
             editor: {
                 type: "textbox",
@@ -118,37 +117,37 @@ $(function () {
         }, {
             title: "备注",
             field: "memo",
-            width: "10%",
+            width: "6%",
             align: 'center',
             editor: 'text'
         }, {
             title: "厂商地址",
             field: "supplierAddres",
-            width: "10%",
+            width: "9%",
             align: 'center',
             editor: 'text'
         }, {
             title: "厂商邮编",
             field: "supplierPostalcode",
-            width: "10%",
+            width: "6%",
             align: 'center',
             editor: 'text'
         }, {
             title: "法人姓名",
             field: "artificialPerson",
-            width: "10%",
+            width: "6%",
             align: 'center',
             editor: 'text'
         }, {
             title: "联系电话",
             field: "linkphone",
-            width: "10%",
+            width: "7%",
             align: 'center',
             editor: 'text'
         }, {
             title: "营业执照号",
             field: "licenceNo",
-            width: "10%",
+            width: "8%",
             align: 'center',
             editor: 'text'
         }, {
@@ -180,7 +179,7 @@ $(function () {
         }, {
             title: "美国或欧洲号",
             field: "fdaOrCeNo",
-            width: "10%",
+            width: "9%",
             align: 'center',
             editor: 'text'
         }, {
@@ -193,14 +192,14 @@ $(function () {
         }, {
             title: "其它证号",
             field: "otherNo",
-            width: "10%",
+            width: "8%",
             align: 'center',
             editor: 'text'
         }, {
             title: "其它日期",
             field: "otherDate",
             width: "11%",
-            align: 'cneter',
+            align: 'center',
             formatter: formatDateBoxFull,
             editor: 'datetimebox'
         }]],
