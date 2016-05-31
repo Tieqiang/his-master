@@ -19,6 +19,7 @@ $(function(){
     $("#dg").datagrid({
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
+        rownumbers: true,
         singleSelect:true,
         title:  "产品类型字典维护",
         columns:[[{
@@ -28,32 +29,37 @@ $(function(){
         },{
             title:'序号',
             field:'serialNo',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor: 'numberbox'
         },{
             title:'类别',
             field:'expClass',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,5]',missingMessage:'请输入5个以内的汉字',invalidMessage:'输入值不在范围'}}
         },{
             title:'类型代码',
             field:'formCode',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入10个以内的字符',invalidMessage:'输入值不在范围'}}
         },{
             title:'类型名称',
             field:'formName',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,15]',missingMessage:'请输入15个以内的汉字',invalidMessage:'输入值不在范围'}}
         },{
             title:'输入码',
             field:'inputCode',
-            width:"16%",
+            align: 'center',
             hidden:true,
             editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入8个之内的字符',invalidMessage:'输入值不在范围'}}
         },{
             title:'库存管理单位',
             field:'storageCode',
+            align: 'center',
             width:"20%",
             editor:{type:'combobox',
                      options:{
