@@ -89,9 +89,9 @@ public class ExpStorageProfileFacade extends BaseFacade {
                 "         EXP_STORAGE_PROFILE.LOW_LEVEL,  \n" +
                 "         EXP_STORAGE_PROFILE.LOCATION \n" +
                 "    FROM EXP_DICT,   \n" +
-                "         EXP_STORAGE_PROFILE  \n" +
+                "         EXP_STORAGE_PROFILE,exp_price_list \n" +
                 "   WHERE EXP_STORAGE_PROFILE.EXP_CODE = EXP_DICT.EXP_CODE AND \n" +
-                "\t\t\tEXP_STORAGE_PROFILE.EXP_SPEC = EXP_DICT.EXP_SPEC AND\n" +
+                "\t\t\tEXP_STORAGE_PROFILE.EXP_SPEC = exp_price_list.EXP_SPEC AND exp_price_list.exp_code=exp_dict.exp_code and\n" +
                 "\t\t\tEXP_STORAGE_PROFILE.STORAGE = '"+storage+"'   ";
         if (null != expForm && !expForm.trim().equals("全部") ) {
             sql += " AND EXP_DICT.exp_form like '%'||'"+expForm+"'||'%'  ";

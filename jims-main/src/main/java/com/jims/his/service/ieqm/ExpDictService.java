@@ -1,6 +1,7 @@
 package com.jims.his.service.ieqm;
 
 import com.jims.his.domain.ieqm.entity.ExpDict;
+import com.jims.his.domain.ieqm.entity.ExpPriceList;
 import com.jims.his.domain.ieqm.facade.ExpDictFacade;
 
 import javax.inject.Inject;
@@ -45,8 +46,8 @@ public class ExpDictService {
     }
     @GET
     @Path("exp-dict-list-by-expCode")
-    public List<ExpDict> expDictListByExpCode(@QueryParam("expCode")  String expCode){
-        List<ExpDict> expDictList = expDictFacade.expDictListByExpCode(expCode);
+    public List<ExpPriceList> expDictListByExpCode(@QueryParam("expCode")  String expCode){
+        List<ExpPriceList> expDictList = expDictFacade.expDictListByExpCode(expCode);
         return expDictList;
     }
     @GET
