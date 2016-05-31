@@ -74,16 +74,16 @@ public class ExpStockFacade extends BaseFacade {
         String sql = "SELECT DISTINCT EXP_STOCK.STORAGE,   " +
                 "                    EXP_STOCK.EXP_CODE, " +
                 "EXP_STOCK.ID,   " +
-                "EXP_STOCK.EXP_SPEC,   " +
-                "EXP_STOCK.UNITS,   " +
+                "EXP_STOCK.PACKAGE_SPEC,   " +
+                "EXP_STOCK.PACKAGE_UNITS,   " +
                 "EXP_STOCK.BATCH_NO,\n" +
                 "EXP_STOCK.EXPIRE_DATE,   " +
                 "EXP_STOCK.FIRM_ID,   " +
                 "EXP_STOCK.PURCHASE_PRICE,   " +
                 "EXP_STOCK.DISCOUNT,    " +
-                "EXP_STOCK.PACKAGE_SPEC,\n" +
+//                "EXP_STOCK.PACKAGE_SPEC,\n" +
                 "EXP_STOCK.QUANTITY,   " +
-                "EXP_STOCK.PACKAGE_UNITS,    " +
+//                "EXP_STOCK.PACKAGE_UNITS,    " +
                 "EXP_STOCK.SUB_PACKAGE_1,    " +
                 "EXP_STOCK.SUB_PACKAGE_UNITS_1,\n" +
                 "EXP_STOCK.SUB_PACKAGE_2,   " +
@@ -386,8 +386,8 @@ public class ExpStockFacade extends BaseFacade {
     public List<ExpStorageProfileVo> searchExpireStock(String overDate, String storage, String hospitalId) {
         String sql = "select a.exp_code,\n" +
                 "       b.exp_name,\n" +
-                "       a.exp_spec,\n" +
-                "       a.units,\n" +
+                "       a.PACKAGE_spec,\n" +
+                "       a.PACKAGE_units,\n" +
                 "       a.batch_no,\n" +
                 "       a.firm_id,\n" +
                 "       a.expire_date,\n" +

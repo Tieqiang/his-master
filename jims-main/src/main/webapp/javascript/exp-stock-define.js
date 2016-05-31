@@ -175,7 +175,7 @@ $(document).ready(function () {
             width:"10%"
         },{
             title:"单位",
-            field:"units",
+            field:"packageUnits",
             width:"10%"
         },{
             title:"常规包装数量",
