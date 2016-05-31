@@ -77,43 +77,53 @@ $(document).ready(function () {
         columns: [[{
             title: "申请单号",
             field: "applicantNo",
+            align: 'center',
             width: "10%"
         }, {
             title: "向哪个库房申请",
             field: "provideName",
+            align: 'center',
             width: "10%"
         }, {
             title: "代码",
             field: "expCode",
+            align: 'center',
             width: "10%"
         }, {
             title: "序号",
             field: "itemNo",
+            align: 'center',
             width: "10%"
         }, {
             title: "产名",
             field: "expName",
+            align: 'center',
             width: "10%"
         }, {
             title: "规格",
             field: "packageSpec",
+            align: 'center',
             width: "10%"
         }, {
             title: "单位",
             field: "packageUnits",
-            width: "7%"
+            align: 'center',
+            width: "8%"
         }, {
             title: "数量",
             field: "quantity",
-            width: "7%"
+            align: 'center',
+            width: "8%"
         }, {
             title: "申请人",
             field: "applicationMan",
+            align: 'center',
             width: "10%"
         }, {
             title: "申请时间",
             field: "enterDateTime",
-            width: "11%",
+            align: 'center',
+            width: "12%",
             formatter: formatterDate
         }]]
     });
