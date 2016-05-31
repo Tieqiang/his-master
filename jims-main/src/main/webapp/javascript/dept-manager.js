@@ -45,45 +45,56 @@ $(function () {
             hidden:true
         }, {
             title: '科室编码',
-            field: 'deptCode'
+            field: 'deptCode',
+            width: '10%'
 
         }, {
             title: '科室名称',
-            field: 'deptName'
+            field: 'deptName',
+            width: '10%'
 
         }, {
             title: '科室别名',
-            field: 'deptAlis'
+            field: 'deptAlis',
+            width: '10%'
 
         }, {
             title: '科室临床属性',
-            field: 'deptAttr'
+            field: 'deptAttr',
+            width: '10%'
 
         }, {
             title: '门诊住院',
-            field: 'deptOutpInp'
+            field: 'deptOutpInp',
+            width: '10%'
 
         }, {
             title: '输入码',
-            field: 'inputCode'
+            field: 'inputCode',
+            width: '5%'
 
         }, {
             title: '分科属性',
-            field: 'deptDevideAttr'
+            field: 'deptDevideAttr',
+            width: '10%'
 
         }, {
             title: '科室位置',
-            field: 'deptLocation'
+            field: 'deptLocation',
+            width: '10%'
 
         }, {
             title:'科室类别',
-            field:'deptClass'
+            field:'deptClass',
+            width: '5%'
         },{
             title:'科室类型',
-            field:'deptType'
+            field:'deptType',
+            width: '10%'
         },{
             title: '是否停止',
-            field: 'deptStopFlag'
+            field: 'deptStopFlag',
+            width: '10%'
         }]]
     });
 
