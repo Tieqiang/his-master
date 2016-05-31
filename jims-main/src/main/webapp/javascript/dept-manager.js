@@ -15,7 +15,7 @@ $(function () {
                         //console.log(children[j]);
                         if ($('#tt').treegrid('isLeaf', children[j].target)) { //判断子级是否为叶子节点,即不是父节点
                             if (children[j].deptName.indexOf(value) >= 0) { //判断节点text是否包含搜索文本
-                                $('#tt').treegrid('select', children[j].target);//设置此节点为选择状态
+                                $('#tt').treegrid('select', children[j].id);//设置此节点为选择状态
                                 break;
                             }
                         }
@@ -195,15 +195,15 @@ $(function () {
             return;
         }
 //        console.info(node)
-        $("#id").val(node.id);
-        $("#deptCode").val(node.deptCode);
-        $("#deptName").val(node.deptName);
-        $("#deptAlis").val(node.deptAlis);
+        $("#id").val([node.id]);
+        $("#deptCode").textbox("setValue",node.deptCode);
+        $("#deptName").textbox("setValue",node.deptName);
+        $("#deptAlis").textbox("setValue",node.deptAlis);
         $("#deptOutpInp").combobox('setValue', node.deptOutpInp);
-        $("#deptDevideAttr").val(node.deptDevideAttr);
-        $("#deptLocation").val(node.deptLocation);
+        $("#deptDevideAttr").textbox("setValue",node.deptDevideAttr);
+        $("#deptLocation").textbox("setValue",node.deptLocation);
         $("#deptStopFlag").combobox('setValue', node.deptStopFlag);
-        $("#parentId").val(node.parentId);
+        $("#parentId").textbox("setValue",node.parentId);
 
         $("#dlg").dialog('open').dialog('setTitle',"科室修改") ;
 
