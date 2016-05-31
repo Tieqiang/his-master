@@ -10,69 +10,79 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         toolbar:'#ft',
         footer: '#tb',
-        rownumbers: true,
         singleSelect: true,
         columns: [[{
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: "7%"
         }, {
             title: '产品名称',
             field: 'expName',
-            width: "6%"
+            align: 'center',
+            width: "8%"
         },  {
             title: '产品规格',
             field: 'expSpec',
-            width: "5%"
+            align: 'center',
+            width: "8%"
         }, {
             title: '单位',
             field: 'units',
-            width: "4%"
+            align: 'center',
+            width: "3%"
         }, {
             title: '厂家',
             field: 'firmId',
-            width: "5%"
+            align: 'center',
+            width: "8%"
         }, {
             title: '市场价',
             field: 'tradePrice',
-            width: "9%",
-            editor: 'numberbox'
+            align: 'center',
+            width: "6%"
         }, {
             title: '零售价',
             field: 'retailPrice',
-            width: "9%",
-            editor: 'numberbox'
+            align: 'center',
+            width: "6%"
         },{
             title: '包装量',
             field: 'amountPerPackage',
-            width: "5%",
-            editor: 'numberbox'
+            align: 'center',
+            width: "5%"
         },{
             title: '最小规格',
             field: 'minSpec',
-            width: "5%"
+            align: 'center',
+            width: "6%"
         },{
             title: '最小单位',
             field: 'minUnits',
-            width: "5%"
+            align: 'center',
+            width: "6%"
         },{
             title: '起始日期',
             field: 'startDate',
-            width: "11%",
+            align: 'center',
+            width: "12%",
             formatter : formatterDate
         },{
             title: '停止日期',
             field: 'stopDate',
-            width: "11%",
+            align: 'center',
+            width: "12%",
             formatter : formatterDate
         }, {
             title: '物价编码',
             field: 'materialCode',
+            align: 'center',
             width: "7%"
         },{
             title: '备注',
             field: 'memos',
-            width: "10%"
+            align: 'center',
+            width: "7%"
         }
         ]]
     });
