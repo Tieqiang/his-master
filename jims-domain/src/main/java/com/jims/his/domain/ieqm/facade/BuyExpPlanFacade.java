@@ -76,7 +76,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 "          exp_storage_profile,\n" +
                 "          exp_price_list\n" +
                 "  WHERE  ( \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_STORAGE_PROFILE\".\"EXP_CODE\" ) and\n" +
-                "         ( \"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\" ) and\n" +
+                "         ( \"EXP_STOCK\".\"PACKAGE_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\" ) and\n" +
                 "         ( \"EXP_STOCK\".\"STORAGE\"  = \"EXP_STORAGE_PROFILE\".\"STORAGE\" ) and\n" +
                 "         ( \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\" ) and\n" +
                 "         ( \"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\" ) and\n" +
