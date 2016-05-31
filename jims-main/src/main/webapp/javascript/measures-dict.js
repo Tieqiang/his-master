@@ -25,6 +25,7 @@ $(function(){
         },{
             title:"单位名称",
             field:"measuresName",
+            align: 'center',
             width:"20%",
             editor:{type:'text',options:{
                 required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字'}
@@ -33,6 +34,7 @@ $(function(){
         },{
             title:"单位类别",
             field:"measuresClass",
+            align: 'center',
             hidden:true
         }]],
         onClickRow: function (index, row) {
