@@ -2,7 +2,9 @@ package com.jims.his.service.ieqm;
 
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.common.vo.BeanChangeVo;
+import com.jims.his.domain.ieqm.entity.ExpExportDetail;
 import com.jims.his.domain.ieqm.entity.ExpStock;
+import com.jims.his.domain.ieqm.facade.ExpAssignDictFacade;
 import com.jims.his.domain.ieqm.facade.ExpStockFacade;
 import com.jims.his.domain.ieqm.vo.*;
 
@@ -29,10 +31,12 @@ public class ExpStockService {
     private String classRadio;
     private String supplier;
     private String expCode;
+    private ExpAssignDictFacade expAssignDictFacade;
 
     @Inject
-    public ExpStockService(ExpStockFacade expStockFacade) {
+    public ExpStockService(ExpStockFacade expStockFacade,ExpAssignDictFacade expAssignDictFacade) {
         this.expStockFacade = expStockFacade;
+        this.expAssignDictFacade=expAssignDictFacade;
     }
 
     /**
@@ -144,6 +148,12 @@ public class ExpStockService {
     @Path("exp-export-manage")
     public Response expExportManage(ExpExportManageVo exportVo){
         try {
+            List<ExpExportDetail> list=exportVo.getExpExportDetailBeanChangeVo().getInserted();
+            if(list!=null&&!list.isEmpty()){
+                for(ExpExportDetail e:list){
+                    e.setAssignCode(expAssignDictFacade.findByCode(e.getAssignCode())==null?null:expAssignDictFacade.findByCode(e.getAssignCode()).getAssignCode());
+                }
+             }
             expStockFacade.expExportManage(exportVo) ;
             return Response.status(Response.Status.OK).entity(exportVo).build() ;
         }catch (Exception e){
