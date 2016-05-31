@@ -17,6 +17,7 @@ $(function(){
         footer:"#tb",
         url:'/api/base-dict/list-by-type',
         method:'GET',
+        rownumbers: true,
         singleSelect:true,
         columns:[[{
             title:'id',
@@ -25,21 +26,25 @@ $(function(){
         },{
             title:'键值',
             field:'baseCode',
+            align: 'center',
             width:"20%",
             editor:'text'
         },{
             title:'键名',
             field:'baseName',
-            width:'30%',
+            align: 'center',
+            width:'20%',
             editor:'text'
         },{
             title:'字典名称',
             field:'baseType',
-            width:'30%',
+            align: 'center',
+            width:'20%',
             editor:'text'
         },{
             title:'输入码',
             field:'inputCode',
+            align: 'center',
             width:'20%'
         }]],
         onClickRow:function(index,row){
