@@ -927,83 +927,43 @@ $(function () {
         }, {
             title: '发票日期',
             field: 'invoiceDate',
-            width: '7%',
+            width: '10%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#dg").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'invoiceDate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
+                //options: {
+                //    value: 'dateTime',
+                //    showSeconds: true,
+                //    formatter: formatterDate,
+                //    parser: w3,
+                //    onSelect: function (date) {
+                //        var dateEd = $("#dg").datagrid('getEditor', {
+                //            index: editIndex,
+                //            field: 'invoiceDate'
+                //        });
+                //        var y = date.getFullYear();
+                //        var m = date.getMonth() + 1;
+                //        var d = date.getDate();
+                //        //var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                //        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) ;
+                //
+                //        $(dateEd.target).textbox('setValue', dateTime);
+                //        $(this).datetimebox('hidePanel');
+                //    }
+                //}
             }
         }, {
             title: '生产日期',
             field: 'producedate',
-            width: '7%',
+            width: '10%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#dg").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'producedate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
             }
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
-            width: '7%',
+            width: '10%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#dg").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'disinfectdate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
             }
         }, {
             title: '灭菌标识',
@@ -1352,7 +1312,7 @@ $(function () {
                     var exportImportVo = {};
                     exportImportVo.exportVo= exportVo;
                     exportImportVo.importVo= importVo;
-
+                    console.log(exportImportVo);
                     $.postJSON("/api/exp-stock/exp-export-import", exportImportVo, function (data) {
                         if (data.errorMessage) {
                             $.messager.alert("系统提示", data.errorMessage, 'error');

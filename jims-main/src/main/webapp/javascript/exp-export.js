@@ -290,17 +290,17 @@ $(function () {
             title: '有效期',
             field: 'expireDate',
             formatter: formatterDate,
-            width: "7%"
+            width: "12%"
         }, {
             title: '生产日期',
             field: 'producedate',
             formatter: formatterDate,
-            width: "7%"
+            width: "12%"
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
             formatter: formatterDate,
-            width: "7%"
+            width: "12%"
         }, {
             title: '单位',
             field: 'units'
