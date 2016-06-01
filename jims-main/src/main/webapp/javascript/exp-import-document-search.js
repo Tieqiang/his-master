@@ -100,31 +100,28 @@ $(function () {
         fit: true,
         fitColumns: true,
         singleSelect: true,
-        showFooter:true,
-        rownumbers:true,
+        //showFooter:true,
+        //rownumbers:true,
         title: "本库房入库单据查询",
         footer: '#ft',
         toolbar:'#expImportDetail',
         columns: [[{
             title: '库房',
             field: 'storage',
-            width: '9%',
-            hidden:true,
-            editor: {type: 'textbox'}
+            hidden:true
         }, {
             title: '入库单号',
             field: 'documentNo',
-            width: '15%',
-            editor: {type: 'textbox'}
+            width: '10%'
         }, {
             title: '入库日期',
             field: 'importDate',
-            width: '11%',
+            width: '10%',
             formatter: formatterDate
         }, {
             title: '供货商',
             field: 'supplier',
-            width: '15%',
+            width: '10%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
@@ -135,33 +132,31 @@ $(function () {
             }
         }, {
             title: "应付金额",
-            width: '7%',
+            width: '10%',
             field: 'accountReceivable'
         }, {
             title: '已付金额',
             field: 'accountPayed',
-            width: '7%',
-            editor: {type: 'textbox'}
+            width: '10%'
         }, {
             title: '附加费用',
             field: 'additionalFee',
-            width: '7%',
-            editor: {type: 'numberbox'}
+            width: '10%'
         }, {
             title: '入库类别',
-            width: '11%',
+            width: '10%',
             field: 'importClass'
         }, {
             title: '记账',
-            width: '7%',
+            width: '10%',
             field: 'accountIndicator'
         }, {
             title: '操作员',
-            width: '7%',
+            width: '10%',
             field: 'operator'
         }, {
             title: '作废',
-            width: '7%',
+            width: '10%',
             field: 'docStatus'
         }]],
         onClickRow: function (index, row) {
