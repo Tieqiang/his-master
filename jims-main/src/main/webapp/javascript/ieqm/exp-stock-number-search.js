@@ -76,7 +76,7 @@ $(function () {
             editor: {type: 'textbox'}
         }, {
             title: '产品单位',
-            field: 'packageUnits',
+            field: 'units',
             width: '7%'
         }, {
             title: '库存数量',
