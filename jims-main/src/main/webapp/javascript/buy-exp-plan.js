@@ -92,11 +92,11 @@ $(function () {
             width: "15%"
         }, {
             title: '规格',
-            field: 'expSpec',
+            field: 'packSpec',
             width: "15%"
         }, {
             title: '单位',
-            field: 'units',
+            field: 'packUnit',
             width: "15%"
         }, {
             title: '厂家',
@@ -118,15 +118,15 @@ $(function () {
             title: '库房',
             field: 'storage',
             hidden: true
-        }, {
-            title: '最小规格',
-            field: 'packSpec',
-            hidden: true
-        }, {
-            title: '最小单位',
-            field: 'packUnit',
-            hidden: true
-        }]],
+        }/*, {
+         title: '最小规格',
+         field: 'packSpec',
+         hidden: true
+         }, {
+         title: '最小单位',
+         field: 'packUnit',
+         hidden: true
+         }*/]],
         onDblClickRow: function (index, row) {
             var allRows = $('#right').datagrid('getRows');
             var buyNo = 0;
@@ -251,11 +251,11 @@ $(function () {
             width: "9%"
         }, {
             title: '包装规格',
-            field: 'expSpec',
+            field: 'packSpec',
             width: "7%"
         }, {
             title: '包装单位',
-            field: 'units',
+            field: 'packUnit',
             width: "7%"
         }, {
             title: '计划数量',
@@ -349,15 +349,15 @@ $(function () {
             title: '库房',
             field: 'storage',
             hidden: true
-        }, {
-            title: '最小规格',
-            field: 'packSpec',
-            hidden: true
-        }, {
-            title: '最小单位',
-            field: 'packUnit',
-            hidden: true
-        }]],
+        }/*, {
+         title: '最小规格',
+         field: 'packSpec',
+         hidden: true
+         }, {
+         title: '最小单位',
+         field: 'packUnit',
+         hidden: true
+         }*/]],
         onClickRow: function (index, row) {
             stopEdit();
 
@@ -436,16 +436,16 @@ $(function () {
                     expCode: row.expCode,
                     expName: row.expName,
                     firmId: row.firmId,
-                    expSpec: row.expSpec,
-                    units: row.units,
+                    packSpec: row.packSpec,
+                    packUnit: row.packUnit,
                     purchasePrice: row.purchase,
                     expForm: row.expForm,
                     storer: parent.config.staffName,
                     stockquantityRef: row.quantity,
                     retailPrice: row.retailPrice,
                     storage: row.storage,
-                    packSpec: row.packSpec,
-                    packUnit: row.packUnit,
+//                    packSpec: row.packSpec,
+//                    packUnit: row.packUnit,
                     buyId: newBuyId
                 });
 

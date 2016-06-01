@@ -61,8 +61,8 @@ public class BuyExpPlanFacade extends BaseFacade {
     public List<BuyExpPlanVo> listBuyListLow(String storageCode){
         String sql = "SELECT exp_stock.storage,\n" +
                 "         exp_stock.exp_code,\n" +
-                "         exp_stock.exp_spec,\n" +
-                "         exp_stock.units,\n" +
+//                "         exp_stock.exp_spec,\n" +
+//                "         exp_stock.units,\n" +
                 "         exp_stock.firm_id,\n" +
                 "         avg(\"EXP_STOCK\".\"PURCHASE_PRICE\") purchase,\n" +
                 "         exp_stock.package_spec pack_spec,\n" +
@@ -102,8 +102,8 @@ public class BuyExpPlanFacade extends BaseFacade {
     public List<BuyExpPlanVo> listBuyListAll(String storageCode) {
         String sql = "SELECT exp_stock.storage,\n" +
                 "       exp_stock.exp_code,\n" +
-                "       exp_stock.exp_spec,\n" +
-                "       exp_stock.units,\n" +
+//                "       exp_stock.exp_spec,\n" +
+//                "       exp_stock.units,\n" +
                 "       exp_stock.firm_id,\n" +
                 "       exp_stock.package_spec pack_spec,\n" +
                 "       exp_stock.package_units pack_unit,\n" +
@@ -248,7 +248,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                         "\t\t\tFROM exp_storage_profile\n" +
                         "\t\t\tWHERE storage ='"+temp.getStorage()+"'\n" +
                         "\t\t\tAND EXP_code = '"+temp.getExpCode()+"'\n" +
-                        "\t\t\tAnd exp_spec = '"+temp.getExpSpec()+"'";
+                        "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'";
 
                 List result = super.createNativeQuery(sql).getResultList();
                 if (result != null && result.size() > 0) {
@@ -277,7 +277,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                         "\t\t\tFROM exp_storage_profile\n" +
                         "\t\t\tWHERE storage = '"+temp.getStorage()+"'\n" +
                         "\t\t\tAND EXP_code = '"+temp.getExpCode()+"'\n" +
-                        "\t\t\tAnd exp_spec = '"+temp.getExpSpec()+"'";
+                        "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'";
                 List result = super.createNativeQuery(sql).getResultList();
                 if (result != null && result.size() > 0) {
                     BigDecimal up = (BigDecimal) result.get(0);
@@ -473,11 +473,10 @@ public class BuyExpPlanFacade extends BaseFacade {
         String sql = "select distinct a.firm_id,a.exp_code, a.retail_price,b.exp_name ,a.exp_spec pack_spec,a.units pack_unit,b.exp_form,a.min_spec exp_spec,a.min_units units,a.trade_price purchase_Price,b.input_code\n" +
                 "  from exp_price_list a ,exp_dict b\n" +
                 " where  a.exp_code = b.exp_code\n" +
-                "   and a.exp_spec = b.exp_spec\n" +
+                "   and a.min_spec = b.exp_spec\n" +
                 "   and (start_date < sysdate and\n" +
                 "       (stop_date >= sysdate or stop_date is null)) ";
         List<BuyExpPlanVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlanVo.class);
         return nativeQuery;
-
     }
 }
