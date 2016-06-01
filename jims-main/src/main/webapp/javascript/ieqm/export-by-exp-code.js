@@ -135,7 +135,7 @@ $(function () {
         }, {
             title: '去向库房',
             field: 'receiver',
-            width: "10%",
+            width: "15%",
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
