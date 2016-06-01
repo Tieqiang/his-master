@@ -50,11 +50,11 @@ $(function () {
             width: "11%"
         },  {
             title: '产品规格',
-            field: 'expSpec',
+            field: 'packageSpec',
             width: "11%"
         }, {
             title: '单位',
-            field: 'units',
+            field: 'packageUnits',
             width: "11%"
         }, {
             title: '厂家',

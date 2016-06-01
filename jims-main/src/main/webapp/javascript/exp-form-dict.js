@@ -2,7 +2,7 @@
  * Created by heren on 2015/9/16.
  */
 /***
- * 消耗品产品经费支出字典
+ * 消耗品类别字典
  */
 $(function(){
     var expStorageDept = [];
@@ -19,6 +19,7 @@ $(function(){
     $("#dg").datagrid({
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
+        rownumbers: true,
         singleSelect:true,
         title:  "产品类型字典维护",
         columns:[[{
@@ -28,32 +29,37 @@ $(function(){
         },{
             title:'序号',
             field:'serialNo',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor: 'numberbox'
         },{
             title:'类别',
             field:'expClass',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,5]',missingMessage:'请输入5个以内的汉字',invalidMessage:'输入值不在范围'}}
         },{
             title:'类型代码',
             field:'formCode',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入10个以内的字符',invalidMessage:'输入值不在范围'}}
         },{
             title:'类型名称',
             field:'formName',
-            width:"16%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,15]',missingMessage:'请输入15个以内的汉字',invalidMessage:'输入值不在范围'}}
         },{
             title:'输入码',
             field:'inputCode',
-            width:"16%",
+            align: 'center',
             hidden:true,
             editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入8个之内的字符',invalidMessage:'输入值不在范围'}}
         },{
             title:'库存管理单位',
             field:'storageCode',
+            align: 'center',
             width:"20%",
             editor:{type:'combobox',
                      options:{
@@ -185,6 +191,67 @@ $(function(){
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
+        if (beanChangeVo.inserted.length > 0) {
+            for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                var expClass = beanChangeVo.inserted[i].expClass;   //类别
+                var formCode = beanChangeVo.inserted[i].formCode;   //类型代码
+                var formName = beanChangeVo.inserted[i].formName;   //类型名称
+                var storageCode = beanChangeVo.inserted[i].storageCode; //库存管理单位
+                var serialNo = beanChangeVo.inserted[i].serialNo;   //序号
+                if(serialNo.length > 2){
+                    $.messager.alert('提示','序号最多两位数字!','error');
+                    return ;
+                }
+                if (expClass.length == 0) {
+                    $.messager.alert('提示', '类别不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (formCode.length == 0) {
+                    $.messager.alert('提示', '类型代码不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (formName.length == 0) {
+                    $.messager.alert('提示', '类型名称不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (storageCode.length == 0) {
+                    $.messager.alert('提示', '请选择库存管理单位!!', 'error');
+                    loadDict();
+                    return;
+                }
+            }
+        }
+
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var expClass = beanChangeVo.updated[i].expClass;   //类别
+                var formCode = beanChangeVo.updated[i].formCode;   //类型代码
+                var formName = beanChangeVo.updated[i].formName;   //类型名称
+                var serialNo = beanChangeVo.updated[i].serialNo;    //序号
+                if(serialNo.length > 2){
+                    $.messager.alert('提示', '序号最多两位数字!', 'error');
+                    return;
+                }
+                if (expClass.length == 0) {
+                    $.messager.alert('提示', '类别不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (formCode.length == 0) {
+                    $.messager.alert('提示', '类型代码不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (formName.length == 0) {
+                    $.messager.alert('提示', '类型名称不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }
+            }
+        }
 
         if (beanChangeVo) {
             $.postJSON("/api/exp-form-dict/merge", beanChangeVo, function (data, status) {

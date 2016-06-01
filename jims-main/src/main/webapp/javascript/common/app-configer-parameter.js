@@ -1,6 +1,13 @@
 /**
  * Created by txb on 2015/10/21.
  */
+
+/*var stopEdit = function () {
+    if (editIndex || editIndex == 0) {
+        $("#dg").datagrid('endEdit', editIndex);
+        editIndex = undefined;
+    }
+}*/
 $(document).ready(function () {
     $("#dg").datagrid({
         title:"配置参数",
@@ -12,12 +19,12 @@ $(document).ready(function () {
             {
                 title:"应用名",
                 field:"appName",
-                width:"10%",
+                width:"20%",
                 editor:{type:"validatebox"}
             }, {
                 title:"使用科室",
                 field:"deptCode",
-                width:"10%",
+                width:"20%",
                 editor:{type:"validatebox"}
             }, {
                 title:"使用人员",
@@ -27,12 +34,12 @@ $(document).ready(function () {
             }, {
                 title:"参数名称",
                 field:"parameterName",
-                width:"10%",
+                width:"20%",
                 editor:{type:"validatebox"}
             }, {
                 title:"参数初始值",
                 field:"parameterValue",
-                width:"10%",
+                width:"20%",
                 editor:{type:"validatebox"}
             }, {
                 title:"位置",
@@ -42,7 +49,6 @@ $(document).ready(function () {
             }, {
                 title:"所属医院",
                 field:"hospitalId",
-                width:"10%",
                 editor:{type:"validatebox"},
                 hidden:true
             }
@@ -102,9 +108,13 @@ $(document).ready(function () {
             $("#dg").datagrid('loadData', data);
         });
     });
+    $("#removeBtn").on("click", function () {
+        $("#name").textbox("setValue",'');
+    });
 
     //添加
     $("#addBtn").on("click", function () {
+        clearData();
         $("#dialogDiv").dialog("open").dialog("setTitle","添加");
         $("#hospitalId").val(parent.config.hospitalId);
     });
@@ -186,7 +196,7 @@ $(document).ready(function () {
         $("#id").val("");
         $("#hospitalId").val("");
 
-    }
+    };
     var loadList = function () {
         $.get("/api/app-configer-parameter/list?hospitalId="+ parent.config.hospitalId, function (data) {
             $("#dg").datagrid("loadData",data);

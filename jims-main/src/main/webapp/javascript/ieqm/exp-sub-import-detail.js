@@ -226,11 +226,11 @@ $(function () {
             width: "10%"
         }, {
             title: '进价金额',
-            field: 'payAmount',
+            field: 'purchaseAmount',
             width: "10%"
         }, {
             title: '零售价金额',
-            field: 'purchaseAmount',
+            field: 'payAmount',
             width: "10%"
         }, {
             title: '类别',

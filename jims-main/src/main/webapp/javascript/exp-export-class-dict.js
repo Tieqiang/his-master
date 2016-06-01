@@ -16,6 +16,7 @@ $(function(){
         title:'消耗品出库分类字典维护',
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
+        rownumbers: true,
         singleSelect:true,
         columns:[[{
             title:'编号',
@@ -24,7 +25,8 @@ $(function(){
         },{
             title:'类别名称',
             field:'exportClass',
-            width:"50%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{
                 required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字'}
             }}]],
@@ -110,6 +112,30 @@ $(function(){
             beanChangeVo.deleted = deleteDate;
             beanChangeVo.updated = updateDate;
 
+            if (beanChangeVo.inserted.length > 0) {
+                for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                    var exportClass = beanChangeVo.inserted[i].exportClass;
+                    if (exportClass.length == 0) {
+                        $.messager.alert('提示', '名称不能为空!!', 'error');
+                        return;
+                    } else if (exportClass.length > 4) {
+                        $.messager.alert('提示', '添加失败:名称超过长度,请输入四个以内的汉字!', 'error');
+                        return;
+                    }
+                }
+            }
+            if (beanChangeVo.updated.length > 0) {
+                for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                    var exportClass = beanChangeVo.updated[i].exportClass;
+                    if (exportClass.length == 0) {
+                        $.messager.alert('提示', '名称不能为空!!', 'error');
+                        return;
+                    } else if (exportClass.length > 4) {
+                        $.messager.alert('提示', '修改失败:名称超过长度,请输入四个以内的汉字!', 'error');
+                        return;
+                    }
+                }
+            }
 
             if (beanChangeVo) {
                 $.postJSON("/api/exp-export-class-dict/merge", beanChangeVo, function (data, status) {

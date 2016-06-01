@@ -25,6 +25,7 @@ $(function(){
         },{
             title:"属性代码",
             field:"toxiCode",
+            align: 'center',
             width:"20%",
             editor:{type:"text",options:{
                 required:true,validType:'length[0,2]',missingMessage:'请输入两个字符',invalidMessage:'输入值不在范围'}
@@ -32,13 +33,15 @@ $(function(){
         },{
             title:"属性名称",
             field:"toxiProperty",
+            align: 'center',
             width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字',invalidMessage:'输入值不在范围'}}
         },{
             title:"拼音码",
             field:"inputCode",
-            width:"20%",
-            editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入‘属性名称’对应大写首字母',invalidMessage:'输入值不在范围'}}
+            align: 'center',
+            width:"20%"
+            //editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入‘属性名称’对应大写首字母',invalidMessage:'输入值不在范围'}}
         }]],
         onClickRow: function (index, row) {
             stopEdit();
@@ -106,6 +109,55 @@ $(function(){
         beanChangeVo.inserted = insertData;
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
+
+        if (beanChangeVo.inserted.length > 0) {
+            for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                var toxiCode = beanChangeVo.inserted[i].toxiCode;   //属性代码
+                var toxiProperty = beanChangeVo.inserted[i].toxiProperty;   //属性名称
+                if (toxiCode.length == 0) {
+                    $.messager.alert('提示', '属性代码不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }else if(toxiCode.length > 2){
+                    $.messager.alert('提示', '属性代码最多两个字符!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (toxiProperty.length == 0) {
+                    $.messager.alert('提示', '属性名称不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }else if(toxiProperty.length > 10){
+                    $.messager.alert('提示', '属性名称最多5个汉字!!', 'error');
+                    loadDict();
+                    return;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var toxiCode = beanChangeVo.updated[i].toxiCode;   //属性代码
+                var toxiProperty = beanChangeVo.updated[i].toxiProperty;   //属性名称
+                if (toxiCode.length == 0) {
+                    $.messager.alert('提示', '属性代码不能为空!!', 'error');
+                    loadDict();
+                    return;
+                } else if (toxiCode.length > 2) {
+                    $.messager.alert('提示', '属性代码最多两个字符!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (toxiProperty.length == 0) {
+                    $.messager.alert('提示', '属性名称不能为空!!', 'error');
+                    loadDict();
+                    return;
+                } else if (toxiProperty.length > 10) {
+                    $.messager.alert('提示', '属性名称最多5个汉字!!', 'error');
+                    loadDict();
+                    return;
+                }
+            }
+        }
 
 
         if(beanChangeVo){

@@ -3,6 +3,7 @@ package com.jims.his.domain.ieqm.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.ieqm.entity.ExpDict;
+import com.jims.his.domain.ieqm.entity.ExpPriceList;
 import com.jims.his.domain.ieqm.vo.ExpStockDefineVo;
 
 import javax.inject.Inject;
@@ -88,8 +89,8 @@ public class ExpDictFacade extends BaseFacade {
         return entityManager.createQuery(hql).getResultList();
     }
 
-    public List<ExpDict> expDictListByExpCode(String expCode) {
-        String hql = "from ExpDict a where a.expCode = '"+expCode+"' ";
+    public List<ExpPriceList> expDictListByExpCode(String expCode) {
+        String hql = "from ExpPriceList a where a.expCode = '"+expCode+"' ";
         return entityManager.createQuery(hql).getResultList();
     }
 

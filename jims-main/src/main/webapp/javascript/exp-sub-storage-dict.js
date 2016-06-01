@@ -15,24 +15,28 @@ $(function () {
         footer: '#tb',
         url: '/api/exp-sub-storage-dict/list',
         method: 'GET',
+        rownumbers: true,
         singleSelect: true,
         columns: [[{
             title: '库房代码',
             field: 'storageCode',
+            align: 'center',
             width: "15%",
             editor:{type:'combogrid',
                 options:{
+                    //editable: false,
                     idField:'storageCode',
-                    textValue:'storageName',
+                    textField:'storageCode',
                     method: 'GET',
                     url:'/api/exp-storage-dept/list?hospitalId='+parent.config.hospitalId ,
                     singleSelect:true,
+                    //width: 1000,
                     mode: 'remote',
                     fit:true,
                     columns:[[{
-                        field:'storageCode',title:'库房代码',width:88
+                        field:'storageCode',title:'库房代码',align: 'center'
                     },{
-                        field:'storageName',title:'库房名称',width:88
+                        field:'storageName',title:'库房名称',align: 'center'
                     }]],
                     onClickRow:function(index,row){
                         var ed = $("#dg").datagrid('getEditor',{index:editIndex,field:'storageCode'}) ;
@@ -40,7 +44,6 @@ $(function () {
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler,{
                         enter:function(e){
-
                             var row  = $(this).combogrid('grid').datagrid('getSelected') ;
                             if(row){
                                 var ed = $("#dg").datagrid('getEditor',{index:editIndex,field:'storageCode'}) ;
@@ -54,35 +57,42 @@ $(function () {
         }, {
             title: '子库房名称',
             field: 'subStorage',
-            width: "10%",
+            align: 'center',
+            width: "14%",
             editor:{type:'text',options:{required:true,validType:'length[0,10]',missingMessage:'请输入10个以内的汉字',invalidMessage:'输入值不在范围'}}
         }, {
             title: '入库单号前缀',
             field: 'importNoPrefix',
-            width: "10%",
+            align: 'center',
+            width: "14%",
             editor:{type:'text',options:{required:true,validType:'length[0,6]',missingMessage:'请输入6字符以内的入库单前缀',invalidMessage:'输入值不在范围'}}
         }, {
             title: '当前入库号',
             field: 'importNoAva',
-            width: "7%",
+            align: 'center',
+            width: "14%",
             editor:'numberbox'
         }, {
             title: '出库单号前缀',
             field: 'exportNoPrefix',
-            width: "10%",
+            align: 'center',
+            width: "14%",
             editor:{type:'text',options:{required:true,validType:'length[0,6]',missingMessage:'请输入6字符以内的出库单号前缀',invalidMessage:'输入值不在范围'}}
         }, {
             title: '当前出库号',
             field: 'exportNoAva',
-            width: "7%",
+            align: 'center',
+            width: "14%",
             editor:'numberbox'
         }, {
             title: '子库房类型',
             field: 'storageType',
-            width: "10%",
+            align: 'center',
+            width: "12%",
             editor: {
                 type: 'combobox',
                 options: {
+                    editable: false ,
                     panelHeight: 'auto',
                     valueField: 'name',
                     textField: 'name',
@@ -201,6 +211,35 @@ $(function () {
         expSubStorageDictChangeVo.inserted = inserted;
         expSubStorageDictChangeVo.deleted = deleted;
         expSubStorageDictChangeVo.updated = updated;
+
+        if(expSubStorageDictChangeVo.inserted.length > 0){
+            for(var i = 0 ; i < expSubStorageDictChangeVo.inserted.length ; i++){
+                var storageCode = expSubStorageDictChangeVo.inserted[i].storageCode ;
+                var subStorage = expSubStorageDictChangeVo.inserted[i].subStorage ;
+                if(typeof (storageCode) == "undefined"){
+                    $.messager.alert('提示','库房代码不能为空','error');
+                    return ;
+                }
+                if(subStorage.length == 0){
+                    $.messager.alert('提示','子库房名称不能为空!','error');
+                    return ;
+                }
+            }
+        }
+        if (expSubStorageDictChangeVo.updated.length > 0) {
+            for (var i = 0; i < expSubStorageDictChangeVo.updated.length; i++) {
+                var storageCode = expSubStorageDictChangeVo.updated[i].storageCode;
+                var subStorage = expSubStorageDictChangeVo.updated[i].subStorage;
+                if (storageCode.length == 0) {
+                    $.messager.alert('提示', '库房代码不能为空', 'error');
+                    return;
+                }
+                if (subStorage.length == 0) {
+                    $.messager.alert('提示', '子库房名称不能为空!', 'error');
+                    return;
+                }
+            }
+        }
 
         $.postJSON("/api/exp-sub-storage-dict/merge", expSubStorageDictChangeVo, function (data, status) {
             $.messager.alert("系统提示", "保存成功", "info");

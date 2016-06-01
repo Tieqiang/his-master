@@ -16,6 +16,7 @@ $(function(){
         title:'消耗品分类字典维护',
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
+        rownumbers: true,
         singleSelect:true,
         columns:[[{
             title:'编号',
@@ -24,7 +25,8 @@ $(function(){
         },{
             title:'分类名称',
             field:'importClass',
-            width:"50%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字',invalidMessage:'输入值不在范围'}}
         }]],
         onClickRow: function (index, row) {
@@ -110,6 +112,30 @@ $(function(){
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
+        if (beanChangeVo.inserted.length > 0) {
+            for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                var importClass = beanChangeVo.inserted[i].importClass;
+                if (importClass.length == 0) {
+                    $.messager.alert('提示', '分类名称不能为空!!', 'error');
+                    return;
+                } else if (importClass.length > 8) {
+                    $.messager.alert('提示', '添加失败:名称超过长度,请输入四个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var importClass = beanChangeVo.updated[i].importClass;
+                if (importClass.length == 0) {
+                    $.messager.alert('提示', '分类名称不能为空!!', 'error');
+                    return;
+                } else if (importClass.length > 8) {
+                    $.messager.alert('提示', '修改失败:名称超过长度,请输入四个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
 
         if (beanChangeVo) {
             $.postJSON("/api/exp-import-class-dict/merge", beanChangeVo, function (data, status) {
@@ -117,6 +143,7 @@ $(function(){
                 loadDict();
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+                loadDict();
             })
         }
 

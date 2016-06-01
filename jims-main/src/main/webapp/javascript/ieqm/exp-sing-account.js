@@ -114,19 +114,23 @@ $(function () {
         columns: [[{
             title: '方式',
             field: 'way',
+            align: 'center',
             width: '6%'
         }, {
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: '10%'
         }, {
             title: '类型',
             field: 'ioClass',
+            align: 'center',
             width: '7%'
         }, {
             title: "科室",
-            width: '7%',
             field: 'ourName',
+            align: 'center',
+            width: '7%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
@@ -138,53 +142,64 @@ $(function () {
         }, {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
             width: '7%'
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: '10%'
         }, {
             title: '批号',
-            width: '5%',
-            field: 'batchNo'
+            field: 'batchNo',
+            align: 'center',
+            width: '5%'
         } , {
             title: '入(出)库日期',
-            width: '11%',
             field: 'actionDate',
+            align: 'center',
+            width: '11%',
             formatter: myFormatter2
         }, {
             title: '失效日期',
-            width: '11%',
             field: 'expireDate',
+            align: 'center',
+            width: '11%',
             formatter: myFormatter2
         }, {
             title: "结存",
-            width: '7%',
-            field: 'inventory'
+            field: 'inventory',
+            align: 'center',
+            width: '7%'
         }, {
             title: '单价',
-            width: '7%',
             field: 'purchasePrice',
+            align: 'center',
+            width: '7%',
             type:'numberbox'
         }, {
             title: '入库数量',
-            width: '7%',
             field: 'importNum',
+            align: 'center',
+            width: '7%',
             type:'numberbox'
         }, {
             title: '入库金额',
-            width: '7%',
             field: 'importPrice',
+            align: 'center',
+            width: '7%',
             type:'numberbox'
         }, {
             title: '出库数量',
-            width: '7%',
             field: 'exportNum',
+            align: 'center',
+            width: '7%',
             type:'numberbox'
         }, {
             title: '出库金额',
-            width: '7%',
             field: 'exportPrice',
+            align: 'center',
+            width: '7%',
             type:'numberbox'
         }]]
     });

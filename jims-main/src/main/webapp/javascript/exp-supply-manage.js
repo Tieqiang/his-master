@@ -24,41 +24,50 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
-            width: "8%"
+            align: 'center',
+            width: "15%"
         }, {
             title: '产品名称',
             field: 'expName',
-            width: "8%"
+            align: 'center',
+            width: "17%"
         }, {
             title: '包装规格',
             field: 'packageSpec',
-            width: "8%"
+            align: 'center',
+            width: "10%"
         }, {
             title: '单位',
             field: 'packageUnits',
-            width: "5%"
+            align: 'center',
+            width: "10%"
         }, {
             title: '厂家',
             field: 'firmId',
-            width: "8%"
+            align: 'center',
+            width: "16%"
         }, {
             title: '批号',
             field: 'batchNo',
-            width: "8%"
+            align: 'center',
+            width: "10%"
         }, {
             title: '数量',
             field: 'quantity',
-            width: "8%"
+            align: 'center',
+            width: "10%"
         }, {
             title: '供应标志',
             field: 'supplyIndicator',
-            width: "8%",
+            align: 'center',
+            width: "10%",
             editor: {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
                     valueField: 'code',
                     textField: 'name',
+                    editable: false,
                     data: [{'code': '1', 'name': '可供应'}, {'code': '0', 'name': '不可供'}]
                 }
             },

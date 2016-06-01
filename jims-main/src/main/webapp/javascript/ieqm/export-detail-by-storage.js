@@ -95,12 +95,14 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         toolbar: '#ft',
         footer: '#tb',
+        rownumbers: true,
         singleSelect: true,
         nowrap: false,
         columns: [[{
             title: '去向库房',
             field: 'receiver',
-            width: "30%",
+            align: 'center',
+            width: "20%",
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
@@ -112,14 +114,17 @@ $(function () {
         }, {
             title: '产品类别',
             field: 'expForm',
-            width: "25%"
+            align: 'center',
+            width: "20%"
         }, {
             title: '全部（金额）',
             field: 'importAmount',
-            width: "25%"
+            align: 'center',
+            width: "20%"
         }, {
             title: '小计（金额）',
             field: 'importAmount',
+            align: 'center',
             width: "20%"
         }]]
     });

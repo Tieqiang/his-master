@@ -198,7 +198,7 @@ public class ExpPriceListFacade extends BaseFacade {
      * @return
      */
     public List<ExpPriceListVo> findExpList(String inputCode ,String StorageCode){
-        String sql = " SELECT B.EXP_NAME,\n" +
+        String sql = " SELECT distinct B.EXP_NAME,\n" +
                 "     c.EXP_CODE,\n" +
                 "     c.EXP_SPEC,\n" +
                 "     c.units,\n" +
@@ -211,7 +211,7 @@ public class ExpPriceListFacade extends BaseFacade {
                 "     c.Permit_no,\n" +
                 "     b.input_code,\n" +
                 "     d.supply_indicator,\n" +
-                "     nvl(d.quantity,0) amount_Per_Package\n" +
+                "     d.quantity as amount_Per_Package\n" +
                 "FROM exp_dict b, exp_price_list c,exp_stock d\n" +
                 "WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "AND   b.exp_spec = c.min_spec\n" +
@@ -220,10 +220,11 @@ public class ExpPriceListFacade extends BaseFacade {
                 "and   c.firm_id = d.firm_id(+)\n" +
                 "AND   c.start_date <= sysdate\n" +
                 "AND   (c.stop_date IS NULL OR c.stop_date > sysdate)\n " +
-                //"and    d.supply_indicator = 1 " +
-                "and   d.storage(+) like '" + StorageCode + "'||'%'\n" +
+                " and   d.package_spec=c.exp_spec " +
+                " and   d.storage(+) like '" + StorageCode + "'||'%'\n" +
                 //"AND   nvl(d.quantity,0) > 0" +
-                "and   upper(b.input_code) like upper('" + inputCode + "%')";
+                "and   upper(b.input_code) like upper('" + inputCode + "%')" +
+                " and   d.quantity>0";
         return super.createNativeQuery(sql,new ArrayList<Object>(), ExpPriceListVo.class);
     }
 

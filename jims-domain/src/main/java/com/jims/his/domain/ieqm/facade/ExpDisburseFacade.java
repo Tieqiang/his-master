@@ -144,9 +144,9 @@ public class ExpDisburseFacade extends BaseFacade {
                 "         EXP_DISBURSE_REC_DETAIL.DISBURSE_REC_NO,   \n" +
                 "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
                 "         EXP_DISBURSE_REC_DETAIL.DISBURSE_COUNT,   \n" +
-                "         EXP_DISBURSE_REC_DETAIL.PAY_AMOUNT,   \n" +
-                "         EXP_DISBURSE_REC_DETAIL.RETAIL_AMOUNT,   \n" +
-                "         EXP_DISBURSE_REC_DETAIL.TRADE_AMOUNT  \n" +
+                "         EXP_DISBURSE_REC.PAY_AMOUNT,   \n" +
+                "         EXP_DISBURSE_REC.RETAIL_AMOUNT,   \n" +
+                "         EXP_DISBURSE_REC.TRADE_AMOUNT  \n" +
                 "    FROM EXP_IMPORT_DETAIL,   \n" +
                 "         EXP_DISBURSE_REC_DETAIL , \n" +
                 "         EXP_DISBURSE_REC , \n" +
@@ -154,9 +154,9 @@ public class ExpDisburseFacade extends BaseFacade {
                 "   WHERE ( EXP_IMPORT_DETAIL.DOCUMENT_NO = EXP_DISBURSE_REC_DETAIL.DOCUMENT_NO ) and  \n" +
                 "         ( EXP_IMPORT_DETAIL.ITEM_NO = EXP_DISBURSE_REC_DETAIL.ITEM_NO )   \n" +
                 "         and ( EXP_DISBURSE_REC.DISBURSE_REC_NO = EXP_DISBURSE_REC_DETAIL.DISBURSE_REC_NO )   \n" +
-                "         AND EXP_IMPORT_DETAIL.package_spec = A.exp_spec   \n" +
+                "         AND EXP_IMPORT_DETAIL.EXP_spec = A.exp_spec   \n" +
                 "         AND EXP_IMPORT_DETAIL.exp_code = A.exp_code   \n" +
-                "         AND EXP_IMPORT_DETAIL.package_units = A.units   \n" +
+                "         AND EXP_IMPORT_DETAIL.units = A.units   \n" +
                 "         and ( EXP_DISBURSE_REC_DETAIL.DISBURSE_REC_NO = '"+disburseRecNo+"' )    " +
                 "         and ( EXP_DISBURSE_REC.STORAGE = '"+storage+"' )    "+
                 "         and ( EXP_IMPORT_DETAIL.HOSPITAL_ID = '"+hospitalId+"' )    ";
