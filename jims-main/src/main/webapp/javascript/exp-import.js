@@ -228,7 +228,7 @@ $(function () {
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
+                    formatter: formatterDate
 //                    parser: w3,
 //                    onSelect: function (date) {
 //                        var dateEd = $("#importDetail").datagrid('getEditor', {
@@ -287,7 +287,7 @@ $(function () {
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
+                    formatter: formatterDate
 //                    parser: w3,
 //                    onSelect: function (date) {
 //                        var dateEd = $("#importDetail").datagrid('getEditor', {
@@ -321,7 +321,7 @@ $(function () {
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
+                    formatter: formatterDate
 //                    parser: w3,
 //                    onSelect: function (date) {
 //                        var dateEd = $("#importDetail").datagrid('getEditor', {
