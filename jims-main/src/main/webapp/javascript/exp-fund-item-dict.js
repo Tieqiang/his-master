@@ -85,15 +85,11 @@ $(function(){
     }) ;
 
     var loadDict = function(){
-        //var name = $("#name").textbox("getValue");
-
         $.get("/api/exp-fund-item-dict/list", function (data) {
             $("#dg").datagrid('loadData', data);
         });
     }
-
     loadDict() ;
-
 
     /**
      * 保存修改的内容
@@ -113,6 +109,42 @@ $(function(){
         beanChangeVo.inserted = insertData;
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
+
+        if (beanChangeVo.inserted.length > 0) {
+            for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                var fundItem = beanChangeVo.inserted[i].fundItem;
+                var serialNo = beanChangeVo.inserted[i].serialNo;
+                if(serialNo.length > 2){
+                    $.messager.alert('提示','序号最多2位数字!','error');
+                    return ;
+                }
+                if (fundItem.length == 0) {
+                    $.messager.alert('提示', '名称不能为空!!', 'error');
+                    return;
+                } else if (fundItem.length > 10) {
+                    $.messager.alert('提示', '添加失败:名称超过长度,请输入五个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var fundItem = beanChangeVo.updated[i].fundItem;
+                var serialNo = beanChangeVo.updated[i].serialNo;
+                if (serialNo.length > 2) {
+                    $.messager.alert('提示', '序号最多2位数字!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (fundItem.length == 0) {
+                    $.messager.alert('提示', '名称不能为空!!', 'error');
+                    return;
+                } else if (fundItem.length > 10) {
+                    $.messager.alert('提示', '修改失败:名称超过长度,请输入五个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
 
         if (beanChangeVo) {
             $.postJSON("/api/exp-fund-item-dict/merge", beanChangeVo, function (data, status) {

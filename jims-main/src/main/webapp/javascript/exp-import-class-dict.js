@@ -110,6 +110,30 @@ $(function(){
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
+        if (beanChangeVo.inserted.length > 0) {
+            for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                var importClass = beanChangeVo.inserted[i].importClass;
+                if (importClass.length == 0) {
+                    $.messager.alert('提示', '分类名称不能为空!!', 'error');
+                    return;
+                } else if (importClass.length > 8) {
+                    $.messager.alert('提示', '添加失败:名称超过长度,请输入四个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var importClass = beanChangeVo.updated[i].importClass;
+                if (importClass.length == 0) {
+                    $.messager.alert('提示', '分类名称不能为空!!', 'error');
+                    return;
+                } else if (importClass.length > 8) {
+                    $.messager.alert('提示', '修改失败:名称超过长度,请输入四个以内的汉字!', 'error');
+                    return;
+                }
+            }
+        }
 
         if (beanChangeVo) {
             $.postJSON("/api/exp-import-class-dict/merge", beanChangeVo, function (data, status) {
@@ -117,6 +141,7 @@ $(function(){
                 loadDict();
             }, function (data) {
                 $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+                loadDict();
             })
         }
 

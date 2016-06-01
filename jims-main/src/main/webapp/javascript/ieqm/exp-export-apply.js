@@ -220,7 +220,7 @@ $(function () {
     //负责人数据加载
     $('#principal').combogrid({
         panelWidth: 500,
-        idField: 'id',
+        idField: 'name',
         textField: 'name',
         loadMsg: '数据正在加载',
         url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
@@ -243,7 +243,7 @@ $(function () {
     //保管员数据加载
     $('#storekeeper').combogrid({
         panelWidth: 500,
-        idField: 'id',
+        idField: 'name',
         textField: 'name',
         loadMsg: '数据正在加载',
         url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
@@ -266,7 +266,7 @@ $(function () {
     //领取人数据加载
     $('#buyer').combogrid({
         panelWidth: 500,
-        idField: 'id',
+        idField: 'name',
         textField: 'name',
         loadMsg: '数据正在加载',
         url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
@@ -395,6 +395,7 @@ $(function () {
                                 //var ed = $("#right").datagrid('getEditor', {index: editIndex, field: 'expCode'});
                                 //$(ed.target).textbox('setValue', row.expCode);
                                 currentExpCode = row.expCode;
+
                                 $("#expDetailDialog").dialog('open');
                             }
                             $(this).combogrid('hidePanel');
@@ -417,8 +418,32 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
+//                    onChange: function (newValue, oldValue) {
+//                        var row = $("#right").datagrid('getData').rows[editIndex];
+//                        var rows = $("#right").datagrid('getRows');
+//                        var totalAmount = 0;
+//                        for (var i = 0; i < rows.length; i++) {
+//                            var rowIndex = $("#right").datagrid('getRowIndex', rows[i]);
+//                            if (rowIndex == editIndex) {
+//                                continue;
+//                            }
+//                            totalAmount += Number(rows[i].planNumber);
+//                        }
+//                        if (totalAmount) {
+//                            totalAmount += newValue * row.retailPrice;
+//                        } else {
+//                            totalAmount = newValue * row.retailPrice;
+//                        }
+//                        $("#accountReceivable").numberbox('setValue', totalAmount);
+//                    },,
                     onChange: function (newValue, oldValue) {
-                        var row = $("#right").datagrid('getData').rows[editIndex];
+                        var selectRows = $("#right").datagrid('getData').rows;
+
+                        var retailPrice =selectRows[editIndex].retailPrice;
+
+                        var amountEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
+                        $(amountEd.target).numberbox('setValue', newValue * retailPrice);
+
                         var rows = $("#right").datagrid('getRows');
                         var totalAmount = 0;
                         for (var i = 0; i < rows.length; i++) {
@@ -429,9 +454,9 @@ $(function () {
                             totalAmount += Number(rows[i].planNumber);
                         }
                         if (totalAmount) {
-                            totalAmount += newValue * row.retailPrice;
+                            totalAmount += newValue * retailPrice;
                         } else {
-                            totalAmount = newValue * row.retailPrice;
+                            totalAmount = newValue * retailPrice;
                         }
                         $("#accountReceivable").numberbox('setValue', totalAmount);
                     },
@@ -453,21 +478,23 @@ $(function () {
             }
         }, {
             title: '单价',
-            field: 'purchasePrice',
-            width: "7%"
-        }, {
-            title: '零售价',
             field: 'retailPrice',
-            width: "7%",
-            editor: {
-                type: 'numberbox',
-                options: {
-                    editable: false,
-                    disabled: true}
-            },
-            hidden:true
-        }, {
-            title: '进价',
+            width: "7%"
+        }
+// , {
+//            title: '零售价',
+//            field: 'retailPrice',
+//            width: "7%",
+//            editor: {
+//                type: 'numberbox',
+//                options: {
+//                    editable: false,
+//                    disabled: true}
+//            },
+//            hidden:true
+//        }
+        /*, {
+            {title: '进价',
             field: 'tradePrice',
             width: "7%",
             editor: {
@@ -475,7 +502,7 @@ $(function () {
                 options: {}
             },
             hidden: true
-        }, {
+        }*/, {
             title: '金额',
             field: 'planNumber',
             width: "7%",
@@ -858,7 +885,7 @@ $(function () {
             rowDetail.units = row.units;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
-            rowDetail.purchasePrice = row.tradePrice;
+            rowDetail.purchasePrice = row.purchasePrice;
             rowDetail.retailPrice = row.retailPrice;
             rowDetail.tradePrice = row.tradePrice;
             rowDetail.memos = row.memos;
@@ -995,7 +1022,9 @@ $(function () {
         exportMaster.acctoperator = parent.config.staffName;
         //exportMaster.acctdate = "";
         exportMaster.principal = $("#principal").combogrid('getValue');
+        alert($("#principal").combogrid('getValue'));
         exportMaster.storekeeper = $("#storekeeper").combogrid('getValue');
+//        ？
         exportMaster.buyer = $("#buyer").combogrid('getValue');
         exportMaster.docStatus = 0;
         exportMaster.hospitalId = parent.config.hospitalId;
@@ -1078,11 +1107,18 @@ $(function () {
                         }
                         $.messager.alert('系统提示', '出库成功', 'success',function(){
                             saveFlag = true;
-                            $("#print").trigger('click');
+//                            $("#print").trigger('click');
                             //parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
                             //刷新左侧列表
-                            //$("#search").click();
-                            $("#clear").click();
+//                            $("#left").datagrid("reload");
+                            var startDate = $("#startDate").datetimebox('getText');
+                            var endDate = $("#endDate").datetimebox('getText');
+                            var applyStorage = $("#storage").combobox("getValue");
+                            var provideStorage = parent.config.storageCode;
+                            var hospitalId = parent.config.hospitalId;
+                            $.get('/api/exp-export/export-apply?storage=' + provideStorage + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
+                                     $("#left").datagrid("loadData", data);
+                             });
                         }, function (data) {
                             $.messager.alert('提示', data.responseJSON.errorMessage, "error");
                         });

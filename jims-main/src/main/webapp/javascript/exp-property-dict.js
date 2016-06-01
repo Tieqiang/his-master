@@ -107,6 +107,55 @@ $(function(){
         beanChangeVo.deleted = deleteDate;
         beanChangeVo.updated = updateDate;
 
+        if (beanChangeVo.inserted.length > 0) {
+            for (var i = 0; i < beanChangeVo.inserted.length; i++) {
+                var toxiCode = beanChangeVo.inserted[i].toxiCode;   //属性代码
+                var toxiProperty = beanChangeVo.inserted[i].toxiProperty;   //属性名称
+                if (toxiCode.length == 0) {
+                    $.messager.alert('提示', '属性代码不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }else if(toxiCode.length > 2){
+                    $.messager.alert('提示', '属性代码最多两个字符!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (toxiProperty.length == 0) {
+                    $.messager.alert('提示', '属性名称不能为空!!', 'error');
+                    loadDict();
+                    return;
+                }else if(toxiProperty.length > 10){
+                    $.messager.alert('提示', '属性名称最多5个汉字!!', 'error');
+                    loadDict();
+                    return;
+                }
+            }
+        }
+        if (beanChangeVo.updated.length > 0) {
+            for (var i = 0; i < beanChangeVo.updated.length; i++) {
+                var toxiCode = beanChangeVo.updated[i].toxiCode;   //属性代码
+                var toxiProperty = beanChangeVo.updated[i].toxiProperty;   //属性名称
+                if (toxiCode.length == 0) {
+                    $.messager.alert('提示', '属性代码不能为空!!', 'error');
+                    loadDict();
+                    return;
+                } else if (toxiCode.length > 2) {
+                    $.messager.alert('提示', '属性代码最多两个字符!!', 'error');
+                    loadDict();
+                    return;
+                }
+                if (toxiProperty.length == 0) {
+                    $.messager.alert('提示', '属性名称不能为空!!', 'error');
+                    loadDict();
+                    return;
+                } else if (toxiProperty.length > 10) {
+                    $.messager.alert('提示', '属性名称最多5个汉字!!', 'error');
+                    loadDict();
+                    return;
+                }
+            }
+        }
+
 
         if(beanChangeVo){
             $.postJSON("/api/exp-property-dict/merge", beanChangeVo, function (data, status) {

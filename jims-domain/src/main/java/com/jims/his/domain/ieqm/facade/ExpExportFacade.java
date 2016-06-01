@@ -530,7 +530,7 @@ public class ExpExportFacade extends BaseFacade {
         String sql="select b.exp_form,a.fund_item,c.assign_name,sum(b.purchase_price*b.quantity) pay_Amount\n" +
                 "from exp_export_master a,exp_export_detail b ,exp_assign_dict c\n" +
                 "where a.document_no = b.document_no\n" +
-                "and   (b.assign_code = c.assign_code or b.assign_code = c.assign_name)\n" +
+                "and   (b.assign_code = c.assign_code)\n" +
                 "and   a.acctdate between to_date('"+s1+"','yyyy-mm-dd hh24:mi:ss') and to_date('"+s2+"','yyyy-mm-dd hh24:mi:ss')\n" +
                 "and   a.storage = '"+storage+"'\n" +
                 "and   a.hospital_id = '"+hospitalId+"'\n" +

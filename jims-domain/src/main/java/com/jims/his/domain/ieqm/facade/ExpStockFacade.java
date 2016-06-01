@@ -354,17 +354,17 @@ public class ExpStockFacade extends BaseFacade {
                 " from exp_stock a, exp_storage_profile b, exp_dict c, exp_price_list d \n" +
                 " where a.exp_code = b.exp_code(+)\n" +
                 "   and a.storage = b.storage(+)\n" +
-                "   and a.exp_spec = b.exp_spec\n" +
-                "   and a.units = b.units(+)\n" +
+                "    and a.PACKAGE_spec = b.exp_spec\n" +
+                "   and a.PACKAGE_units = b.units(+)\n" +
                 "   and a.storage = '" + storage + "'\n" +
                 "   and a.hospital_id = '" + hospitalId + "'" +
                 "   and a.exp_code = c.exp_code\n" +
 //                "   and a.exp_spec = c.exp_spec\n" +
                 "   and a.units = c.units\n" +
                 "   and a.exp_code = d.exp_code\n" +
-                "   and a.exp_spec = d.exp_spec\n" +
+                "   AND a.PACKAGE_spec = d.exp_spec \n" +
                 "   and (a.quantity>b.upper_level or  a.quantity<b.low_level)  \n" +
-                "   and a.units = d.units\n" +
+                "    AND a.PACKAGE_units = d.units \n" +
                 "   and a.firm_id = d.firm_id\n" +
                 "   and ((to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) > d.start_date and to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) < d.stop_date) or\n" +
                 "       d.stop_date is null)";
