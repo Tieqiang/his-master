@@ -110,7 +110,7 @@ public class ExpStockService {
                 "   and b.exp_spec=d.exp_spec            \n" +
                 "   and b.exp_code=d.exp_code AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
                 "   AND b.EXP_CODE = '"+expCode+"'" +
-                "   and   c.exp_spec=d.package_specand c.hospital_id = '"+hospitalId+"'  and d.storage='"+storageCode+"'" ;
+                "   and   c.exp_spec=d.package_spec and c.hospital_id = '"+hospitalId+"'  and d.storage='"+storageCode+"'" ;
 
         return expStockFacade.createNativeQuery(sql,new ArrayList<Object>(),ExpStockRecord.class) ;
 

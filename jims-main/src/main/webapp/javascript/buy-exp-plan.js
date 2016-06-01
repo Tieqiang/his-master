@@ -185,64 +185,36 @@ $(function () {
                     width: "15%",
                     editor: {
                         type: 'combogrid', options: {
-                            url: '/api/buy-exp-plan/list-exp-name-by-input',
+                            mode: 'remote',
+                            url: '/api/exp-name-dict/list-exp-name-by-input',
                             singleSelect: true,
                             method: 'GET',
-                            panelWidth: 200,
-                            idField: 'expName',
-                            textField: 'expName',
-                            columns: [
-                                [
-                                    {
-                                        title: '代码',
-                                        field: 'expCode',
-                                        width: "30%"
-                                    },
-                                    {
-                                        title: '品名',
-                                        field: 'expName',
-                                        width: "40%",
-                                        editor: {type: 'text', options: {required: true}}
-                                    },
-                                    {
-                                        title: '代码',
-                                        field: 'inputCode',
-                                        width: "40%",
-                                        editor: {type: 'text', options: {required: true}}
-                                    }
-                                ]
-                            ],
+                            panelWidth: 300,
+                            idField: 'expCode',
+                            textField: 'expCode',
+                            columns: [[{
+                                title: '代码',
+                                field: 'expCode',
+                                width: "30%"
+                            }, {
+                                title: '品名',
+                                field: 'expName',
+                                width: "40%",
+                                editor: {type: 'text', options: {required: true}}
+                            }, {
+                                title: '拼音码',
+                                field: 'inputCode',
+                                width: "30%",
+                                editor: 'text'
+                            }]],
                             onClickRow: function (index, row) {
-                                alert("11111111111111111");
-                                var ed = $("#right").datagrid('getEditor', {index: editIndex, field: 'expCode'});
-                                $(ed.target).textbox('setValue', row.expCode);
                                 currentExpCode = row.expCode;
-                                alert(currentExpCode);
                                 $("#stockRecordDialog").dialog('open');
-//                                $("#stockRecordDialog").dialog({
-//                                    title: '选择规格',
-//                                    width: 700,
-//                                    height: 300,
-//                                    closed: false,
-//                                    catch: false,
-//                                    modal: true,
-//                                    closed: true,
-//                                    onOpen: function () {
-//                                        $("#stockRecordDatagrid").datagrid('load', {
-//                                            storageCode: parent.config.storageCode,
-//                                            expCode: currentExpCode,
-//                                            hospitalId: parent.config.hospitalId
-//                                        });
-//                                        $("#stockRecordDatagrid").datagrid('selectRow', 0)
-//                                    }
-//                                });
                             },
                             keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
                                 enter: function (e) {
                                     var row = $(this).combogrid('grid').datagrid('getSelected');
                                     if (row) {
-                                        var ed = $("#right").datagrid('getEditor', {index: editIndex, field: 'expCode'});
-                                        $(ed.target).textbox('setValue', row.expCode);
                                         currentExpCode = row.expCode;
                                         $("#stockRecordDialog").dialog('open');
                                     }
@@ -804,65 +776,101 @@ $(function () {
                     field: 'permitNo',
                     align: 'center',
                     width: '8%'
+                },
+                {
+                    title: '类型',
+                    field: 'expForm',
+                    align: 'center',
+                    width: '8%'
                 }
             ]
         ],
-        onLoadSuccess: function (data) {
-            if (data.total == 0 && editIndex != undefined) {
-                $.messager.alert('系统提示', '无法获取产品的价格信息！', 'info');
-                $("#stockRecordDialog").dialog('close');
-            }
-        },
-        onClickRow: function (index, row) {
-            /**
-             *    expCode: row.expCode,
-             //                                    expName:row.expName,
-                                                 firmId: row.firmId,
-             //                                    packSpec: row.packSpec,
-             //                                    packUnit:row.packUnit,
-             //                                    wantNumber: 0,
-             //                                    purchasePrice: row.purchasePrice,
-             //                                    planNumber: 0,
-             //                                    expForm: row.expForm,
-             //                                    storer: parent.config.staffName,
-             //                                    retailPrice: row.retailPrice
-             *
-             */
-//            console.log(row);
-            var expCodeEdit = $("#right").datagrid('getEditor', {index: editIndex, field: 'expCode'});
-//            $(expCodeEdit.target).textbox('setValue', row.expCode);
-//            expName:row.expName
-            console.log(expCodeEdit.target+"(((((((((((((((999");
-            var expNameEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'expName'});
-            $(expNameEd.target).textbox('setValue', row.expName);
-
-            var packageSpecEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'packSpec'});
-            $(packageSpecEd.target).textbox('setValue', row.expSpec);
-
-            var packageUnitsEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'packUnit'});
-            $(packageUnitsEd.target).textbox('setValue', row.units);
-
-            var batchNoEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
-            $(batchNoEd.target).textbox('setValue', 0);
-
-            var purchasePriceEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
-            $(purchasePriceEd.target).textbox('setValue', row.retailPrice);
-
-            var amountEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'storer'});
-            $(amountEd.target).textbox('setValue', parent.config.staffName);
-
-            var expFormEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'expForm'});
-            $(expFormEd.target).textbox('setValue', row.expForm);
-
-            var firmIdEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'firmId'});
-            $(firmIdEd.target).textbox('setValue', row.firmId);
-            var inventoryEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'purchasePrice'});
-            $(inventoryEd.target).textbox('setValue', row.purchasePrice);
-
+        onDblClickRow: function (index, row) {
             $("#right").datagrid('endEdit', editIndex);
-            $("#right").datagrid('beginEdit', editIndex);
+            var rows = $("#right").datagrid('getRows') ;
+            for(var i = 0;i<rows.length;i++){
+                if(rows[i].expCode == row.expCode && rows[i].packageSpec==row.expSpec && rows[i].firmId ==row.firmId){
+                    $.messager.alert("系统提示","同批次、同厂商、同规格的【"+row.expName+"】记录已经存在，请不要重复添加",'info');
+                    return ;
+                }
+            }
+            var rowDetail = $("#right").datagrid('getData').rows[editIndex];
+
+            rowDetail.expName=row.expName;
+            rowDetail.firmId=row.firmId;
+            rowDetail.packSpec=row.expSpec;
+            rowDetail.packUnit=row.units;
+            rowDetail.purchasePrice=row.tradePrice;
+            rowDetail.storer= parent.config.staffName;
+            rowDetail.expForm=row.expForm;
+            //rowDetail.invoiceDate = setDefaultDate();
+            //rowDetail.invoiceNo = row.invoiceNo;
+
+            $("#right").datagrid('refreshRow', editIndex);
             $("#stockRecordDialog").dialog('close');
+            $("#right").datagrid('beginEdit', editIndex);
+
+
         }
+        //onLoadSuccess: function (data) {
+        //    if (data.total == 0 && editIndex != undefined) {
+        //        $.messager.alert('系统提示', '无法获取产品的价格信息！', 'info');
+        //        $("#stockRecordDialog").dialog('close');
+        //    }
+        //},
+
+
+
+//        onClickRow: function (index, row) {
+//            /**
+//             *    expCode: row.expCode,
+//             //                                    expName:row.expName,
+//             firmId: row.firmId,
+//             //                                    packSpec: row.packSpec,
+//             //                                    packUnit:row.packUnit,
+//             //                                    wantNumber: 0,
+//             //                                    purchasePrice: row.purchasePrice,
+//             //                                    planNumber: 0,
+//             //                                    expForm: row.expForm,
+//             //                                    storer: parent.config.staffName,
+//             //                                    retailPrice: row.retailPrice
+//             *
+//             */
+////            console.log(row);
+//            var expCodeEdit = $("#right").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+////            $(expCodeEdit.target).textbox('setValue', row.expCode);
+////            expName:row.expName
+//            console.log(expCodeEdit.target+"(((((((((((((((999");
+//            var expNameEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'expName'});
+//            $(expNameEd.target).textbox('setValue', row.expName);
+//
+//            var packageSpecEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'packSpec'});
+//            $(packageSpecEd.target).textbox('setValue', row.expSpec);
+//
+//            var packageUnitsEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'packUnit'});
+//            $(packageUnitsEd.target).textbox('setValue', row.units);
+//
+//            var batchNoEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
+//            $(batchNoEd.target).textbox('setValue', 0);
+//
+//            var purchasePriceEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'retailPrice'});
+//            $(purchasePriceEd.target).textbox('setValue', row.retailPrice);
+//
+//            var amountEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'storer'});
+//            $(amountEd.target).textbox('setValue', parent.config.staffName);
+//
+//            var expFormEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'expForm'});
+//            $(expFormEd.target).textbox('setValue', row.expForm);
+//
+//            var firmIdEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'firmId'});
+//            $(firmIdEd.target).textbox('setValue', row.firmId);
+//            var inventoryEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'purchasePrice'});
+//            $(inventoryEd.target).textbox('setValue', row.purchasePrice);
+//
+//            $("#right").datagrid('endEdit', editIndex);
+//            $("#right").datagrid('beginEdit', editIndex);
+//            $("#stockRecordDialog").dialog('close');
+//        }
 
     });
 });
