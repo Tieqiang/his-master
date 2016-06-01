@@ -702,7 +702,7 @@ $(function () {
         singleSelect: true,
         fit: true,
         fitColumns: true,
-        url: '/api/exp-stock/stock-record/',
+        url: '/api/exp-stock/stock-record?storageCode='+parent.config.storageCode,
         method: 'GET',
         columns: [[{
             title: '代码',
@@ -773,7 +773,7 @@ $(function () {
             }
         },
         onClickRow: function (index, row) {
-            console.log(row);
+//            console.log(row);
             var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
             $(expCodeEdit.target).textbox('setValue', row.expCode);
 
