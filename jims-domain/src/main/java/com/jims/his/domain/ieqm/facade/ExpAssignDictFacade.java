@@ -28,7 +28,18 @@ public class ExpAssignDictFacade extends BaseFacade {
         List<ExpAssignDict> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpAssignDict.class);
         return nativeQuery;
     }
-
+    /**
+     * 按code查询
+     * @param code
+     * @return
+     */
+    public ExpAssignDict findByCode(String code) {
+       Object obj=entityManager.createQuery("from ExpAssignDict  where assignName='"+code+"'").getSingleResult();
+       if(obj!=null&&!"".equals(obj)){
+           return (ExpAssignDict)obj;
+       }
+       return null;
+    }
     /**
      * 保存增删改
      *

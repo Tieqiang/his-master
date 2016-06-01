@@ -9,7 +9,7 @@ $(function () {
             $("#right").datagrid('endEdit', editIndex);
             editIndex = undefined;
         }
-    }
+    };
     //生成采购单号
     var getBuyId = $.get("/api/buy-exp-plan/get-buy-id", function (data) {
         newBuyId = data;
@@ -21,15 +21,6 @@ $(function () {
 
     $("#expName").searchbox({
         searcher:function(value, name) {
-            //var url = '';
-            //if ($(".radios:checked").val() == 0) {
-            //    url='/api/buy-exp-plan/list-low?storageCode=' + parent.config.storageCode;
-            //}
-            ////全部
-            //if ($(".radios:checked").val() == 1) {
-            //    url='/api/buy-exp-plan/list-all?storageCode=' + parent.config.storageCode;
-            //}
-            //$("#left").datagrid("load",url);
             var rows = $("#left").datagrid("getRows");
             for (var i = 0; i < rows.length; i++) {
                 if (rows[i].expName == value){
@@ -41,7 +32,6 @@ $(function () {
 
     //采购单号数据加载
     $('#buyId').combobox({
-        panelHeight: 'auto',
         url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.staffName,
         method: 'GET',
         valueField: 'classCode',
@@ -219,14 +209,12 @@ $(function () {
                                 }
                             }
                         );
-                        //$(this).combogrid('hidePanel');
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
                         enter: function (e) {
                             var row = $(this).combogrid('grid').datagrid('getSelected');
                             $(this).combogrid('hidePanel');
                             if (row) {
-                                console.log(row)
                                 $("#right").datagrid('updateRow', {
                                     index: editIndex,
                                     row: {
@@ -394,11 +382,10 @@ $(function () {
         fit: true
     });
 
-
     //新增按钮功能
     $("#add").on('click', function () {
         stopEdit();
-        $("#getNum").linkbutton("disable");
+
         var rows = $('#right').datagrid("getRows");
 
 
@@ -429,7 +416,7 @@ $(function () {
     });
     //加入按钮功能
     $("#join").on('click', function () {
-        $("#getNum").linkbutton("enable");
+
         var leftRows = $("#left").datagrid('getSelections');
         if (leftRows.length == 0) {
             $.messager.alert("系统提示", "请先选择消耗品待选数据", 'error');
@@ -442,6 +429,7 @@ $(function () {
             }
             buyNo = maxBuyNo >= buyNo ? maxBuyNo : buyNo;
             $.each(leftRows, function (index, row) {
+
                 buyNo = buyNo + 1;
                 $('#right').datagrid('appendRow', {
                     buyNo: buyNo,
@@ -460,6 +448,7 @@ $(function () {
                     packUnit: row.packUnit,
                     buyId: newBuyId
                 });
+
             });
 
         }
@@ -468,7 +457,7 @@ $(function () {
     });
     //全部加入按钮功能
     $("#joinAll").on('click', function () {
-        $("#getNum").linkbutton("enable");
+
         var leftRows = $("#left").datagrid('getRows');
         var rows = $('#right').datagrid('getRows');
         var buyNo = 0;
@@ -500,7 +489,7 @@ $(function () {
     });
     //新建按钮功能
     $("#new").on('click', function () {
-        $("#getNum").linkbutton("enable");
+
         $.get("/api/buy-exp-plan/get-buy-id", function (buyId) {
             newBuyId = buyId;
             console.log("getBuyId" + newBuyId);
@@ -519,7 +508,6 @@ $(function () {
         }
         for (var i = 0; i < rows.length; i++) {
             //删除空行
-            console.log(rows[i])
             if ($.trim(rows[i].expCode) == '' || $.trim(rows[i].expName) == '' || $.trim(rows[i].firmId) == '' ) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
                 $("#right").datagrid('selectRow', i);
@@ -528,17 +516,13 @@ $(function () {
         }
         if ($("#expScope").combobox("getValue") == 1) {
             $.postJSON('/api/buy-exp-plan/generate-num-up', rows, function (data) {
-                $.each(data, function (index, item) {
-                    item.planNumber = item.purchasePrice * item.wantNumber;
-                });
+
                 $("#right").datagrid("loadData", data);
             });
         }
         if ($("#expScope").combobox("getValue") == 2) {
             $.postJSON('/api/buy-exp-plan/generate-num-low', rows, function (data) {
-                $.each(data, function (index, item) {
-                    item.planNumber = item.purchasePrice * item.wantNumber;
-                });
+
                 $("#right").datagrid("loadData", data);
             });
         }
@@ -550,9 +534,7 @@ $(function () {
             rows.unshift(day);
 
             $.postJSON('/api/buy-exp-plan/generate-num-sale', rows, function (data) {
-                $.each(data, function (index, item) {
-                    item.planNumber = item.purchasePrice * item.wantNumber;
-                });
+
                 $("#right").datagrid("loadData", data);
             });
         }
@@ -565,39 +547,23 @@ $(function () {
             if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
                 $("#right").datagrid('selectRow', i);
+                $("#right").datagrid("loadData", data);
                 return false;
+
             }
             if (rows[i].wantNumber == undefined || rows[i].wantNumber <= 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:计划数量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
-                //$("#right").datagrid('beginEdit', i);
+
                 return false;
             }
-            //if (rows[i].planNumber == undefined || rows[i].planNumber <= 0) {
-            //    $.messager.alert("系统提示", "第" + (i + 1) + "行:计划金额不能小于0 请重新填写", 'error');
-            //    $("#right").datagrid('selectRow', i);
-            //    //$("#right").datagrid('beginEdit', i);
-            //    return false;
-            //}
-            //if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <= 0) {
-            //    $.messager.alert("系统提示", "第" + (i + 1) + "行:消耗量不能小于0 请重新填写", 'error');
-            //    $("#right").datagrid('selectRow', i);
-            //    //$("#right").datagrid('beginEdit', i);
-            //    return false;
-            //}
-            //if (rows[i].retailPrice == undefined || rows[i].retailPrice <= 0) {
-            //    $.messager.alert("系统提示", "第" + (i + 1) + "行:零售价不能小于0 请重新填写", 'error');
-            //    $("#right").datagrid('selectRow', i);
-            //    //$("#right").datagrid('beginEdit', i);
-            //    return false;
-            //}
+
         }
         return true;
-    }
+    };
     //暂存按钮操作
     $("#ts").on('click', function () {
         stopEdit();
-        $("#getNum").linkbutton("enable");
         var rows = $("#right").datagrid('getRows');
         if (rows.length == 0) {
             $.messager.alert("系统提示", "采购计划为空，不允许保存", 'error');
@@ -624,7 +590,7 @@ $(function () {
                 });
                 //采购单号数据加载
                 $('#buyId').combobox({
-                    panelHeight: 'auto',
+
                     url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.staffName,
                     method: 'GET',
                     valueField: 'classCode',
@@ -645,13 +611,11 @@ $(function () {
             })
         }
 
-
-
     });
     //保存按钮操作
     $("#save").on('click', function () {
         stopEdit();
-        $("#getNum").linkbutton("enable");
+
         var rows = $("#right").datagrid('getRows');
         if (rows.length == 0) {
             $.messager.alert("系统提示", "采购计划为空，不允许保存", 'error');
@@ -678,7 +642,7 @@ $(function () {
                 });
                 //采购单号数据加载
                 $('#buyId').combobox({
-                    panelHeight: 'auto',
+
                     url: '/api/buy-exp-plan/list-buy-id?storageCode=' + parent.config.storageCode + "&expNo=" + parent.config.staffName,
                     method: 'GET',
                     valueField: 'classCode',
@@ -709,11 +673,10 @@ $(function () {
         closed: true,
         onOpen: function () {
 
-            //var hospitalId = parent.config.hospitalId;
-            //var storage = parent.config.storageCode;
+
             $("#report").prop("src",parent.config.defaultReportPath + "buy-exp-plan.cpt");
         }
-    })
+    });
     $("#print").on('click',function(){
         var printData = $("#right").datagrid('getRows');
         if(printData.length<=0){
@@ -723,8 +686,5 @@ $(function () {
         $("#printDiv").dialog('open');
 
     })
-
-
-
 
 });

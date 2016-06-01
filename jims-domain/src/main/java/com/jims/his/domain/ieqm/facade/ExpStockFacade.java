@@ -74,16 +74,16 @@ public class ExpStockFacade extends BaseFacade {
         String sql = "SELECT DISTINCT EXP_STOCK.STORAGE,   " +
                 "                    EXP_STOCK.EXP_CODE, " +
                 "EXP_STOCK.ID,   " +
-                "EXP_STOCK.EXP_SPEC,   " +
-                "EXP_STOCK.UNITS,   " +
+                "EXP_STOCK.PACKAGE_SPEC,   " +
+                "EXP_STOCK.PACKAGE_UNITS,   " +
                 "EXP_STOCK.BATCH_NO,\n" +
                 "EXP_STOCK.EXPIRE_DATE,   " +
                 "EXP_STOCK.FIRM_ID,   " +
                 "EXP_STOCK.PURCHASE_PRICE,   " +
                 "EXP_STOCK.DISCOUNT,    " +
-                "EXP_STOCK.PACKAGE_SPEC,\n" +
+//                "EXP_STOCK.PACKAGE_SPEC,\n" +
                 "EXP_STOCK.QUANTITY,   " +
-                "EXP_STOCK.PACKAGE_UNITS,    " +
+//                "EXP_STOCK.PACKAGE_UNITS,    " +
                 "EXP_STOCK.SUB_PACKAGE_1,    " +
                 "EXP_STOCK.SUB_PACKAGE_UNITS_1,\n" +
                 "EXP_STOCK.SUB_PACKAGE_2,   " +
@@ -343,7 +343,7 @@ public class ExpStockFacade extends BaseFacade {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String startTime = formatter.format(day.getTime());
         String sql = "select a.exp_code,\n" +
-                "       a.exp_spec,\n" +
+                "       a.package_spec,\n" +
                 "       a.package_units,\n" +
                 "       a.quantity stock_quantity,\n" +
                 "       b.upper_level,\n" +
@@ -354,17 +354,17 @@ public class ExpStockFacade extends BaseFacade {
                 " from exp_stock a, exp_storage_profile b, exp_dict c, exp_price_list d \n" +
                 " where a.exp_code = b.exp_code(+)\n" +
                 "   and a.storage = b.storage(+)\n" +
-                "   and a.exp_spec = b.exp_spec\n" +
-                "   and a.units = b.units(+)\n" +
+                "    and a.PACKAGE_spec = b.exp_spec\n" +
+                "   and a.PACKAGE_units = b.units(+)\n" +
                 "   and a.storage = '" + storage + "'\n" +
                 "   and a.hospital_id = '" + hospitalId + "'" +
                 "   and a.exp_code = c.exp_code\n" +
 //                "   and a.exp_spec = c.exp_spec\n" +
                 "   and a.units = c.units\n" +
                 "   and a.exp_code = d.exp_code\n" +
-                "   and a.exp_spec = d.exp_spec\n" +
+                "   AND a.PACKAGE_spec = d.exp_spec \n" +
                 "   and (a.quantity>b.upper_level or  a.quantity<b.low_level)  \n" +
-                "   and a.units = d.units\n" +
+                "    AND a.PACKAGE_units = d.units \n" +
                 "   and a.firm_id = d.firm_id\n" +
                 "   and ((to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) > d.start_date and to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) < d.stop_date) or\n" +
                 "       d.stop_date is null)";
@@ -386,8 +386,8 @@ public class ExpStockFacade extends BaseFacade {
     public List<ExpStorageProfileVo> searchExpireStock(String overDate, String storage, String hospitalId) {
         String sql = "select a.exp_code,\n" +
                 "       b.exp_name,\n" +
-                "       a.exp_spec,\n" +
-                "       a.units,\n" +
+                "       a.PACKAGE_spec,\n" +
+                "       a.PACKAGE_units,\n" +
                 "       a.batch_no,\n" +
                 "       a.firm_id,\n" +
                 "       a.expire_date,\n" +
