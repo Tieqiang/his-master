@@ -110,15 +110,18 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         toolbar: '#ft',
         footer: '#tb',
+        rownumbers: true,
         singleSelect: true,
         columns: [[{
             title: '库房',
             field: 'subStorage',
+            align: 'center',
             width: "10%"
         }, {
             title: '去向',
             field: 'receiver',
-            width: "10%",
+            align: 'center',
+            width: "12%",
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
@@ -130,30 +133,37 @@ $(function () {
         }, {
             title: '产品编码',
             field: 'expCode',
-            width: "15%"
+            align: 'center',
+            width: "10%"
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: "15%"
         }, {
             title: '包装规格',
             field: 'packageSpec',
+            align: 'center',
             width: "10%"
         }, {
             title: '单位',
             field: 'packageUnits',
-            width: "10%"
+            align: 'center',
+            width: "9%"
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: "10%"
         }, {
             title: '数量',
             field: 'quantity',
+            align: 'center',
             width: "10%"
         }, {
             title: '金额',
             field: 'amount',
+            align: 'center',
             width: "10%"
         }]]
     });
