@@ -239,14 +239,14 @@ public class BuyExpPlanFacade extends BaseFacade {
      * @param inData
      * @return
      */
-    public List<BuyExpPlan> generateNumUp(List<BuyExpPlan> inData) {
+    public List<BuyExpPlan> generateNumUp(List<BuyExpPlan> inData,String storageCode) {
         if(null != inData && inData.size() > 0){
             Iterator<BuyExpPlan> ite = inData.iterator();
             while(ite.hasNext()){
                 BuyExpPlan temp = ite.next();
                 String sql = "SELECT nvl(sum(upper_level),0)\n" +
                         "\t\t\tFROM exp_storage_profile\n" +
-                        "\t\t\tWHERE storage ='"+temp.getStorage()+"'\n" +
+                        "\t\t\tWHERE storage ='"+storageCode+"'\n" +
                         "\t\t\tAND EXP_code = '"+temp.getExpCode()+"'\n" +
                         "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'";
 
@@ -268,14 +268,14 @@ public class BuyExpPlanFacade extends BaseFacade {
      * @param inData
      * @return
      */
-    public List<BuyExpPlan> generateNumLow(List<BuyExpPlan> inData) {
+    public List<BuyExpPlan> generateNumLow(List<BuyExpPlan> inData,String storageCode) {
         if (null != inData && inData.size() > 0) {
             Iterator<BuyExpPlan> ite = inData.iterator();
             while (ite.hasNext()) {
                 BuyExpPlan temp = ite.next();
                 String sql = "SELECT nvl(sum(low_level),0)\n" +
                         "\t\t\tFROM exp_storage_profile\n" +
-                        "\t\t\tWHERE storage = '"+temp.getStorage()+"'\n" +
+                        "\t\t\tWHERE storage = '"+storageCode+"'\n" +
                         "\t\t\tAND EXP_code = '"+temp.getExpCode()+"'\n" +
                         "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'";
                 List result = super.createNativeQuery(sql).getResultList();

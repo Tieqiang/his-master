@@ -514,13 +514,13 @@ $(function () {
             }
         }
         if ($("#expScope").combobox("getValue") == 1) {
-            $.postJSON('/api/buy-exp-plan/generate-num-up', rows, function (data) {
+            $.postJSON('/api/buy-exp-plan/generate-num-up?storageCode='+ parent.config.storageCode, rows, function (data) {
 
                 $("#right").datagrid("loadData", data);
             });
         }
         if ($("#expScope").combobox("getValue") == 2) {
-            $.postJSON('/api/buy-exp-plan/generate-num-low', rows, function (data) {
+            $.postJSON('/api/buy-exp-plan/generate-num-low?storageCode='+ parent.config.storageCode, rows, function (data) {
 
                 $("#right").datagrid("loadData", data);
             });
