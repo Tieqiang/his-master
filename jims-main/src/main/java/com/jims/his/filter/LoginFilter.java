@@ -17,8 +17,9 @@ public class LoginFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest httpServletRequest = (HttpServletRequest)request ;
-        HttpSession session = httpServletRequest.getSession();
+        HttpSession session = httpServletRequest.getSession() ;
         String loginName = (String)session.getAttribute("loginName") ;
         if(loginName !=null){
             chain.doFilter(request,response);
@@ -28,11 +29,12 @@ public class LoginFilter implements Filter {
         StringBuffer requestURL = httpServletRequest.getRequestURL();
         String path = requestURL.toString() ;
         boolean login = path.contains("login")||path.contains("assert")||path.contains("jnlp");
+        System.out.println(requestURL);
         if(login){
             chain.doFilter(request,response);
             return ;
         }
-        System.out.println(requestURL);
+
         HttpServletResponse httpServletResponse = (HttpServletResponse)response ;
 
         httpServletResponse.sendRedirect("/login1.html") ;
