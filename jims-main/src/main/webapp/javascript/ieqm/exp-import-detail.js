@@ -149,78 +149,95 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         toolbar: '#ft',
         footer: '#tb',
-        singleSelect: false,
+        rownumbers: true,
         nowrap: false,
         columns: [[{
             title: '金额',
             field: 'sum',
+            align: 'center',
             width: "7%"
         }, {
             title: '子库房',
             field: 'subStorage',
+            align: 'center',
             width: "7%"
         }, {
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: "7%"
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: "7%"
         }, {
             title: '规格',
             field: 'packageSpec',
-            width: "7%"
+            align: 'center',
+            width: "6%"
         }, {
             title: '单位',
             field: 'packageUnits',
-            width: "7%"
+            align: 'center',
+            width: "6%"
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: "7%"
         }, {
             title: '价格',
             field: 'purchasePrice',
-            width: "7%"
+            align: 'center',
+            width: "6%"
         }, {
             title: '扣率',
             field: 'discount',
+            align: 'center',
             width: "7%"
         }, {
             title: '数量',
             field: 'quantity',
-            width: "7%"
+            align: 'center',
+            width: "6%"
         }, {
             title: '发票号',
             field: 'invoiceNo',
+            align: 'center',
             width: "7%"
         }, {
             title: '发票日期',
             field: 'invoiceDate',
             formatter: formatterDate,
-            width: "11%"
+            align: 'center',
+            width: "9%"
         }, {
             title: '入库单号',
             field: 'documentNo',
+            align: 'center',
             width: "7%"
         }, {
             title: '供货单位',
             field: 'supplier',
-            width: "11%"
+            align: 'center',
+            width: "8%"
         }, {
             title: '批号',
             field: 'batchNo',
+            align: 'center',
             width: "7%"
         }, {
             title: '有效期',
             field: 'expireDate',
             formatter: formatterDate,
-            width: "11%"
+            align: 'center',
+            width: "8%"
         }, {
             title: '备注',
             field: 'memo',
-            width: "10%"
+            align: 'center',
+            width: "6%"
         }]]
     });
 

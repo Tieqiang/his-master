@@ -36,11 +36,11 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-            var h = date.getHours();
-            var mm = date.getMinutes();
-            var s = date.getSeconds();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
-                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+//            var h = date.getHours();
+//            var mm = date.getMinutes();
+//            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d);
+//                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
             return dateTime;
         }
     }
@@ -73,36 +73,40 @@ $(function () {
         columns: [[{
             title: '项目代码',
             field: 'expCode',
+            align: 'center',
+            width: '6%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '品名',
             field: 'expName',
-            width: '10%',
+            align: 'center',
+            width: '9%',
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
                     url: '/api/exp-name-dict/list-exp-name-by-input',
                     singleSelect: true,
                     method: 'GET',
-                    panelWidth: 200,
+                    panelWidth: 300,
                     idField: 'expName',
                     textField: 'expName',
                     columns: [[{
                         title: '代码',
                         field: 'expCode',
-                        width: "30%"
+                        align: 'center',
+                        width: 110
                     }, {
                         title: '品名',
                         field: 'expName',
-                        width: "40%",
-                        editor: {type: 'text', options: {required: true}}
+                        align: 'center',
+                        width: 120
                     }, {
                         title: '拼音码',
                         field: 'inputCode',
-                        width: "30%",
-                        editor: 'text'
+                        align: 'center',
+                        width: 50
                     }]],
                     onClickRow: function (index, row) {
                         var ed = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
@@ -127,18 +131,23 @@ $(function () {
         }, {
             title: '规格',
             field: 'packageSpec',
+            align: 'center',
+            width: '5%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
+            width: '5%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: "数量",
             field: 'quantity',
+            align: 'center',
             width:'5%',
             editor: {
                 type: 'numberbox', options: {
@@ -175,12 +184,16 @@ $(function () {
         }, {
             title: '批号',
             field: 'batchNo',
+            align: 'center',
+            width: '5%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '进价',
             field: 'purchasePrice',
+            align: 'center',
+            width: '6%',
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: true,
@@ -188,6 +201,8 @@ $(function () {
         }, {
             title: '金额',
             field: 'amount',
+            align: 'center',
+            width: '5%',
             editor: {
                 type: 'numberbox', options: {
                     precision: '2',
@@ -198,45 +213,52 @@ $(function () {
         }, {
             title: '产品类型',
             field: 'expForm',
+            align: 'center',
+            width: '6%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '有效日期',
             field: 'expireDate',
-            width:'7%',
+            align: 'center',
+            width:'9%',
             editor: {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#importDetail").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'expireDate'
-                        });
-                        var y = date.getFullYear()+1;
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
+                    formatter: formatterDate
+//                    parser: w3,
+//                    onSelect: function (date) {
+//                        var dateEd = $("#importDetail").datagrid('getEditor', {
+//                            index: editIndex,
+//                            field: 'expireDate'
+//                        });
+//                        var y = date.getFullYear()+1;
+//                        var m = date.getMonth() + 1;
+//                        var d = date.getDate();
+//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//
+//                        $(dateEd.target).textbox('setValue', dateTime);
+//                        $(this).datetimebox('hidePanel');
+//                    }
                 }
             }
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
+            width: '6%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '注册证号',
             field: 'expImportDetailRegistNo',
+            align: 'center',
+            width: '6%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}
@@ -244,75 +266,84 @@ $(function () {
         }, {
             title: '许可证号',
             field: 'expImportDetailLicenceno',
+            align: 'center',
+            width: '6%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '发票号',
             field: 'invoiceNo',
+            align: 'center',
+            width: '5%',
             editor: {type: 'textbox', options: {}}
         }, {
             title: '发票日期',
             field: 'invoiceDate',
-            width:'7%',
+            align: 'center',
+            width:'9%',
             editor: {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#importDetail").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'invoiceDate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
+                    formatter: formatterDate
+//                    parser: w3,
+//                    onSelect: function (date) {
+//                        var dateEd = $("#importDetail").datagrid('getEditor', {
+//                            index: editIndex,
+//                            field: 'invoiceDate'
+//                        });
+//                        var y = date.getFullYear();
+//                        var m = date.getMonth() + 1;
+//                        var d = date.getDate();
+//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//
+//                        $(dateEd.target).textbox('setValue', dateTime);
+//                        $(this).datetimebox('hidePanel');
+//                    }
                 }
             }
         }, {
             title: '备注',
             field: 'memo',
+            align: 'center',
+            width: '5%',
             editor: {type: 'textbox', options: {}}
         }, {
             title: '生产日期',
             field: 'producedate',
-            width:'7%',
+            align: 'center',
+            width:'9%',
             editor: {
                 type: 'datetimebox',
                 options: {
                     value: 'dateTime',
                     showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#importDetail").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'producedate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
+                    formatter: formatterDate
+//                    parser: w3,
+//                    onSelect: function (date) {
+//                        var dateEd = $("#importDetail").datagrid('getEditor', {
+//                            index: editIndex,
+//                            field: 'producedate'
+//                        });
+//                        var y = date.getFullYear();
+//                        var m = date.getMonth() + 1;
+//                        var d = date.getDate();
+//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//
+//                        $(dateEd.target).textbox('setValue', dateTime);
+//                        $(this).datetimebox('hidePanel');
+//                    }
                 }
             }
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
-            width:'7%',
+            align: 'center',
+            width:'9%',
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -339,9 +370,12 @@ $(function () {
         }, {
             title: '灭菌标志',
             field: 'killFlag',
+            align: 'center',
+            width: '6%',
             editor: {type: 'combobox', options: {
                 valueField:'value',
                 textField:'title',
+                editable: false,
                 data:[{
                     value:'1',
                     title:'已灭菌'
@@ -353,34 +387,44 @@ $(function () {
         }, {
             title: '折扣',
             field: 'discount',
+            align: 'center',
+            width: '5%',
             editor: {type: 'textbox', options: {}}
         }, {
 
             title: '招标文号',
             field: 'orderBatch',
+            align: 'center',
+            width: '6%',
             editor: {type: 'textbox', options: {}}
 
         }, {
             title: '招标文号序号',
             field: 'tenderNo',
+            align: 'center',
+            width: '8%',
             editor: {type: 'numberbox', options: {}}
         }, {
             title: '现有数量',
             field: 'inventory',
+            align: 'center',
+            width: '6%',
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: true,precision: '2'}}
         }, {
             title: '零售价',
             field: 'retailPrice',
-            //hidden: true,
+            align: 'center',
+            width: '6%',
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: true,precision: '2'}}
         }, {
             title: '进货价',
             field: 'tradePrice',
-            //hidden: true,
+            align: 'center',
+            width: '6%',
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: true,precision: '2'}}
@@ -388,14 +432,12 @@ $(function () {
             title: '最小规格',
             field: 'expSpec',
             hidden: true,
-            editor: {type: 'textbox', options: {
-                editable: false,
-                disabled: true}}
+            editor: {type: 'textbox'}
         }, {
             title: '最小单位',
             field: 'units',
             hidden: true,
-            editor: {type: 'textbox', options: {}}
+            editor: {type: 'textbox'}
         }
         ]],
         onClickCell: function (index, field, row) {
@@ -409,11 +451,12 @@ $(function () {
         }
     });
 
-    //入库分类字典
+    //入库类别
     $("#importClass").combobox({
         url: '/api/exp-import-class-dict/list',
         valueField: 'importClass',
         textField: 'importClass',
+        editable: false,
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
@@ -456,11 +499,12 @@ $(function () {
 
         return promise;
     }
-
+    //子库房
     $("#subStorage").combobox({
         url: '/api/exp-sub-storage-dict/list-by-storage?storageCode=' + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId,
         valueField: 'subStorage',
         textField: 'subStorage',
+        editable: false,
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
@@ -476,11 +520,12 @@ $(function () {
         }
     });
 
-
+    //招标方式
     $("#tenderType").combobox({
         url: '/api/exp-tender-type-dict/list',
         valueField: 'tenderTypeCode',
         textField: 'tenderTypeName',
+        editable: false,
         method: 'GET',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
@@ -604,14 +649,14 @@ $(function () {
             idField: 'supplierName',
             textField: 'supplierName',
             data: suppliers,
-            panelWidth: 500,
+            panelWidth: 450,
             fitColumns: true,
             columns: [[{
                 title: '供应商名称',
-                field: 'supplierName', width: 200, align: 'center'
+                field: 'supplierName', width: 180, align: 'center'
             }, {
                 title: '供应商代码',
-                field: 'supplierCode', width: 150, align: 'center'
+                field: 'supplierCode', width: 130, align: 'center'
             }, {
                 title: '输入码',
                 field: 'inputCode', width: 50, align: 'center'
@@ -657,41 +702,63 @@ $(function () {
         singleSelect: true,
         fit: true,
         fitColumns: true,
-        url: '/api/exp-stock/stock-record/',
+        url: '/api/exp-stock/stock-record?storageCode='+parent.config.storageCode,
         method: 'GET',
         columns: [[{
             title: '代码',
-            field: 'expCode'
+            field: 'expCode',
+            align: 'center',
+            width: '8%'
         }, {
             title: '名称',
-            field: 'expName'
+            field: 'expName',
+            align: 'center',
+            width: '8%'
         },  {
             title: '规格',
-            field: 'expSpec'
+            field: 'expSpec',
+            align: 'center',
+            width: '6%'
         }, {
             title: '最小规格',
-            field: 'minSpec'
+            field: 'minSpec',
+            align: 'center',
+            width: '8%'
         }, {
             title: '单位',
-            field: 'units'
+            field: 'units',
+            align: 'center',
+            width: '6%'
         }, {
             title: '最小单位',
-            field: 'minUnits'
+            field: 'minUnits',
+            align: 'center',
+            width: '8%'
         }, {
             title: '厂家',
-            field: 'firmId'
+            field: 'firmId',
+            align: 'center',
+            width: '8%'
         }, {
             title: '批发价',
-            field: 'tradePrice'
+            field: 'tradePrice',
+            align: 'center',
+            width: '8%'
         }, {
             title: '零售价',
-            field: 'retailPrice'
+            field: 'retailPrice',
+            align: 'center',
+            width: '8%'
         }, {
             title: '注册证号',
-            field: 'registerNo'
+            field: 'registerNo',
+            align: 'center',
+            width: '8%'
         }, {
             title: '许可证号',
-            field: 'permitNo'
+            field: 'permitNo',
+            align: 'center',
+            width: '8%'
         }]],
         onLoadSuccess:function(data){
             flag = flag+1;
@@ -706,7 +773,7 @@ $(function () {
             }
         },
         onClickRow: function (index, row) {
-            console.log(row);
+//            console.log(row);
             var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
             $(expCodeEdit.target).textbox('setValue', row.expCode);
 

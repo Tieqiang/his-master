@@ -16,6 +16,7 @@ $(function(){
         title:'消耗品分类字典维护',
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
+        rownumbers: true,
         singleSelect:true,
         columns:[[{
             title:'编号',
@@ -24,7 +25,8 @@ $(function(){
         },{
             title:'分类名称',
             field:'importClass',
-            width:"50%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字',invalidMessage:'输入值不在范围'}}
         }]],
         onClickRow: function (index, row) {

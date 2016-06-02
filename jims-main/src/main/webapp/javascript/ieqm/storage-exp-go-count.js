@@ -118,6 +118,7 @@ $(function () {
         columns: [[{
             title: '去向库房',
             field: 'receiver',
+            align: 'center',
             width: '10%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
@@ -130,40 +131,48 @@ $(function () {
         },{
             title: '代码',
             field: 'expCode',
-            width: '10%'
+            align: 'center',
+            width: '9%'
         },{
             title: '产品名称',
             field: 'expName',
-            width: '15%'
+            align: 'center',
+            width: '10%'
         }, {
             title: '产品类别',
             field: 'expForm',
+            align: 'center',
             width: '10%'
         }, {
             title: '规格',
             field: 'packageSpec',
-            width: '10%'
+            align: 'center',
+            width: '9%'
         },  {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
             width: '10%'
         }, {
             title: '厂家',
-            width: '10%',
-            field: 'firmId'
-
+            field: 'firmId',
+            align: 'center',
+            width: '10%'
         }, {
             title: "数量",
-            width: '10%',
-            field: 'quantity'
+            field: 'quantity',
+            align: 'center',
+            width: '10%'
         },{
             title: '零售金额',
-            width: '10%',
-            field: 'retailAmount'
+            field: 'retailAmount',
+            align: 'center',
+            width: '10%'
         },{
             title: '批发总价',
-            width: '10%',
-            field: 'payAmount'
+            field: 'payAmount',
+            align: 'center',
+            width: '10%'
         }]]
     });
     //定义子库房

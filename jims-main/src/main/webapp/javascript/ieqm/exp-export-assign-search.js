@@ -47,19 +47,23 @@ $(function () {
         columns: [[{
             title: '产品类型',
             field: 'expForm',
-            width: '9%'
+            align: 'center',
+            width: '20%'
         }, {
             title: '资金类型',
             field: 'fundItem',
-            width: '9%'
+            align: 'center',
+            width: '20%'
         }, {
             title: '分摊方式名称',
             field: 'assignName',
-            width: '9%'
+            align: 'center',
+            width: '20%'
         }, {
             title: '出库金额',
             field: 'payAmount',
-            width: '7%'
+            align: 'center',
+            width: '20%'
         }]]
     });
     //设置时间

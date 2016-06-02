@@ -18,6 +18,7 @@
 
 
 
+
 //V2 static
     String.format = function() {
         if( arguments.length == 0 )
@@ -466,10 +467,10 @@ function delCookie(name) {
 $.base64.utf8encode = true;
 
 $.ajaxSetup({
-    beforeSend: function (req) {
-        //var result=$.base64.btoa('000LRF:1') ;//加密
-        //req.setRequestHeader('Authorization', config.authentication);
-        //result = $.base64.atob(config.authentication)
+    beforeSend: function (xhr) {
+        console.log(config) ;
+        console.log(xhr);
+        xhr.setRequestHeader("aaa",'bbb')
     }
 });
 

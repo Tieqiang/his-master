@@ -14,6 +14,7 @@ $(function(){
         title:'产品经费支出字典',
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
+        rownumbers: true,
         singleSelect:true,
         columns:[[{
             title:'编号',
@@ -22,12 +23,14 @@ $(function(){
         },{
             title:'序号',
             field:'serialNo',
+            align: 'center',
             width:"20%",
             editor: 'numberbox'
         },{
             title:'支出经费名称',
             field:'fundItem',
-            width:"30%",
+            align: 'center',
+            width:"20%",
             editor:{type:'text',options:{
                 required:true,validType:'length[0,10]',missingMessage:'请输入五个以内的汉字'}
             }}]],
