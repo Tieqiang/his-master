@@ -403,7 +403,7 @@ $(document).ready(function () {
                         storage: parent.config.storageCode,
                         expCode: row.expCode,
                         location: row.expCode,
-                        units: row.units
+                        units: row.minUnits
                     }
                 });
                 //currentExpCode = row.expCode;

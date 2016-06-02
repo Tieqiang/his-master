@@ -76,12 +76,12 @@ public class BuyExpPlanFacade extends BaseFacade {
                 "          exp_storage_profile,\n" +
                 "          exp_price_list\n" +
                 "  WHERE  ( \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_STORAGE_PROFILE\".\"EXP_CODE\" ) and\n" +
-                "         ( \"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\" ) and\n" +
+                "         ( \"EXP_STOCK\".\"PACKAGE_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\" ) and\n" +
                 "         ( \"EXP_STOCK\".\"STORAGE\"  = \"EXP_STORAGE_PROFILE\".\"STORAGE\" ) and\n" +
                 "         ( \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\" ) and\n" +
                 "         ( \"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\" ) and\n" +
                 "\t\t\t( exp_stock.exp_code = exp_price_list.exp_code) and\n" +
-                "         ( exp_stock.EXP_SPEC = exp_price_list.EXP_SPEC) and\n" +
+                "         ( exp_stock.EXP_SPEC = exp_price_list.MIN_SPEC) and\n" +
                 "\t\t\t( exp_stock.firm_id = exp_price_list.firm_id) and\n" +
                 "         ( exp_price_list.start_date < sysdate and (sysdate <= exp_price_list.stop_date or exp_price_list.stop_date is null)) \n" +
                 "         and ( \"EXP_STOCK\".\"STORAGE\" = "+storageCode+" )\n" +
@@ -116,7 +116,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 " WHERE (\"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\")\n" +
                 "   and (\"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\")\n" +
                 "   and (exp_stock.exp_code = exp_price_list.exp_code)\n" +
-                "   and (exp_stock.EXP_SPEC = exp_price_list.EXP_SPEC)\n" +
+                "   and (exp_stock.EXP_SPEC = exp_price_list.MIN_SPEC)\n" +
                 "   and (exp_stock.firm_id = exp_price_list.firm_id)\n" +
                 "   and (exp_price_list.start_date < sysdate and\n" +
                 "       (sysdate <= exp_price_list.stop_date or\n" +

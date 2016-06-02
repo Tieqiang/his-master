@@ -21,7 +21,7 @@ $(function () {
             width: "17%"
         },  {
             title: '产品规格',
-            field: 'expSpec',
+            field: 'packageSpec',
             width: "17%"
         }, {
             title: '包装单位',

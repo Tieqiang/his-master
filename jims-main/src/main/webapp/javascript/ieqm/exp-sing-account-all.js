@@ -52,11 +52,11 @@ $(function () {
         columns: [[{
             title: '方式',
             field: 'way',
-            width: '6%'
+            width: '5%'
         }, {
             title: '代码',
             field: 'expCode',
-            width: '10%'
+            width: '8%'
         }, {
             title: '产品名称',
             field: 'expName',
@@ -80,23 +80,23 @@ $(function () {
         }, {
             title: '单位',
             field: 'packageUnits',
-            width: '7%'
+            width: '4%'
         }, {
             title: '厂家',
             field: 'firmId',
-            width: '10%'
+            width: '9%'
         }, {
             title: '批号',
-            width: '5%',
+            width: '4%',
             field: 'batchNo'
         } , {
             title: '入(出)库日期',
-            width: '11%',
+            width: '13%',
             field: 'actionDate',
             formatter: myFormatter2
         }, {
             title: '失效日期',
-            width: '11%',
+            width: '13%',
             field: 'expireDate',
             formatter: myFormatter2
         }, {
