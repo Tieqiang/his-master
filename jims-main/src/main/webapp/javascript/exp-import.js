@@ -404,7 +404,7 @@ $(function () {
             align: 'center',
             width: '8%',
             editor: {type: 'numberbox', options: {}}
-        }/*, {
+        }, {
             title: '现有数量',
             field: 'inventory',
             align: 'center',
@@ -412,7 +412,7 @@ $(function () {
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: true,precision: '2'}}
-        }*/, {
+        }, {
             title: '零售价',
             field: 'retailPrice',
             align: 'center',

@@ -88,33 +88,35 @@ public class ExpStockService {
     @Path("stock-record")
     public List<ExpStockRecord> listExpStockRecord(@QueryParam("storageCode")String storageCode,@QueryParam("expCode")String expCode,
                                                    @QueryParam("hospitalId")String hospitalId){
-        String sql = "SELECT distinct b.EXP_NAME,b.EXP_FORM,\n" +
-                "       c.EXP_CODE,\n" +
-                "       c.EXP_SPEC,\n" +
-                "       c.units,\n" +
-                "       c.min_spec,\n" +
-                "       c.min_UNITS,\n" +
-                "       c.FIRM_ID,\n" +
-                "       c.TRADE_PRICE,\n" +
-                "       c.TRADE_PRICE purchase_Price,\n" +
-                "       c.retail_price,\n" +
-                "       c.material_code,\n" +
-                "       c.Register_no,\n" +
-//                "       0 quantity," +
-                "       c.Permit_no,   c.amount_per_package " +
-//                "       d.quantity\n" +
-                "  FROM exp_dict b, exp_price_list c\n" +
-                " WHERE b.EXP_CODE = c.EXP_CODE\n" +
-                "   AND b.exp_spec = c.min_spec\n" +
-                "   AND c.start_date <= sysdate" +
-//                "   and b.exp_spec=d.exp_spec            \n" +
+        String sql = " SELECT distinct b.EXP_NAME,\n" +
+                "                 b.EXP_FORM,\n" +
+                "                 c.EXP_CODE,\n" +
+                "                 c.EXP_SPEC,\n" +
+                "                 c.units,\n" +
+                "                 c.min_spec,\n" +
+                "                 c.min_UNITS,\n" +
+                "                 c.FIRM_ID,\n" +
+                "                 c.TRADE_PRICE,\n" +
+                "                 c.TRADE_PRICE purchase_Price,\n" +
+                "                 c.retail_price,\n" +
+                "                 c.material_code,\n" +
+                "                 c.Register_no,\n" +
+                "                 c.Permit_no,\n" +
+                "                 c.amount_per_package,\n" +
+                "                 nvl(d.quantity,0) as quantity\n" +
+                "   FROM exp_dict b, exp_price_list c,exp_stock d\n" +
+                "  WHERE b.EXP_CODE = c.EXP_CODE\n" +
+                "    AND b.exp_spec = c.min_spec\n" +
+                "    AND c.start_date <= sysdate\n" +
+                "    and c.min_spec = d.exp_spec(+)\n" +
+                "    and c.exp_code = d.exp_code(+)\n" +
                 "    AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
-                "   AND b.EXP_CODE = '"+expCode+"'" +
-                "    and c.hospital_id = '"+hospitalId+"'" ;
-
-        return expStockFacade.createNativeQuery(sql,new ArrayList<Object>(),ExpStockRecord.class) ;
-
-    }
+                "    AND b.EXP_CODE = '"+expCode+"'\n" +
+                "    and c.exp_spec = d.package_spec(+)\n" +
+                "    and c.hospital_id = '"+hospitalId+"'\n" +
+                "    and d.storage(+) = '"+storageCode+"'" ;
+         return expStockFacade.createNativeQuery(sql,new ArrayList<Object>(),ExpStockRecord.class) ;
+     }
 
 
     /**
