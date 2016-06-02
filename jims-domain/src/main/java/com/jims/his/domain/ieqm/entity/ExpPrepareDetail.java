@@ -22,12 +22,12 @@ public class ExpPrepareDetail {
     private String impDocnoSecond  ;//入库单号
     private String expDocnoSecond  ;//出库单号
     private String operator ;       //扫码人员
-    private String print_flag ;     //是否打印
+    private String printFlag ;     //是否打印
 
     public ExpPrepareDetail(){
     }
 
-    public ExpPrepareDetail(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String operator, String print_flag) {
+    public ExpPrepareDetail(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String operator, String printFlag) {
         this.expBarCode = expBarCode;
         this.masterId = masterId;
         this.useFlag = useFlag;
@@ -39,7 +39,7 @@ public class ExpPrepareDetail {
         this.impDocnoSecond = impDocnoSecond;
         this.expDocnoSecond = expDocnoSecond;
         this.operator = operator;
-        this.print_flag = print_flag;
+        this.printFlag = printFlag;
     }
 
     @GenericGenerator(name = "generator", strategy = "uuid.hex")
@@ -154,12 +154,12 @@ public class ExpPrepareDetail {
     }
 
     @Column(name = "PRINT_FLAG", length = 2)
-    public String getPrint_flag() {
-        return print_flag;
+    public String getPrintFlag() {
+        return printFlag;
     }
 
-    public void setPrint_flag(String print_flag) {
-        this.print_flag = print_flag;
+    public void setPrintFlag(String printFlag) {
+        this.printFlag = printFlag;
     }
 }
 
