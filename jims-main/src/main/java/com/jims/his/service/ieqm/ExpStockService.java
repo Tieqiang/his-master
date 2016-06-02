@@ -101,16 +101,16 @@ public class ExpStockService {
                 "       c.material_code,\n" +
                 "       c.Register_no,\n" +
 //                "       0 quantity," +
-                "       c.Permit_no,   c.amount_per_package, " +
-                "       d.quantity\n" +
-                "  FROM exp_dict b, exp_price_list c,exp_stock d\n" +
+                "       c.Permit_no,   c.amount_per_package " +
+//                "       d.quantity\n" +
+                "  FROM exp_dict b, exp_price_list c\n" +
                 " WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "   AND b.exp_spec = c.min_spec\n" +
                 "   AND c.start_date <= sysdate" +
-                "   and b.exp_spec=d.exp_spec            \n" +
-                "   and b.exp_code=d.exp_code AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
+//                "   and b.exp_spec=d.exp_spec            \n" +
+                "    AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
                 "   AND b.EXP_CODE = '"+expCode+"'" +
-                "   and   c.exp_spec=d.package_spec and c.hospital_id = '"+hospitalId+"'  and d.storage='"+storageCode+"'" ;
+                "    and c.hospital_id = '"+hospitalId+"'" ;
 
         return expStockFacade.createNativeQuery(sql,new ArrayList<Object>(),ExpStockRecord.class) ;
 
