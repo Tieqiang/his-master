@@ -681,7 +681,7 @@ $(function () {
 
 
             rowDetail.expSpec = row.minSpec;
-            rowDetail.units = row.units;
+            rowDetail.units = row.minUnits;
             rowDetail.memos = row.memos;
             rowDetail.expImportDetailRegistNo = row.expImportDetailRegistNo;
             rowDetail.expImportDetailLicenceno = row.expImportDetailLicenceno;
