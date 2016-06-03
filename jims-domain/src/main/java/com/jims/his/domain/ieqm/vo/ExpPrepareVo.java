@@ -1,14 +1,13 @@
 package com.jims.his.domain.ieqm.vo;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 /**
  * Created by zhuq on 2016/6/2.
  * 高值耗材集合类
  */
 @XmlRootElement
-public class ExpPrepareVo implements Serializable {
+public class ExpPrepareVo {
     private String expBarCode ;         //条形码
     private String masterId ;           //备货记录ID
     private String useFlag ;            //是否使用
@@ -35,12 +34,13 @@ public class ExpPrepareVo implements Serializable {
     private String units;                //单位
     private String expFrom;                //高值耗材
     private String usePrice;               //出库价格
+    private String supplier;
 
     public ExpPrepareVo(){
 
     }
 
-    public ExpPrepareVo(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
+    public ExpPrepareVo(String supplier,String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
         this.expBarCode = expBarCode;
         this.masterId = masterId;
         this.useFlag = useFlag;
@@ -67,6 +67,15 @@ public class ExpPrepareVo implements Serializable {
         this.units = units;
         this.expFrom = expFrom;
         this.usePrice = usePrice;
+        this.supplier=supplier;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 
     public String getExpBarCode() {
