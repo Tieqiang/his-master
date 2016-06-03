@@ -4,6 +4,8 @@ import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.common.vo.BeanChangeVo;
 import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.facade.ExpStorageDeptFacade;
+import com.jims.his.domain.ieqm.facade.ExpSupplierCatalogFacade;
+import com.jims.his.domain.ieqm.vo.ExpSupplierVo;
 import org.jboss.logging.Param;
 
 import javax.inject.Inject;
@@ -21,10 +23,12 @@ import java.util.List;
 public class ExpStorageDeptService {
 
     private ExpStorageDeptFacade expStorageDeptFacade;
+    private ExpSupplierCatalogFacade expSupplierCatalogFacade;
 
     @Inject
-    public ExpStorageDeptService(ExpStorageDeptFacade expStorageDeptFacade) {
+    public ExpStorageDeptService(ExpStorageDeptFacade expStorageDeptFacade,ExpSupplierCatalogFacade expSupplierCatalogFacade) {
         this.expStorageDeptFacade = expStorageDeptFacade;
+        this.expSupplierCatalogFacade=expSupplierCatalogFacade;
     }
 
     @GET
@@ -44,6 +48,8 @@ public class ExpStorageDeptService {
     public List<ExpStorageDept> expStorageDeptLevelList(@QueryParam("hospitalId")String hospitalId, @QueryParam("storageCode") String storageCode) {
         return expStorageDeptFacade.getDeptByHospitalId(hospitalId, storageCode) ;
     }
+
+
     /**
      * 根据库房级别查询下级库房
      * @param hospitalId
@@ -87,6 +93,12 @@ public class ExpStorageDeptService {
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build() ;
         }
+    }
+
+    @GET
+    @Path("listLevelByThis")
+    public List<ExpSupplierVo> listLevelByThis(@QueryParam("hospitalId")String hospitalId, @QueryParam("storageCode") String storageCode,@QueryParam("exportClass") String exportClass) {
+        return expSupplierCatalogFacade.listLevelByThis(hospitalId, storageCode,exportClass) ;
     }
 
 }
