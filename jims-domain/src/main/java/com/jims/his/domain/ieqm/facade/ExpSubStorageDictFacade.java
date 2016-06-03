@@ -118,4 +118,14 @@ public class ExpSubStorageDictFacade extends BaseFacade {
         }
         return null;
     }
+
+    /**
+     * chenxy
+     * @param storageCode
+     * @return
+     */
+    public ExpSubStorageDict findByStorageCode(String storageCode) {
+        String sql="from ExpSubStorageDict where storageCode='"+storageCode+"'";
+        return (ExpSubStorageDict)entityManager.createQuery(sql).getSingleResult();
+    }
 }
