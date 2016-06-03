@@ -205,7 +205,7 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
      * 查找所有供货商和生产商
      * @return
      */
-    private List<ExpSupplierVo> findAll(List<ExpSupplierVo> expSupplierVos){
+    public List<ExpSupplierVo> findAll(List<ExpSupplierVo> expSupplierVos){
 //        List<ExpSupplierVo> expSupplierVos=new ArrayList<ExpSupplierVo>();
         List<ExpSupplierCatalog> list=this.findAll(ExpSupplierCatalog.class);
         for(ExpSupplierCatalog expSupplierCatalog:list){
@@ -213,8 +213,11 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
             e.setInputCode(expSupplierCatalog.getInputCode());
             e.setSupplierCode(expSupplierCatalog.getSupplierId());
             e.setSupplierName(expSupplierCatalog.getSupplier());
+            e.setId(expSupplierCatalog.getId());
             expSupplierVos.add(e);
         }
         return expSupplierVos;
     }
+
+
 }

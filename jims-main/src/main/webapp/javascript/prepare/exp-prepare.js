@@ -7,180 +7,124 @@ $(function () {
     var newBuyId = '';
     var maxBuyNo = 1;
     var currentExpCode = "";
+    var flag;
     var stopEdit = function () {
-        if (editIndex || editIndex == 0) {
-            $("#right").datagrid('endEdit', editIndex);
-            editIndex = undefined;
+         if (editIndex || editIndex == 0) {
+            $("#left").datagrid('endEdit', editIndex);
         }
     };
-
-
-    $("#expName").combobox({
-
-
-
+     /**
+     *供货商
+     */
+    var suppliers = [];
+    var promise = $.get("/api/exp-supplier-catalog/list-all", function (data) {
+        suppliers = data;
     });
-
-
-
-    //左侧列表初始化
-    $("#left").datagrid({
-        title: '备货记录',
-        singleSelect: false,
-        fit: true,
-        nowrap: false,
-        //url: '/api/buy-exp-plan/list-low?storageCode=' + parent.config.storageCode,
-        method: 'GET',
-        columns: [
-            [
-                {
-                    title: '消耗品',
-                    field: 'expId',
-                    width: "25%"
-                },
-                {
-                    title: '供应商',
-                    field: 'supplierId',
-                    width: "25%"
-                },
-                {
-                    title: '备货时间',
-                    field: 'prepareDate',
-                    width: "25%"
-                },
-                {
-                    title: '备货数量',
-                    field: 'prepareCount',
-                    width: "25%"
-                },
-                {
-                    title: '操作人',
-                    field: 'operator',
-                    hidden: true
-                },
-                {
-                    title: '备货人',
-                    field: 'preparePersonName',
-                    hidden: true
-                },
-                {
-                    title: '备货人电话',
-                    field: 'phone',
-                    hidden: true
-                },
-                {
-                    title: '备货价格',
-                    field: 'price',
-                    hidden: true
-                }
+    promise.done(function () {
+        $("#supplier").combogrid({
+            idField: 'id',
+            textField: 'supplierName',
+            data: suppliers,
+            panelWidth: 450,
+            fitColumns: true,
+            columns: [
+                [
+                    {
+                        title: '供应商名称',
+                        field: 'supplierName', width: 180, align: 'center'
+                    },
+                    {
+                        title: '供应商代码',
+                        field: 'supplierCode', width: 130, align: 'center'
+                    },
+                    {
+                        title: '输入码',
+                        field: 'inputCode', width: 50, align: 'center'
+                    }
+                ]
             ]
-        ],
-        onDblClickRow: function (index, row) {
-            var allRows = $('#right').datagrid('getRows');
-            var buyNo = 0;
-            if (allRows.length > 0) {
-                buyNo = $('#right').datagrid('getData').rows[allRows.length - 1].buyNo;
-            }
-            buyNo = maxBuyNo >= buyNo ? maxBuyNo : buyNo;
-            $('#right').datagrid('appendRow', {
-               /* buyNo: buyNo + 1,
-                expCode: row.expCode,
-                expName: row.expName,
-                firmId: row.firmId,
-                expSpec: row.expSpec,
-                units: row.units,
-                purchasePrice: row.purchase,
-                expForm: row.expForm,
-                storer: parent.config.staffName,
-                stockquantityRef: row.quantity,
-                retailPrice: row.retailPrice,
-                storage: row.storage,
-                packSpec: row.packSpec,
-                packUnit: row.packUnit,
-                buyId: newBuyId*/
-            });
-        }
+        })
     });
+
+
+
+
+
 
     //右侧列表初始化
     $("#right").datagrid({
-        title: '备货明细记录',
+
+        /**
+
+         private String expBarCode ;     //条形码
+         private String masterId ;       //备货记录ID
+         private String useFlag ;        //是否使用
+         private String useDate ;        //使用日期
+         private String usePatientId ;   //使用病人
+         private String useDept ;        //使用科室
+         private String impDocnoFirst   ;//入库单号
+         private String expDocnoFirst   ;//出库单号
+         private String impDocnoSecond  ;//入库单号
+         private String expDocnoSecond  ;//出库单号
+         private String operator ;       //扫码人员
+         private String printFlag ;     //是否打印
+         *
+         *
+         *
+         *
+         *
+         */
+        title: '备货完成明细记录',
         singleSelect: true,
         fit: true,
         fitColumns: true,
         columns: [
             [
+
                 {
+                    title: 'id',
+                    field: 'id',
+                    hidden:true
+                },{
                     title: '条形码',
                     field: 'expBarCode',
-                    width: "10%"
+                    width: "20%"
                 },
                 {
                     title: '备货记录ID',
                     field: 'masterId',
-                    width: "10%"
+                    width: "10%",
+                    hidden:true
                 },
                 {
                     title: '是否使用',
                     field: 'useFlag',
-                    width: "5%"
+                    width: "15%"
                 },
                 {
                     title: '使用日期',
                     field: 'useDate',
-                    width: "10%"
+                    width: "20%"
                 },
                 {
                     title: '使用病人',
                     field: 'usePatientId',
-                    width: "5%"
+                    width: "20%"
                 },
                 {
                     title: '使用科室',
-                    field: 'userDept',
-                    width: "10%"
-                },
-                {
-                    title: '一级库入库单号',
-                    field: 'impDocNoFirst',
-                    width: "10%"
-
-                },
-                {
-                    title: '一级库出库单号',
-                    field: 'expDocNoFirst',
-                    width: "10%"
-                },
-                {
-                    title: '二级库入库单号',
-                    field: 'impDocNoSecond',
-                    width: "10%"
-                },
-                {
-                    title: '二级库出库单号',
-                    field: 'expDocNoSecond',
-                    width: "10%"
+                    field: 'useDept',
+                    width: "15%"
                 },
                 {
                     title: '扫码人员',
                     field: 'operator',
-                    width: "5%"
+                    width: "20%"
 
-                },
-                {
-                    title: '是否打印',
-                    field: 'printFlag',
-                    width: "5%"
                 }
             ]
-        ],
-        onClickRow: function (index, row) {
-            stopEdit();
-
-            $(this).datagrid('beginEdit', index);
-            editIndex = index;
-        }
-    });
+        ]
+     });
 
     $("#top").datagrid({
         toolbar: '#ft',
@@ -197,155 +141,103 @@ $(function () {
     $("#dg").layout({
         fit: true
     });
-
-    $('#buyId').combobox({
-
-
-
-    });
-    //新增按钮功能
-    $("#add").on('click', function () {
-        stopEdit();
-
-        var rows = $('#right').datagrid("getRows");
-
-
-        var buyNo = 0;
-        if (rows.length > 0) {
-            buyNo = $('#right').datagrid('getData').rows[rows.length - 1].buyNo;
-        }
-        buyNo = maxBuyNo >= buyNo ? maxBuyNo : buyNo;
-        $('#right').datagrid('appendRow', {buyNo: buyNo + 1, buyId: newBuyId});
-
-        var addRowIndex = $("#right").datagrid('getRowIndex', rows[rows.length - 1]);
-        editIndex = addRowIndex;
-        $("#right").datagrid('selectRow', editIndex);
-        $("#right").datagrid('beginEdit', editIndex);
-
-    });
-    //删除按钮功能
     $("#delete").on('click', function () {
-        var row = $('#right').datagrid('getSelected');
-        var index = $('#right').datagrid('getRowIndex', row);
+        var row = $('#left').datagrid('getSelected');
+        var index = $('#left').datagrid('getRowIndex', row);
         if (index == -1) {
             $.messager.alert("提示", "请选择删除的行", "info");
         } else {
-            $('#right').datagrid('deleteRow', index);
+            $('#left').datagrid('deleteRow', index);
             editIndex = undefined;
         }
     });
-    //加入按钮功能
-    $("#join").on('click', function () {
-
-        var leftRows = $("#left").datagrid('getSelections');
-        if (leftRows.length == 0) {
-            $.messager.alert("系统提示", "请先选择消耗品待选数据", 'error');
-            return false;
-        } else {
-            var rows = $('#right').datagrid('getRows');
-            var buyNo = 0;
-            if (rows.length > 0) {
-                buyNo = $('#right').datagrid('getData').rows[rows.length - 1].buyNo;
-            }
-            buyNo = maxBuyNo >= buyNo ? maxBuyNo : buyNo;
-            $.each(leftRows, function (index, row) {
-
-                buyNo = buyNo + 1;
-                $('#right').datagrid('appendRow', {
-                    buyNo: buyNo,
-                    expCode: row.expCode,
-                    expName: row.expName,
-                    firmId: row.firmId,
-                    packSpec: row.packSpec,
-                    packUnit: row.packUnit,
-                    purchasePrice: row.purchase,
-                    expForm: row.expForm,
-                    storer: parent.config.staffName,
-                    stockquantityRef: row.quantity,
-                    retailPrice: row.retailPrice,
-                    storage: row.storage,
-                    buyId: newBuyId
-                });
-
-            });
-
-        }
-
-    });
-
-    //新建按钮功能
-    $("#new").on('click', function () {
-
-        $.get("/api/buy-exp-plan/get-buy-id", function (buyId) {
-            newBuyId = buyId;
-            console.log("getBuyId" + newBuyId);
-            $("#right").datagrid('loadData', {total: 0, rows: []});
-        });
-
-    });
-
-
-    var checkValidate = function (rows) {
-        for (var i = 0; i < rows.length; i++) {
-            //删除空行
-            if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
-                $("#right").datagrid('selectRow', i);
-                $("#right").datagrid("loadData", data);
-                return false;
-
-            }
-            if (rows[i].wantNumber == undefined || rows[i].wantNumber <= 0) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行:计划数量不能小于0 请重新填写", 'error');
-                $("#right").datagrid('selectRow', i);
-
-                return false;
-            }
-
-        }
-        return true;
-    };
-
-    //新增按钮
+     /**
+     * 备货
+     */
     $("#addBtn").on('click', function () {
-        $('#dlg').dialog('open').dialog('center').dialog('setTitle', '新建调查问卷');
-    });
+          var supplierId=$("#supplier").combogrid("getValue");
+        if(supplierId==null || ""==supplierId){
+            alert("请选择供货厂商！！");
+        }else{
+                flag=0;
+                $("#left").datagrid('appendRow', {});
+                var rows = $("#left").datagrid('getRows');
+                var appendRowIndex = $("#left").datagrid('getRowIndex', rows[rows.length - 1]);
+                if (editIndex || editIndex == 0) {
+                    $("#left").datagrid('endEdit', editIndex);
+                }
+                editIndex = appendRowIndex;
+                $("#left").datagrid('beginEdit', editIndex);
+         }
+     });
     //保存按钮操作
     $("#save").on('click', function () {
         stopEdit();
-
-        var rows = $("#right").datagrid('getRows');
+        var rows = $("#left").datagrid('getRows');
         if (rows.length == 0) {
             $.messager.alert("系统提示", "备货列表为空，不允许保存", 'error');
             return false;
+        }else{
+            //数据校验
+//            if(dataValid()){
+//            var rows = $("#left").datagrid('getRows');
+//            for (var i = 0; i < rows.length; i++) {
+////            alert(rows[i].amount );
+//                if (rows[i].amount == 0) {
+//                    $.messager.alert("系统提示", "第" + i + "行备货数量为0 请重新填写", 'error');
+//                    return false;
+//                }
+//            }
+//            var supplierId=$("#supplier").combogrid("getValue");
+//            alert(supplierId);
+//            if(supplierId==null || supplierId==""){
+//                return false;
+//            }
+                 var expCodes="";
+                var amounts="";
+                var prices="";
+                for (var i = 0; i < rows.length; i++) {
+
+                     expCodes+= rows[i].expCode+",";
+                     amounts+=rows[i].amount+",";
+                     prices+=rows[i].purchasePrice+",";
+                 }
+                expCodes=expCodes.substring(0,expCodes.length-1);
+                 var supplierId=$("#supplier").combogrid("getValue");
+                 $.postJSON("/api/exp-prepare/make-data?supplierId="+supplierId+"&expCodes="+expCodes+"&operator="+parent.config.staffName+"&amounts="+amounts+"&prices="+prices, function (data) {
+                    //List<ExpPrepareDetail>
+                     console.info(data);
+                    $("#right").datagrid("loadData",data);
+                 }, function (data) {//List<ExpPrepareDetail>
+                     console.info(data);
+                    $("#right").datagrid("loadData",data);
+                    $.messager.alert("系统提示", "error", 'error');
+                })
+//            }
         }
-        if (checkValidate(rows)) {
-            for (var i = 0; i < rows.length; i++) {
-                rows[i].buyId = newBuyId;
-                rows[i].flag = 1;
+     });
+    /**
+     * 进行数据校验
+     */
+  function dataValid() {
+        alert(1);
+        var rows = $("#left").datagrid('getRows');
+        for (var i = 0; i < rows.length; i++) {
+//            alert(rows[i].amount );
+            if (rows[i].amount == 0) {
+                $.messager.alert("系统提示", "第" + i + "行备货数量为0 请重新填写", 'error');
+                return false;
             }
-
-            var updated = [];
-            var deleted = $("#right").datagrid('getChanges', "deleted");
-            var expChangeVo = {};
-            expChangeVo.inserted = rows;
-            expChangeVo.updated = updated;
-            expChangeVo.deleted = deleted;
-
-            $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
-                $.messager.alert("系统提示", "保存成功", "info");
-                $("#right").datagrid('loadData', {total: 0, rows: []});
-                $.get("/api/buy-exp-plan/get-buy-id", function (data) {
-                    newBuyId = data;
-                });
-
-            }, function (data) {
-                $.messager.alert('失败提示', data.responseJSON.errorMessage, "error");
-            })
         }
-
-    });
-    //打印按钮操作
+        var supplierId=$("#supplier").combogrid("getValue");
+        alert(supplierId);
+        if(supplierId==null || supplierId==""){
+            return false;
+        }
+        alert("ok");
+        return true;
+     }
+        //打印按钮操作
     $("#printDiv").dialog({
         title: '打印预览',
         width: 1000,
@@ -354,9 +246,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-
-
-            $("#report").prop("src", parent.config.defaultReportPath + "buy-exp-plan.cpt");
+              $("#report").prop("src", parent.config.defaultReportPath + "buy-exp-plan.cpt");
         }
     });
     $("#print").on('click', function () {
@@ -370,4 +260,217 @@ $(function () {
     })
 
 
+    $("#stockRecordDialog").dialog({
+        title: '选择规格',
+        width: 700,
+        height: 300,
+        closed: false,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#stockRecordDatagrid").datagrid('load', {
+//                storageCode: parent.config.storageCode,
+                expCode: currentExpCode,
+                hospitalId: parent.config.hospitalId
+            });
+            $("#stockRecordDatagrid").datagrid('selectRow', 0)
+        }
+    });
+
+    $("#stockRecordDatagrid").datagrid({
+        singleSelect: true,
+        fit: true,
+        fitColumns: true,
+        url: '/api/exp-prepare/exp-spec',
+        method: 'GET',
+        columns: [
+            [
+                {
+                    title: '代码',
+                    field: 'expCode',
+                    align: 'center',
+                    width: '16%'
+                },
+                {
+                    title: '名称',
+                    field: 'expName',
+                    align: 'center',
+                    width: '17%'
+                },
+                {
+                    title: '包装规格',
+                    field: 'expSpec',
+                    align: 'center',
+                    width: '10%'
+                },
+                {
+                    title: '最小规格',
+                    field: 'minSpec',
+                    align: 'center',
+                    width: '10%'
+                },
+                {
+                    title: '包装单位',
+                    field: 'units',
+                    align: 'center',
+                    width: '10%'
+                },
+                {
+                    title: '最小单位',
+                    field: 'minUnits',
+                    align: 'center',
+                    width: '10%'
+                },
+                {
+                    title: '厂家',
+                    field: 'firmId',
+                    align: 'center',
+                    width: '17%'
+                },
+                {
+                    title: '价格',
+                    field: 'purchasePrice',
+                    align: 'center',
+                    width: '10%'
+                }
+             ]
+        ],
+//        purchasePrice
+        onLoadSuccess: function (data) {
+            flag = flag + 1;
+            if (flag == 1) {
+                if (data.total == 0 && editIndex != undefined) {
+                    $.messager.alert('系统提示', '无法获取产品的价格信息！', 'info');
+                    $("#stockRecordDialog").dialog('close');
+                 }
+                flag = 0;
+            }
+        },
+        onClickRow: function (index, row) {
+
+            var rowDetail = $("#left").datagrid('getData').rows[editIndex];
+            rowDetail.expCode=row.expCode;
+            rowDetail.expName=row.expName;
+            rowDetail.packageSpec=row.expSpec;
+            rowDetail.packageUnits=row.units;
+            rowDetail.units=row.minUnits;
+            rowDetail.purchasePrice=row.purchasePrice;
+            $("#left").datagrid('endEdit', editIndex);
+            $("#left").datagrid('beginEdit', editIndex);
+            $("#stockRecordDialog").dialog('close');
+        }
+     });
+
+    var  supplierId=$("#supplier").combogrid("getValue");
+    //左侧列表初始化
+    $("#left").datagrid({
+        title: '备货列表',
+        singleSelect: false,
+        fit: true,
+        nowrap: false,
+        method: 'GET',
+        columns: [
+            [
+                {
+                    title: '品名',
+                    field: 'expName',
+                    align: 'center',
+                    width: '25%',
+                    editor: {
+                        type: 'combogrid', options: {
+                            mode: 'remote',
+                            url: '/api/exp-prepare/find-by-firm-name?supplierId='+supplierId,
+                            singleSelect: true,
+                            method: 'GET',
+                            panelWidth: 300,
+                            idField: 'expName',
+                            textField: 'expName',
+                            columns: [
+                                [
+                                    {
+                                        title: '代码',
+                                        field: 'expCode',
+                                        align: 'center',
+                                        width: 110
+                                    },
+                                    {
+                                        title: '品名',
+                                        field: 'expName',
+                                        align: 'center',
+                                        width: 120
+                                    },
+                                    {
+                                        title: '拼音码',
+                                        field: 'inputCode',
+                                        align: 'center',
+                                        width: 50
+                                    }
+                                ]
+                            ],
+                            onClickRow: function (index, row) {
+                                  var rowDetail = $("#left").datagrid('getData').rows[editIndex];
+                                  rowDetail.expCode=row.expCode;
+//                                var ed = $("#left").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+//                                $(ed.target).textbox('setValue', row.expCode);
+                                currentExpCode = row.expCode;
+                                alert(currentExpCode);
+                                $("#stockRecordDialog").dialog('open');
+                            },
+                            keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+                                enter: function (e) {
+                                    var row = $(this).combogrid('grid').datagrid('getSelected');
+                                    if (row) {
+//                                        var ed = $("#left").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+//                                        $(ed.target).textbox('setValue', row.expCode);    var rowDetail = $("#left").datagrid('getData').rows[editIndex];
+                                        var rowDetail = $("#left").datagrid('getData').rows[editIndex];
+                                        rowDetail.expCode=row.expCode;
+                                        currentExpCode = row.expCode;
+                                        $("#stockRecordDialog").dialog('open');
+                                    }
+                                    $(this).combogrid('hidePanel');
+                                }
+                            })
+                        }
+                    }
+                },
+                {
+                    title: '包装规格',
+                    field: 'packageSpec',
+                    width: "25%"
+                },
+                {
+                    title: '价格',
+                    field: 'purchasePrice',
+                    width: "25%"
+                },
+                {
+                    title: '备货数量',
+                    field: 'amount',
+                    width: "25%",
+                    editor: {type: 'textbox', options: {}}
+                },
+                {
+                    title: 'expCode',
+                    field: 'expCode',
+                    hidden: true
+                },
+                {
+                    title: 'packageUnits',
+                    field: 'packageUnits',
+                    hidden: true
+                },
+                {
+                    title: 'units',
+                    field: 'units',
+                    hidden: true
+                },
+                {
+                    title: 'expSpec',
+                    field: 'expSpec',
+                    hidden: true
+                }
+            ]
+        ]
+     });
 });
