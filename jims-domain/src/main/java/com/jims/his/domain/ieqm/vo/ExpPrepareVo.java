@@ -1,13 +1,14 @@
 package com.jims.his.domain.ieqm.vo;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 /**
  * Created by zhuq on 2016/6/2.
  * 高值耗材集合类
  */
 @XmlRootElement
-public class ExpPrepareVo {
+public class ExpPrepareVo implements Serializable {
     private String expBarCode ;         //条形码
     private String masterId ;           //备货记录ID
     private String useFlag ;            //是否使用

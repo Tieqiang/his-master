@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "EXP_PREPARE_MASTER", schema = "JIMS")
-public class ExpPrepareMaster {
+public class ExpPrepareMaster implements java.io.Serializable{
     private String id ;
     private String expId ;               //消耗品
     private String supplierId ;          //供应商
