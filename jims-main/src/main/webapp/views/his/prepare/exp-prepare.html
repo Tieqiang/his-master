@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>高值耗材备货记录</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div class="easyui-layout" id="dg">
+    <div region="north" border="false">
+        <table id="top" class="easyui-datagrid" style="width:100%"></table>
+    </div>
+    <div region="south" border="false">
+        <table id="bottom" class="easyui-datagrid" style="width:100%"></table>
+    </div>
+    <div region="west" border="false" style="width:300px;">
+        <table id="left" class="easyui-datagrid"></table>
+    </div>
+    <div region="center" border="false">
+        <table id="right" class="easyui-datagrid">
+        </table>
+
+    </div>
+</div>
+<div id="ft">
+    供货厂商：<input id="supplier" class="easyui-combobox" style="width:250px"/>
+    <!--消耗品：<input id="buyId" class="easyui-combobox" style="width:250px"/>-->
+</div>
+<div id="tb">
+    <!--<a href="#" id="add" class="easyui-linkbutton" iconCls="icon-add">增加备货明细</a>-->
+    <a href="#" id="addBtn" class="easyui-linkbutton" iconCls="icon-add">备货</a>
+    <a href="#" id="delete" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    <!--<a href="#" id="join" class="easyui-linkbutton" iconCls="">加入</a>-->
+    <!--<a href="#" id="new" class="easyui-linkbutton" iconCls="">清空</a>-->
+    <a href="#" id="save" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+    <!--<a href="#" id="print" class="easyui-linkbutton" iconCls="icon-print">打印</a>-->
+</div>
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px" id="report">
+    </iframe>
+</div>
+<div id="stockRecordDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="stockRecordDatagrid">
+
+    </div>
+</div>
+<!--<div id="dlg" class="easyui-dialog" style="width:600px;height:500px;padding:10px 20px"-->
+     <!--closed="true" buttons="#dlg-buttons">-->
+    <!--<div class="ftitle">信息</div>-->
+    <!--<form id="fm" method="post" novalidate>-->
+        <!--<div class="fitem">-->
+            <!--<label>消耗品：</label>-->
+            <!--<input type="text" value="" class="easyui-textbox" >-->
+        <!--</div>-->
+        <!--<div class="fitem">-->
+            <!--<label>供应商：</label>-->
+            <!--<input type="text" value="" class="easyui-textbox">-->
+        <!--</div>-->
+        <!--<div class="fitem">-->
+            <!--<label>备货时间：</label>-->
+            <!--<input id="date1" editable="false" class="easyui-datebox" formatter="yyyy-MM-dd" required="false">-->
+        <!--</div>-->
+        <!--<div class="fitem">-->
+            <!--<label>备货数量：</label>-->
+            <!--<input type="text"  class="easyui-textbox">-->
+        <!--</div>-->
+        <!--<div class="fitem">-->
+            <!--<label>扫码人员：</label>-->
+            <!--<input type="text" class="easyui-textbox">-->
+        <!--</div>-->
+
+    <!--</form>-->
+
+
+<!--</div>-->
+
+
+
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../javascript/prepare/exp-prepare.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

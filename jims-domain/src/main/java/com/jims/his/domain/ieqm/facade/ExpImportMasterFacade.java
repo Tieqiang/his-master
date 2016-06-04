@@ -127,9 +127,9 @@ public class ExpImportMasterFacade extends BaseFacade {
                  "   WHERE M.STORAGE = '"+storage+"' " +
                 "          AND M.HOSPITAL_ID = '"+hospitalId+"' " +
                 "          AND M.DOCUMENT_NO(+) = D.DOCUMENT_NO   \n" +
-                "          AND D.package_spec = A.exp_spec   \n" +
+                "          AND D.exp_spec = A.exp_spec   \n" +
                 "          AND D.exp_code = A.exp_code   \n" +
-                "          AND D.package_units = A.units   " ;
+                "          AND D.units = A.units   " ;
 
         if (payRadio != null && payRadio.trim().length() > 0) {
             if(payRadio.trim().equals("0")){

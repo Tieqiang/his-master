@@ -19,6 +19,7 @@ public class ExpExportClassDict implements java.io.Serializable {
 
 	private String id;
 	private String exportClass;
+    private String direction;
 
 	// Constructors
 
@@ -52,5 +53,12 @@ public class ExpExportClassDict implements java.io.Serializable {
 	public void setExportClass(String exportClass) {
 		this.exportClass = exportClass;
 	}
+    @Column(name="direction")
+    public String getDirection() {
+        return direction;
+    }
 
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 }
