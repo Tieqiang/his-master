@@ -1095,7 +1095,7 @@ $(function () {
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
-            detail.tradePrice = rows[i].retailPrice;
+            detail.tradePrice = rows[i].purchasePrice;
             detail.tallyFlag = 0;
             detail.killflag = rows[i].killflag;
             detail.discount = rows[i].discount;

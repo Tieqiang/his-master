@@ -5,6 +5,8 @@ import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.ieqm.entity.*;
 import com.jims.his.domain.ieqm.vo.*;
+import com.sun.corba.se.impl.protocol.AddressingDispositionException;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.text.SimpleDateFormat;
@@ -29,7 +31,7 @@ public class ExpDisburseFacade extends BaseFacade {
 
 
     @Transactional
-    public void expDisburseVo(ExpDisburseVo disburseVo) {
+    public void expDisburseVo(ExpDisburseVo disburseVo) throws Exception {
         //1、向exp_disburse_rec表中写入一条记录
         saveDisburseRec(disburseVo);
         //2、向 exp_disburse_rec_detail中写入每一条付款的明细
@@ -61,14 +63,35 @@ public class ExpDisburseFacade extends BaseFacade {
         merge(dis) ;
     }
     //3、更新exp_import_detail中的已付款数量
-    private void updateImportDetail(ExpDisburseVo disburseVo) {
+    private void updateImportDetail(ExpDisburseVo disburseVo) throws Exception {
         List<ExpDisburseRecDetail> details = disburseVo.getExpDisburseRecDetailBeanChangeVo().getInserted() ;
         for(ExpDisburseRecDetail detail :details){
             String id  =  detail.getId();
+            String documentNo = detail.getDocumentNo() ;
+            ExpImportMaster expImportMaster = getExpImportMasterByDocumentNo(documentNo);
+            double payed=expImportMaster.getAccountPayed() ;
             Double disCount = detail.getDisburseCount();
             ExpImportDetail imDetail = get(ExpImportDetail.class,id);
+            double addPay = imDetail.getPurchasePrice() * disCount ;
+            expImportMaster.setAccountPayed(payed + addPay);
             imDetail.setDisburseCount(disCount);
             merge(imDetail);
+            merge(expImportMaster) ;
+        }
+    }
+
+    /**
+     * 根据入库单据号查询入库主记录
+     * @param documentNo
+     * @return
+     */
+    private ExpImportMaster getExpImportMasterByDocumentNo(String documentNo) throws Exception {
+        String hql = "from ExpImportMaster master where master.documentNo = '"+documentNo+"'" ;
+        List<ExpImportMaster> expImportMasters = createQuery(ExpImportMaster.class,hql,new ArrayList<Object>()).getResultList() ;
+        if(expImportMasters.size()==1){
+            return expImportMasters.get(0) ;
+        }else{
+            throw  new Exception("单据号为："+documentNo+"入库记录有误") ;
         }
     }
 
