@@ -135,7 +135,7 @@ public class ExpPrepareService {
     /**
      * 根据条形码获取高值耗材信息
      */
-    @GET
+    @POST
     @Path("find-by-bar-code")
     public Map<String, Object> findByBarCode(@QueryParam("barCode") String barCode) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -161,7 +161,7 @@ public class ExpPrepareService {
      * @param patientId
      * @return
      */
-    @POST
+    @GET
     @Path("prepare-fee")
     public Map<String,Object> prepareFee(@QueryParam("barCode") String barCode, @QueryParam("storageCode") String storageCode, @QueryParam("operator") String operator, @QueryParam("patientId") String patientId,@QueryParam("hospitalId") String hospitalId) {
         Map<String,Object> returnVal=new HashMap<String,Object>();
@@ -181,6 +181,10 @@ public class ExpPrepareService {
             } else if (importNoPrefix.length() == 6) {
                 documentNo = expSubStorageDict.getImportNoPrefix() + "0000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
             }
+            /**
+             * 跟新 exp_sub_storage_dict.import_no_ava
+             */
+
             String documentNo2 = "";//出库单据号
             String suffer2 = expSubStorageDict.getExportNoPrefix();//前缀
             if (suffer2.length() <= 4) {
@@ -204,7 +208,7 @@ public class ExpPrepareService {
      * 回滚操作
      * @return
      */
-    @POST
+    @GET
     @Path("roll-back-prepare")
     public Map<String,Object> rollBackPrepare(@QueryParam("inDocumentNo") String inDocumentNo,@QueryParam("outDocumentNo") String outDocumentNo,@QueryParam("barCode") String barCode){
         Map<String,Object> retVal=this.expPrepareMasterFacade.rollBack(inDocumentNo,outDocumentNo,barCode);

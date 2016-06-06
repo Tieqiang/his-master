@@ -191,10 +191,12 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportDetail.setPackageUnits(expPriceList.getUnits());
             expExportDetail.setInventory(0.0);//现有数量为0
             expExportDetail.setAssignCode("");//分摊方式
+            expExportDetail= super.merge(expExportDetail);
             /**
              * 库存表 exp_stock
              */
             ExpStock expStock=new ExpStock();
+            expStock.setDocumentNo(documentNo);
             expStock.setStorage(storageCode);//入库单据号
             expStock.setExpCode(expPriceList.getExpCode());
             expStock.setExpSpec(expPriceList.getMinSpec());
@@ -216,7 +218,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             ExpPrepareDetail expPrepareDetail=this.expPrepareDetailFacade.findByCode(barCode);
             expPrepareDetail.setUseFlag("1");//已经使用
             expPrepareDetail.setUseDate(sdf.format(new Date()));
-            expPrepareDetail.setUseDept(null);
+            expPrepareDetail.setUseDept(storageCode);
             expPrepareDetail.setUsePatientId(patientId);
             expPrepareDetail=super.merge(expPrepareDetail);
             expPrepareVo.setExpCode(expPriceList.getExpCode());
@@ -235,6 +237,10 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expPrepareVo.setOperator(operator);
             expPrepareVo.setInDocumentNo(documentNo);
             expPrepareVo.setOutDocumentNo(documentNo2);
+            ExpSubStorageDict expSubStorageDict1=this.expSubStorageDictFacade.findByStorageCode(storageCode);
+            expSubStorageDict1.setImportNoAva(expSubStorageDict1.getImportNoAva()+1);
+            expSubStorageDict1.setExportNoAva(expSubStorageDict1.getExportNoAva()+1);
+            expSubStorageDict1=expSubStorageDictFacade.save(expSubStorageDict1);
          } catch (Exception e) {
             e.printStackTrace();
         }

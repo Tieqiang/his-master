@@ -128,4 +128,14 @@ public class ExpSubStorageDictFacade extends BaseFacade {
         String sql="from ExpSubStorageDict where storageCode='"+storageCode+"'";
         return (ExpSubStorageDict)entityManager.createQuery(sql).getSingleResult();
     }
+
+    /**
+     * save
+     * @param expSubStorageDict1
+     * @return
+     */
+    @Transactional
+    public ExpSubStorageDict save(ExpSubStorageDict expSubStorageDict1) {
+        return super.merge(expSubStorageDict1);
+    }
 }

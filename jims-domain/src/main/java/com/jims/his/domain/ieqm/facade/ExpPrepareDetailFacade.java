@@ -51,7 +51,7 @@ public class ExpPrepareDetailFacade extends BaseFacade {
      * @return
      */
     public String findByExpBarCode(String barCode) {
-        String sql="select masterId from ExpPrepareDerail where expBarCode='"+barCode+"'";
+        String sql="select masterId from ExpPrepareDetail where expBarCode='"+barCode+"'";
         List<String> list=entityManager.createQuery(sql).getResultList();
         if(list!=null&&!list.isEmpty())
             return list.get(0);
