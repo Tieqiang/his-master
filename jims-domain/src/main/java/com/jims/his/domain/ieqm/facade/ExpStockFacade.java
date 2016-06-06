@@ -355,7 +355,7 @@ public class ExpStockFacade extends BaseFacade {
                 " where a.exp_code = b.exp_code(+)\n" +
                 "   and a.storage = b.storage(+)\n" +
                 "    and a.PACKAGE_spec = b.exp_spec\n" +
-                "   and a.PACKAGE_units = b.units(+)\n" +
+                "   and a.PACKAGE_units = b.PACKAGE_units(+)\n" +
                 "   and a.storage = '" + storage + "'\n" +
                 "   and a.hospital_id = '" + hospitalId + "'" +
                 "   and a.exp_code = c.exp_code\n" +
