@@ -143,7 +143,6 @@ $(function () {
         }, {
             title: '去向库房',
             field: 'receiver',
-            width: "15%",
             align: 'center',
             width: "13%",
             formatter: function (value, row, index) {

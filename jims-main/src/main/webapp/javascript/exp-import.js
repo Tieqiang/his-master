@@ -538,17 +538,17 @@ $(function () {
     $('#importDate').datetimebox({
         required: true,
         showSeconds: true,
-        value: 'dateTime',
-        formatter: formatterDate,
-        onSelect: function (date) {
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var time = $('#importDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-            $('#importDate').datetimebox('setText', dateTime);
-            $('#importDate').datetimebox('hidePanel');
-        }
+        value: 'dateTime'
+//        formatter: formatterDate,
+//        onSelect: function (date) {
+//            var y = date.getFullYear();
+//            var m = date.getMonth() + 1;
+//            var d = date.getDate();
+//            var time = $('#importDate').datetimebox('spinner').spinner('getValue');
+//            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//            $('#importDate').datetimebox('setText', dateTime);
+//            $('#importDate').datetimebox('hidePanel');
+//        }
     });
 
     //负责人数据加载

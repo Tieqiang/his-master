@@ -1,6 +1,8 @@
 /**
  * Created by heren on 2015/10/23.
  */
+
+
 $(function () {
 
     var exportToFlag = undefined;//退库的时候，标志，用于区分是否退货给供应商。
@@ -66,14 +68,7 @@ $(function () {
     var upStorageFlag;
     var panelHeight = $(window).height - 300;
     //库房字典
-    var depts = [];
-    var deptsBack = [];
-    var saveFlag;
-    var promise = $.get("/api/exp-storage-dept/listLevelDown?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode, function (data) {
-        depts = data;
-        deptsBack = data;
-        return depts;
-    });
+
 
     //出库日期
     $('#exportDate').datetimebox({
@@ -393,49 +388,81 @@ $(function () {
     //出库类别
     $("#exportClass").combobox({
         url: '/api/exp-export-class-dict/list',
-        valueField: 'exportClass',
+        valueField: 'direction',
         textField: 'exportClass',
         method: 'GET',
-        onLoadSuccess: function () {
-            var data = $(this).combobox('getData');
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].exportClass == "发放出库") {
-                    $(this).combobox('select', data[i].exportClass);
-                }
-            }
-        },
-        onChange: function (newValue, oldValue) {
-            if (newValue.indexOf("退") >= 0) {
-                $('#receiver').combogrid('enable');
-                $.messager.defaults.ok = "供货商";
-                $.messager.defaults.cancel = "上级库房";
-                $.messager.confirm('系统消息', '请选择退货对象', function (r) {
-                    if (r) {
-                        exportToFlag = "toSupplier";
-                        depts = new Array;
-                        upStorageFlag = true;
-                        for (var i = 0; i < suppliers.length; i++) {
-                            var dept = {};
-                            dept.storageName = suppliers[i].supplierName;
-                            dept.storageCode = suppliers[i].supplierCode;
-                            dept.disburseNoPrefix = suppliers[i].inputCode;
-                            depts.push(dept)
-                        }
-                        $('#receiver').combogrid('grid').datagrid('loadData', depts);
-                    } else {
-                        exportToFlag = "toHigherStorage"
-                    }
-                    $.messager.defaults.ok = "确定";
-                    $.messager.defaults.cancel = "取消";
-                });
-            } else if (newValue == "盘亏出库") {
-                $('#receiver').combogrid('disable');
-            } else {
-                $('#receiver').combogrid('enable');
-                depts = deptsBack;
-            }
-            $('#receiver').combogrid('grid').datagrid('loadData', depts);
+        onSelect:function(){
+            var exportClass=$("#exportClass").combobox("getValue");
+            var depts = [];
+            var deptsBack = [];
+            var saveFlag;
+            var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode+"&exportClass="+exportClass, function (data) {
+                depts = data;
+                deptsBack = data;
+                return depts;
+            });
+            promise.done(function () {
+                $("#receiver").combogrid({
+                    idField: 'supplierCode',
+                    textField: 'supplierName',
+                    data: depts,
+                    panelWidth: 300,
+                    columns: [[{
+                        title: '科室名称',
+                        field: 'supplierName',
+                        width: 200
+                    }, {
+                        title: '科室代码',
+                        field: 'supplierCode',
+                        width: 50
+                    }, {
+                        title: '输入码',
+                        field: 'inputCode',
+                        width: 50
+                    }]]
+                })
+            });
         }
+//        onLoadSuccess: function () {
+//            var data = $(this).combobox('getData');
+//            for (var i = 0; i < data.length; i++) {
+//                if (data[i].exportClass == "发放出库") {
+//                    $(this).combobox('select', data[i].exportClass);
+//                }
+//            }
+//        },
+//        onChange: function (newValue, oldValue) {
+//            if (newValue.indexOf("退") >= 0) {
+//                $('#receiver').combogrid('enable');
+//                $.messager.defaults.ok = "供货商";
+//                $.messager.defaults.cancel = "上级库房";
+//                $.messager.confirm('系统消息', '请选择退货对象', function (r) {
+//                    if (r) {
+//                        exportToFlag = "toSupplier";
+//                        depts = new Array;
+//                        upStorageFlag = true;
+//                        for (var i = 0; i < suppliers.length; i++) {
+//                            var dept = {};
+//                            dept.storageName = suppliers[i].supplierName;
+//                            dept.storageCode = suppliers[i].supplierCode;
+//                            dept.disburseNoPrefix = suppliers[i].inputCode;
+//                            depts.push(dept)
+//                        }
+//                        $('#receiver').combogrid('grid').datagrid('loadData', depts);
+//                    } else {
+//                        exportToFlag = "toHigherStorage"
+//                    }
+//                    $.messager.defaults.ok = "确定";
+//                    $.messager.defaults.cancel = "取消";
+//                });
+//            } else if (newValue == "盘亏出库") {
+//                $('#receiver').combogrid('disable');
+//            } else {
+//                $('#receiver').combogrid('enable');
+//                depts = deptsBack;
+//            }
+//            $('#receiver').combogrid('grid').datagrid('loadData', depts);
+//        }
     });
 
     $("#documentNo").textbox({
@@ -566,27 +593,7 @@ $(function () {
         pageNumber: 1
     });
 
-    promise.done(function () {
-        $("#receiver").combogrid({
-            idField: 'storageCode',
-            textField: 'storageName',
-            data: depts,
-            panelWidth: 300,
-            columns: [[{
-                title: '科室名称',
-                field: 'storageName',
-                width: 200
-            }, {
-                title: '科室代码',
-                field: 'storageCode',
-                width: 50
-            }, {
-                title: '输入码',
-                field: 'disburseNoPrefix',
-                width: 50
-            }]]
-        })
-    });
+
     $("#addRow").on('click', function () {
         flag = 0;
         $("#exportDetail").datagrid('appendRow', {});
