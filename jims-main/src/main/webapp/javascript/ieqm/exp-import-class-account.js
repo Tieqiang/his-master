@@ -109,23 +109,28 @@ $(function () {
         columns: [[{
             title: '入库类别',
             field: 'importClass',
+            align: 'center',
             width: '15%'
         }, {
             title: '供应商',
             field: 'supplier',
+            align: 'center',
             width: '15%'
         }, {
             title: '品次',
             field: 'accountReceivable',
+            align: 'center',
             width: '15%'
         }, {
             title: "品种",
-            width: '15%',
-            field: 'accountIndicator'
+            field: 'accountIndicator',
+            align: 'center',
+            width: '15%'
         }, {
             title: '金额',
-            width: '15%',
             field: 'importPrice',
+            align: 'center',
+            width: '15%',
             type:'numberbox'
         }]]
     });

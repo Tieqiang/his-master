@@ -1,7 +1,10 @@
 package com.jims.his.service.common;
 
 import com.jims.his.common.expection.ErrorException;
+import com.jims.his.common.util.Cache;
+import com.jims.his.common.util.CacheManager;
 import com.jims.his.common.util.EnscriptAndDenScript;
+import com.jims.his.common.util.MD5Generator;
 import com.jims.his.domain.common.entity.*;
 import com.jims.his.domain.common.facade.*;
 import com.jims.his.domain.common.vo.BeanChangeVo;
@@ -11,9 +14,11 @@ import com.jims.his.domain.htca.entity.AcctDeptVsDeptDict;
 import com.jims.his.domain.htca.facade.AcctDeptDictFacade;
 import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 import com.jims.his.domain.ieqm.facade.ExpStorageDeptFacade;
+import org.eclipse.jetty.http.HttpStatus;
 
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -58,7 +63,7 @@ public class LoginService {
     @Path("sso")
     @GET
     public void ssoLogin(@QueryParam("username")String userName ,@QueryParam("password")String password,
-                         @QueryParam("moduleId")String moduleId,@QueryParam("hospitalId")String hospitalId) throws IOException {
+                         @QueryParam("moduleId")String moduleId,@QueryParam("hospitalId")String hospitalId) throws Exception {
         if("".equals(userName)||"".equals(password)||"".equals(moduleId)||"".equals(hospitalId)){
 
             resp.sendRedirect("/login1.html?error=参数不允许为空");
@@ -79,8 +84,9 @@ public class LoginService {
             Response response = this.login(userName, password) ;
             Object object = response.getEntity() ;
             if(object instanceof StaffDict){
-                //用户名和密码校验成功
+
                 Config config = new Config() ;
+                setAccessToken();
                 config.setHospitalId(hospitalId);
                 config.setModuleId(moduleId);
                 config.setPassword(password);
@@ -125,6 +131,7 @@ public class LoginService {
                 ErrorMessager errorMessager = new ErrorMessager("错误的密码", "系统登录");
                 return Response.status(Response.Status.OK).entity(errorMessager).build() ;
             }else{
+                setAccessToken();
                 session.setAttribute("loginName",staffDict.getLoginName());
                 session.setAttribute("staffName", staffDict.getName());
                 session.setAttribute("loginId",staffDict.getId());
@@ -305,6 +312,27 @@ public class LoginService {
             errorException.setMessage(e);
             return Response.status(Response.Status.OK).entity(errorException).build();
         }
+    }
+
+    private void setAccessToken(){
+        //用户名和密码校验成功
+
+        try {
+            String clientId = request.getRemoteHost() ;
+            MD5Generator md5Generator = new MD5Generator();
+            String accessToken = null;
+            accessToken = md5Generator.generateValue();
+            Cache cache= new Cache("code_"+clientId,accessToken,7200,true) ;
+            CacheManager.putCache("code_" + clientId, cache);
+            Cookie cookie = new Cookie("ACCESS_TOKEN","code_" + clientId) ;
+            cookie.setMaxAge(3600);
+            HttpSession session  = request.getSession();
+            session.setAttribute("ACCESS_TOKEN",accessToken);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
 

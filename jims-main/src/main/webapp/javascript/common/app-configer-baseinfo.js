@@ -12,7 +12,7 @@ $(document).ready(function () {
         columns:[[{
             title:"应用名",
             field:"appName",
-            width:"10%",
+            width:"15%",
             editor:{type:"validatebox"}
         },{
             title:"参数序号",
@@ -22,7 +22,7 @@ $(document).ready(function () {
         },{
             title:"参数名称",
             field:"parameterName",
-            width:"10%",
+            width:"15%",
             editor:{type:"validatebox"}
         },{
             title:"参数初始值",
@@ -32,12 +32,12 @@ $(document).ready(function () {
         },{
             title:"参数范围",
             field:"parameterScope",
-            width:"10%",
+            width:"15%",
             editor:{type:"validatebox"}
         },{
             title:"说明",
             field:"explanation",
-            width:"40%",
+            width:"35%",
             editor:{type:"textarea",options:{
             }}
         }]]
@@ -60,11 +60,13 @@ $(document).ready(function () {
     });
     //添加
     $("#addBtn").on("click", function () {
+        clearData();
         $("#dialogDiv").dialog("open").dialog("setTitle","添加");
     });
     //修改
     $("#editBtn").on("click", function () {
-       var row = $("#dg").datagrid("getSelected");
+        clearData();
+        var row = $("#dg").datagrid("getSelected");
         if (row == null){
             $.messager.alert("提示","请选择修改的行","info");
             return ;

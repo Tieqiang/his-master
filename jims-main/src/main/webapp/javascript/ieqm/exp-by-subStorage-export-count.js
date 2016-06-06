@@ -114,54 +114,65 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: '10%'
         },{
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: '10%'
         }, {
             title: '规格',
             field: 'packageSpec',
+            align: 'center',
             width: '7%'
         },  {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
             width: '7%'
         }, {
             title: '厂家',
-            width: '10%',
-            field: 'firmId'
-
+            field: 'firmId',
+            align: 'center',
+            width: '10%'
         }, {
             title: "数量",
-            width: '7%',
-            field: 'quantity'
+            field: 'quantity',
+            align: 'center',
+            width: '7%'
         }, {
             title: '进价金额',
             field: 'payAmount',
+            align: 'cneter',
             width: '7%'
         }, {
             title: '零售金额',
-            width: '7%',
-            field: 'retailAmount'
+            field: 'retailAmount',
+            align: 'center',
+            width: '7%'
         }, {
             title: '产品类别',
-            width: '7%',
-            field: 'expForm'
+            field: 'expForm',
+            align: 'center',
+            width: '7%'
         }, {
             title: '出库单号',
-            width: '10%',
             field: 'documentNo',
+            align: 'center',
+            width: '10%',
             editor: {type: 'textbox'}
         }, {
             title: '有效期',
-            width: '11%',
             field: 'expireDate',
+            align: 'center',
+            width: '11%',
             formatter: myFormatter2
         }, {
             title: '批号',
-            width: '4%',
-            field: 'batchNo'
+            field: 'batchNo',
+            align: 'center',
+            width: '4%'
         }]]
     });
     //定义子库房

@@ -387,17 +387,18 @@ public class ExpExportFacade extends BaseFacade {
                 "                EXP_EXPORT_DETAIL.DOCUMENT_NO,\n" +
                 "                EXP_EXPORT_DETAIL.RETAIL_PRICE,\n" +
                 "                EXP_EXPORT_DETAIL.RETAIL_PRICE * EXP_EXPORT_DETAIL.QUANTITY retail_Amount,\n" +
-                "                EXP_EXPORT_MASTER.RECEIVER,\n" +
+                "                exp_storage_dept.storage_name as RECEIVER,\n" +
                 "                EXP_DICT.EXP_NAME,\n" +
                 "                EXP_EXPORT_MASTER.SUB_STORAGE,\n" +
                 "                EXP_EXPORT_DETAIL.EXP_CODE,\n" +
                 "                EXP_EXPORT_DETAIL.EXP_FORM，" +
                 "                BASE_DICT.base_name dept_ATTR  \n" +
-                "    FROM EXP_EXPORT_DETAIL, EXP_EXPORT_MASTER, base_dict, EXP_DICT, DEPT_DICT" +
-                "   WHERE ( EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO ) and  \n" +
+                "    FROM EXP_EXPORT_DETAIL, EXP_EXPORT_MASTER, base_dict, EXP_DICT, DEPT_DICT, exp_storage_dept " +
+                "   WHERE   (EXP_EXPORT_MASTER.RECEIVER=exp_storage_dept.storage_code ) and " +
+                "( EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO ) and  \n" +
                 "         ( EXP_EXPORT_MASTER.DOC_STATUS <> 1) and\n" +
                 "         ( EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
-                "         ( EXP_EXPORT_MASTER.RECEIVER = DEPT_DICT.DEPT_NAME or EXP_EXPORT_MASTER.RECEIVER =  DEPT_DICT.DEPT_code) and  \n" +
+//                "         ( EXP_EXPORT_MASTER.RECEIVER = DEPT_DICT.DEPT_NAME or EXP_EXPORT_MASTER.RECEIVER =  DEPT_DICT.DEPT_code) and  \n" +
 
                 "         ( EXP_DICT.EXP_SPEC = EXP_EXPORT_DETAIL.EXP_SPEC ) and \n" +
 //                "('B' = 'L' and exp_sgtp in ('2','3') or\n" +
@@ -529,7 +530,7 @@ public class ExpExportFacade extends BaseFacade {
         String sql="select b.exp_form,a.fund_item,c.assign_name,sum(b.purchase_price*b.quantity) pay_Amount\n" +
                 "from exp_export_master a,exp_export_detail b ,exp_assign_dict c\n" +
                 "where a.document_no = b.document_no\n" +
-                "and   (b.assign_code = c.assign_code or b.assign_code = c.assign_name)\n" +
+                "and   (b.assign_code = c.assign_code)\n" +
                 "and   a.acctdate between to_date('"+s1+"','yyyy-mm-dd hh24:mi:ss') and to_date('"+s2+"','yyyy-mm-dd hh24:mi:ss')\n" +
                 "and   a.storage = '"+storage+"'\n" +
                 "and   a.hospital_id = '"+hospitalId+"'\n" +

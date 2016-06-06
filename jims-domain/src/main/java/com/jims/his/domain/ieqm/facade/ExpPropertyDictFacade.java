@@ -38,13 +38,13 @@ public class ExpPropertyDictFacade extends BaseFacade {
         List<ExpPropertyDict> updated = beanChangeVo.getUpdated();
         List<ExpPropertyDict> deleted = beanChangeVo.getDeleted();
         for (ExpPropertyDict dict : inserted) {
-            //dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getToxiProperty()));
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getToxiProperty()));
             ExpPropertyDict merge = merge(dict);
             newUpdateDict.add(merge);
         }
 
         for (ExpPropertyDict dict : updated) {
-            //dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getToxiProperty()));
+            dict.setInputCode(PinYin2Abbreviation.cn2py(dict.getToxiProperty()));
             ExpPropertyDict merge = merge(dict);
             newUpdateDict.add(merge);
         }

@@ -104,6 +104,7 @@ $(function () {
         title: "供货商供货情况查询",
         toolbar: '#tb',
         footer: '#ft',
+        rownumbers: true,
         singleSelect: false,
         showFooter:true,
         //footer: '#ft',
@@ -111,38 +112,46 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width:'10%'
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: '10%'
         }, {
             title: '规格',
             field: 'packageSpec',
+            align: 'center',
             width: '10%'
         }, {
             title: "单位",
-            width: '10%',
-            field: 'packageUnits'
+            field: 'packageUnits',
+            align: 'center',
+            width: '10%'
         }, {
             title: '厂家',
-            width: '10%',
             field: 'firmId',
+            align: 'center',
+            width: '10%',
             type:'textbox'
         }, {
             title: '数量',
-            width: '10%',
             field: 'quantity',
+            align: 'center',
+            width: '10%',
             type:'numberbox'
         }, {
             title: '金额',
-            width: '10%',
             field: 'payAmount',
+            align: 'center',
+            width: '10%',
             type:'numberbox'
         }, {
             title: '实际金额',
-            width: '10%',
             field: 'purchaseAmount',
+            align: 'center',
+            width: '10%',
             type:'numberbox'
         }]]
     });

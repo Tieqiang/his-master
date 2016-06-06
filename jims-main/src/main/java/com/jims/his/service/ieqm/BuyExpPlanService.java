@@ -6,12 +6,13 @@ import com.jims.his.domain.ieqm.entity.BuyExpPlan;
 import com.jims.his.domain.ieqm.entity.ExpClassDict;
 import com.jims.his.domain.ieqm.facade.BuyExpPlanFacade;
 import com.jims.his.domain.ieqm.vo.BuyExpPlanVo;
-import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
+
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +36,6 @@ public class BuyExpPlanService {
      */
     @GET
     @Path("list-buy-id")
-    @Produces({MediaType.APPLICATION_JSON})
     public List<ExpClassDict> listBuyId(@QueryParam("storageCode") String storageCode, @QueryParam("expNo") String expNo){
         return buyExpPlanFacade.listBuyId(storageCode, expNo);
     }
@@ -142,8 +142,8 @@ public class BuyExpPlanService {
      */
     @POST
     @Path("generate-num-up")
-    public List<BuyExpPlan> generateNumUp(List<BuyExpPlan> inData){
-        return buyExpPlanFacade.generateNumUp(inData);
+    public List<BuyExpPlan> generateNumUp(@QueryParam("storageCode") String storageCode,List<BuyExpPlan> inData){
+        return buyExpPlanFacade.generateNumUp(inData,storageCode);
     }
 
     /**
@@ -153,8 +153,8 @@ public class BuyExpPlanService {
      */
     @POST
     @Path("generate-num-low")
-    public List<BuyExpPlan> generateNumLow(List<BuyExpPlan> inData) {
-        return buyExpPlanFacade.generateNumLow(inData);
+    public List<BuyExpPlan> generateNumLow(@QueryParam("storageCode") String storageCode,List<BuyExpPlan> inData) {
+        return buyExpPlanFacade.generateNumLow(inData,storageCode);
     }
 
     /**

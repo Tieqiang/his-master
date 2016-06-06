@@ -42,6 +42,7 @@ public class ExpStockRecord implements Serializable {
     private Long indicator;
     private String materialCode;
     private String packageSpec;
+    private Integer amountPerPackage;//常规包装数量
 
 
     public ExpStockRecord(String expName, String expCode, String expSpec, String units, String minSpec, String minUnits, String firmId, Double purchasePrice, Double tradePrice, Double retailPrice, Double quantity, String registerNo, String permitNo, String batchNo, Date disinfectdate, Date producedate, Date expireDate, String documentNo, String singleGroupIndicator, String expForm, Integer killflag, String subPackageUnits1, Double subPackage1, String subPackageSpec1, String subPackageUnits2, Double subPackage2, String subPackageSpec2, Double discount, Long indicator, String materialCode) {
@@ -329,5 +330,12 @@ public class ExpStockRecord implements Serializable {
         this.materialCode = materialCode;
     }
 
+    public Integer getAmountPerPackage() {
+        return amountPerPackage;
+    }
+
+    public void setAmountPerPackage(Integer amountPerPackage) {
+        this.amountPerPackage = amountPerPackage;
+    }
 }
 

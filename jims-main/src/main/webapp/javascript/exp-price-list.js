@@ -91,22 +91,26 @@ $(function () {
         },{
             title: '代码',
             field: 'expCode',
-            width: "7%"
+            align: 'center',
+            width: "6%"
         }, {
             title: '品名',
             field: 'expName',
+            align: 'center',
             width: "7%"
         }, {
             title: '包装数量',
             field: 'amountPerPackage',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'numberbox'
             }
         }, {
             title: '包装规格',
             field: 'expSpec',
-            width: "10%",
+            align: 'center',
+            width: "6%",
             formatter:function(value,row,index){
                 if($.trim(row.amountPerPackage)!=''&& $.trim(row.minSpec)!=''){
                     row.expSpec = row.amountPerPackage+"*"+ row.minSpec;
@@ -117,7 +121,8 @@ $(function () {
         }, {
             title: '包装单位',
             field: 'units',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -132,6 +137,7 @@ $(function () {
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: "7%",
             editor: {
                 type: 'combobox',
@@ -148,12 +154,14 @@ $(function () {
         }, {
             title: '物价编码',
             field: 'materialCode',
-            width: "7%",
+            align: 'center',
+            width: "6%",
             editor: 'text'
         },{
             title: '批发价格',
             field: 'tradePrice',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'numberbox',
                 options: {
@@ -167,7 +175,8 @@ $(function () {
         }, {
             title: '价格比例',
             field: 'priceRatio',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -182,7 +191,8 @@ $(function () {
         }, {
             title: '零售价格',
             field: 'retailPrice',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'numberbox',
                 options: {
@@ -195,6 +205,7 @@ $(function () {
         }, {
             title: '最高零售价',
             field: 'maxRetailPrice',
+            align: 'center',
             width: "7%",
             editor: {
                 type:'numberbox',
@@ -209,12 +220,14 @@ $(function () {
         }, {
             title: '注册证号',
             field: 'registerNo',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: 'numberbox'
         }, {
             title: '最小规格',
             field: 'minSpec',
-            width: "10%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'textbox',
                 options: {
@@ -263,7 +276,8 @@ $(function () {
         }, {
             title: '最小单位',
             field: 'minUnits',
-            width: "5%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'textbox',
                 options: {
@@ -284,7 +298,8 @@ $(function () {
         }, {
             title: '住院收据费用分类',
             field: 'classOnInpRcpt',
-            width: "9%",
+            align: 'center',
+            width: "11%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -303,7 +318,8 @@ $(function () {
         }, {
             title: '门诊收据费用分类',
             field: 'classOnOutpRcpt',
-            width: "9%",
+            align: 'center',
+            width: "11%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -322,7 +338,8 @@ $(function () {
         }, {
             title: '核算项目分类',
             field: 'classOnReckoning',
-            width: "7%",
+            align: 'center',
+            width: "9%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -341,7 +358,8 @@ $(function () {
         }, {
             title: '会计科目',
             field: 'subjCode',
-            width: "7%",
+            align: 'center',
+            width: "6%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -360,7 +378,8 @@ $(function () {
         }, {
             title: '病案首页费用项目分类',
             field: 'classOnMr',
-            width: "9%",
+            align: 'center',
+            width: "12%",
             editor: {
                 type: 'combobox',
                 options: {
@@ -379,22 +398,24 @@ $(function () {
         }, {
             title: '许可证号',
             field: 'permitNo',
-            width: "7%",
+            align: 'center',
+            width: "6%",
             editor: 'text'
         }, {
             title: '美国或欧洲号',
             field: 'fdaOrCeNo',
-            width: "7%",
+            align: 'center',
+            width: "8%",
             editor: 'text'
         }, {
             title: '备注',
             field: 'memos',
-            width: "7%",
+            align: 'center',
+            width: "5%",
             editor: 'text'
         }, {
             title: '医院id',
             field: 'hospitalId',
-            width: "7%",
             hidden:true
         }
         ]],
@@ -428,6 +449,7 @@ $(function () {
             obj.packageUnits='' ;
             obj.expSpec='' ;
             obj.amountPerPackage = '' ;
+            obj.columnProtect = '0';
             newRows.push(obj) ;
         } else {
             var code = $('#expName').combogrid('getValue');
@@ -484,14 +506,7 @@ $(function () {
                     }else{
                         $.postJSON("/api/exp-price-list/stop-price",row, function (data) {
                             $.messager.alert("提示", "停价成功", "info");
-                            var promise = loadDict();//有价格信息
-
-                            promise.done(function () {
-                                if (prices.length > 0) {
-                                    $("#dg").datagrid('loadData', prices);
-                                    return;
-                                }
-                            });
+                            $("#dg").datagrid('deleteRow', index);
                         }, function (data) {
                             $.messager.alert("提示", data.responseJSON.errorMessage, "error");
                         })

@@ -38,11 +38,11 @@ $(function () {
             width: "11%"
         }, {
             title: '产品包装规格',
-            field: 'expSpec',
+            field: 'packageSpec',
             width: "8%"
         }, {
             title: '产品单位',
-            field: 'units',
+            field: 'packageUnits',
             width: "8%"
         }, {
             title: '生产厂家',
@@ -119,6 +119,7 @@ $(function () {
         var promise = $.get("/api/exp-storage-zero-manage/list?storageCode=" +parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&expName="+expName, function(data){
             dicts=data;
 //            console.log(data);
+//            ?
             if(data.length<=0){
                 $.messager.alert("系统提示", "数据库暂无数据","info");
                 $("#dg").datagrid('loadData', []);

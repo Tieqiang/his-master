@@ -93,7 +93,7 @@ $(function () {
      * 添加医院
      */
     $("#addBtn").on('click', function () {
-
+        reset();
         $("#dlg").dialog("open").dialog("setTitle", "添加医院");
 
     })
@@ -104,7 +104,7 @@ $(function () {
      */
 
     $("#addChildBtn").on('click', function () {
-
+        reset();
         var node = $("#tt").treegrid('getSelected');
         if (!node) {
             $.messager.alert("系统提示", "请选择总院，然后在添加分院");
@@ -122,6 +122,7 @@ $(function () {
      */
 
     $("#editBtn").on('click', function () {
+        reset();
         var node = $("#tt").treegrid("getSelected") ;
         if(!node){
             $.messager.alert("系统提示","请选择要修改的医院") ;
@@ -154,13 +155,6 @@ $(function () {
             $.postJSON("/api/hospital-dict/add", hospitalDict, function (data) {
                 $.messager.alert("系统提示", "保存成功");
                 loadHospital();
-                $("#id").val("");
-                $("#hospitalName").textbox('setValue',"");
-                $("#unitCode").textbox('setValue',"");
-                $("#location").textbox('setValue',"");
-                $("#zipCode").textbox('setValue',"");
-                $("#organizationFullCode").textbox('setValue',"");
-                $("#parentHospital").textbox('setValue',"");
                 $("#dlg").dialog('close') ;
             }, function (data) {
                 $.messager.alert("系统提示", "保存失败");
@@ -169,6 +163,16 @@ $(function () {
 
     });
 
+    //清空表单
+    var reset=function(){
+        $("#id").val("");
+        $("#hospitalName").textbox('setValue',"");
+        $("#unitCode").textbox('setValue',"");
+        $("#location").textbox('setValue',"");
+        $("#zipCode").textbox('setValue',"");
+        $("#organizationFullCode").textbox('setValue',"");
+        $("#parentHospital").textbox('setValue',"");
+    }
     /**
      * 删除
      */

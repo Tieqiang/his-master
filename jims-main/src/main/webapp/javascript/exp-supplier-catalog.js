@@ -1,27 +1,29 @@
 /**
- * Created by tangxinbo on 2015/10/10.
+ * Created by fyg on 2016/5/28.
  */
-/**
- * 产品供应商目录维护
- */
-
 //供应商类别 拼音二选一
-function checkRadio(){
-    if ($("#supplierType:checked").val() != null){
+function checkRadio() {
+    if ($("#supplierType:checked").val() != null) {
         $("#searchInputCode").textbox("disable");
         $("#searchInputCode").combogrid("clear");
         $("#supplierSelect").textbox("enable");
-    }else {
+    } else {
         $("#searchInputCode").combobox("enable");
         $("#supplierSelect").combobox("clear");
         $("#supplierSelect").combobox("disable");
     }
 }
-$(document).ready(function () {
-    var editRowIndex;
+$(function () {
+    var editIndex;
+    var stopEdit = function () {
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid('endEdit', editIndex);
+            editIndex = undefined;
+        }
+    }
     //格式化日期函数
-    function formatterDate(val, row) {
-        if (val != null ) {
+    function formatterDate(val) {   //把number类型的毫秒数转换成字符串   1464417772000 ---> 2016-05-28 14:42:52
+        if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -31,296 +33,184 @@ $(document).ready(function () {
             var s = date.getSeconds();
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
                 + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-            return dateTime
-        }
-    }
-    function formatterDate1(val, row) {
-        if (val != null&& val!=undefined && val.length>11) {
-            var date = new Date(val);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var h = date.getHours();
-            var mm = date.getMinutes();
-            var s = date.getSeconds();
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
-                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-            return dateTime
-        }else{
-            return "";
-        }
-    }
-
-    function w3(s) {
-        if (!s) return new Date();
-        var y = s.substring(0, 4);
-        var m = s.substring(5, 7);
-        var d = s.substring(8, 10);
-        var h = s.substring(11, 14);
-        var min = s.substring(15, 17);
-        var sec = s.substring(18, 20);
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
-            return new Date(y, m - 1, d, h, min, sec);
-        } else {
-            return new Date();
+            return dateTime;
         }
     }
 
     $("#dg").datagrid({
-        title:"产品供应商目录维护",
-        fit:true,
-        fitColumns:false,
-        toolbar:"#topbar",
-        footer:"#tb",
-        singleSelect:true,
-        rownumbers:true,
-        columns:[[{
-                title:"简称",
-                field:"supplierId",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"名称",
-                field:"supplier",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"类别",
-                field:"supplierClass",
-                width:"10%",
-                editor:{type:"combobox",options:{
-                    valueField:"value",
-                    textField:"text",
-                    data:[
+        title: "产品供应商目录维护",
+        fit: true,
+        singleSelect: true,
+        rownumbers: true,
+        toolbar: "#topbar",
+        footer: "#tb",
+        columns: [[{
+            title: "简称",
+            field: "supplierId",
+            width: "10%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "名称",
+            field: "supplier",
+            width: "10%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "类别",
+            field: "supplierClass",
+            align: 'center',
+            width: "8%",
+            editor: {
+                type: "combobox", options: {
+                    valueField: "value",
+                    textField: "text",
+                    data: [
                         {
-                            value:"供应商",
-                            text:"供应商"
-                        },{
-                            value:"生产商",
-                            text:"生产商"
+                            value: "供应商",
+                            text: "供应商"
+                        }, {
+                            value: "生产商",
+                            text: "生产商"
                         }
                     ]
-                }}
-            }, {
-                title: "产品范围",
-                field: "suppbound",
-                width:"10%",
-                editor:{type:"combobox",options:{
-                    valueField:"key",
-                    textField:"value",
-                    data:[{
-                        key:"1",
-                        value:"全院产品"
-                     },{
-                        key:"2",
-                        value:"普通产品"
+                }
+            }
+        }, {
+            title: "产品范围",
+            field: "suppbound",
+            width: "8%",
+            align: 'center',
+            editor: {
+                type: "combobox", options: {
+                    editable: false,
+                    valueField: "key",
+                    textField: "value",
+                    data: [{
+                        key: "1",
+                        value: "全院产品"
+                    }, {
+                        key: "2",
+                        value: "普通产品"
                     }]
-                    }
-                },formatter: function(value,row,index){
-                if (row.suppbound=='1'){
+                }
+            }, formatter: function (value, row, index) {
+                if (row.suppbound == '1') {
                     return '全院产品';
-                }else if(row.suppbound =='2'){
+                } else if (row.suppbound == '2') {
                     return '普通产品';
                 }
                 return value;
             }
-            },{
-                title:"输入码",
-                field:"inputCode",
-                width:"10%",
-                editor:{type:"textbox",
-                    options:{
-                        editable: false,
-                        disabled: true}
-                }
-            },{
-                title:"备注",
-                field:"memo",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"厂商地址",
-                field:"supplierAddres",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"厂商邮编",
-                field:"supplierPostalcode",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"法人姓名",
-                field:"artificialPerson",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"联系电话",
-                field:"linkphone",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"营业执照号",
-                field:"licenceNo",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"营业执照期限",
-                field:"licenceDate",
-                width:"11%",
-                formatter: formatterDate,
-                parser: w3,
-                editor: {
-                    type: 'datetimebox',
-                    options: {
-                        value: 'dateTime',
-                        showSeconds: true,
-                        formatter: formatterDate,
-                        parser: w3,
-                        onSelect: function (date) {
-                            var dateEd = $("#dg").datagrid('getEditor', {
-                                index: editRowIndex,
-                                field: 'licenceDate'
-                            });
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                            $(dateEd.target).textbox('setValue', dateTime);
-                            $(this).datetimebox('hidePanel');
-                        }
-                    }
-                }
-            },{
-                title:"生产经营许可证号",
-                field:"permitNo",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"许可证期限",
-                field:"permitDate",
-                width:"11%",
-                formatter: formatterDate,
-                parser: w3,
-                editor: {
-                    type: 'datetimebox',
-                    options: {
-                        value: 'dateTime',
-                        showSeconds: true,
-                        formatter: formatterDate,
-                        parser: w3,
-                        onSelect: function (date) {
-                            var dateEd = $("#dg").datagrid('getEditor', {
-                                index: editRowIndex,
-                                field: 'permitDate'
-                            });
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                            $(dateEd.target).textbox('setValue', dateTime);
-                            $(this).datetimebox('hidePanel');
-                        }
-                    }
-                }
-            },{
-                title:"医疗器械注册证号",
-                field:"registerNo",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"美国或欧洲号",
-                field:"fdaOrCeNo",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"截止日期",
-                field:"fdaOrCeDate",
-                width:"11%",
-                formatter: formatterDate,
-                parser: w3,
-                editor: {
-                    type: 'datetimebox',
-                    options: {
-                        value: 'dateTime',
-                        showSeconds: true,
-                        formatter: formatterDate,
-                        parser: w3,
-                        onSelect: function (date) {
-                            var dateEd = $("#dg").datagrid('getEditor', {
-                                index: editRowIndex,
-                                field: 'fdaOrCeDate'
-                            });
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-                            $(dateEd.target).textbox('setValue', dateTime);
-                            $(this).datetimebox('hidePanel');
-                        }
-                    }
-                }
-            },{
-                title:"其它证号",
-                field:"otherNo",
-                width:"10%",
-                editor:{type:"validatebox"}
-            },{
-                title:"其它日期",
-                field:"otherDate",
-                formatter: formatterDate,
-                parser: w3,
-                width:"11%",
-                editor: {
-                    type: 'datetimebox',
-                    options: {
-                        value: 'dateTime',
-                        showSeconds: true,
-                        formatter: formatterDate,
-                        parser: w3,
-                        onSelect: function (date) {
-                            var dateEd = $("#dg").datagrid('getEditor', {
-                                index: editRowIndex,
-                                field: 'otherDate'
-                            });
-                            var y = date.getFullYear();
-                            var m = date.getMonth() + 1;
-                            var d = date.getDate();
-                            var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-                            $(dateEd.target).textbox('setValue', dateTime);
-                            $(this).datetimebox('hidePanel');
-                        }
-                    }
+        }, {
+            title: "输入码",
+            field: "inputCode",
+            width: "8%",
+            align: 'center',
+            editor: {
+                type: "textbox",
+                options: {
+                    editable: false,
+                    disabled: true
                 }
             }
-        ]],
-        onClickRow: function (rowIndex,rowData) {
-            if (editRowIndex!= rowIndex ){
-                $(this).datagrid("endEdit",editRowIndex);
-                editRowIndex = rowIndex;
-            }
-            $(this).datagrid("beginEdit",rowIndex);
-
+        }, {
+            title: "备注",
+            field: "memo",
+            width: "6%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "厂商地址",
+            field: "supplierAddres",
+            width: "9%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "厂商邮编",
+            field: "supplierPostalcode",
+            width: "6%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "法人姓名",
+            field: "artificialPerson",
+            width: "6%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "联系电话",
+            field: "linkphone",
+            width: "7%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "营业执照号",
+            field: "licenceNo",
+            width: "8%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "营业执照期限",
+            field: "licenceDate",
+            width: "11%",
+            align: 'center',
+            formatter: formatDateBoxFull,
+            editor: 'datetimebox'
+        }, {
+            title: "生产经营许可证号",
+            field: "permitNo",
+            width: "10%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "许可证期限",
+            field: "permitDate",
+            width: "11%",
+            align: 'center',
+            formatter: formatDateBoxFull,
+            editor: 'datetimebox'
+        }, {
+            title: "医疗器械注册证号",
+            field: "registerNo",
+            width: "10%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "美国或欧洲号",
+            field: "fdaOrCeNo",
+            width: "9%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "截止日期",
+            field: "fdaOrCeDate",
+            width: "11%",
+            align: 'center',
+            formatter: formatDateBoxFull,
+            editor: 'datetimebox'
+        }, {
+            title: "其它证号",
+            field: "otherNo",
+            width: "8%",
+            align: 'center',
+            editor: 'text'
+        }, {
+            title: "其它日期",
+            field: "otherDate",
+            width: "11%",
+            align: 'center',
+            formatter: formatDateBoxFull,
+            editor: 'datetimebox'
+        }]],
+        onClickRow: function (index, row) {
+            stopEdit();
+            $(this).datagrid('beginEdit', index);
+            editIndex = index;
 
         }
     });
-    //供应商检索
-    //$("#searchInputCode").textbox({
-    //    onChange: function (newValue,oldValue) {
-    //        //alert(newValue);
-    //        //alert(oldValue);
-    //        if($("#supplierSearch:checked").val()){
-    //            $.get("/api/exp-supplier-catalog/find-supplier?inputCode="+newValue, function (data) {
-    //                $("#dg").datagrid("loadData",data);
-    //            });
-    //        }
-    //    }
-    //});
+    //供应商拼音字头检索
     $('#searchInputCode').combogrid({
         panelWidth: 500,
         idField: 'supplier',
@@ -340,111 +230,80 @@ $(document).ready(function () {
         autoRowHeight: false,
         pageSize: 50,
         pageNumber: 1
-
     });
-    //供应商查询
+    //供应商查询按钮
     $("#searchBtn").on("click", function () {
-        //if ($("#supplierType:checked").val()){
-        //    var selectedValue = $("#supplierSelect").combobox("getValue");
-        //    var supplier = $("#searchInputCode").combogrid("getValue");
-        //    if (!selectedValue || !supplier ){
-        //        $.messager.alert("提示","请选择供应商","info");
-        //        return ;
-        //    }
-
-            var selectedValue = $("#supplierSelect").combobox("getValue");
-            var supplier = $("#searchInputCode").combogrid("getValue");
-            if (!selectedValue && !supplier ){
-                $.messager.alert("提示","请选择供应商","info");
-                return ;
+        var selectedValue = $("#supplierSelect").combobox("getValue");
+        var supplier = $("#searchInputCode").combogrid("getValue");
+        if (!selectedValue && !supplier) {
+            $.messager.alert("提示", "请选择供应商", "info");
+            return;
+        }
+        $.get("/api/exp-supplier-catalog/find-supplier?supplierName=" + selectedValue + "&supplier=" + supplier, function (data) {
+            for (var i = 0; i < data.length; i++) {
             }
-            $.get("/api/exp-supplier-catalog/find-supplier?supplierName="+selectedValue+"&supplier="+supplier, function (data) {
-                if(data.length<=0){
-                    $.messager.alert('系统消息','数据库暂无数据','info')
-                }
-                $("#dg").datagrid("loadData",data);
-            });
-
-        //else {
-        //    var searchValue = $("#searchInputCode").val();
-        //    //alert(searchValue);
-        //    $.get("/api/exp-supplier-catalog/find-supplier?inputCode="+searchValue, function (data) {
-        //        $("#dg").datagrid("loadData",data);
-        //    });
-        //}
+            if (data.length <= 0) {
+                $.messager.alert('系统消息', '数据库暂无数据', 'info')
+            }
+            $("#dg").datagrid("loadData", data);
+        });
     });
     //添加按钮
     $("#addBtn").on("click", function () {
-        if(editRowIndex!=undefined){
-            $("#dg").datagrid("endEdit", editRowIndex);
-        }
-        $("#dg").datagrid("appendRow",{});
-        var rows = $("#dg").datagrid("getRows"); //得到所有行
-        var row = rows[rows.length - 1];//获得最后一行
-        var row_index = $("#dg").datagrid("getRowIndex",row);//得到最后一行索引号
-
-        $("#dg").datagrid("selectRow",row_index);//选择当前行
-        //alert('editRowIndex'+editRowIndex+"row_index"+row_index);
-        if (editRowIndex == undefined){
-            $("#dg").datagrid("beginEdit",row_index);
-            editRowIndex = row_index;
-        }
-        if(editRowIndex == row_index - 1 || editRowIndex != undefined){ //取消上一行的编辑 并且选中后取消编辑
-            $("#dg").datagrid("endEdit",editRowIndex);
-            editRowIndex =row_index;
-            $("#dg").datagrid("beginEdit",editRowIndex);
-        }
-    });
-    //修改
-    $("#editBtn").on("click", function () {
-        $("#dg").datagrid("endEdit",editRowIndex);
-        var row = $("#dg").datagrid("getSelected");
-        var row_index = $("#dg").datagrid("getRowIndex",row);
-
-        $("#dg").datagrid("beginEdit",row_index);
-        editRowIndex = row_index;
-
+        stopEdit();
+        $("#dg").datagrid('appendRow', {});
+        var rows = $("#dg").datagrid('getRows');
+        var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+        editIndex = addRowIndex;
+        $("#dg").datagrid('selectRow', editIndex);
+        $("#dg").datagrid('beginEdit', editIndex);
     });
     //删除
     $("#delBtn").on("click", function () {
-        $("#dg").datagrid("endEdit",editRowIndex);
-        var row = $("#dg").datagrid("getSelected");
-        var row_index = $("#dg").datagrid("getRowIndex",row);
-        if(row_index == -1){
-            if  (editRowIndex == undefined){
-                $.messager.alert("提示","请选择要删除的行","info");
-                return ;
-            }else {
-                $("#dg").datagrid("deleteRow",editRowIndex);
-                editRowIndex = undefined;
+        var row = $("#dg").datagrid('getSelected');
+        if (row) {
+            var rowIndex = $("#dg").datagrid('getRowIndex', row);
+            $("#dg").datagrid('deleteRow', rowIndex);
+            if (editIndex == rowIndex) {
+                editIndex = undefined;
             }
-        }else {
-            $("#dg").datagrid("endEdit",editRowIndex);
-            $("#dg").datagrid("deleteRow",row_index);
-            editRowIndex = undefined
+        } else {
+            $.messager.alert('系统提示', "请选择要删除的行", 'info');
         }
     });
-
+    //清屏按钮
+    $("#clearBtn").on("click", function () {
+        $("#dg").datagrid("loadData", {rows: []});
+        editIndex = undefined;
+    });
     //保存
     $("#saveBtn").on("click", function () {
-        if (editRowIndex || editRowIndex == 0) {
-            $("#dg").datagrid("endEdit", editRowIndex);
+        if (editIndex || editIndex == 0) {
+            $("#dg").datagrid("endEdit", editIndex);
         }
         var insertData = $("#dg").datagrid("getChanges", "inserted");
         var updateDate = $("#dg").datagrid("getChanges", "updated");
         var deleteDate = $("#dg").datagrid("getChanges", "deleted");
-        console.log(insertData)
-        console.log(updateDate)
-        console.log(deleteDate)
-        if(insertData.length>0){
+        if (insertData.length > 0) {
             for (var i = 0; i < insertData.length; i++) {
+                console.log("名称:" + insertData[i].supplierClass);
+                console.log("length:" + insertData[i].supplierClass.length);
+                if (insertData[i].supplier.length == 0) {
+                    $.messager.alert('提示', '名称不能为空!', 'error');
+                    return;
+                }
+                if (insertData[i].supplierClass.length == 0) {
+                    $.messager.alert('提示', '请选择类别!', 'error');
+                    return;
+                }
+                console.log("insertData[i].licenceDate:" + insertData[i].licenceDate);
                 insertData[i].licenceDate = new Date(insertData[i].licenceDate);
                 insertData[i].permitDate = new Date(insertData[i].permitDate);
                 insertData[i].fdaOrCeDate = new Date(insertData[i].fdaOrCeDate);
                 insertData[i].otherDate = new Date(insertData[i].otherDate);
             }
         }
-        if(updateDate.length>0){
+        if (updateDate.length > 0) {
             for (var i = 0; i < updateDate.length; i++) {
                 updateDate[i].licenceDate = new Date(updateDate[i].licenceDate);
                 updateDate[i].permitDate = new Date(updateDate[i].permitDate);
@@ -452,7 +311,7 @@ $(document).ready(function () {
                 updateDate[i].otherDate = new Date(updateDate[i].otherDate);
             }
         }
-        if(deleteDate.length>0){
+        if (deleteDate.length > 0) {
             for (var i = 0; i < insertData.length; i++) {
                 deleteDate[i].licenceDate = new Date(deleteDate[i].licenceDate);
                 deleteDate[i].permitDate = new Date(deleteDate[i].permitDate);
@@ -460,7 +319,7 @@ $(document).ready(function () {
                 deleteDate[i].otherDate = new Date(deleteDate[i].otherDate);
             }
         }
-        if(insertData.length>0 || updateDate.length>0 || deleteDate.length>0){
+        if (insertData.length > 0 || updateDate.length > 0 || deleteDate.length > 0) {
             var beanChangeVo = {};
             beanChangeVo.inserted = insertData;
             beanChangeVo.deleted = deleteDate;
@@ -474,16 +333,122 @@ $(document).ready(function () {
                     $.messager.alert('提示', data.responseJSON.errorMessage, "error");
                 })
             }
-        }else{
-            $.messager.alert('系统消息','没有要保存的信息，请规范操作系统！','info')
+        } else {
+            $.messager.alert('系统消息', '没有要保存的信息，请规范操作系统！', 'info')
         }
-
-
     });
-    
-    $("#clearBtn").on("click", function () {
-        $("#dg").datagrid("loadData",{rows:[]});
-        editRowIndex = undefined ;
-    })
-
 });
+
+
+/*该方法使日期列的显示符合阅读习惯*/
+//datagrid中用法：{ field:'StartDate',title:'开始日期', formatter: formatDatebox, width:80}
+function formatDatebox(value) {
+    if (value == null || value == '') {
+        return '';
+    }
+    var dt = parseToDate(value);
+    return dt.format("yyyy-MM-dd");
+}
+
+/*转换日期字符串为带时间的格式*/
+function formatDateBoxFull(value) {
+    if (value == null || value == '') {
+        return '';
+    }
+    var dt = parseToDate(value);
+    return dt.format("yyyy-MM-dd hh:mm:ss");
+}
+
+//辅助方法(转换日期)
+function parseToDate(value) {
+    if (value == null || value == '') {
+        return undefined;
+    }
+
+    var dt;
+    if (value instanceof Date) {
+        dt = value;
+    }
+    else {
+        if (!isNaN(value)) {
+            dt = new Date(value);
+        }
+        else if (value.indexOf('/Date') > -1) {
+            value = value.replace(/\/Date\((-?\d+)\)\//, '$1');
+            dt = new Date();
+            dt.setTime(value);
+        } else if (value.indexOf('/') > -1) {
+            dt = new Date(Date.parse(value.replace(/-/g, '/')));
+        } else {
+            dt = new Date(value);
+        }
+    }
+    return dt;
+}
+
+//为Date类型拓展一个format方法，用于格式化日期
+Date.prototype.format = function (format) //author: meizz
+{
+    var o = {
+        "M+": this.getMonth() + 1, //month
+        "d+": this.getDate(),    //day
+        "h+": this.getHours(),   //hour
+        "m+": this.getMinutes(), //minute
+        "s+": this.getSeconds(), //second
+        "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+        "S": this.getMilliseconds() //millisecond
+    };
+    if (/(y+)/.test(format))
+        format = format.replace(RegExp.$1,
+            (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] :
+                    ("00" + o[k]).substr(("" + o[k]).length));
+    return format;
+};
+
+//以下拓展是为了datagrid的日期列在编辑状态下显示正确日期
+$.extend(
+    $.fn.datagrid.defaults.editors, {
+        datebox: {
+            init: function (container, options) {
+                var input = $('<input type="text">').appendTo(container);
+                input.datebox(options);
+                return input;
+            },
+            destroy: function (target) {
+                $(target).datebox('destroy');
+            },
+            getValue: function (target) {
+                return $(target).datebox('getValue');
+            },
+            setValue: function (target, value) {
+                $(target).datebox('setValue', formatDatebox(value));
+            },
+            resize: function (target, width) {
+                $(target).datebox('resize', width);
+            }
+        },
+        datetimebox: {
+            init: function (container, options) {
+                var input = $('<input type="text">').appendTo(container);
+                input.datetimebox(options);
+                return input;
+            },
+            destroy: function (target) {
+                $(target).datetimebox('destroy');
+            },
+            getValue: function (target) {
+                return $(target).datetimebox('getValue');
+            },
+            setValue: function (target, value) {
+                $(target).datetimebox('setValue', formatDateBoxFull(value));
+            },
+            resize: function (target, width) {
+                $(target).datetimebox('resize', width);
+            }
+        }
+    });
+

@@ -205,7 +205,7 @@ $(function () {
         refresh();
     });
     //新增按钮功能
-    $("#add").on('click', function () {
+   /* $("#add").on('click', function () {
         stopEdit();
 
         var rows = $('#right').datagrid("getRows");
@@ -223,9 +223,9 @@ $(function () {
         $("#right").datagrid('selectRow', editIndex);
         $("#right").datagrid('beginEdit', editIndex);
 
-    });
+    });*/
     //删除按钮功能
-    $("#delete").on('click', function () {
+  /*  $("#delete").on('click', function () {
         var row = $('#right').datagrid('getSelected');
         var index = $('#right').datagrid('getRowIndex', row);
         if (index == -1) {
@@ -236,16 +236,16 @@ $(function () {
                 editIndex = undefined;
             }
         }
-    });
+    });*/
 
     var checkValidate=function(rows){
         for (var i = 0; i < rows.length; i++) {
             //删除空行
-            if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
+       /*     if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
                 $("#right").datagrid('selectRow', i);
                 return false;
-            }
+            }*/
             if (rows[i].stockNumber == undefined || rows[i].stockNumber <= 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:采购数量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);

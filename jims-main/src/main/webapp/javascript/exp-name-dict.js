@@ -116,14 +116,16 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
-            width: "30%",
+            align: 'center',
+            width: "40%",
             onchange:function(newValue,oldValue){
 
             }
         }, {
             title: '品名',
             field: 'expName',
-            width: "30%",
+            align: 'center',
+            width: "40%",
             editor: {type: 'text', options: {required: true}}
         }
         ]],
@@ -144,20 +146,23 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: "10%"
         }, {
             title: '品名',
             field: 'expName',
-            width: "10%",
-            editor: {type: 'text', options: {required: true}}
+            align: 'center',
+            width: "10%"
         }, {
             title: '规格',
             field: 'expSpec',
-            width: "10%",
+            align: 'center',
+            width: "9%",
             editor: {type: 'text', options: {required: true}}
         }, {
             title: '单位',
             field: 'units',
+            align: 'center',
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -172,6 +177,7 @@ $(function () {
         }, {
             title: '类型',
             field: 'expForm',
+            align: 'center',
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -186,6 +192,7 @@ $(function () {
         }, {
             title: '属性',
             field: 'toxiProperty',
+            align: 'center',
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -200,11 +207,13 @@ $(function () {
         }, {
             title: '单位数量',
             field: 'dosePerUnit',
-            width: "7%",
+            align: 'center',
+            width: "10%",
             editor: 'numberbox'
         }, {
             title: '数量单位',
             field: 'doseUnits',
+            align: 'center',
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -223,6 +232,7 @@ $(function () {
         },{
             title: '是否包',
             field: 'singleGroupIndicator',
+            align: 'center',
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -250,7 +260,8 @@ $(function () {
         }, {
             title: '产品范围',
             field: 'expIndicator',
-            width: "7%",
+            align: 'center',
+            width: "11%",
             editor: {
                 type: 'combobox',
                 options: {

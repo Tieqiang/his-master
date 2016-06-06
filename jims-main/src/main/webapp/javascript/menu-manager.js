@@ -14,20 +14,19 @@ $(function () {
         columns: [[{
             title: '菜单名称',
             field: 'menuName',
-            width: "20%"
+            width: "30%"
         }, {
             title: '路径',
             field: 'href',
-            width: "40%"
+            width: "50%"
         }, {
             title: 'id',
             field: 'id',
-            width: "20%",
             hidden:true
         }, {
             title: '层级',
             field: 'position',
-            width: "10%"
+            width: "20%"
         }]],
         onLoadSuccess:function(row, data){
             //启用拖动
