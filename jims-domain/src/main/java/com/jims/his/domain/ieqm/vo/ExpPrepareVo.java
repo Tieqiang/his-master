@@ -35,6 +35,11 @@ public class ExpPrepareVo {
     private String expFrom;                //高值耗材
     private String usePrice;               //出库价格
     private String supplier;
+    private String firm;
+    private String packageSpec;//
+    private String packageUnits;//
+    private String inDocumentNo;
+    private String outDocumentNo;//
 
     public ExpPrepareVo(){
 
@@ -284,5 +289,45 @@ public class ExpPrepareVo {
 
     public void setUsePrice(String usePrice) {
         this.usePrice = usePrice;
+    }
+
+    public String getFirm() {
+        return firm;
+    }
+
+    public void setFirm(String firm) {
+        this.firm = firm;
+    }
+
+    public String getPackageSpec() {
+        return packageSpec;
+    }
+
+    public void setPackageSpec(String packageSpec) {
+        this.packageSpec = packageSpec;
+    }
+
+    public String getPackageUnits() {
+        return packageUnits;
+    }
+
+    public void setPackageUnits(String packageUnits) {
+        this.packageUnits = packageUnits;
+    }
+
+    public String getInDocumentNo() {
+        return inDocumentNo;
+    }
+
+    public void setInDocumentNo(String inDocumentNo) {
+        this.inDocumentNo = inDocumentNo;
+    }
+
+    public String getOutDocumentNo() {
+        return outDocumentNo;
+    }
+
+    public void setOutDocumentNo(String outDocumentNo) {
+        this.outDocumentNo = outDocumentNo;
     }
 }

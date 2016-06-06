@@ -196,15 +196,16 @@ $(function () {
                  var expCodes="";
                 var amounts="";
                 var prices="";
+                var packageSpecs="";
                 for (var i = 0; i < rows.length; i++) {
-
-                     expCodes+= rows[i].expCode+",";
+                      expCodes+= rows[i].expCode+",";
                      amounts+=rows[i].amount+",";
                      prices+=rows[i].purchasePrice+",";
+                     packageSpecs+=rows[i].expSpec+",";
                  }
                 expCodes=expCodes.substring(0,expCodes.length-1);
                  var supplierId=$("#supplier").combogrid("getValue");
-                 $.postJSON("/api/exp-prepare/make-data?supplierId="+supplierId+"&expCodes="+expCodes+"&operator="+parent.config.staffName+"&amounts="+amounts+"&prices="+prices, function (data) {
+                 $.postJSON("/api/exp-prepare/make-data?supplierId="+supplierId+"&expCodes="+expCodes+"&operator="+parent.config.staffName+"&amounts="+amounts+"&prices="+prices+"&packageSpecs="+packageSpecs, function (data) {
                     //List<ExpPrepareDetail>
                      console.info(data);
                     $("#right").datagrid("loadData",data);
@@ -414,7 +415,7 @@ $(function () {
 //                                var ed = $("#left").datagrid('getEditor', {index: editIndex, field: 'expCode'});
 //                                $(ed.target).textbox('setValue', row.expCode);
                                 currentExpCode = row.expCode;
-                                alert(currentExpCode);
+//                                alert(currentExpCode);
                                 $("#stockRecordDialog").dialog('open');
                             },
                             keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {

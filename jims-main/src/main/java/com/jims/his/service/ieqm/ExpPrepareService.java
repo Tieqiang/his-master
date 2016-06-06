@@ -1,19 +1,17 @@
 package com.jims.his.service.ieqm;
 
 import com.google.inject.Inject;
-import com.jims.his.domain.ieqm.entity.ExpDict;
-import com.jims.his.domain.ieqm.entity.ExpPrepareDetail;
-import com.jims.his.domain.ieqm.entity.ExpPrepareMaster;
-import com.jims.his.domain.ieqm.facade.ExpDictFacade;
-import com.jims.his.domain.ieqm.facade.ExpNameDictFacade;
-import com.jims.his.domain.ieqm.facade.ExpPrepareDetailFacade;
-import com.jims.his.domain.ieqm.facade.ExpPrepareMasterFacade;
+import com.jims.his.common.util.StringUtils;
+import com.jims.his.domain.ieqm.entity.*;
+import com.jims.his.domain.ieqm.facade.*;
 import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
+import com.jims.his.domain.ieqm.vo.ExpPrepareVo;
 import com.jims.his.domain.ieqm.vo.ExpStockRecord;
+import org.eclipse.jetty.util.StringUtil;
 import com.jims.his.domain.ieqm.facade.ExpPrepareDetailFacade;
 import com.jims.his.domain.ieqm.vo.ExpPrepareVo;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -33,19 +31,23 @@ import java.util.List;
 @Produces("application/json")
 public class ExpPrepareService {
 
-    private ExpPrepareDetailFacade expPrepareDetailFacade;
-    private ExpPrepareMasterFacade expPrepareMasterFacade;
+     private ExpPrepareMasterFacade expPrepareMasterFacade;
 
     private ExpNameDictFacade expNameDictFacade;
 
-    private ExpDictFacade expDictFacade;
+    private ExpPrepareDetailFacade expPrepareDetailFacade;
 
-    @Inject
-    public ExpPrepareService(ExpPrepareDetailFacade expPrepareDetailFacade, ExpPrepareMasterFacade expPrepareMasterFacade,ExpNameDictFacade expNameDictFacade,ExpDictFacade expDictFacade) {
+    private ExpSubStorageDictFacade expSubStorageDictFacade;
+
+    private ExpPriceListFacade expPriceListFacade;
+
+    @javax.inject.Inject
+    public ExpPrepareService(ExpPrepareDetailFacade expPrepareDetailFacade, ExpPrepareMasterFacade expPrepareMasterFacade, ExpNameDictFacade expNameDictFacade, ExpSubStorageDictFacade expSubStorageDictFacade,ExpPriceListFacade expPriceListFacade) {
         this.expPrepareDetailFacade = expPrepareDetailFacade;
         this.expPrepareMasterFacade = expPrepareMasterFacade;
-        this.expNameDictFacade=expNameDictFacade;
-        this.expDictFacade=expDictFacade;
+        this.expNameDictFacade = expNameDictFacade;
+        this.expSubStorageDictFacade = expSubStorageDictFacade;
+        this.expPriceListFacade=expPriceListFacade;
     }
 
     /**
@@ -93,18 +95,20 @@ public class ExpPrepareService {
 
     /**
      * 根据厂商和inputCode 查询相应的exp
+     *
      * @param q
      * @param supplerId
      * @return
      */
     @GET
     @Path("find-by-firm-name")
-    public  List<ExpNameCaVo> findByFirmName(@QueryParam("q") String q,@QueryParam("supplierId") String supplerId){
-        return expNameDictFacade.listExpNameBySupplier(q,supplerId);
+    public List<ExpNameCaVo> findByFirmName(@QueryParam("q") String q, @QueryParam("supplierId") String supplerId) {
+        return expNameDictFacade.listExpNameBySupplier(q, supplerId);
     }
 
     /**
-     *生成备货明细
+     * 生成备货明细
+     *
      * @param supplierId
      * @param expCodes
      * @param operator
@@ -112,45 +116,100 @@ public class ExpPrepareService {
      */
     @POST
     @Path("make-data")
-    public List<ExpPrepareDetail> makeData(@QueryParam("supplierId") String supplierId,@QueryParam("expCodes") String expCodes,@QueryParam("operator") String operator,@QueryParam("amounts") String amounts,@QueryParam("prices") String priceStr){
-        List<ExpPrepareDetail> list=new ArrayList<ExpPrepareDetail>();
-        if(expCodes!=null&&!"".equals(expCodes)){
-            String[] amountArr=amounts.split(",");
-            String[] expCodeArr=expCodes.split(",");
-            String[] priceArr=priceStr.split(",");
-            for(int i=0;i<expCodeArr.length;i++){
-               ExpDict expDict= expDictFacade.findByCode(expCodeArr[i]);
-               list=expPrepareMasterFacade.save(expDict.getId(),supplierId,amountArr[i],operator,Double.parseDouble(priceArr[i]),list);
+    public List<ExpPrepareDetail> makeData(@QueryParam("supplierId") String supplierId, @QueryParam("expCodes") String expCodes, @QueryParam("operator") String operator, @QueryParam("amounts") String amounts, @QueryParam("prices") String priceStr,@QueryParam("packageSpecs") String packageSpecs) {
+        List<ExpPrepareDetail> list = new ArrayList<ExpPrepareDetail>();
+        if (expCodes != null && !"".equals(expCodes)) {
+            String[] amountArr = amounts.split(",");
+            String[] expCodeArr = expCodes.split(",");
+            String[] priceArr = priceStr.split(",");
+            String[] packageSpecArr=packageSpecs.split(",");
+            for (int i = 0; i < expCodeArr.length; i++) {
+//                ExpDict expDict = expDictFacade.findByCode(expCodeArr[i],packageSpecArr[i]);
+                ExpPriceList expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(expCodeArr[i],packageSpecArr[i]);
+                list = expPrepareMasterFacade.save(expPriceList.getId(), supplierId, amountArr[i], operator, Double.parseDouble(priceArr[i]), list,expPriceList.getFirmId());
             }
-         }
+        }
         return list;
-    }
-
-    private ExpPrepareDetailFacade expPrepareDetailFacade;
-
-    @Inject
-    public ExpPrepareService(ExpPrepareDetailFacade expPrepareDetailFacade){
-        this.expPrepareDetailFacade=expPrepareDetailFacade;
     }
 
     /**
      * 根据条形码获取高值耗材信息
-     * */
+     */
     @GET
     @Path("find-by-bar-code")
-    public Map<String,Object> findByBarCode(@QueryParam("barCode") String barCode){
-        Map<String,Object> map=new HashMap<String,Object>();
-        List <ExpPrepareVo> list= expPrepareDetailFacade.findByBarCode(barCode);
-        if(list!=null&&list.size()>0){
-            map.put("info",list);
-         }else{
-            if(barCode!=null&&!"".equals(barCode)){
-                map.put("info","找不到对应的消耗品，barCode错误！");
+    public Map<String, Object> findByBarCode(@QueryParam("barCode") String barCode) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<ExpPrepareVo> list = expPrepareDetailFacade.findByBarCode(barCode);
+        if (list != null && list.size() > 0) {
+            map.put("info", list);
+        } else {
+            if (barCode != null && !"".equals(barCode)) {
+                map.put("info", "找不到对应的消耗品，barCode错误！");
 
-            }else{
-                map.put("info","barCode为空！");
+            } else {
+                map.put("info", "barCode为空！");
             }
         }
         return map;
-     }
+    }
+    /**
+     * 病人计费接口
+     *
+     * @param barCode
+     * @param storageCode
+     * @param operator
+     * @param patientId
+     * @return
+     */
+    @POST
+    @Path("prepare-fee")
+    public Map<String,Object> prepareFee(@QueryParam("barCode") String barCode, @QueryParam("storageCode") String storageCode, @QueryParam("operator") String operator, @QueryParam("patientId") String patientId,@QueryParam("hospitalId") String hospitalId) {
+        Map<String,Object> returnVal=new HashMap<String,Object>();
+        /**
+         * 入库操作
+         * 出库操作
+         * 回写数据
+         */
+        if (StringUtil.isNotBlank(barCode) && StringUtil.isNotBlank(operator) && StringUtil.isNotBlank(storageCode) && StringUtil.isNotBlank(patientId)) {
+            ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findByStorageCode(storageCode);
+            String documentNo = "";//入库单据号
+            String importNoPrefix = expSubStorageDict.getImportNoPrefix();//前缀
+            if (importNoPrefix.length() <= 4) {
+                documentNo = importNoPrefix + "000000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
+            } else if (importNoPrefix.length() == 5) {
+                documentNo = expSubStorageDict.getImportNoPrefix() + "00000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
+            } else if (importNoPrefix.length() == 6) {
+                documentNo = expSubStorageDict.getImportNoPrefix() + "0000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
+            }
+            String documentNo2 = "";//出库单据号
+            String suffer2 = expSubStorageDict.getExportNoPrefix();//前缀
+            if (suffer2.length() <= 4) {
+                documentNo2 = expSubStorageDict.getExportNoPrefix() + "000000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
+            } else if (suffer2.length() == 5) {
+                documentNo2 = expSubStorageDict.getExportNoPrefix() + "00000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
+            } else if (suffer2.length() == 6) {
+                documentNo2 = expSubStorageDict.getExportNoPrefix() + "0000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
+            }
+            String masterId=this.expPrepareDetailFacade.findByExpBarCode(barCode);
+            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
+            ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,storageCode,operator,patientId,hospitalId,barCode);
+            returnVal.put("info",expPrepareVo);
+        }else{
+            returnVal.put("info","参数错误！");
+        }
+         return returnVal;
+    }
+
+    /**
+     * 回滚操作
+     * @return
+     */
+    @POST
+    @Path("roll-back-prepare")
+    public Map<String,Object> rollBackPrepare(@QueryParam("inDocumentNo") String inDocumentNo,@QueryParam("outDocumentNo") String outDocumentNo,@QueryParam("barCode") String barCode){
+        Map<String,Object> retVal=this.expPrepareMasterFacade.rollBack(inDocumentNo,outDocumentNo,barCode);
+        return retVal;
+    }
+
+
 }

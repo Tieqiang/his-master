@@ -1,6 +1,7 @@
 package com.jims.his.domain.ieqm.facade;
 
 import com.jims.his.common.BaseFacade;
+import com.jims.his.domain.ieqm.entity.ExpPrepareDetail;
 import com.jims.his.domain.ieqm.vo.ExpPrepareVo;
 
 import javax.inject.Inject;
@@ -42,6 +43,28 @@ public class ExpPrepareDetailFacade extends BaseFacade {
             }
             return list;
         }
+    }
+     /**
+     * chenxy
+     * findMasterIdByBarCode
+     * @param barCode
+     * @return
+     */
+    public String findByExpBarCode(String barCode) {
+        String sql="select masterId from ExpPrepareDerail where expBarCode='"+barCode+"'";
+        List<String> list=entityManager.createQuery(sql).getResultList();
+        if(list!=null&&!list.isEmpty())
+            return list.get(0);
+            return null;
+     }
+
+    /**
+     *
+     * @param barCode
+     * @return
+     */
+    public ExpPrepareDetail findByCode(String barCode) {
+          return (ExpPrepareDetail)entityManager.createQuery("from ExpPrepareDetail where expBarCode='"+barCode+"'").getSingleResult();
     }
 }
 

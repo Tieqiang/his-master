@@ -390,7 +390,8 @@ $(function () {
         url: '/api/exp-export-class-dict/list',
         valueField: 'direction',
         textField: 'exportClass',
-        method: 'GET',
+//        idField:'exportClass',
+         method: 'GET',
         onSelect:function(){
             var exportClass=$("#exportClass").combobox("getValue");
             var depts = [];
@@ -862,7 +863,7 @@ $(function () {
         expExportMasterBeanChangeVo.inserted = [];
         var exportMaster = {};
         exportMaster.documentNo = $("#documentNo").textbox('getValue');
-        exportMaster.exportClass = $("#exportClass").combobox('getValue');
+        exportMaster.exportClass = $("#exportClass").combobox('getText');
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');

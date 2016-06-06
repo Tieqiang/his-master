@@ -219,5 +219,13 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         return expSupplierVos;
     }
 
-
+    /**
+     *
+     * @param supplierId
+     * @return
+     */
+    public String findNameById(String supplierId) {
+        String sql="select supplier from ExpSupplierCatalog where id='"+supplierId+"'";
+        return (String)entityManager.createQuery(sql).getSingleResult();
+    }
 }

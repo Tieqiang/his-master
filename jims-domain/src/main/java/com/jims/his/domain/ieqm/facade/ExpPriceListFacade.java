@@ -246,4 +246,24 @@ public class ExpPriceListFacade extends BaseFacade {
             return null;
         }
     }
+
+    /**
+     * chenxy
+     * @param expCode
+     * @param packageSpec
+     * @return
+     */
+    public ExpPriceList findByCodeAndPackageSpec(String expCode, String packageSpec) {
+        String  sql="from ExpPriceList where  expCode='"+expCode+"' and expSpec='"+packageSpec+"'";
+        return (ExpPriceList)entityManager.createQuery(sql).getSingleResult();
+    }
+
+    /**
+     * chenxy
+     * @param expId
+     * @return
+     */
+    public ExpPriceList findById(String expId) {
+        return (ExpPriceList)entityManager.createQuery("from ExpPriceList where id='"+expId+"'").getSingleResult();
+    }
 }
