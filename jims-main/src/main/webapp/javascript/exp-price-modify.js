@@ -178,9 +178,6 @@ $(function () {
             title: '名称',
             field: 'expName'
         }, {
-            title: '数量',
-            field: 'quantity'
-        }, {
             title: '规格',
             field: 'expSpec'
         }, {
