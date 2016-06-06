@@ -55,7 +55,11 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         expPrepareMaster.setPrepareDate(sdf.format(new Date()));
         expPrepareMaster.setOperator(staffName);
         expPrepareMaster.setPrice(price);
-        expPrepareMaster.setFirmId(firmId);
+        /**
+         *
+         */
+        String id=this.expSupplierCatalogFacade.findBySuppierId(firmId);
+        expPrepareMaster.setFirmId(id);
         expPrepareMaster=entityManager.merge(expPrepareMaster);
         /**
          * 在 exp_prepare_detail 表中写入数据

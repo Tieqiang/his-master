@@ -228,4 +228,13 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         String sql="select supplier from ExpSupplierCatalog where id='"+supplierId+"'";
         return (String)entityManager.createQuery(sql).getSingleResult();
     }
+
+    /**
+     * chenxy
+     * @param firmId
+     * @return
+     */
+    public String findBySuppierId(String firmId) {
+         return (String)entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getSingleResult();
+    }
 }
