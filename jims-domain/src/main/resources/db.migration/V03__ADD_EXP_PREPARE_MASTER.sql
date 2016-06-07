@@ -10,6 +10,8 @@ create table EXP_PREPARE_MASTER
   prepare_count       VARCHAR2(10),
   operator            VARCHAR2(16),
   prepare_person_name VARCHAR2(16),
+  sub_storage_id      VARCHAR2(64),
+  flag                VARCHAR2(64),
   phone               VARCHAR2(16),
   price               NUMBER
 )
@@ -35,6 +37,10 @@ comment on column EXP_PREPARE_MASTER.operator
   is '操作人';
 comment on column EXP_PREPARE_MASTER.prepare_person_name
   is '备货人';
+comment on column EXP_PREPARE_MASTER.sub_storage_id
+  is '子库房主键';
+comment on column EXP_PREPARE_MASTER.prepare_person_name
+  is '备用字段';
 comment on column EXP_PREPARE_MASTER.phone
   is '备货人电话';
 comment on column EXP_PREPARE_MASTER.price

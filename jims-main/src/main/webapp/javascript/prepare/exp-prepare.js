@@ -173,10 +173,11 @@ $(function () {
     $("#addBtn").on('click', function () {
         var supplierId = $("#supplier").combogrid("getValue");
         if (supplierId == null || "" == supplierId) {
+            $.messager.alert("提示", "请选择供货厂商！！", "info");
             $.messager.alert("系统提示", "请选择供货厂商！", 'error');
         } else {
             flag = 0;
-            $("#left").datagrid('appendRow', {});
+            $("#left").datagrid('appendRow', {sign:1});
             var rows = $("#left").datagrid('getRows');
             var appendRowIndex = $("#left").datagrid('getRowIndex', rows[rows.length - 1]);
             if (editIndex || editIndex == 0) {
@@ -186,6 +187,28 @@ $(function () {
             $("#left").datagrid('beginEdit', editIndex);
         }
     });
+
+    /**
+     * 删除
+     */
+    $("#delBtn").on('click', function () {
+        var row = $("#left").datagrid('getSelected');
+        if(row){
+            var delIndex = $("#left").datagrid('getRowIndex', row);
+            if(row.sign=="1"){
+                $("#left").datagrid('deleteRow', delIndex);
+                if (editIndex == delIndex) {
+                    editIndex = undefined;
+                }
+            }else{
+                $.messager.alert("提示","已备货，不允许删除","info");
+            }
+        }else{
+            $.messager.alert("提示","请选择要删除的行!","info")
+        }
+    });
+
+
     //保存按钮操作
     $("#save").on('click', function () {
         stopEdit();
@@ -474,9 +497,21 @@ $(function () {
                     title: 'expSpec',
                     field: 'expSpec',
                     hidden: true
+                },
+                {
+                    title: 'sign',
+                    field: 'sign',
+                    hidden: true
                 }
             ]
-        ]
+        ],
+        onClickRow: function (index, row) {
+            stopEdit();
+            if(row.sign=="1"){
+                $(this).datagrid('beginEdit', index);
+            }
+            editIndex = index;
+        }
     });
     $("#queryBtn").on("click",function(){
         location.href="/views/his/prepare/exp-prepare-detail.html";
