@@ -9,6 +9,7 @@ $(function () {
             editIndex = undefined;
         }
     }
+
     $("#dg").datagrid({
         title: '备货完成明细记录',
         singleSelect: true,
