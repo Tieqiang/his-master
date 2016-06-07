@@ -43,9 +43,9 @@ public class ExpStorageUpperLowerMarketService {
     @GET
     @Path("upper-lower")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<ExpStorageProfileVo> listExpMenuSearch(@QueryParam("storageCode") String storageCode,@QueryParam("startTime") String startTime,@QueryParam("stopTime") String stopTime,@QueryParam("hospitalId") String hospitalId){
+    public List<ExpStorageProfileVo> listExpMenuSearch(@QueryParam("storageCode") String storageCode,@QueryParam("startTime") String startTime,@QueryParam("stopTime") String stopTime,@QueryParam("hospitalId") String hospitalId,@QueryParam("supplier") String supplier){
 
-        List<ExpStorageProfileVo> resultList = expStorageUpperLowerMarketFacade.findAll(storageCode,startTime,stopTime,hospitalId);
+        List<ExpStorageProfileVo> resultList = expStorageUpperLowerMarketFacade.findAll(storageCode,startTime,stopTime,hospitalId,supplier);
         return resultList;
     }
 

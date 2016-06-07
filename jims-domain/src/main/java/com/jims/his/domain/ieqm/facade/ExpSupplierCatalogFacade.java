@@ -219,5 +219,31 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         return expSupplierVos;
     }
 
+    /**
+     *
+     * @param supplierId
+     * @return
+     */
+    public String findNameById(String supplierId) {
+        String sql="select supplier from ExpSupplierCatalog where id='"+supplierId+"'";
+        return (String)entityManager.createQuery(sql).getSingleResult();
+    }
 
+    /**
+     * chenxy
+     * @param firmId
+     * @return
+     */
+    public String findBySuppierId(String firmId) {
+         return (String)entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getSingleResult();
+    }
+
+    /**
+     *
+     * @param firmId
+     * @return
+     */
+    public ExpSupplierCatalog findById(String firmId) {
+       return (ExpSupplierCatalog)entityManager.createQuery("from ExpSupplierCatalog where id='"+firmId+"'").getSingleResult();
+    }
 }

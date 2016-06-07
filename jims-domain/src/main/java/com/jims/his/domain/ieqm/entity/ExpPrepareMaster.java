@@ -19,6 +19,7 @@ public class ExpPrepareMaster implements java.io.Serializable{
     private String preparePersonName ;   //备货人
     private String phone ;               //备货人电话
     private Double price ;               //备货价格
+    private String firmId;              //生产厂商
 
     public ExpPrepareMaster (){
 
@@ -117,5 +118,14 @@ public class ExpPrepareMaster implements java.io.Serializable{
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    @Column(name="firm_id")
+    public String getFirmId() {
+        return firmId;
+    }
+
+    public void setFirmId(String firmId) {
+        this.firmId = firmId;
     }
 }
