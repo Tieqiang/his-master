@@ -49,11 +49,17 @@ public class IncomeItemDictFacade extends BaseFacade {
 
                 List<IncomeItemDict> incomes=createQuery(IncomeItemDict.class,hql,paras).getResultList() ;
                 if(incomes.size()>0){
-                    String updateHql = "update IncomeItemDict as dict set dict.outpOrderedBy="+incomeItemDict.getOutpOrderedBy()+"" +
-                            " , dict.outpPerformedBy="+incomeItemDict.getOutpPerformedBy()+",dict.outpWardCode="+incomeItemDict.getOutpWardCode()+"," +
-                            "dict.inpOrderedBy="+incomeItemDict.getInpOrderedBy()+",dict.inpPerformedBy="+incomeItemDict.getInpPerformedBy()+",dict.inpWardCode="+incomeItemDict.getInpWardCode()+"" +
-                            " where dict.priceItemCode='"+incomeItemDict.getPriceItemCode()+"'" ;
-                    getEntityManager().createQuery(updateHql).executeUpdate() ;
+                    for(IncomeItemDict dict:incomes){
+                        dict.setOutpOrderedBy(incomeItemDict.getOutpOrderedBy());
+                        dict.setOutpPerformedBy(incomeItemDict.getOutpPerformedBy());
+                        dict.setOutpWardCode(incomeItemDict.getOutpWardCode());
+                        dict.setInpOrderedBy(incomeItemDict.getInpOrderedBy());
+                        dict.setInpPerformedBy(incomeItemDict.getInpPerformedBy());
+                        dict.setInpWardCode(incomeItemDict.getInpWardCode());
+                        dict.setReckItemCode(incomeItemDict.getReckItemCode());
+                        dict.setReckItemName(incomeItemDict.getReckItemName());
+                        merge(dict);
+                    }
                 }else{
                     merge(incomeItemDict) ;
                 }
@@ -115,10 +121,13 @@ public class IncomeItemDictFacade extends BaseFacade {
                 "  from comm.price_list a, COMM.reck_item_class_dict b\n" +
                 " where a.class_on_reckoning = b.class_code\n" +
                 "   and a.item_code not in\n" +
-                "       (select NVL(price_item_code, '000000') from htca.income_item_dict where hospital_id='"+hospitalId+"')" ;
+                "       (select NVL(price_item_code, '000000') from htca.income_item_dict where hospital_id='"+hospitalId+"'" ;
 
         if(!"".equals(reckCode) && reckCode!=null){
-            sql+=" and a.class_on_reckoning='"+reckCode+"'" ;
+
+            sql+=" and reck_item_code ='"+reckCode+"') and a.class_on_reckoning='"+reckCode+"'" ;
+        }else{
+            sql+=")" ;
         }
 
         PageEntity<IncomeItemDict> pageEntity = new PageEntity<>() ;

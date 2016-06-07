@@ -173,7 +173,8 @@ $(function () {
         var promise =loadDict();
         promise.done(function(){
             for(var i = 0 ;i<prices.length;i++){
-                if(prices[i].stopDate != null && prices[i].stopDate-nowTime<0){
+                console.log(prices[i].stopDate-nowTime);
+                if(prices[i].stopDate != null && prices[i].stopDate-nowTime<=0){
                     oldPriceData.push(prices[i]);
                 }
             }
