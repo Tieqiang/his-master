@@ -18,6 +18,7 @@ public class ExpPrepareDetailFacade extends BaseFacade {
 
     private EntityManager entityManager;
 
+
     @Inject
     public ExpPrepareDetailFacade (EntityManager entityManager){
         this.entityManager=entityManager;
