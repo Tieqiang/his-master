@@ -220,5 +220,23 @@ public class ExpPrepareService {
     }
 
 
+    /**
+     *
+     * @param dept
+     * @param supplerId
+     * @return
+     */
+    @GET
+    @Path("find-detail")
+    public  List<ExpPrepareVo> findList(@QueryParam("dept") String dept,@QueryParam("supplierId") String supplerId){
+        return expPrepareDetailFacade.list(dept,supplerId);
+    }
+
+    @GET
+    @Path("find-input-code-detail")
+    public List<ExpNameCaVo> listExpNameCa(@QueryParam("q") String q) {
+        List<ExpNameCaVo> expNameCaVos = expPrepareDetailFacade.listExpPrepareDetail(q);
+        return expNameCaVos;
+    }
 
 }
