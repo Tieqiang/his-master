@@ -134,19 +134,6 @@ public class ExpPrepareService {
 
     /**
      * 根据条形码获取高值耗材信息
-     */
-    @POST
-    @Path("find-by-bar-code")
-    public Map<String, Object> findByBarCode(@QueryParam("barCode") String barCode) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        List<ExpPrepareVo> list = expPrepareDetailFacade.findByBarCode(barCode);
-        if (list != null && list.size() > 0) {
-            map.put("info", list);
-        } else {
-            if (barCode != null && !"".equals(barCode)) {
-                map.put("info", "找不到对应的消耗品，barCode错误！");
-    /**
-     * 根据条形码获取高值耗材信息
      * */
     @GET
     @Path("find-by-bar-code")
@@ -165,8 +152,6 @@ public class ExpPrepareService {
 
             } else {
                 map.put("info", "barCode为空！");
-            }else{
-                map.put("info","barCode为空！");
             }
         }
         return map;
@@ -235,5 +220,5 @@ public class ExpPrepareService {
     }
 
 
-    }
+
 }
