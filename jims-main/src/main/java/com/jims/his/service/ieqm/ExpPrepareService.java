@@ -41,7 +41,7 @@ public class ExpPrepareService {
 
     private ExpPriceListFacade expPriceListFacade;
 
-    @javax.inject.Inject
+    @Inject
     public ExpPrepareService(ExpPrepareDetailFacade expPrepareDetailFacade, ExpPrepareMasterFacade expPrepareMasterFacade, ExpNameDictFacade expNameDictFacade, ExpSubStorageDictFacade expSubStorageDictFacade,ExpPriceListFacade expPriceListFacade) {
         this.expPrepareDetailFacade = expPrepareDetailFacade;
         this.expPrepareMasterFacade = expPrepareMasterFacade;
@@ -170,9 +170,11 @@ public class ExpPrepareService {
     public Map<String,Object> prepareFee(@QueryParam("barCode") String barCode, @QueryParam("storageCode") String storageCode, @QueryParam("operator") String operator, @QueryParam("patientId") String patientId,@QueryParam("hospitalId") String hospitalId) {
         Map<String,Object> returnVal=new HashMap<String,Object>();
         /**
-         * 入库操作
-         * 出库操作
-         * 回写数据
+         * 入库操作   exp_import_master exp_import_detail
+         * 出库操作   exp_export_master exp_export_detail
+         * 库存表      exp_stock
+         * 子库房      exp_sub_storage_dict
+         * 回写数据    exp_prepare_detail
          */
         if (StringUtil.isNotBlank(barCode) && StringUtil.isNotBlank(operator) && StringUtil.isNotBlank(storageCode) && StringUtil.isNotBlank(patientId)) {
             ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findByStorageCode(storageCode);
