@@ -22,7 +22,15 @@ $(function () {
                 field: 'id',
                 hidden: true
             }, {
-                title: '条形码',
+                title: '品名',
+                field: 'expName',
+                width: "20%"
+            },{
+                title: '规格',
+                field: 'expSpec',
+                width: "10%"
+            },{
+                title: '包装规格',
                 field: 'expBarCode',
                 width: "20%"
             }, {
@@ -40,15 +48,15 @@ $(function () {
             }, {
                 title: '使用病人',
                 field: 'usePatientId',
-                width: "20%"
+                width: "10%"
             }, {
                 title: '使用科室',
-                field: 'useDept',
-                width: "10%"
+                field: 'userDept',
+                width: "5%"
             }, {
                 title: '扫码人员',
                 field: 'operator',
-                width: "20%"
+                width: "5%"
 
             }
             ]
@@ -115,8 +123,6 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var supplierId=$("#supplier").combogrid("getValue");
         var dept=$("#dept").combogrid("getValue");
-        alert(supplierId);
-        alert(dept);
         $.get("/api/exp-prepare/find-detail?supplierId=" + supplierId + "&dept=" + dept, function (data) {
 
             $("#dg").datagrid('loadData', data);
