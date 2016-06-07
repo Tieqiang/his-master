@@ -100,7 +100,15 @@ $(function () {
                 {
                     title: '是否使用',
                     field: 'useFlag',
-                    width: "15%"
+                    width: "15%",
+                    formatter: function (value, row, index) {
+                        if (value == '1') {
+                            return '已使用';
+                        }
+                        if (value == '0') {
+                            return '未使用';
+                        }
+                    }
                 },
                 {
                     title: '使用日期',
@@ -121,7 +129,6 @@ $(function () {
                     title: '备货人员',
                     field: 'operator',
                     width: "20%"
-
                 }
             ]
         ]
@@ -197,9 +204,9 @@ $(function () {
 //                console.info(data);
                 $("#right").datagrid("loadData", data);
             }, function (data) {//List<ExpPrepareDetail>
-                console.info(data);
+//                console.info(data);
                 $("#right").datagrid("loadData", data);
-                $.messager.alert("系统提示", "error", 'error');
+//                $.messager.alert("系统提示", "error", 'error');
             })
             }else{
                 $("#left").datagrid('beginEdit', editIndex);

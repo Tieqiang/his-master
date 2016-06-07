@@ -141,7 +141,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             if(expDict!=null){
                 expImportDetail.setExpForm(expDict.getExpForm());
             }
-            expImportDetail.setFirmId(expPrepareMaster.getFirmId());//生产厂家
+            ExpSupplierCatalog e=this.expSupplierCatalogFacade.findById(expPrepareMaster.getFirmId());
+            expImportDetail.setFirmId(e.getSupplierId());//生产厂家
             expImportDetail.setPackageSpec(expPriceList.getExpSpec());
             expImportDetail.setPurchasePrice(expPriceList.getTradePrice());//进价
             expImportDetail.setTradePrice(expPriceList.getRetailPrice());//林售价
@@ -177,7 +178,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportDetail.setExpSpec(expPriceList.getMinSpec());
             expExportDetail.setExpCode(expPriceList.getExpCode());
             expExportDetail.setUnits(expPriceList.getMinUnits());
-            expExportDetail.setFirmId(expPrepareMaster.getFirmId());
+            expExportDetail.setFirmId(e.getSupplierId());
             expExportDetail.setExpForm(expDict.getExpForm());
 
             expExportDetail.setPurchasePrice(expPriceList.getTradePrice());//
@@ -203,7 +204,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expStock.setPackageSpec(expPriceList.getExpSpec());
             expStock.setUnits(expPriceList.getMinUnits());
             expStock.setPackageUnits(expPriceList.getUnits());
-            expStock.setFirmId(expPrepareMaster.getFirmId());
+            expStock.setFirmId(e.getSupplierId());
             expStock.setQuantity(0.0);
             expStock.setPurchasePrice(expPriceList.getTradePrice());
             expStock.setDiscount(100.0);
@@ -235,6 +236,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expPrepareVo.setUsePatientId(patientId);
             expPrepareVo.setUseFlag("已使用");
             expPrepareVo.setOperator(operator);
+            expPrepareVo.setUseDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             expPrepareVo.setInDocumentNo(documentNo);
             expPrepareVo.setOutDocumentNo(documentNo2);
             ExpSubStorageDict expSubStorageDict1=this.expSubStorageDictFacade.findByStorageCode(storageCode);
@@ -256,14 +258,14 @@ public class ExpPrepareMasterFacade extends BaseFacade {
      */
     @Transactional
     public Map<String, Object> rollBack(String inDocumentNo, String outDocumentNo, String barCode) {
-        Map<String, Object> map=new HashMap<String,Object>();
+         Map<String, Object> map=new HashMap<String,Object>();
         /**
          * import export
          */
         int rows1=entityManager.createQuery("delete from ExpImportMaster where documentNo='"+inDocumentNo+"'").executeUpdate();
-        int rows2=entityManager.createQuery("delete from expImportDetail where documentNo='"+inDocumentNo+"'").executeUpdate();
-        int rows3=entityManager.createQuery("delete from expExportMaster where documentNo='"+outDocumentNo+"'").executeUpdate();
-        int rows4=entityManager.createQuery("delete from expExportDetail where documentNo='"+outDocumentNo+"'").executeUpdate();
+        int rows2=entityManager.createQuery("delete from ExpImportDetail where documentNo='"+inDocumentNo+"'").executeUpdate();
+        int rows3=entityManager.createQuery("delete from ExpExportMaster where documentNo='"+outDocumentNo+"'").executeUpdate();
+        int rows4=entityManager.createQuery("delete from ExpExportDetail where documentNo='"+outDocumentNo+"'").executeUpdate();
         /**
          *exp_prepare_detail
          */
