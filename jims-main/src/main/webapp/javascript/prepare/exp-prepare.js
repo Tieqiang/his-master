@@ -145,7 +145,7 @@ $(function () {
     $("#addBtn").on('click', function () {
         var supplierId = $("#supplier").combogrid("getValue");
         if (supplierId == null || "" == supplierId) {
-            alert("请选择供货厂商！！");
+            $.messager.alert("提示", "请选择供货厂商！！", "info");
         } else {
             flag = 0;
             $("#left").datagrid('appendRow', {});
