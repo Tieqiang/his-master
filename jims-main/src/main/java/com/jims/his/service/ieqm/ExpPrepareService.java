@@ -9,6 +9,7 @@ import com.jims.his.domain.ieqm.facade.ExpNameDictFacade;
 import com.jims.his.domain.ieqm.facade.ExpPrepareDetailFacade;
 import com.jims.his.domain.ieqm.facade.ExpPrepareMasterFacade;
 import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
+import com.jims.his.domain.ieqm.vo.ExpPrepareVo;
 import com.jims.his.domain.ieqm.vo.ExpStockRecord;
 
 import javax.ws.rs.*;
@@ -115,5 +116,23 @@ public class ExpPrepareService {
         return list;
     }
 
+    /**
+     *
+     * @param dept
+     * @param supplerId
+     * @return
+     */
+    @GET
+    @Path("find-detail")
+    public  List<ExpPrepareVo> findList(@QueryParam("dept") String dept,@QueryParam("supplierId") String supplerId){
+        return expPrepareDetailFacade.list(dept,supplerId);
+    }
+
+    @GET
+    @Path("find-input-code-detail")
+    public List<ExpNameCaVo> listExpNameCa(@QueryParam("q") String q) {
+        List<ExpNameCaVo> expNameCaVos = expPrepareDetailFacade.listExpPrepareDetail(q);
+        return expNameCaVos;
+    }
 
 }
