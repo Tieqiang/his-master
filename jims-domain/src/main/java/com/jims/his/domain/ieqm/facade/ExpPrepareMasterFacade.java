@@ -44,7 +44,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<ExpPrepareDetail> save(String expId, String supplierId, String amount,String staffName,double price,List<ExpPrepareDetail> list,String firmId) {
+    public List<ExpPrepareDetail> save(String expId, String supplierId, String amount,String staffName,double price,List<ExpPrepareDetail> list,String firmId,String subStorageId) {
         /**
          * 在 exp_prepare_master 表中写入数据
          */
@@ -55,6 +55,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         expPrepareMaster.setPrepareDate(sdf.format(new Date()));
         expPrepareMaster.setOperator(staffName);
         expPrepareMaster.setPrice(price);
+        expPrepareMaster.setSubStorageId(subStorageId);
         /**
          *
          */

@@ -20,6 +20,8 @@ public class ExpPrepareMaster implements java.io.Serializable{
     private String phone ;               //备货人电话
     private Double price ;               //备货价格
     private String firmId;              //生产厂商
+    private String subStorageId;//子库房主键
+    private String flag;//备用字段
 
     public ExpPrepareMaster (){
 
@@ -127,5 +129,23 @@ public class ExpPrepareMaster implements java.io.Serializable{
 
     public void setFirmId(String firmId) {
         this.firmId = firmId;
+    }
+
+    @Column(name="flag")
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    @Column(name="sub_storage_id")
+    public String getSubStorageId() {
+        return subStorageId;
+    }
+
+    public void setSubStorageId(String subStorageId) {
+        this.subStorageId = subStorageId;
     }
 }

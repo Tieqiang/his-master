@@ -15,6 +15,34 @@ $(function () {
         }
     };
     /**
+     * 子库房
+     */
+    var subStorages = [];
+    var promise = $.get("/api/exp-sub-storage-dict/list-by-storage?storageCode="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId, function (data) {
+        subStorages = data;
+    });
+    promise.done(function () {
+        $("#subStorage").combogrid({
+            idField: 'id',
+            textField: 'subStorage',
+            data: subStorages,
+            panelWidth: 450,
+            fitColumns: true,
+            columns: [
+                 [
+                    {
+                        title: '子库房名称',
+                        field: 'subStorage', width: 180, align: 'center'
+                    },
+                    {
+                        title: '子库房代码',
+                        field: 'storageCode', width: 130, align: 'center'
+                    }
+                 ]
+            ]
+        })
+    });
+    /**
      *供货商
      */
     var suppliers = [];
@@ -145,7 +173,7 @@ $(function () {
     $("#addBtn").on('click', function () {
         var supplierId = $("#supplier").combogrid("getValue");
         if (supplierId == null || "" == supplierId) {
-            alert("请选择供货厂商！！");
+            $.messager.alert("系统提示", "请选择供货厂商！", 'error');
         } else {
             flag = 0;
             $("#left").datagrid('appendRow', {});
@@ -162,10 +190,13 @@ $(function () {
     $("#save").on('click', function () {
         stopEdit();
         var rows = $("#left").datagrid('getRows');
+        var subStorageValue=$("#subStorage").combogrid("getValue");
         if (rows.length == 0) {
             $.messager.alert("系统提示", "备货列表为空，不允许保存", 'error');
             return false;
-        } else {
+        } else if(subStorageValue==""){
+            $.messager.alert("系统提示", "请选择子库房", 'error');
+        }else {
             if(dataValid()){
             var expCodes = "";
             var amounts = "";
@@ -179,7 +210,7 @@ $(function () {
             }
             expCodes = expCodes.substring(0, expCodes.length - 1);
             var supplierId = $("#supplier").combogrid("getValue");
-            $.postJSON("/api/exp-prepare/make-data?supplierId=" + supplierId + "&expCodes=" + expCodes + "&operator=" + parent.config.staffName + "&amounts=" + amounts + "&prices=" + prices + "&packageSpecs=" + packageSpecs, function (data) {
+            $.postJSON("/api/exp-prepare/make-data?supplierId=" + supplierId + "&expCodes=" + expCodes + "&operator=" + parent.config.staffName + "&amounts=" + amounts + "&prices=" + prices + "&packageSpecs=" + packageSpecs+"&subStorage="+subStorageValue, function (data) {
                 //List<ExpPrepareDetail>
 //                console.info(data);
                 $("#right").datagrid("loadData", data);

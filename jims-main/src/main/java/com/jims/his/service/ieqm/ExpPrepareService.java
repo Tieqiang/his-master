@@ -116,7 +116,7 @@ public class ExpPrepareService {
      */
     @POST
     @Path("make-data")
-    public List<ExpPrepareDetail> makeData(@QueryParam("supplierId") String supplierId, @QueryParam("expCodes") String expCodes, @QueryParam("operator") String operator, @QueryParam("amounts") String amounts, @QueryParam("prices") String priceStr,@QueryParam("packageSpecs") String packageSpecs) {
+    public List<ExpPrepareDetail> makeData(@QueryParam("supplierId") String supplierId, @QueryParam("expCodes") String expCodes, @QueryParam("operator") String operator, @QueryParam("amounts") String amounts, @QueryParam("prices") String priceStr,@QueryParam("packageSpecs") String packageSpecs,@QueryParam("subStorage") String subStorageId) {
         List<ExpPrepareDetail> list = new ArrayList<ExpPrepareDetail>();
         if (expCodes != null && !"".equals(expCodes)) {
             String[] amountArr = amounts.split(",");
@@ -126,7 +126,7 @@ public class ExpPrepareService {
             for (int i = 0; i < expCodeArr.length; i++) {
 //                ExpDict expDict = expDictFacade.findByCode(expCodeArr[i],packageSpecArr[i]);
                 ExpPriceList expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(expCodeArr[i],packageSpecArr[i]);
-                list = expPrepareMasterFacade.save(expPriceList.getId(), supplierId, amountArr[i], operator, Double.parseDouble(priceArr[i]), list,expPriceList.getFirmId());
+                list = expPrepareMasterFacade.save(expPriceList.getId(), supplierId, amountArr[i], operator, Double.parseDouble(priceArr[i]), list,expPriceList.getFirmId(),subStorageId);
             }
         }
         return list;
@@ -177,7 +177,9 @@ public class ExpPrepareService {
          * 回写数据    exp_prepare_detail
          */
         if (StringUtil.isNotBlank(barCode) && StringUtil.isNotBlank(operator) && StringUtil.isNotBlank(storageCode) && StringUtil.isNotBlank(patientId)) {
-            ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findByStorageCode(storageCode);
+            String masterId=this.expPrepareDetailFacade.findByExpBarCode(barCode);
+            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
+            ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             String documentNo = "";//入库单据号
             String importNoPrefix = expSubStorageDict.getImportNoPrefix();//前缀
             if (importNoPrefix.length() <= 4) {
@@ -200,8 +202,8 @@ public class ExpPrepareService {
             } else if (suffer2.length() == 6) {
                 documentNo2 = expSubStorageDict.getExportNoPrefix() + "0000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
             }
-            String masterId=this.expPrepareDetailFacade.findByExpBarCode(barCode);
-            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
+
+//            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
             ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,storageCode,operator,patientId,hospitalId,barCode);
             returnVal.put("info",expPrepareVo);
         }else{
