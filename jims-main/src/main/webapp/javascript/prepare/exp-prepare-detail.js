@@ -9,6 +9,7 @@ $(function () {
             editIndex = undefined;
         }
     }
+
     $("#dg").datagrid({
         title: '备货完成明细记录',
         singleSelect: true,
@@ -30,7 +31,7 @@ $(function () {
                 field: 'expSpec',
                 width: "10%"
             },{
-                title: '包装规格',
+                title: '条形码',
                 field: 'expBarCode',
                 width: "20%"
             }, {
@@ -40,7 +41,18 @@ $(function () {
             }, {
                 title: '是否使用',
                 field: 'useFlag',
-                width: "10%"
+                width: "10%",
+                editor: {type: 'text', options: {
+                    valueField:'value',
+                    textField:'title',
+                    data:[{
+                        value:'0',
+                        title:'未使用'
+                    },{
+                        title:'已使用',
+                        value:'1'
+                    }]
+                }}
             }, {
                 title: '使用日期',
                 field: 'useDate',
@@ -54,7 +66,7 @@ $(function () {
                 field: 'userDept',
                 width: "5%"
             }, {
-                title: '扫码人员',
+                title: '备货人员',
                 field: 'operator',
                 width: "5%"
 
@@ -120,12 +132,22 @@ $(function () {
 
 
 
+    var list=[];
     $("#searchBtn").on('click', function () {
         var supplierId=$("#supplier").combogrid("getValue");
         var dept=$("#dept").combogrid("getValue");
         $.get("/api/exp-prepare/find-detail?supplierId=" + supplierId + "&dept=" + dept, function (data) {
+            list=data;
+              for(var i=0;i<list.length;i++){
+                  if(list[i].useFlag==0){
+                      list[i].useFlag='未使用'
+                  }else{
+                      list[i].useFlag='已使用'
+                  }
+              }
 
-            $("#dg").datagrid('loadData', data);
+            console.log(list);
+            $("#dg").datagrid('loadData', list);
         });
 
     })

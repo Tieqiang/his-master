@@ -18,6 +18,7 @@ public class ExpPrepareDetailFacade extends BaseFacade {
 
     private EntityManager entityManager;
 
+
     @Inject
     public ExpPrepareDetailFacade (EntityManager entityManager){
         this.entityManager=entityManager;
@@ -95,7 +96,7 @@ public class ExpPrepareDetailFacade extends BaseFacade {
                 "   and d.exp_code = e.exp_code\n" +
                 "   and d.exp_spec = e.min_spec\n" +
                 "   and b.id='"+supplerId+"'\n" +
-                "   and e.exp_code='"+dept+"'\n";
+                "   and e.exp_code like '%"+dept+"%'\n";
         List<ExpPrepareVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPrepareVo.class);
         return nativeQuery;
     }
