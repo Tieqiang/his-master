@@ -46,7 +46,7 @@ public class ExpPrepareVo {
     }
 
     public ExpPrepareVo(String supplier,String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
-    public ExpPrepareVo(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String userDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
+//    public ExpPrepareVo(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String userDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
         this.expBarCode = expBarCode;
         this.masterId = masterId;
         this.useFlag = useFlag;
@@ -331,4 +331,8 @@ public class ExpPrepareVo {
     public void setOutDocumentNo(String outDocumentNo) {
         this.outDocumentNo = outDocumentNo;
     }
+
+
+
+
 }

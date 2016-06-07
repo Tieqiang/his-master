@@ -232,7 +232,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expPrepareVo.setPackageSpec(expPriceList.getExpSpec());
             expPrepareVo.setExpName(expDict.getExpName());
             expPrepareVo.setFirm(this.expSupplierCatalogFacade.findNameById(expPrepareMaster.getFirmId()));
-            expPrepareVo.setUseDept(expPrepareDetail.getUseDept());
+            expPrepareVo.setUserDept(expPrepareDetail.getUseDept());
             expPrepareVo.setUsePatientId(patientId);
             expPrepareVo.setUseFlag("已使用");
             expPrepareVo.setOperator(operator);

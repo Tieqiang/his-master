@@ -54,26 +54,6 @@ $(function () {
     //右侧列表初始化
     $("#right").datagrid({
 
-        /**
-
-         private String expBarCode ;     //条形码
-         private String masterId ;       //备货记录ID
-         private String useFlag ;        //是否使用
-         private String useDate ;        //使用日期
-         private String usePatientId ;   //使用病人
-         private String useDept ;        //使用科室
-         private String impDocnoFirst   ;//入库单号
-         private String expDocnoFirst   ;//出库单号
-         private String impDocnoSecond  ;//入库单号
-         private String expDocnoSecond  ;//出库单号
-         private String operator ;       //扫码人员
-         private String printFlag ;     //是否打印
-         *
-         *
-         *
-         *
-         *
-         */
         title: '备货完成明细记录',
         singleSelect: true,
         fit: true,
@@ -467,6 +447,8 @@ $(function () {
             ]
         ]
     });
-
+    $("#queryBtn").on("click",function(){
+        location.href="/views/his/prepare/exp-prepare-detail.html";
+    })
 
 });
