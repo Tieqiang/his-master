@@ -129,9 +129,6 @@ $(function () {
             pageNumber: 1
         });
 
-
-
-
     var list=[];
     $("#searchBtn").on('click', function () {
         var supplierId=$("#supplier").combogrid("getValue");
@@ -146,9 +143,42 @@ $(function () {
                   }
               }
 
-            console.log(list);
+//            console.log(list);
             $("#dg").datagrid('loadData', list);
         });
 
     })
+     /**
+     * 删除按钮
+     */
+    $("#delBtn").on('click', function () {
+        var row = $("#dg").datagrid('getSelected');
+        if (row) {
+            var flag=window.confirm("确定要删除吗?");
+            if(flag){
+                var index = $("#dg").datagrid('getRowIndex', row);
+                $("#dg").datagrid('deleteRow', index);
+                if (editIndex == index) {
+                    editIndex = undefined;
+                }
+                alert(row.id);
+                $.ajax({
+                    type:"POST",
+                    url:"/api/exp-prepare/del-data?id="+row.id,
+                    dataType:"JSON",
+                    cache:false,
+                    success:function(data){
+                        if(data.success){
+                            $("#dg").datagrid('reload');
+                            $.messager.alert("系统提示", "删除成功!", 'info');
+                        }else{
+                             $.messager.alert("系统提示", "删除失败!", 'error');
+                         }
+                     }
+                 });
+            }
+         } else {
+            $.messager.alert("系统提示", "请选择要删除的行", 'info');
+        }
+    });
 });

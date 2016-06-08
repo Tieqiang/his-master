@@ -40,6 +40,7 @@ public class ExpPrepareVo {
     private String packageUnits;//
     private String inDocumentNo;
     private String outDocumentNo;//
+    private String id;//exp_prepare_detail 主键
 
     public ExpPrepareVo(){
 
@@ -333,6 +334,11 @@ public class ExpPrepareVo {
     }
 
 
+    public String getId() {
+        return id;
+    }
 
-
+    public void setId(String id) {
+        this.id = id;
+    }
 }

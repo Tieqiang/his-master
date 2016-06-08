@@ -225,7 +225,7 @@ public class ExpPrepareService {
 
 
     /**
-     *
+     *weishen
      * @param dept
      * @param supplerId
      * @return
@@ -241,6 +241,18 @@ public class ExpPrepareService {
     public List<ExpNameCaVo> listExpNameCa(@QueryParam("q") String q) {
         List<ExpNameCaVo> expNameCaVos = expPrepareDetailFacade.listExpPrepareDetail(q);
         return expNameCaVos;
+    }
+
+    /**
+     * chenxy
+     * @param id  exp_prepare_detail  主键
+     * @return
+     */
+    @POST
+    @Path("del-data")
+    public Map<String,Object> delData(@QueryParam("id") String id){
+         Map<String,Object> map=this.expPrepareDetailFacade.delData(id);
+         return map;
     }
 
 }
