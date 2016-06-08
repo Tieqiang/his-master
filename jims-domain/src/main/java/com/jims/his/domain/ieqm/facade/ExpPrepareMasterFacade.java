@@ -219,6 +219,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportDetail.setPackageUnits(expPriceList.getUnits());
             expExportDetail.setInventory(0.0);//现有数量为0
             expExportDetail.setAssignCode("");//分摊方式
+            expExportDetail.setBigFirmId(e.getSupplierId());
             expExportDetail= super.merge(expExportDetail);
             /**
              * 库存表 exp_stock
@@ -237,7 +238,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expStock.setDiscount(100.0);
             expStock.setSubStorage(this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId()).getSubStorage());
             expStock.setHospitalId(hospitalId);
-            expStock.setSupplyIndicator(1);//可供标志
+             expStock.setSupplyIndicator(1);//可供标志
+            expStock.setBatchNo("x");
             expStock=super.merge(expStock);
             /**
              * 回写exp_prepare_detail 表
