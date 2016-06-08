@@ -536,8 +536,8 @@ $(function () {
                     textField: 'assignName',
                     method: 'GET',
                     onLoadSuccess: function () {
-                        var data = $(this).combobox('getData');
-                        $(this).combobox('select', data[0].assignName);
+//                        var data = $(this).combobox('getData');
+                        $(this).combobox('select',"请选择");
                     }
                 }
             }
