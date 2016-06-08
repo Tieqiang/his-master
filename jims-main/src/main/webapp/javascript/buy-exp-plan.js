@@ -79,7 +79,7 @@ $(function () {
         title: '消耗品待选表',
         singleSelect: false,
         fit: true,
-        nowrap: false,
+//        nowrap: false,
         url: '/api/buy-exp-plan/list-low?storageCode=' + parent.config.storageCode,
         method: 'GET',
         columns: [
@@ -526,12 +526,14 @@ $(function () {
             });
         }
         if ($("#expScope").combobox("getValue") == 3) {
-            var day = {
-                "storage": "DAY",
-                "planNumber": $("#day").textbox("getText")
-            };
-            rows.unshift(day);
-
+//            var day = {
+//                "storage": "DAY",
+//                "planNumber": $("#day").textbox("getText")
+//            };
+            var day=$("#day").textbox("getText");
+            for(var i=0;i<rows.length;i++){
+                rows[i].planNumber=day;
+            }
             $.postJSON('/api/buy-exp-plan/generate-num-sale', rows, function (data) {
 
                 $("#right").datagrid("loadData", data);
