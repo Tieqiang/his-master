@@ -235,9 +235,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expStock.setQuantity(0.0);
             expStock.setPurchasePrice(expPriceList.getTradePrice());
             expStock.setDiscount(100.0);
-            expStock.setSubStorage(expSubStorageDict.getStorageCode());
+            expStock.setSubStorage(this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId()).getSubStorage());
             expStock.setHospitalId(hospitalId);
-
             expStock.setSupplyIndicator(1);//可供标志
             expStock=super.merge(expStock);
             /**
