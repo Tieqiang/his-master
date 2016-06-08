@@ -180,6 +180,10 @@ public class ExpPrepareService {
             String masterId=this.expPrepareDetailFacade.findByExpBarCode(barCode);
             ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
             ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
+            if(expSubStorageDict==null){
+                returnVal.put("info","barCode参数错误!");
+                return returnVal;
+            }
             String documentNo = "";//入库单据号
             String importNoPrefix = expSubStorageDict.getImportNoPrefix();//前缀
             if (importNoPrefix.length() <= 4) {
