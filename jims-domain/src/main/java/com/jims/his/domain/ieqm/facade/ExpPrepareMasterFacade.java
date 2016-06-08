@@ -123,7 +123,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expImportMaster.setAccountPayed(0.0);
             expImportMaster.setAdditionalFee(0.0);
             expImportMaster.setImportClass("正常入库");
-            ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findByStorageCode(storageCode);
+            ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             if(expSubStorageDict!=null){
                 expImportMaster.setSubStorage(expSubStorageDict.getSubStorage());//子库房
             }
@@ -146,12 +146,15 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expImportDetail.setFirmId(e.getSupplierId());//生产厂家
             expImportDetail.setPackageSpec(expPriceList.getExpSpec());
             expImportDetail.setPurchasePrice(expPriceList.getTradePrice());//进价
-            expImportDetail.setTradePrice(expPriceList.getRetailPrice());//林售价
+            expImportDetail.setTradePrice(expPriceList.getTradePrice());//林售价
+            expImportDetail.setRetailPrice(expPriceList.getRetailPrice());
             expImportDetail.setUnits(expPriceList.getMinUnits());//最小规格
             expImportDetail.setPackageUnits(expPriceList.getUnits());//包装规格
             expImportDetail.setExpSpec(expPriceList.getMinSpec());//最小规格
+            expImportDetail.setItemNo(Short.parseShort("0"));
             expImportDetail.setInventory(1.0);//现有数量
             expImportDetail.setQuantity(1.0);//chuku
+            expImportDetail.setBatchNo("x");
             expImportDetail=super.merge(expImportDetail);
             /**
              * 出库主表  exp_export_master
@@ -187,7 +190,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportDetail.setRetailPrice(expPriceList.getRetailPrice());
 
             expExportDetail.setTradePrice(expPriceList.getTradePrice());
-
+            expExportDetail.setBatchNo("x");
             expExportDetail.setPackageSpec(expPriceList.getExpSpec());
             expExportDetail.setQuantity(1.0);//出库数量
             expExportDetail.setPackageUnits(expPriceList.getUnits());
@@ -240,7 +243,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expPrepareVo.setUseDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             expPrepareVo.setInDocumentNo(documentNo);
             expPrepareVo.setOutDocumentNo(documentNo2);
-            ExpSubStorageDict expSubStorageDict1=this.expSubStorageDictFacade.findByStorageCode(storageCode);
+            ExpSubStorageDict expSubStorageDict1=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             expSubStorageDict1.setImportNoAva(expSubStorageDict1.getImportNoAva()+1);
             expSubStorageDict1.setExportNoAva(expSubStorageDict1.getExportNoAva()+1);
             expSubStorageDict1=expSubStorageDictFacade.save(expSubStorageDict1);

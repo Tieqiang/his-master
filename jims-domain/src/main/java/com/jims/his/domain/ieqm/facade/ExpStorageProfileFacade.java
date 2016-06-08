@@ -76,7 +76,7 @@ public class ExpStorageProfileFacade extends BaseFacade {
     }
 
     public List<ExpStorageProfile> findExpStockDefine(String expForm, String expCode,String storage) {
-        String sql = "SELECT EXP_STORAGE_PROFILE.ID," +
+        String sql = "SELECT distinct EXP_STORAGE_PROFILE.ID," +
                 "         EXP_STORAGE_PROFILE.STORAGE,   \n" +
                 "         EXP_DICT.EXP_NAME,   \n" +
                 "         EXP_DICT.EXP_FORM,   \n" +
