@@ -34,6 +34,10 @@ public class ExpImportDetailFacade extends BaseFacade {
      * @return
      */
     public List<ExpImportDetailVo> searchImportDetailDict(String documentNo, String hospitalId) {
+        /**
+         * accountReceivable
+         *
+         */
         String sql = "SELECT distinct EXP_IMPORT_DETAIL.DOCUMENT_NO,   \n" +
                 "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
                 "         EXP_IMPORT_DETAIL.EXP_CODE,   \n" +
@@ -43,7 +47,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "         EXP_IMPORT_DETAIL.EXPIRE_DATE,   \n" +
                 "         EXP_IMPORT_DETAIL.FIRM_ID,\n" +
                 "\t       EXP_IMPORT_MASTER.SUPPLIER,   \n" +
-                "\t       EXP_IMPORT_DETAIL.PURCHASE_PRICE*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
+                "\t       EXP_IMPORT_DETAIL.RETAIL_PRICE*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
                 "         EXP_IMPORT_DETAIL.PURCHASE_PRICE,   \n" +
                 "         EXP_IMPORT_DETAIL.DISCOUNT,   \n" +
                 "         EXP_IMPORT_DETAIL.PACKAGE_SPEC,   \n" +

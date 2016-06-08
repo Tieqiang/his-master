@@ -267,8 +267,9 @@ $(function () {
                     textField: 'assignName',
                     method: 'GET',
                     onLoadSuccess: function () {
-                        var data = $(this).combobox('getData');
-                        $(this).combobox('select', data[0].assignName);
+//                        var data = $(this).combobox('getData');
+                        $(this).combobox('select', "全部");
+//                        $(this).assignCode =data[0].assignCode;
                     }
                 },
                 width: "8%"
@@ -720,10 +721,10 @@ $(function () {
             }}
         }]],
         onLoadSuccess: function (data) {
-            var dat = {};
-            dat = $("#stockRecordDatagrid").datagrid('getData');
-            console.log(dat);
-            if (dat.total == 0 && editIndex != undefined) {
+            var data = {};
+            data = $("#stockRecordDatagrid").datagrid('getData');
+            console.log(data);
+            if (data.total == 0 && editIndex != undefined) {
                 $("#exportDetail").datagrid('endEdit', editIndex);
                 $("#stockRecordDialog").dialog('close');
                 $.messager.alert('系统提示', '该子库房暂无此产品,请重置产品名称或子库房！', 'info');
@@ -929,20 +930,6 @@ $(function () {
                 detail.killflag = 0;
             }
             detail.expSgtp = 1;
-            //if($(input).is(":checked")){
-            //    alert(5);
-            //}
-            //$("#order > thead > tr > td > input ").click(function(){
-            //    if(this.checked){
-            //        row.killflag=1;
-            //        //做if条件判断，如果是被选中的，那么.....
-            //    }
-            //   // 或者
-            //    if($(this).attr("type")=="checkbox"&&$(this).attr("type").prop("checked")){
-            //    row.killflag=1;
-            //    }
-            //    //请问这里能用this关键字来查询么，因为当前对象已经是这个input了
-            //})
             detail.assignCode = rows[i].assignCode;
             detail.bigCode = rows[i].expCode;
             detail.bigSpec = rows[i].packageSpec;

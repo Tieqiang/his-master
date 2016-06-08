@@ -49,6 +49,9 @@ $(function () {
     });
     //格式化日期函数
     function formatterDate(val, row) {
+        if(val.index("1970")>0){
+            return null;
+        }
         if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
@@ -354,7 +357,7 @@ $(function () {
             field: 'firmId'
         }, {
             title: '批发价',
-            field: 'tradePrice'
+            field: 'purchasePrice'
         }, {
             title: '零售价',
             field: 'retailPrice'

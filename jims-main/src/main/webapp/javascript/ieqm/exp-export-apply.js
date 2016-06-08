@@ -882,7 +882,7 @@ $(function () {
             rowDetail.expForm = row.expForm;
             rowDetail.packageSpec = row.packageSpec;
             rowDetail.expCode = row.expCode;
-            rowDetail.units = row.units;
+            rowDetail.units = row.minUnits;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
             rowDetail.purchasePrice = row.purchasePrice;
