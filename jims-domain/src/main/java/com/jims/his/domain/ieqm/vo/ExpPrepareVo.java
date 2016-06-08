@@ -1,20 +1,19 @@
 package com.jims.his.domain.ieqm.vo;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 /**
  * Created by zhuq on 2016/6/2.
  * 高值耗材集合类
  */
 @XmlRootElement
-public class ExpPrepareVo implements Serializable {
+public class ExpPrepareVo {
     private String expBarCode ;         //条形码
     private String masterId ;           //备货记录ID
     private String useFlag ;            //是否使用
     private String useDate ;            //使用日期
     private String usePatientId ;       //使用病人
-    private String useDept ;            //使用科室
+    private String userDept ;            //使用科室
     private String impDocnoFirst   ;    //入库单号
     private String expDocnoFirst   ;    //出库单号
     private String impDocnoSecond  ;    //入库单号
@@ -35,18 +34,26 @@ public class ExpPrepareVo implements Serializable {
     private String units;                //单位
     private String expFrom;                //高值耗材
     private String usePrice;               //出库价格
+    private String supplier;
+    private String firm;
+    private String packageSpec;//
+    private String packageUnits;//
+    private String inDocumentNo;
+    private String outDocumentNo;//
+    private String id;//exp_prepare_detail 主键
 
     public ExpPrepareVo(){
 
     }
 
-    public ExpPrepareVo(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
+    public ExpPrepareVo(String supplier,String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
+//    public ExpPrepareVo(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String userDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
         this.expBarCode = expBarCode;
         this.masterId = masterId;
         this.useFlag = useFlag;
         this.useDate = useDate;
         this.usePatientId = usePatientId;
-        this.useDept = useDept;
+        this.userDept = userDept;
         this.impDocnoFirst = impDocnoFirst;
         this.expDocnoFirst = expDocnoFirst;
         this.impDocnoSecond = impDocnoSecond;
@@ -67,6 +74,15 @@ public class ExpPrepareVo implements Serializable {
         this.units = units;
         this.expFrom = expFrom;
         this.usePrice = usePrice;
+        this.supplier=supplier;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 
     public String getExpBarCode() {
@@ -109,12 +125,12 @@ public class ExpPrepareVo implements Serializable {
         this.usePatientId = usePatientId;
     }
 
-    public String getUseDept() {
-        return useDept;
+    public String getUserDept() {
+        return userDept;
     }
 
-    public void setUseDept(String useDept) {
-        this.useDept = useDept;
+    public void setUserDept(String userDept) {
+        this.userDept = userDept;
     }
 
     public String getImpDocnoFirst() {
@@ -275,5 +291,54 @@ public class ExpPrepareVo implements Serializable {
 
     public void setUsePrice(String usePrice) {
         this.usePrice = usePrice;
+    }
+
+    public String getFirm() {
+        return firm;
+    }
+
+    public void setFirm(String firm) {
+        this.firm = firm;
+    }
+
+    public String getPackageSpec() {
+        return packageSpec;
+    }
+
+    public void setPackageSpec(String packageSpec) {
+        this.packageSpec = packageSpec;
+    }
+
+    public String getPackageUnits() {
+        return packageUnits;
+    }
+
+    public void setPackageUnits(String packageUnits) {
+        this.packageUnits = packageUnits;
+    }
+
+    public String getInDocumentNo() {
+        return inDocumentNo;
+    }
+
+    public void setInDocumentNo(String inDocumentNo) {
+        this.inDocumentNo = inDocumentNo;
+    }
+
+    public String getOutDocumentNo() {
+        return outDocumentNo;
+    }
+
+    public void setOutDocumentNo(String outDocumentNo) {
+        this.outDocumentNo = outDocumentNo;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

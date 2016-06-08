@@ -73,7 +73,7 @@ public class ExpPriceListFacade extends BaseFacade {
                 "         a.OTHER_DATE   \n" +
                 "    FROM EXP_PRICE_LIST a,EXP_DICT b   \n" +
                 "   WHERE  a.EXP_CODE = b.EXP_CODE and a.min_spec=b.exp_spec" +
-                "   and ( a.STOP_DATE >= sysdate OR a.STOP_DATE is null ) \n" +
+                "   and ( a.STOP_DATE <= sysdate OR a.STOP_DATE is null ) \n" +
                 "     and  a.START_DATE <= sysdate \n";
         if(null != expCode && !expCode.trim().equals("")){
             sql += " AND a.EXP_CODE ='" + expCode + "'";
@@ -245,5 +245,25 @@ public class ExpPriceListFacade extends BaseFacade {
         }else{
             return null;
         }
+    }
+
+    /**
+     * chenxy
+     * @param expCode
+     * @param packageSpec
+     * @return
+     */
+    public ExpPriceList findByCodeAndPackageSpec(String expCode, String packageSpec) {
+        String  sql="from ExpPriceList where  expCode='"+expCode+"' and expSpec='"+packageSpec+"'";
+        return (ExpPriceList)entityManager.createQuery(sql).getSingleResult();
+    }
+
+    /**
+     * chenxy
+     * @param expId
+     * @return
+     */
+    public ExpPriceList findById(String expId) {
+        return (ExpPriceList)entityManager.createQuery("from ExpPriceList where id='"+expId+"'").getSingleResult();
     }
 }
