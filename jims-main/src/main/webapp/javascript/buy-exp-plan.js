@@ -79,7 +79,7 @@ $(function () {
         title: '消耗品待选表',
         singleSelect: false,
         fit: true,
-        nowrap: false,
+//        nowrap: false,
         url: '/api/buy-exp-plan/list-low?storageCode=' + parent.config.storageCode,
         method: 'GET',
         columns: [
@@ -526,12 +526,14 @@ $(function () {
             });
         }
         if ($("#expScope").combobox("getValue") == 3) {
-            var day = {
-                "storage": "DAY",
-                "planNumber": $("#day").textbox("getText")
-            };
-            rows.unshift(day);
-
+//            var day = {
+//                "storage": "DAY",
+//                "planNumber": $("#day").textbox("getText")
+//            };
+            var day=$("#day").textbox("getText");
+            for(var i=0;i<rows.length;i++){
+                rows[i].planNumber=day;
+            }
             $.postJSON('/api/buy-exp-plan/generate-num-sale', rows, function (data) {
 
                 $("#right").datagrid("loadData", data);
@@ -782,6 +784,11 @@ $(function () {
                     field: 'expForm',
                     align: 'center',
                     width: '8%'
+                }, {
+                    title: '库存量',
+                    field: 'quantity',
+                    align: 'center',
+                    width: '8%'
                 }
             ]
         ],
@@ -803,6 +810,7 @@ $(function () {
             rowDetail.purchasePrice=row.tradePrice;
             rowDetail.storer= parent.config.staffName;
             rowDetail.expForm=row.expForm;
+            rowDetail.stockquantityRef=row.quantity;
             //rowDetail.invoiceDate = setDefaultDate();
             //rowDetail.invoiceNo = row.invoiceNo;
 

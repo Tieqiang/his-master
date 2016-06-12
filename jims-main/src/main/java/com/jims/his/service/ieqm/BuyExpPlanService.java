@@ -58,7 +58,7 @@ public class BuyExpPlanService {
      */
     @GET
     @Path("list-low")
-    @Produces({MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_JSON})
     public List<BuyExpPlanVo> listBuyListLow(@QueryParam("storageCode") String storageCode){
         return buyExpPlanFacade.listBuyListLow(storageCode);
     }

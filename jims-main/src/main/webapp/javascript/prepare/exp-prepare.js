@@ -173,7 +173,7 @@ $(function () {
     $("#addBtn").on('click', function () {
         var supplierId = $("#supplier").combogrid("getValue");
         if (supplierId == null || "" == supplierId) {
-            $.messager.alert("提示", "请选择供货厂商！！", "info");
+//            $.messager.alert("提示", "请选择供货厂商！！", "info");
             $.messager.alert("系统提示", "请选择供货厂商！", 'error');
         } else {
             flag = 0;
