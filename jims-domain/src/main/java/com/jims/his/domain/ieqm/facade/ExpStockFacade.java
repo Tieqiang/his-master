@@ -759,10 +759,11 @@ public class ExpStockFacade extends BaseFacade {
         ExpSubStorageDict subStorage = expSubStorageDictFacade.getSubStorage(expExportMaster.getStorage(), expExportMaster.getSubStorage(), expExportMaster.getHospitalId());
         subStorage.setExportNoAva(subStorage.getExportNoAva() + 1);
         merge(subStorage);//当前的单据号加1
+        expExportMaster.setAcctdate(new Date());
         merge(expExportMaster);
         List<ExpExportDetail> details = exportVo.getExpExportDetailBeanChangeVo().getInserted();
         for (ExpExportDetail detail : details) {
-            merge(detail);
+             merge(detail);
         }
     }
 

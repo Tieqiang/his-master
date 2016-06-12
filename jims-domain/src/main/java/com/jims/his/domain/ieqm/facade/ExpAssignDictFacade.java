@@ -33,18 +33,12 @@ public class ExpAssignDictFacade extends BaseFacade {
      * @param code
      * @return
      */
-    public ExpAssignDict findByCode(String code) throws Exception {
-        String hql = "from ExpAssignDict  where assignCode='"+code+"'" ;
-        List<ExpAssignDict> expAssignDicts = createQuery(ExpAssignDict.class,hql,new ArrayList<Object>()).getResultList() ;
-
-       //if(obj!=null&&!"".equals(obj)){
-       //    return (ExpAssignDict)obj;
-       //}
-        if(expAssignDicts.size()==1){
-            return expAssignDicts.get(0) ;
-        }else{
-            throw new Exception("消耗品出库分摊方式，维护有误，请检查");
-        }
+    public ExpAssignDict findByCode(String code) {
+       Object obj=entityManager.createQuery("from ExpAssignDict  where assignCode='"+code+"'").getSingleResult();
+       if(obj!=null&&!"".equals(obj)){
+           return (ExpAssignDict)obj;
+       }
+       return null;
     }
     /**
      * 保存增删改

@@ -59,7 +59,7 @@ public class BuyExpPlanFacade extends BaseFacade {
      * @return
      */
     public List<BuyExpPlanVo> listBuyListLow(String storageCode){
-        String sql = "SELECT exp_stock.storage,\n" +
+        String sql = "SELECT distinct exp_stock.storage,\n" +
                 "         exp_stock.exp_code,\n" +
 //                "         exp_stock.exp_spec,\n" +
 //                "         exp_stock.units,\n" +
@@ -100,37 +100,48 @@ public class BuyExpPlanFacade extends BaseFacade {
     }
 
     public List<BuyExpPlanVo> listBuyListAll(String storageCode) {
-        String sql = "SELECT exp_stock.storage,\n" +
-                "       exp_stock.exp_code,\n" +
-//                "       exp_stock.exp_spec,\n" +
-//                "       exp_stock.units,\n" +
-                "       exp_stock.firm_id,\n" +
-                "       exp_stock.package_spec pack_spec,\n" +
-                "       exp_stock.package_units pack_unit,\n" +
-                "       exp_price_list.retail_price,\n" +
-                "       \"EXP_DICT\".\"EXP_NAME\",\n" +
-                "       avg(\"EXP_STOCK\".\"PURCHASE_PRICE\") purchase,\n" +
-                "       sum(\"EXP_STOCK\".\"QUANTITY\") quantity,\n" +
-                "       EXP_DICT.exp_form\n" +
-                "  FROM \"EXP_DICT\", exp_stock, exp_price_list\n" +
-                " WHERE (\"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\")\n" +
-                "   and (\"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\")\n" +
-                "   and (exp_stock.exp_code = exp_price_list.exp_code)\n" +
-                "   and (exp_stock.EXP_SPEC = exp_price_list.MIN_SPEC)\n" +
-                "   and (exp_stock.firm_id = exp_price_list.firm_id)\n" +
-                "   and (exp_price_list.start_date < sysdate and\n" +
-                "       (sysdate <= exp_price_list.stop_date or\n" +
-                "       exp_price_list.stop_date is null))\n" +
-                "   and (\"EXP_STOCK\".\"STORAGE\" = "+ storageCode +")\n" +
-                " group by exp_stock.storage,\n" +
-                "          exp_stock.exp_code,\n" +
-                "          exp_stock.exp_spec,\n" +
-                "          exp_stock.units,\n" +
-                "          exp_stock.firm_id,\n" +
-                "          exp_stock.package_spec,\n" +
-                "          exp_stock.package_units,\n" +
-                "          \"EXP_DICT\".\"EXP_NAME\",\n" +
-                "          exp_price_list.retail_price,EXP_DICT.exp_form";
+        String sql =  "  SELECT\n" +
+                "        distinct exp_stock.storage,\n" +
+                "        exp_stock.exp_code,\n" +
+                "        exp_stock.firm_id,\n" +
+                "        exp_price_list.exp_spec pack_spec,\n" +
+                "        exp_stock.package_units pack_unit,\n" +
+                "        exp_price_list.retail_price,\n" +
+                "        EXP_DICT.EXP_NAME,\n" +
+                "        EXP_STOCK.PURCHASE_PRICE purchase,\n" +
+                "        EXP_STOCK.QUANTITY quantity,\n" +
+                "        EXP_DICT.exp_form   \n" +
+                "    FROM\n" +
+                "        \"EXP_DICT\",\n" +
+                "         exp_stock,\n" +
+                "        exp_price_list  \n" +
+                "    WHERE\n" +
+                "        (\n" +
+                "            \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\"\n" +
+                "        )    \n" +
+                "        and (\n" +
+                "            \"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\"\n" +
+                "        )    \n" +
+                "        and (\n" +
+                "            exp_stock.exp_code = exp_price_list.exp_code\n" +
+                "        )    \n" +
+                "        and (\n" +
+                "            exp_stock.EXP_SPEC = exp_price_list.MIN_SPEC\n" +
+                "        )    \n" +
+                "        and (\n" +
+                "            exp_stock.firm_id = exp_price_list.firm_id\n" +
+                "        )    \n" +
+                "        and (\n" +
+                "            exp_price_list.start_date < sysdate \n" +
+                "            and        (\n" +
+                "                sysdate <= exp_price_list.stop_date \n" +
+                "                or        exp_price_list.stop_date is null\n" +
+                "            )\n" +
+                "        )    \n" +
+                "        and (\n" +
+                "            \"EXP_STOCK\".\"STORAGE\" = '"+storageCode+"'\n" +
+                "        ) ";
+
 
         List<BuyExpPlanVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlanVo.class);
         return result;
@@ -254,7 +265,8 @@ public class BuyExpPlanFacade extends BaseFacade {
                 if (result != null && result.size() > 0) {
                     BigDecimal up = (BigDecimal) result.get(0);
                     double upLevel = up.doubleValue();
-                    temp.setExportquantityRef(upLevel);
+//                    exportquantityRef
+//                    temp.setExportquantityRef(upLevel);
                     temp.setWantNumber(upLevel);
                 }
 
@@ -282,7 +294,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 if (result != null && result.size() > 0) {
                     BigDecimal up = (BigDecimal) result.get(0);
                     double upLevel = up.doubleValue();
-                    temp.setExportquantityRef(upLevel);
+//                    temp.setExportquantityRef(upLevel);
                     temp.setWantNumber(upLevel);
                 }
 
@@ -297,6 +309,7 @@ public class BuyExpPlanFacade extends BaseFacade {
      * @return
      */
     public List<BuyExpPlan> generateNumSale(List<BuyExpPlan> inData) {
+
         if (null != inData && inData.size() > 0) {
             Iterator<BuyExpPlan> ite = inData.iterator();
             int day = 0;
@@ -308,7 +321,7 @@ public class BuyExpPlanFacade extends BaseFacade {
             int dayIndex = 0;
             while (ite.hasNext()) {
                 BuyExpPlan temp = ite.next();
-                if(temp.getStorage().equals("DAY")){
+//                if(temp.getStorage().equals("DAY")){
                     day = temp.getPlanNumber().intValue();
                     dayIndex = inData.indexOf(temp);
 
@@ -325,12 +338,12 @@ public class BuyExpPlanFacade extends BaseFacade {
                     startDate = sdf.format(dBefore);    //格式化前n天
                     endDate = sdf.format(dNow); //格式化当前时间
 
-                }else{
+//                }else{
                     //首先计算当前库存量
                     String stockSql = "SELECT nvl(sum(quantity),0)\n" +
                             "      FROM exp_stock\n" +
                             "      where exp_code = '"+temp.getExpCode()+"'\n" +
-                            "      And exp_spec = '"+temp.getExpSpec()+"'\n" +
+//                            "      And exp_spec = '"+temp.getExpSpec()+"'\n" +
                             "      And firm_id = '"+temp.getFirmId()+"'\n" +
                             "      And package_spec = '"+temp.getPackSpec()+"'";
                     List quantityList = super.createNativeQuery(stockSql).getResultList();
@@ -345,7 +358,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                                 "\t\t\tand   exp_export_detail.firm_id = exp_price_list.firm_id  \t\t\tAND   exp_price_list.stop_date is NULL\n" +
                                 "\t\t\tAND\tEXP_export_master.storage = '"+temp.getStorage()+"'\n" +
                                 "\t\t\tAND\texp_export_detail.EXP_code = '"+temp.getExpCode()+"'\n" +
-                                "\t\t\tAND   exp_export_detail.EXP_spec = '"+temp.getExpSpec()+"'\n" +
+                                "\t\t\tAND   exp_export_detail.package_spec = '"+temp.getPackSpec()+"'\n" +
                                 "\t\t\tAND   export_date >= to_date('"+ startDate+"','YYYY-MM-DD HH24:MI:SS')\n" +
                                 "\t\t\tAnd   export_date < to_date('"+ endDate+"','YYYY-MM-DD HH24:MI:SS')";
                         List consumeList = super.createNativeQuery(consumeSql).getResultList();
@@ -370,12 +383,8 @@ public class BuyExpPlanFacade extends BaseFacade {
                         temp.setStockquantityRef(quantity);
                     }
                 }
-
-            }
-            inData.remove(dayIndex);
-        }
-
-        return inData;
+         }
+         return inData;
     }
 
     /**

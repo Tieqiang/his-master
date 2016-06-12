@@ -113,22 +113,29 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             * 入库主表 expImportMaster
             */
             ExpImportMaster expImportMaster =new ExpImportMaster();
-            expImportMaster.setOperator(operator);
+//            expImportMaster.setOperator(operator);
             expImportMaster.setDocumentNo(documentNo);
             expImportMaster.setStorage(storageCode);
             expImportMaster.setImportDate(new Date());
+            expImportMaster.setAcctdate(new Date());
+            expImportMaster.setOperator("0000");
+            expImportMaster.setBuyer("0000");
+            expImportMaster.setCheckman("0000");
+            expImportMaster.setPrincipal("0000");
+            expImportMaster.setDocStatus("0");
+            expImportMaster.setStorekeeper("0000");
             expImportMaster.setSupplier(this.expSupplierCatalogFacade.findNameById(expPrepareMaster.getSupplierId()));
             expImportMaster.setHospitalId(hospitalId);
             expImportMaster.setAccountReceivable(expPrepareMaster.getPrice());//应付金额==备货价格
             expImportMaster.setAccountPayed(0.0);
             expImportMaster.setAdditionalFee(0.0);
             expImportMaster.setImportClass("正常入库");
-            ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findByStorageCode(storageCode);
+            ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             if(expSubStorageDict!=null){
                 expImportMaster.setSubStorage(expSubStorageDict.getSubStorage());//子库房
             }
             expImportMaster.setAccountIndicator(1);//默认已记账
-            expImportMaster.setAcctoperator(operator);
+            expImportMaster.setAcctoperator("0000");
             expImportMaster=super.merge(expImportMaster);
             /**
              * 入库详情表  exp_import_detail
@@ -146,12 +153,15 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expImportDetail.setFirmId(e.getSupplierId());//生产厂家
             expImportDetail.setPackageSpec(expPriceList.getExpSpec());
             expImportDetail.setPurchasePrice(expPriceList.getTradePrice());//进价
-            expImportDetail.setTradePrice(expPriceList.getRetailPrice());//林售价
+            expImportDetail.setTradePrice(expPriceList.getTradePrice());//林售价
+            expImportDetail.setRetailPrice(expPriceList.getRetailPrice());
             expImportDetail.setUnits(expPriceList.getMinUnits());//最小规格
             expImportDetail.setPackageUnits(expPriceList.getUnits());//包装规格
             expImportDetail.setExpSpec(expPriceList.getMinSpec());//最小规格
+            expImportDetail.setItemNo(Short.parseShort("0"));
             expImportDetail.setInventory(1.0);//现有数量
             expImportDetail.setQuantity(1.0);//chuku
+            expImportDetail.setBatchNo("x");
             expImportDetail=super.merge(expImportDetail);
             /**
              * 出库主表  exp_export_master
@@ -167,13 +177,32 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportMaster.setExportClass("正常出库");
             expExportMaster.setSubStorage(expSubStorageDict.getSubStorage());//子库房
             expExportMaster.setAccountIndicator(true);
-            expExportMaster.setOperator(operator);
+//            expExportMaster.setOperator(operator);
             expExportMaster.setHospitalId(hospitalId);
+            expExportMaster.setStorekeeper("0000");
+            expExportMaster.setBuyer("0000");
+            expExportMaster.setOperator("0000");
+            expExportMaster.setAcctoperator("0000");
+            expExportMaster.setPrincipal("0000");
+            expExportMaster.setDocStatus("0");
+            expExportMaster.setAcctdate(new Date());
             expExportMaster=super.merge(expExportMaster);
             /**
              * 出库详情表 exp_export_detail
              */
+            /**
+             * exp_export_detail 的item_no  ,   import_document_no  ,rec_flag（接收标识），rec_operator(写入0000)  ，rec_date记录扫描时间，big_code  ,big_spec  ,big_firm_id ,killflag(默认灭菌，即写1)
+             exp_export_master和exp_import_master要改的差不多
+             */
             ExpExportDetail expExportDetail=new ExpExportDetail();
+            expExportDetail.setItemNo(0);
+            expExportDetail.setImportDocumentNo(documentNo);//入库单据号
+            expExportDetail.setRecFlag(1);
+            expExportDetail.setRecOperator("0000");
+            expExportDetail.setRecDate(new Date());
+            expExportDetail.setKillflag(1);//默认灭菌
+            expExportDetail.setBigCode(expPriceList.getExpCode());
+            expExportDetail.setBigSpec(expPriceList.getExpSpec());
             expExportDetail.setHospitalId(hospitalId);
             expExportDetail.setDocumentNo(documentNo2);
             expExportDetail.setExpSpec(expPriceList.getMinSpec());
@@ -181,18 +210,16 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportDetail.setUnits(expPriceList.getMinUnits());
             expExportDetail.setFirmId(e.getSupplierId());
             expExportDetail.setExpForm(expDict.getExpForm());
-
             expExportDetail.setPurchasePrice(expPriceList.getTradePrice());//
-
             expExportDetail.setRetailPrice(expPriceList.getRetailPrice());
-
             expExportDetail.setTradePrice(expPriceList.getTradePrice());
-
+            expExportDetail.setBatchNo("x");
             expExportDetail.setPackageSpec(expPriceList.getExpSpec());
             expExportDetail.setQuantity(1.0);//出库数量
             expExportDetail.setPackageUnits(expPriceList.getUnits());
             expExportDetail.setInventory(0.0);//现有数量为0
             expExportDetail.setAssignCode("");//分摊方式
+            expExportDetail.setBigFirmId(e.getSupplierId());
             expExportDetail= super.merge(expExportDetail);
             /**
              * 库存表 exp_stock
@@ -209,10 +236,10 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expStock.setQuantity(0.0);
             expStock.setPurchasePrice(expPriceList.getTradePrice());
             expStock.setDiscount(100.0);
-            expStock.setSubStorage(expSubStorageDict.getStorageCode());
+            expStock.setSubStorage(this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId()).getSubStorage());
             expStock.setHospitalId(hospitalId);
-
-            expStock.setSupplyIndicator(1);//可供标志
+             expStock.setSupplyIndicator(1);//可供标志
+            expStock.setBatchNo("x");
             expStock=super.merge(expStock);
             /**
              * 回写exp_prepare_detail 表
@@ -240,7 +267,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expPrepareVo.setUseDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             expPrepareVo.setInDocumentNo(documentNo);
             expPrepareVo.setOutDocumentNo(documentNo2);
-            ExpSubStorageDict expSubStorageDict1=this.expSubStorageDictFacade.findByStorageCode(storageCode);
+            ExpSubStorageDict expSubStorageDict1=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             expSubStorageDict1.setImportNoAva(expSubStorageDict1.getImportNoAva()+1);
             expSubStorageDict1.setExportNoAva(expSubStorageDict1.getExportNoAva()+1);
             expSubStorageDict1=expSubStorageDictFacade.save(expSubStorageDict1);

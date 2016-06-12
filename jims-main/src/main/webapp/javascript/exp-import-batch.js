@@ -966,7 +966,7 @@ $(function () {
             rows[i].amount = rows[i].quantity * rows[i].retailPrice ;
             totals += rows[i].amount ;
             datas.push(rows[i]) ;
-            console.log(rows[i].documentNo);
+//            console.log(rows[i].documentNo);
         }
         if(totals){
             $("#accountReceivable").numberbox('setValue',totals);
@@ -1020,7 +1020,7 @@ $(function () {
             var expImpVo = getCommitData() ;
             expImpVo.expExportDetialVoBeanChangeVo={} ;
             for(var i =0;i<rows.length;i++){
-                rows[i].expireDate=new Date(rows[i].expireDate);
+//                rows[i].expireDate=new Date(rows[i].expireDate);
                 rows[i].invoiceDate=new Date(rows[i].invoiceDate);
                 rows[i].disinfectDate= new Date(rows[i].disinfectDate);
                 rows[i].produceDate= new Date(rows[i].produceDate);

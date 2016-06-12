@@ -536,8 +536,8 @@ $(function () {
                     textField: 'assignName',
                     method: 'GET',
                     onLoadSuccess: function () {
-                        var data = $(this).combobox('getData');
-                        $(this).combobox('select', data[0].assignName);
+//                        var data = $(this).combobox('getData');
+                        $(this).combobox('select',"请选择");
                     }
                 }
             }
@@ -882,7 +882,7 @@ $(function () {
             rowDetail.expForm = row.expForm;
             rowDetail.packageSpec = row.packageSpec;
             rowDetail.expCode = row.expCode;
-            rowDetail.units = row.units;
+            rowDetail.units = row.minUnits;
             rowDetail.packageUnits = row.units;
             rowDetail.disNum = row.quantity;
             rowDetail.purchasePrice = row.purchasePrice;
