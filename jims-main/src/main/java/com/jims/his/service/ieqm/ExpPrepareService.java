@@ -216,8 +216,8 @@ public class ExpPrepareService {
      */
     @GET
     @Path("roll-back-prepare")
-    public Map<String,Object> rollBackPrepare(@QueryParam("inDocumentNo") String inDocumentNo,@QueryParam("outDocumentNo") String outDocumentNo,@QueryParam("barCode") String barCode){
-        Map<String,Object> retVal=this.expPrepareMasterFacade.rollBack(inDocumentNo,outDocumentNo,barCode);
+    public Map<String,Object> rollBackPrepare(@QueryParam("barCode") String barCode){
+        Map<String,Object> retVal=this.expPrepareMasterFacade.rollBack(barCode);
         return retVal;
     }
 
