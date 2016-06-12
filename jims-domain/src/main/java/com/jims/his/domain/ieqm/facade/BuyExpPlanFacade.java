@@ -265,7 +265,8 @@ public class BuyExpPlanFacade extends BaseFacade {
                 if (result != null && result.size() > 0) {
                     BigDecimal up = (BigDecimal) result.get(0);
                     double upLevel = up.doubleValue();
-                    temp.setExportquantityRef(upLevel);
+//                    exportquantityRef
+//                    temp.setExportquantityRef(upLevel);
                     temp.setWantNumber(upLevel);
                 }
 
@@ -293,7 +294,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 if (result != null && result.size() > 0) {
                     BigDecimal up = (BigDecimal) result.get(0);
                     double upLevel = up.doubleValue();
-                    temp.setExportquantityRef(upLevel);
+//                    temp.setExportquantityRef(upLevel);
                     temp.setWantNumber(upLevel);
                 }
 
