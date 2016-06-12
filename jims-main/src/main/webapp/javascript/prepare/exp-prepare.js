@@ -404,7 +404,7 @@ $(function () {
                     title: '品名',
                     field: 'expName',
                     align: 'center',
-                    width: '25%',
+                    width: '20%',
                     editor: {
                         type: 'combogrid', options: {
                             mode: 'remote',
@@ -465,23 +465,35 @@ $(function () {
                 {
                     title: '包装规格',
                     field: 'packageSpec',
-                    width: "25%"
+                    width: "15%"
                 },
                 {
                     title: '价格',
                     field: 'purchasePrice',
-                    width: "25%"
+                    width: "10%"
                 },
                 {
                     title: '备货数量',
                     field: 'amount',
-                    width: "25%",
+                    width: "15%",
                     editor: {type: 'textbox', options: {}}
                 },
                 {
                     title: 'expCode',
                     field: 'expCode',
                     hidden: true
+                },
+                {
+                    title: '备货人',
+                    field: 'preparePersonName',
+                    width: "15%",
+                    editor: {type: 'textbox', options: {}}
+                },
+                {
+                    title: '备货人电话',
+                    field: 'phone',
+                    width: "25%",
+                    editor: {type: 'textbox', options: {}}
                 },
                 {
                     title: 'packageUnits',
