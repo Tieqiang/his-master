@@ -784,6 +784,11 @@ $(function () {
                     field: 'expForm',
                     align: 'center',
                     width: '8%'
+                }, {
+                    title: '库存量',
+                    field: 'quantity',
+                    align: 'center',
+                    width: '8%'
                 }
             ]
         ],
@@ -805,6 +810,7 @@ $(function () {
             rowDetail.purchasePrice=row.tradePrice;
             rowDetail.storer= parent.config.staffName;
             rowDetail.expForm=row.expForm;
+            rowDetail.stockquantityRef=row.quantity;
             //rowDetail.invoiceDate = setDefaultDate();
             //rowDetail.invoiceNo = row.invoiceNo;
 
