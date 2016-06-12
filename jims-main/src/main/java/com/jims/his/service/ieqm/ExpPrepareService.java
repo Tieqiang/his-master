@@ -138,83 +138,77 @@ public class ExpPrepareService {
     @GET
     @Path("find-by-bar-code")
     public Map<String,Object> findByBarCode(@QueryParam("barCode") String barCode){
-        Map<String,Object> map=new HashMap<String,Object>();
-        List <ExpPrepareVo> list= expPrepareDetailFacade.findByBarCode(barCode);
-        if(list!=null&&list.size()>0){
-            if(list.get(0).getUseFlag().equals("未使用")){
-                map.put("info",list.get(0));
-            }else{
-                map.put("info","物品已使用，此条码无效");
-            }
-        }else{
-            if(barCode!=null&&!"".equals(barCode)){
-                map.put("info","找不到对应的消耗品，barCode错误！");
-
-            } else {
-                map.put("info", "barCode为空！");
-            }
-        }
-        return map;
+       return findByCode(barCode);
     }
     /**
      * 病人计费接口
      *
      * @param barCode
-     * @param storageCode
-     * @param operator
+      * @param operator
      * @param patientId
      * @return
      */
     @GET
     @Path("prepare-fee")
-    public Map<String,Object> prepareFee(@QueryParam("barCode") String barCode, @QueryParam("storageCode") String storageCode, @QueryParam("operator") String operator, @QueryParam("patientId") String patientId,@QueryParam("hospitalId") String hospitalId) {
-        Map<String,Object> returnVal=new HashMap<String,Object>();
-        /**
-         * 入库操作   exp_import_master exp_import_detail
-         * 出库操作   exp_export_master exp_export_detail
-         * 库存表      exp_stock
-         * 子库房      exp_sub_storage_dict
-         * 回写数据    exp_prepare_detail
-         */
-        if (StringUtil.isNotBlank(barCode) && StringUtil.isNotBlank(operator) && StringUtil.isNotBlank(storageCode) && StringUtil.isNotBlank(patientId)) {
-            String masterId=this.expPrepareDetailFacade.findByExpBarCode(barCode);
-            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
-            ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
-            if(expSubStorageDict==null){
-                returnVal.put("info","barCode参数错误!");
-                return returnVal;
-            }
-            String documentNo = "";//入库单据号
-            String importNoPrefix = expSubStorageDict.getImportNoPrefix();//前缀
-            if (importNoPrefix.length() <= 4) {
-                documentNo = importNoPrefix + "000000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
-            } else if (importNoPrefix.length() == 5) {
-                documentNo = expSubStorageDict.getImportNoPrefix() + "00000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
-            } else if (importNoPrefix.length() == 6) {
-                documentNo = expSubStorageDict.getImportNoPrefix() + "0000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
-            }
+    public Map<String,Object> prepareFee(@QueryParam("barCode") String barCode,@QueryParam("operator") String operator, @QueryParam("patientId") String patientId,@QueryParam("hospitalId") String hospitalId,@QueryParam("userDeptCode") String userDeptCode) {
+        Map<String,Object> map=findByCode(barCode);
+        if((Boolean)map.get("success")){
+            Map<String,Object> returnVal=new HashMap<String,Object>();
             /**
-             * 跟新 exp_sub_storage_dict.import_no_ava
+             * 入库操作   exp_import_master exp_import_detail
+             * 出库操作   exp_export_master exp_export_detail
+             * 库存表      exp_stock
+             * 子库房      exp_sub_storage_dict
+             * 回写数据    exp_prepare_detail
              */
+            if (StringUtil.isNotBlank(barCode) && StringUtil.isNotBlank(operator)&& StringUtil.isNotBlank(patientId)) {
+                String masterId=this.expPrepareDetailFacade.findByExpBarCode(barCode);
+                ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
+                ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
+                if(expSubStorageDict==null){
+                    returnVal.put("info","barCode参数错误!");
+                    return returnVal;
+                }
+                String documentNo = "";//入库单据号
+                String importNoPrefix = expSubStorageDict.getImportNoPrefix();//前缀
+                if (importNoPrefix.length() <= 4) {
+                    documentNo = importNoPrefix + "000000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
+                } else if (importNoPrefix.length() == 5) {
+                    documentNo = expSubStorageDict.getImportNoPrefix() + "00000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
+                } else if (importNoPrefix.length() == 6) {
+                    documentNo = expSubStorageDict.getImportNoPrefix() + "0000".substring((expSubStorageDict.getImportNoAva() + "").length()) + expSubStorageDict.getImportNoAva();
+                }
+                /**
+                 * 跟新 exp_sub_storage_dict.import_no_ava
+                 */
 
-            String documentNo2 = "";//出库单据号
-            String suffer2 = expSubStorageDict.getExportNoPrefix();//前缀
-            if (suffer2.length() <= 4) {
-                documentNo2 = expSubStorageDict.getExportNoPrefix() + "000000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
-            } else if (suffer2.length() == 5) {
-                documentNo2 = expSubStorageDict.getExportNoPrefix() + "00000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
-            } else if (suffer2.length() == 6) {
-                documentNo2 = expSubStorageDict.getExportNoPrefix() + "0000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
-            }
+                String documentNo2 = "";//出库单据号
+                String suffer2 = expSubStorageDict.getExportNoPrefix();//前缀
+                if (suffer2.length() <= 4) {
+                    documentNo2 = expSubStorageDict.getExportNoPrefix() + "000000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
+                } else if (suffer2.length() == 5) {
+                    documentNo2 = expSubStorageDict.getExportNoPrefix() + "00000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
+                } else if (suffer2.length() == 6) {
+                    documentNo2 = expSubStorageDict.getExportNoPrefix() + "0000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
+                }
 
 //            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
-            ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,storageCode,operator,patientId,hospitalId,barCode);
-            returnVal.put("info",expPrepareVo);
+                ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,operator,patientId,hospitalId,barCode,userDeptCode);
+                returnVal.put("info",expPrepareVo);
+                if(expPrepareVo!=null){
+                    returnVal.put("success",true);
+                }else{
+                    returnVal.put("success",false);
+                }
+            }else{
+                returnVal.put("info","参数错误！");
+                returnVal.put("success",false);
+            }
+            return returnVal;
         }else{
-            returnVal.put("info","参数错误！");
+            return map;
         }
-         return returnVal;
-    }
+     }
 
     /**
      * 回滚操作
@@ -257,6 +251,30 @@ public class ExpPrepareService {
     public Map<String,Object> delData(@QueryParam("id") String id){
          Map<String,Object> map=this.expPrepareDetailFacade.delData(id);
          return map;
+    }
+
+    private Map<String,Object> findByCode(String barCode){
+        Map<String,Object> map=new HashMap<String,Object>();
+        List <ExpPrepareVo> list= expPrepareDetailFacade.findByBarCode(barCode);
+        if(list!=null&&list.size()>0){
+            if(list.get(0).getUseFlag().equals("未使用")){
+                map.put("info",list.get(0));
+                map.put("success",true);
+            }else{
+                map.put("info","物品已使用，此条码无效");
+                map.put("success",false);
+            }
+        }else{
+            if(barCode!=null&&!"".equals(barCode)){
+                map.put("info","找不到对应的消耗品，barCode错误！");
+                map.put("success",false);
+
+            } else {
+                map.put("info", "barCode为空！");
+                map.put("success",false);
+            }
+        }
+        return map;
     }
 
 }

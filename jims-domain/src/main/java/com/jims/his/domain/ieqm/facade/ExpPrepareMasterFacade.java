@@ -100,22 +100,22 @@ public class ExpPrepareMasterFacade extends BaseFacade {
      * @param expPrepareMaster
      * @param documentNo    入库单据号
      * @param documentNo2   出库单据号
-     * @param storageCode  库房代码
      * @param operator   操作人
      * @param patientId   病人Id
      * @return
      */
     @Transactional
-    public ExpPrepareVo prepareFee(ExpPrepareMaster expPrepareMaster, String documentNo, String documentNo2, String storageCode, String operator, String patientId,String hospitalId,String barCode) {
+    public ExpPrepareVo prepareFee(ExpPrepareMaster expPrepareMaster, String documentNo, String documentNo2,  String operator, String patientId,String hospitalId,String barCode,String useDeptCode) {
         ExpPrepareVo expPrepareVo=new ExpPrepareVo();
         try {
             /**
             * 入库主表 expImportMaster
             */
+            ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             ExpImportMaster expImportMaster =new ExpImportMaster();
 //            expImportMaster.setOperator(operator);
             expImportMaster.setDocumentNo(documentNo);
-            expImportMaster.setStorage(storageCode);
+            expImportMaster.setStorage(expSubStorageDict.getStorageCode());
             expImportMaster.setImportDate(new Date());
             expImportMaster.setAcctdate(new Date());
             expImportMaster.setOperator("0000");
@@ -130,7 +130,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expImportMaster.setAccountPayed(0.0);
             expImportMaster.setAdditionalFee(0.0);
             expImportMaster.setImportClass("正常入库");
-            ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
+//            ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             if(expSubStorageDict!=null){
                 expImportMaster.setSubStorage(expSubStorageDict.getSubStorage());//子库房
             }
@@ -168,9 +168,9 @@ public class ExpPrepareMasterFacade extends BaseFacade {
              */
             ExpExportMaster expExportMaster=new ExpExportMaster();
             expExportMaster.setDocumentNo(documentNo2);
-            expExportMaster.setStorage(storageCode);
+            expExportMaster.setStorage(expSubStorageDict.getStorageCode());
             expExportMaster.setExportDate(new Date());
-            expExportMaster.setReceiver(storageCode);//
+            expExportMaster.setReceiver(expSubStorageDict.getStorageCode());//
             expExportMaster.setAccountReceivable(expPriceList.getRetailPrice());//零售价
             expExportMaster.setAccountPayed(0.0);
             expExportMaster.setAdditionalFee(0.0);
@@ -226,7 +226,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
              */
             ExpStock expStock=new ExpStock();
             expStock.setDocumentNo(documentNo);
-            expStock.setStorage(storageCode);//入库单据号
+            expStock.setStorage(expSubStorageDict.getStorageCode());//入库单据号
             expStock.setExpCode(expPriceList.getExpCode());
             expStock.setExpSpec(expPriceList.getMinSpec());
             expStock.setPackageSpec(expPriceList.getExpSpec());
@@ -247,7 +247,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             ExpPrepareDetail expPrepareDetail=this.expPrepareDetailFacade.findByCode(barCode);
             expPrepareDetail.setUseFlag("1");//已经使用
             expPrepareDetail.setUseDate(sdf.format(new Date()));
-            expPrepareDetail.setUseDept(storageCode);
+            expPrepareDetail.setUseDept(useDeptCode);
             expPrepareDetail.setUsePatientId(patientId);
             expPrepareDetail=super.merge(expPrepareDetail);
             expPrepareVo.setExpCode(expPriceList.getExpCode());

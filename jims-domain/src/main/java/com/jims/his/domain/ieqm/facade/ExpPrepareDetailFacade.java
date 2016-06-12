@@ -26,7 +26,7 @@ public class ExpPrepareDetailFacade extends BaseFacade {
     }
 
     public List<ExpPrepareVo>findByBarCode(String barCode){
-        String sql="select c.exp_code,a.EXP_BAR_CODE,a.a.use_flag,a.master_id ,b.exp_id,b.prepare_date,b.prepare_person_name,b.phone,b.price,c.exp_name,e.exp_spec,e.units, d.supplier from exp_prepare_detail a,exp_prepare_master b,exp_dict c ,exp_supplier_catalog d,exp_price_list e where a.master_id=b.id and b.exp_id=e.id and b.supplier_id=d.id and c.exp_code=e.exp_code and c.exp_spec=e.min_spec and a.exp_bar_code='"+barCode+"'";
+        String sql="select c.exp_code,a.EXP_BAR_CODE,a.use_flag,a.master_id ,b.exp_id,b.prepare_date,b.prepare_person_name,b.phone,b.price,c.exp_name,e.exp_spec,e.units, d.supplier from exp_prepare_detail a,exp_prepare_master b,exp_dict c ,exp_supplier_catalog d,exp_price_list e where a.master_id=b.id and b.exp_id=e.id and b.supplier_id=d.id and c.exp_code=e.exp_code and c.exp_spec=e.min_spec and a.exp_bar_code='"+barCode+"'";
         List<ExpPrepareVo> list=super.createNativeQuery(sql,new ArrayList<Object>(),ExpPrepareVo.class);
         if(list.size()==0){
             return null;
