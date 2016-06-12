@@ -646,7 +646,7 @@ $(function () {
 
     promise.done(function () {
         $("#supplier").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: suppliers,
             panelWidth: 450,

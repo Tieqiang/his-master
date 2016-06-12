@@ -31,7 +31,7 @@ public class ExpStorageUpperLowerMarketFacade extends BaseFacade {
      * @param stopTime
      * @return
      */
-    public List<ExpStorageProfileVo> findAll(String storageCode,String startTime,String stopTime,String hospitalId,String supplier){
+    public List<ExpStorageProfileVo> findAll(String storageCode,String startTime,String stopTime,String hospitalId){
         String sql = "SELECT distinct EXP_STORAGE_PROFILE.STORAGE,\n" +
                 "       EXP_STORAGE_PROFILE.ID,\n" +
                 "       EXP_STORAGE_PROFILE.LOCATION,\n" +
@@ -65,8 +65,7 @@ public class ExpStorageUpperLowerMarketFacade extends BaseFacade {
                 " WHERE (exp_storage_profile.exp_code = exp_price_list.exp_code)\n" +
                 "   and (exp_dict.Exp_Code = Exp_Price_List.exp_code)\n" +
                 "   and (exp_storage_profile.exp_spec = exp_price_list.exp_spec)\n" +
-                "   and EXP_STORAGE_PROFILE.STORAGE = '"+storageCode+"' and  exp_price_list.firm_id='"+supplier+"'" ;
-
+                "   and EXP_STORAGE_PROFILE.STORAGE = '"+storageCode+"'" ;
         List<ExpStorageProfileVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageProfileVo.class);
         return nativeQuery;
     }

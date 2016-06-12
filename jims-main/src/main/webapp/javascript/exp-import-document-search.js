@@ -49,9 +49,9 @@ $(function () {
     });
     //格式化日期函数
     function formatterDate(val, row) {
-        if(val.index("1970")>0){
-            return null;
-        }
+//        if(val.index("1970")>0){
+//            return null;
+//        }
         if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
@@ -399,25 +399,25 @@ $(function () {
         }
     });
 
-    //打印
-    //$("#printDiv").dialog({
-    //    title: '打印预览',
-    //    width: 1000,
-    //    height: 520,
-    //    catch: false,
-    //    modal: true,
-    //    closed: true,
-    //    onOpen: function () {
-    //        $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-document-search.cpt");
-    //    }
-    //})
-    //$("#printBtn").on('click', function () {
-    //    var printData = $("#importMaster").datagrid('getRows');
-    //    if (printData.length <= 0) {
-    //        $.messager.alert('系统提示', '请先查询数据', 'info');
-    //        return;
-    //    }
-    //    $("#printDiv").dialog('open');
-    //
-    //})
+
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-document-search.cpt");
+        }
+    })
+    $("#printBtn").on('click', function () {
+        var printData = $("#importMaster").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
 })

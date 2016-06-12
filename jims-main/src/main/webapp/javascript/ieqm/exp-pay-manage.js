@@ -437,9 +437,9 @@ $(function () {
             detail.documentNo = rows[i].documentNo;
             detail.itemNo = rows[i].itemNo;
             detail.disburseCount = parseFloat(rows[i].disburseCount) + parseFloat(rows[i].needDisburse);
-            detail.payAmount = rows[i].purchasePrice;
-            detail.retailAmount = rows[i].retailPrice;
-            detail.tradeAmount = rows[i].tradePrice;
+            detail.payAmount = rows[i].purchasePrice*detail.disburseCount;
+            detail.retailAmount = rows[i].retailPrice*detail.disburseCount;
+            detail.tradeAmount = rows[i].tradePrice*detail.disburseCount;
             detail.id = rows[i].id;
             detail.hospitalId = parent.config.hospitalId;
             expDisburseRecDetailBeanChangeVo.inserted.push(detail);
