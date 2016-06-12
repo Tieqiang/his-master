@@ -160,14 +160,13 @@ public class ExpPrepareService {
      * 病人计费接口
      *
      * @param barCode
-     * @param storageCode
-     * @param operator
+      * @param operator
      * @param patientId
      * @return
      */
     @GET
     @Path("prepare-fee")
-    public Map<String,Object> prepareFee(@QueryParam("barCode") String barCode, @QueryParam("storageCode") String storageCode, @QueryParam("operator") String operator, @QueryParam("patientId") String patientId,@QueryParam("hospitalId") String hospitalId) {
+    public Map<String,Object> prepareFee(@QueryParam("barCode") String barCode,@QueryParam("operator") String operator, @QueryParam("patientId") String patientId,@QueryParam("hospitalId") String hospitalId,@QueryParam("userDeptCode") String userDeptCode) {
         Map<String,Object> returnVal=new HashMap<String,Object>();
         /**
          * 入库操作   exp_import_master exp_import_detail
@@ -176,7 +175,7 @@ public class ExpPrepareService {
          * 子库房      exp_sub_storage_dict
          * 回写数据    exp_prepare_detail
          */
-        if (StringUtil.isNotBlank(barCode) && StringUtil.isNotBlank(operator) && StringUtil.isNotBlank(storageCode) && StringUtil.isNotBlank(patientId)) {
+        if (StringUtil.isNotBlank(barCode) && StringUtil.isNotBlank(operator)&& StringUtil.isNotBlank(patientId)) {
             String masterId=this.expPrepareDetailFacade.findByExpBarCode(barCode);
             ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
             ExpSubStorageDict expSubStorageDict = this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
@@ -208,12 +207,18 @@ public class ExpPrepareService {
             }
 
 //            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
-            ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,storageCode,operator,patientId,hospitalId,barCode);
+            ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,operator,patientId,hospitalId,barCode,userDeptCode);
             returnVal.put("info",expPrepareVo);
-        }else{
+            if(expPrepareVo!=null){
+                returnVal.put("success",true);
+            }else{
+                 returnVal.put("success",false);
+            }
+         }else{
             returnVal.put("info","参数错误！");
+            returnVal.put("success",false);
         }
-         return returnVal;
+        return returnVal;
     }
 
     /**
