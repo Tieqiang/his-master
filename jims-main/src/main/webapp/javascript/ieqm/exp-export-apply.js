@@ -1096,7 +1096,7 @@ $(function () {
             //detail.recDate="";
             detail.assignCode = rows[i].assignCode;
             detail.bigCode = rows[i].expCode;
-            detail.bigSpec = rows[i].expSpec;
+            detail.bigSpec = rows[i].packageSpec;
             detail.bigFirmId = rows[i].firmId;
             detail.expSgtp = "1";
             detail.memo = rows[i].memo;
