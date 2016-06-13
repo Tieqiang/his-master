@@ -152,7 +152,7 @@ $(function () {
             editor: {
                 type: 'numberbox', options: {
                     onChange: function (newValue, oldValue) {
-//                        var selectRows = $("#importDetail").datagrid('getData').rows;
+                        var selectRows = $("#importDetail").datagrid('getData').rows;
 //                        console.log(selectRows[editIndex]);
                         //var purchasePriceEd = $("#importDetail").datagrid('getEditor', {
                         //    index: editIndex,
