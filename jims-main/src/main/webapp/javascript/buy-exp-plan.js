@@ -534,8 +534,7 @@ $(function () {
                 rows[i].planNumber=day;
             }
             $.postJSON('/api/buy-exp-plan/generate-num-sale', rows, function (data) {
-
-                $("#right").datagrid("loadData", data);
+                 $("#right").datagrid("loadData", data);
             });
         }
 

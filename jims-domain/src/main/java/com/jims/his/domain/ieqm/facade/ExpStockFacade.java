@@ -323,9 +323,9 @@ public class ExpStockFacade extends BaseFacade {
     private void updateExpDetail(List<ExpExportDetialVo> update) {
 
         for (ExpExportDetialVo vo : update) {
-
             ExpExportDetail detail = expExportDetailFacade.getDetail(vo.getHospitalId(), vo.getDocumentNo(), vo.getItemNo());
             detail.setRecFlag(1);
+            detail.setRecDate(new Date());
             merge(detail);
         }
 

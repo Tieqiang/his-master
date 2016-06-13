@@ -962,6 +962,7 @@ $(function () {
         importMaster.tenderNo = $("#tenderNo").textbox('getValue');
         importMaster.tenderType = $("#tenderType").combobox('getValue');
         importMaster.hospitalId = parent.config.hospitalId;
+        importMaster.acctdate=new Date();
         expImportMasterBeanChangeVo.inserted.push(importMaster);
 
         //明细记录

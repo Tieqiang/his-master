@@ -131,7 +131,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 "       and (exp_price_list.start_date < sysdate and\n" +
                 "        (sysdate <= exp_price_list.stop_date or\n" +
                 "       exp_price_list.stop_date is null))\n" +
-                "   and (\"EXP_STOCK\".\"STORAGE\" = 1503)\n" +
+                "   and (\"EXP_STOCK\".\"STORAGE\" ="+storageCode+")\n" +
                    " ";
          List<BuyExpPlanVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlanVo.class);
         return result;
