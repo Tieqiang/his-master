@@ -43,30 +43,27 @@ public class ExpStorageUpperLowerMarketFacade extends BaseFacade {
                 "       EXP_STORAGE_PROFILE.AMOUNT_PER_PACKAGE,\n" +
                 "       EXP_STORAGE_PROFILE.PACKAGE_UNITS,\n" +
                 "       EXP_STORAGE_PROFILE.UPPER_LEVEL,\n" +
-                "       EXP_STORAGE_PROFILE.LOW_LEVEL,\n" +
-                "       (SELECT sum(quantity * EXP_PRICE_LIST.AMOUNT_PER_PACKAGE) stockQuantity\n" +
-                "          FROM exp_export_master, exp_export_detail, exp_price_list,exp_storage_profile\n" +
-                "         WHERE exp_export_detail.document_no = exp_export_master.document_no\n" +
-                "           AND exp_export_detail.exp_code = exp_price_list.exp_code\n" +
-                "           AND exp_export_detail.PACKAGE_SPEC = exp_price_list.exp_spec\n" +
-                "           AND exp_export_master.storage = '"+storageCode+"'\n" +
-                "           AND exp_export_detail.exp_code = exp_storage_profile.exp_code\n" +
-                "           AND exp_export_detail.package_spec = exp_storage_profile.exp_spec\n" +
-                "           and exp_price_list.firm_id = exp_export_detail.firm_id\n" +
-                "           and exp_storage_profile.supplier = exp_export_detail.firm_id\n" +
-                "           AND export_date >=\n" +
-                "               to_date('"+startTime+"', 'yyyy-MM-dd HH24:MI:SS')\n" +
-                "           AND export_date <\n" +
-                "               to_date('"+stopTime+"', 'yyyy-MM-dd HH24:MI:SS')\n" +
-                "           AND exp_export_master.hospital_id =\n" +
-                "               '"+hospitalId+"')/\n" +
-                "       EXP_STORAGE_PROFILE.AMOUNT_PER_PACKAGE stock_quantity\n" +
-                "  FROM EXP_price_list, exp_dict, EXP_STORAGE_PROFILE\n" +
-                " WHERE (exp_storage_profile.exp_code = exp_price_list.exp_code)\n" +
-                "   and (exp_dict.Exp_Code = Exp_Price_List.exp_code)\n" +
-                "   and (exp_storage_profile.exp_spec = exp_price_list.exp_spec)\n" +
-                "   and EXP_STORAGE_PROFILE.STORAGE = '"+storageCode+"'" ;
-        List<ExpStorageProfileVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageProfileVo.class);
-        return nativeQuery;
+                "       EXP_STORAGE_PROFILE.LOW_LEVEL\n" +
+                 "  FROM exp_dict, EXP_STORAGE_PROFILE\n" +
+                " WHERE (exp_storage_profile.exp_code = exp_dict.exp_code)\n" +
+                 "and EXP_STORAGE_PROFILE.STORAGE = '"+storageCode+"'" ;
+        List<ExpStorageProfileVo> expStorageProfileVos = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageProfileVo.class);
+        for(ExpStorageProfileVo e:expStorageProfileVos){
+            String sql2="select nvl(b.quantity,0)  from exp_export_master a,exp_export_detail b WHERE a.document_no=b.document_no  and " +
+                    "a.storage='"+storageCode+"' and a.export_date >=\n" +
+                    "                           to_date('"+startTime+"',\n" +
+                    "                                   'yyyy-MM-dd HH24:MI:SS')\n" +
+                    "                       AND export_date <\n" +
+                    "                           to_date('"+stopTime+"',\n" +
+                    "                                   'yyyy-MM-dd HH24:MI:SS') and " +
+                    " a.hospital_id='"+hospitalId+"' and b.exp_code='"+e.getExpCode()+"' and b.package_spec='"+e.getExpSpec()+"' ";
+            List<String> obj = super.createNativeQuery(sql2).getResultList();
+           if(obj!=null&&!obj.isEmpty()){
+               e.setStockQuantity(Integer.parseInt(obj.get(0).toString()));
+           }else{
+               e.setStockQuantity(0);
+           }
+         }
+        return expStorageProfileVos;
     }
 }

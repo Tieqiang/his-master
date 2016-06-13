@@ -213,13 +213,13 @@ $(function () {
                     price.expCode = item.expCode;
                     price.amountPerPackage = item.amountPerPackage;
                     price.packageUnits = item.packageUnits;
-                    if (item.stockQuantity != null) {
-                        price.upperLevel = item.stockQuantity*1.6;
-                        price.lowLevel = item.stockQuantity*0.6;
-                    }else{
+//                    if (item.stockQuantity != null) {
+//                        price.upperLevel = item.stockQuantity*1.6;
+//                        price.lowLevel = item.stockQuantity*0.6;
+//                    }else{
                         price.upperLevel = item.upperLevel;
                         price.lowLevel = item.lowLevel;
-                    }
+//                    }
                     price.location = item.expCode;
                     price.expireDate = item.expireDate;
                     price.supplier = item.supplier;

@@ -505,14 +505,13 @@ $(function () {
             $.messager.alert("系统提示", "采购计划为空，不允许计算", 'error');
             return false;
         }
-//        for (var i = 0; i < rows.length; i++) {
-//            //删除空行
-//            if ($.trim(rows[i].expCode) == '' || $.trim(rows[i].expName) == '' || $.trim(rows[i].firmId) == '') {
-//                $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
-//                $("#right").datagrid('selectRow', i);
-//                return false;
-//            }
-//        }
+        for (var i = 0; i < rows.length; i++) {
+
+            if ($.trim(rows[i].storage) == '' || $.trim(rows[i].storage) == '' ) {
+                rows[i].storage=parent.config.storageCode;
+                return false;
+            }
+        }
         if ($("#expScope").combobox("getValue") == 1) {
             $.postJSON('/api/buy-exp-plan/generate-num-up?storageCode='+ parent.config.storageCode, rows, function (data) {
 

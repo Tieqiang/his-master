@@ -335,7 +335,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                             "      where exp_code = '"+temp.getExpCode()+"'\n" +
 //                            "      And exp_spec = '"+temp.getExpSpec()+"'\n" +
                             "      And firm_id = '"+temp.getFirmId()+"'\n" +
-                            "      And package_spec = '"+temp.getPackSpec()+"'";
+                            "      And package_spec = '"+temp.getPackSpec()+"' and storage='"+temp.getStorage()+"'";
                     List quantityList = super.createNativeQuery(stockSql).getResultList();
                     if (quantityList != null && quantityList.size() > 0) {
                         double quantity = ((BigDecimal) quantityList.get(0)).doubleValue();
