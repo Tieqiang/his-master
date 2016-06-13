@@ -373,21 +373,15 @@ $(function () {
             align: 'center',
             width: '6%',
             editor: {type: 'combobox', options: {
-                valueField:'flag',
-                textField:'text',
-                editable: false,
+                valueField:'value',
+                textField:'title',
                 data:[{
-                    flag:'1',
-                    text:'已灭菌'
+                    value:'1',
+                    title:'已灭菌'
                 },{
-                    text:'未灭菌',
-                    flag:'0'
-                }],
-                onLoadSuccess: function () {
-//                        var data = $(this).combobox('getData');
-                    $(this).combobox('select', "全部");
-//                        $(this).assignCode =datas[0].assisgnCode;
-                }
+                    title:'未灭菌',
+                    value:'0'
+                }]
             }}
         }, {
             title: '折扣',
@@ -991,7 +985,7 @@ $(function () {
             detail.tallyFlag = 0;
             detail.tradePrice = rows[i].tradePrice;
             detail.killflag = rows[i].killflag;
-            console.info(rows[i]);
+//            console.info(rows[i]);
             detail.discount = rows[i].discount;
             detail.orderBatch = rows[i].orderBatch;
             detail.tenderNo = rows[i].tenderNo;
