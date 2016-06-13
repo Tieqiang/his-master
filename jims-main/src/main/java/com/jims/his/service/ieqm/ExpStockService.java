@@ -105,7 +105,7 @@ public class ExpStockService {
                 "        c.Permit_no,\n" +
                 "        c.amount_per_package,\n" +
                 "        nvl(d.quantity,\n" +
-                "        0) as quantity    \n" +
+                "        0) as quantity ,KillFlag \n" +
                 "    FROM\n" +
                 "        exp_dict b,\n" +
                 "        exp_price_list c,\n" +

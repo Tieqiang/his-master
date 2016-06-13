@@ -109,8 +109,10 @@ $(function () {
                         width: 50
                     }]],
                     onClickRow: function (index, row) {
-                        var ed = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
-                        $(ed.target).textbox('setValue', row.expCode);
+                        var rowDetail = $("#importDetail").datagrid('getData').rows[editIndex];
+//                         var ed = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+//                        $(ed.target).textbox('setValue', row.expCode);
+                        rowDetail.expCode=row.expCode;
                         currentExpCode = row.expCode;
                         $("#stockRecordDialog").dialog('open');
                     },
@@ -758,7 +760,27 @@ $(function () {
             field: 'permitNo',
             align: 'center',
             width: '8%'
-        }]],
+        },
+            {
+                title: '灭菌标识',
+                field: 'killflag',
+                editor: {type: 'combobox', options: {
+                    valueField: 'value',
+                    textField: 'title',
+                    data: [
+                        {
+                            value: '1',
+                            title: '已灭菌'
+                        },
+                        {
+                            title: '未灭菌',
+                            value: '0'
+                        }
+                    ]
+                }
+                }
+            }
+        ]],
         onLoadSuccess:function(data){
             flag = flag+1;
             if(flag==1){
@@ -772,7 +794,9 @@ $(function () {
             }
         },
         onClickRow: function (index, row) {
-//            console.log(row);
+
+//            var rowDetail = $("#importDetail").datagrid('getData').rows[editIndex];
+
             var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
             $(expCodeEdit.target).textbox('setValue', row.expCode);
 
@@ -791,6 +815,8 @@ $(function () {
             var unitsEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'units'});
             $(unitsEd.target).textbox('setValue', row.minUnits);
 
+            var kill = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'killFlag'});
+            $(kill.target).textbox('setValue', row.killflag);
 
             var quantityEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'quantity'});
             $(quantityEd.target).textbox('setValue', 0);
@@ -960,6 +986,7 @@ $(function () {
         expImportMasterBeanChangeVo.inserted.push(importMaster);
 
         //明细记录
+
         var expImportDetailBeanChangeVo = {};
         expImportDetailBeanChangeVo.inserted = [];
 
@@ -984,8 +1011,7 @@ $(function () {
             detail.retailPrice = rows[i].retailPrice;
             detail.tallyFlag = 0;
             detail.tradePrice = rows[i].tradePrice;
-            detail.killflag = rows[i].killflag;
-//            console.info(rows[i]);
+            detail.killflag = rows[i].killFlag;
             detail.discount = rows[i].discount;
             detail.orderBatch = rows[i].orderBatch;
             detail.tenderNo = rows[i].tenderNo;
