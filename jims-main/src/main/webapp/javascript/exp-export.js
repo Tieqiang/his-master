@@ -70,22 +70,12 @@ $(function () {
     //库房字典
 
 
-    //出库日期
     $('#exportDate').datetimebox({
-        required: true,
-        showSeconds: true,
-        value: 'dateTime',
-        formatter: formatterDate,
-        onSelect: function (date) {
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var time = $('#startTime').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-            $('#exportDate').datetimebox('setText', dateTime);
-            $('#exportDate').datetimebox('hidePanel');
-        }
+        required:true ,
+        missingMessage:'出库日期必填!' ,
+        editable:false
     });
+
 
     var suppliers = [];
     var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
@@ -315,16 +305,16 @@ $(function () {
             field: 'killflag',
             width: '8%',
             align: 'center',
-            formatter: function (value, row, index) {
-                if (value == '1') {
-                    return '<input type="checkbox" name="DGC" checked="true" style="width: 15px" />';
-                }
-                if (value == '0') {
-                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
-                } else {//if(value==undefined){
-                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
-                }
-            },
+//            formatter: function (value, row, index) {
+//                if (value == '1') {
+//                    return '<input type="checkbox" name="DGC" checked="true" style="width: 15px" />';
+//                }
+//                if (value == '0') {
+//                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
+//                } else {//if(value==undefined){
+//                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
+//                }
+//            },
             editor: {type: 'combobox', options: {
                 valueField:'value',
                 textField:'title',
@@ -335,6 +325,12 @@ $(function () {
                     title:'未灭菌',
                     value:'0'
                 }]
+                , onLoadSuccess: function () {
+//                        var data = $(this).combobox('getData');
+                    $(this).combobox('select', "全部");
+//                        $(this).assignCode =datas[0].assisgnCode;
+                }
+
             }}
 
         }, {
@@ -515,7 +511,7 @@ $(function () {
     //开支类别
     $("#fundItem").combobox({
         url: '/api/exp-fund-item-dict/list',
-        valueField: 'fundItem',
+        valueField: 'serialNo',
         textField: 'fundItem',
         method: 'GET',
         onLoadSuccess: function () {
@@ -923,12 +919,12 @@ $(function () {
             detail.inventory = rows[i].disNum - rows[i].quantity;
             detail.producedate = new Date(rows[i].producedate);
             detail.disinfectdate = new Date(rows[i].disinfectdate);
-            if ($(rows[i].killflag).attr('type') == "checked") {
-                detail.killflag = 1;
-
-            } else {
-                detail.killflag = 0;
-            }
+//            if ($(rows[i].killflag).attr('type') == "checked") {
+//                detail.killflag = 1;
+//            } else {
+//                detail.killflag = 0;
+//            }
+            detail.killflag=rows[i].killflag;
             detail.expSgtp = 1;
             detail.assignCode = rows[i].assignCode;
             detail.bigCode = rows[i].expCode;

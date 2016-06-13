@@ -152,8 +152,8 @@ $(function () {
             editor: {
                 type: 'numberbox', options: {
                     onChange: function (newValue, oldValue) {
-                        var selectRows = $("#importDetail").datagrid('getData').rows;
-                        console.log(selectRows[editIndex]);
+//                        var selectRows = $("#importDetail").datagrid('getData').rows;
+//                        console.log(selectRows[editIndex]);
                         //var purchasePriceEd = $("#importDetail").datagrid('getEditor', {
                         //    index: editIndex,
                         //    field: 'purchasePrice'
@@ -373,16 +373,21 @@ $(function () {
             align: 'center',
             width: '6%',
             editor: {type: 'combobox', options: {
-                valueField:'value',
-                textField:'title',
+                valueField:'flag',
+                textField:'text',
                 editable: false,
                 data:[{
-                    value:'1',
-                    title:'已灭菌'
+                    flag:'1',
+                    text:'已灭菌'
                 },{
-                    title:'未灭菌',
-                    value:'0'
-                }]
+                    text:'未灭菌',
+                    flag:'0'
+                }],
+                onLoadSuccess: function () {
+//                        var data = $(this).combobox('getData');
+                    $(this).combobox('select', "全部");
+//                        $(this).assignCode =datas[0].assisgnCode;
+                }
             }}
         }, {
             title: '折扣',
@@ -985,6 +990,7 @@ $(function () {
             detail.tallyFlag = 0;
             detail.tradePrice = rows[i].tradePrice;
             detail.killflag = rows[i].killflag;
+            console.info(rows[i]);
             detail.discount = rows[i].discount;
             detail.orderBatch = rows[i].orderBatch;
             detail.tenderNo = rows[i].tenderNo;

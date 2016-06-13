@@ -227,7 +227,7 @@ $(function () {
         panelHeight: 'auto',
         url: '/api/exp-fund-item-dict/list',
         method: 'GET',
-        valueField: 'fundItem',
+        valueField: 'serialNo',
         textField: 'fundItem',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
@@ -970,16 +970,17 @@ $(function () {
             field: 'killflag',
             width: '7%',
             align: 'center',
-            formatter: function (value, row, index) {
-                if (value == '1') {
-                    return '<input type="checkbox" name="DGC" checked="true" style="width: 15px" />';
-                }
-                if (value == '0') {
-                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
-                } else {//if(value==undefined){
-                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
-                }
-            }
+            editor: {type: 'combobox', options: {
+                valueField:'value',
+                textField:'title',
+                data:[{
+                    value:'1',
+                    title:'已灭菌'
+                },{
+                    title:'未灭菌',
+                    value:'0'
+                }]
+            }}
         }, {
             title: '子包装1',
             field: 'subPackage1',

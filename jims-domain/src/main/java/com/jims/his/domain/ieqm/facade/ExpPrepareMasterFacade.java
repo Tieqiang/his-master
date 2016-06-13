@@ -226,23 +226,32 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             /**
              * 库存表 exp_stock
              */
-            ExpStock expStock=new ExpStock();
-            expStock.setDocumentNo(documentNo);
-            expStock.setStorage(expSubStorageDict.getStorageCode());//入库单据号
-            expStock.setExpCode(expPriceList.getExpCode());
-            expStock.setExpSpec(expPriceList.getMinSpec());
-            expStock.setPackageSpec(expPriceList.getExpSpec());
-            expStock.setUnits(expPriceList.getMinUnits());
-            expStock.setPackageUnits(expPriceList.getUnits());
-            expStock.setFirmId(e.getSupplierId());
-            expStock.setQuantity(0.0);
-            expStock.setPurchasePrice(expPriceList.getTradePrice());
-            expStock.setDiscount(100.0);
-            expStock.setSubStorage(this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId()).getSubStorage());
-            expStock.setHospitalId(hospitalId);
-             expStock.setSupplyIndicator(1);//可供标志
-            expStock.setBatchNo("x");
-            expStock=super.merge(expStock);
+            ExpStock expStock=null;
+            String sql="from ExpStock where expCode='"+expPriceList.getExpCode()+"' and expSpec='"+expPriceList.getMinSpec()+"' and packageSpec='"+expPriceList.getExpSpec()+"' and firmId='"+e.getSupplierId()+"'";
+            List<ExpStock> list=entityManager.createQuery(sql).getResultList();
+            if(list!=null&&!list.isEmpty()){
+                expStock.setDocumentNo(documentNo);
+            }else{
+                expStock=new ExpStock();
+                expStock.setDocumentNo(documentNo);
+                expStock.setStorage(expSubStorageDict.getStorageCode());//入库单据号
+                expStock.setExpCode(expPriceList.getExpCode());
+                expStock.setExpSpec(expPriceList.getMinSpec());
+                expStock.setPackageSpec(expPriceList.getExpSpec());
+                expStock.setUnits(expPriceList.getMinUnits());
+                expStock.setPackageUnits(expPriceList.getUnits());
+                expStock.setFirmId(e.getSupplierId());
+                expStock.setQuantity(0.0);
+                expStock.setPurchasePrice(expPriceList.getTradePrice());
+                expStock.setDiscount(100.0);
+                expStock.setSubStorage(this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId()).getSubStorage());
+                expStock.setHospitalId(hospitalId);
+                expStock.setSupplyIndicator(1);//可供标志
+                expStock.setBatchNo("x");
+            }
+            if(expStock!=null){
+                expStock=super.merge(expStock);
+            }
             /**
              * 回写exp_prepare_detail 表
              */
