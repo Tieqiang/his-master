@@ -51,20 +51,20 @@ public class FetchDataFacade extends BaseFacade {
         String orderDept  = null ;//定义执行科室
 
         if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8) {
-            startDate = strings[0] + "-" + month + "-01 00:00:00";
-            endDate = strings[0] + "-" + month + "-31 23:59:59";
+            startDate = strings[0] + "-0" + month + "-01 00:00:00";
+            endDate = strings[0] + "-0" + month + "-31 23:59:59";
         } else if (month == 12 || month == 10) {
             startDate = strings[0] + "-" + month + "-01 00:00:00";
             endDate = strings[0] + "-" + month + "-31 23:59:59";
         } else if (month == 4 || month == 6 || month == 9) {
-            startDate = strings[0] + month + "-01 00:00:00";
-            endDate = strings[0] + month + "-30 23:59:59";
+            startDate = strings[0] + "-0"+ month + "-01 00:00:00";
+            endDate = strings[0] + "-0"+ month + "-30 23:59:59";
         } else if (month == 11) {
             startDate = strings[0] + "-" + month + "-01 00:00:00";
             endDate = strings[0] + "-" + month + "-30 23:59:59";
 
         } else {
-            startDate = strings[0] + "-" + 2 + "-01 00:00:00";
+            startDate = strings[0] + "-0" + 2 + "-01 00:00:00";
             if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
                 endDate = strings[0] + "-02-29 23:59:59";
             }else{
@@ -262,6 +262,23 @@ public class FetchDataFacade extends BaseFacade {
         String outpDevideBaseInpHql = "from AppConfigerParameter as config where config.appName='HTCA' and config.parameterName='OUTP_DEVIDE_BASE_INP'";
         AppConfigerParameter outpDevideBaseInpParamter = createQuery(AppConfigerParameter.class, outpDevideBaseInpHql, new ArrayList<Object>()).getSingleResult();
 
+        //读取体检科参数
+        String tjkIdHql = "from AppConfigerParameter as config where config.appName='HTCA' and config.parameterName='TJK_ID'" ;
+        AppConfigerParameter tjkIdParameter = createQuery(AppConfigerParameter.class,tjkIdHql,new ArrayList<Object>()).getSingleResult() ;
+        String tjkId = tjkIdParameter.getParameterValue() ;
+        //读取体检科与执行科室的分割比例
+        String tjkRateHql = "from AppConfigerParameter as config where config.appName='HTCA' and config.parameterName='TJK_RATE'" ;
+        AppConfigerParameter tjkRateParameter = createQuery(AppConfigerParameter.class,tjkRateHql,new ArrayList<Object>()).getSingleResult() ;
+        String[] tjRates = tjkRateParameter.getParameterValue().split("|") ;
+        Double tjOrderRate = 40.0 ;
+        Double tjPerformRate = 60.0 ;
+        Double tjWardCode = 0.0 ;
+        if(tjRates.length==3) {
+            tjOrderRate = Double.parseDouble(tjRates[0]) ;
+            tjPerformRate = Double.parseDouble(tjRates[1]) ;
+            tjWardCode = Double.parseDouble(tjRates[2]) ;
+        }
+
         Map<String, String> outpWard = new HashMap<>();
         if (outpDevideBaseInpParamter != null) {
             String temp = outpDevideBaseInpParamter.getParameterValue();
@@ -360,7 +377,23 @@ public class FetchDataFacade extends BaseFacade {
                         detail.setWardIncome(wardIncome);
                     }
                     detail.setWardCode(outpWard.get(detail.getOrderedBy()));//设置护理单元为对应的护理单元
-                } else {
+                } else if(tjkId !=null && tjkId.equals(detail.getOrderedBy())){//如果开单科室是体检科，则体检科按照既定的比例进行分割
+                    orderIncome = new BigDecimal(totalCost.doubleValue() * tjOrderRate/100).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() ;
+                    perormIncome = new BigDecimal(totalCost.doubleValue() * tjPerformRate/100).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() ;
+                    wardIncome = new BigDecimal(totalCost.doubleValue() * tjWardCode/100).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() ;
+
+                    detail.setOrderIncome(orderIncome);
+                    //如果是执行科室是手术室且是材料费，则将材料费按照护理单元比例计入手术室否则则将对应的护理收入计入急诊科
+                    if (isOpratorDept(detail, parameter) && ("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
+                        detail.setPerformIncome(wardIncome);
+                        detail.setWardIncome(perormIncome);
+                    } else {
+                        detail.setPerformIncome(perormIncome);
+                        detail.setWardIncome(wardIncome);
+                    }
+                    detail.setWardCode(outpWard.get(detail.getOrderedBy()));//设置护理单元为对应的护理单元
+
+                }else {
                     orderIncome = new BigDecimal(totalCost.doubleValue() * outpOrderReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     perormIncome = new BigDecimal(totalCost.doubleValue() * outpPerformReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     wardIncome = new BigDecimal(totalCost.doubleValue() * outpWardReate).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -374,30 +407,7 @@ public class FetchDataFacade extends BaseFacade {
                         detail.setWardCode(outpWardParameter.getParameterValue());
                     }
                     detail.setWardIncome(wardIncome);
-                    //注释部分主要是为了判断，如果是材料费，对于普通门诊如果执行科室是手术室，则材料收入按照门诊护理单元的比例计入手术室
-                    //如果不是则将此部分材料费按照护理单元的收入计入急诊护理
-                    //if (isOpratorDept(detail, parameter)) {
-                    //    if (("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
-                    //        detail.setPerformIncome(wardIncome);
-                    //        detail.setWardIncome(perormIncome);
-                    //    } else {
-                    //        detail.setPerformIncome(perormIncome);
-                    //        detail.setWardIncome(wardIncome);
-                    //    }
-                    //} else {
-                    //    if (("K01".equals(detail.getClassOnRecking())||"K02".equals(detail.getClassOnRecking()))) {
-                    //        detail.setPerformIncome(perormIncome);
-                    //        detail.setWardCode(outpWardParameter.getParameterValue());//将护理单元设置成急诊科护理单元，从配置文件中取
-                    //        detail.setWardIncome(wardIncome);
-                    //    } else {
-                    //        detail.setPerformIncome(perormIncome);
-                    //        detail.setWardIncome(wardIncome);
-                    //    }
-                    //}
-                    //if("*".equals(detail.getWardCode())){
-                    //    detail.setWardCode(outpWardParameter.getParameterValue());//如果门诊费用的护理单元为空，则将护理单元设置为急诊护理，从配置文件中获取
-                    //}
-                    //detail.setOrderIncome(orderIncome);
+
                 }
                 merge(detail);
             }

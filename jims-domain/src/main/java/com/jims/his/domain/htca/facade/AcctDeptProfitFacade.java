@@ -200,23 +200,16 @@ public class AcctDeptProfitFacade extends BaseFacade {
     @Transactional
     public int updateSpecialIncome(String yearMonth, String hospitalId) {
 
-        String sql = "update htca.acct_dept_profit m\n" +
-                "   set m.special_income = nvl((select n.reward_num\n" +
-                "                                from (select sum(reward_num) reward_num,\n" +
-                "                                             acct_dept_id,\n" +
-                "                                             year_month,\n" +
-                "                                             hospital_id\n" +
-                "                                        from htca.acct_single_reward_record\n" +
-                "                                       group by acct_dept_id,\n" +
-                "                                                year_month,\n" +
-                "                                                hospital_id) n\n" +
-                "                               where m.acct_dept_id = n.acct_dept_id\n" +
-                "                               and n.hospital_id = '"+hospitalId+"'\n" +
-                "                                 and n.year_month = '"+yearMonth+"'),\n" +
-                "                              0)\n" +
-                " where m.year_month = '"+yearMonth+"'\n" +
-                "   and m.hospital_id = '"+hospitalId+"'";
-
+        String sql = "   \n" +
+                "   update htca.acct_dept_profit a\n" +
+                "      set a.special_income = (select sum(b.reward_num)\n" +
+                "                                from htca.acct_single_reward_record b\n" +
+                "                               where a.acct_dept_id = b.acct_dept_id\n" +
+                "                                 and a.year_month = b.year_month\n" +
+                "                                 and b.year_month = '"+yearMonth+"')\n" +
+                "                                 and b.hospital_id = '"+hospitalId+"'" +
+                "    where a.year_month = '"+yearMonth+"'\n" +
+                "      and a.hospital_id = '"+hospitalId+"'" ;
         return createNativeQuery(sql).executeUpdate() ;
     }
 }

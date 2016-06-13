@@ -22,7 +22,6 @@ public class StaffDictVo implements Serializable {
     private String name ;
     private String idNo;
 
-
     public StaffDictVo() {
     }
 

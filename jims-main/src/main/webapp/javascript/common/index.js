@@ -1,18 +1,18 @@
 /**
  * Created by heren on 2015/9/11.
  */
-var config = new common();
+var config = new common() ;
 
 
 window.addTab = function (title, href) {
     //如果路径为空，则直接返回
-    if (!href) {
-        return;
+    if(!href){
+        return ;
     }
     var tabs = $("#mainContent").tabs('tabs');
-    if (tabs.length > 10) {
-        $.messager.alert("系统提示", "打开的Tab页面太多，请观不需要的，重新在打开", 'info');
-        return;
+    if(tabs.length>10){
+        $.messager.alert("系统提示","打开的Tab页面太多，请观不需要的，重新在打开",'info') ;
+        return ;
     }
     if ($("#mainContent").tabs('exists', title)) {
         $("#mainContent").tabs('select', title);

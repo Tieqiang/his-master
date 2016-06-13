@@ -110,10 +110,7 @@ $(function(){
         },{
             title:'单项奖金额',
             field:'rewardNum',
-            width:'10%',
-            editor:{type:'validatebox',options:{
-                validType:'number'
-            }}
+            width:'10%'
         },{
             title:'操作人',
             field:'operator',
@@ -163,13 +160,13 @@ $(function(){
     $("#searchBtn").on('click',function(){
         var yearMonth = $("#fetchDate").datebox('getValue') ;
         if(!yearMonth){
-            $.messager.alert("系统提示","查询时间不能为空",'info') ;
+            $.messager.alert("系统提示","查询月份不能为空",'info') ;
             return ;
         }
         var costItemId = $("#rewardItem").combobox('getValue') ;
 
         if(!costItemId){
-            $.messager.alert("系统提示","请选择对应程成本项目",'info') ;
+            $.messager.alert("系统提示","专项奖项目不能为空",'info') ;
             return ;
         }
 
