@@ -65,7 +65,20 @@ $(function () {
             return dateTime
         }
     }
-
+    function formatterDate2(val, row) {
+       if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mm = date.getMinutes();
+        var s = date.getSeconds();
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+    }
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -183,11 +196,12 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
+
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
@@ -198,7 +212,7 @@ $(function () {
         value: 'dateTime',
         required: true,
         showSeconds: true,
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;

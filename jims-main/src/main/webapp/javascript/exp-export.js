@@ -69,11 +69,34 @@ $(function () {
     var panelHeight = $(window).height - 300;
     //库房字典
 
-
+    function formatterDate2(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
     $('#exportDate').datetimebox({
-        required:true ,
-        missingMessage:'出库日期必填!' ,
-        editable:false
+        required: true,
+        showSeconds: true,
+        value: 'dateTime',
+        formatter: formatterDate2,
+        onSelect: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var time = $('#exportDate').datetimebox('spinner').spinner('getValue');
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            $('#exportDate').datetimebox('setText', dateTime);
+            $('#exportDate').datetimebox('hidePanel');
+        }
     });
 
 
