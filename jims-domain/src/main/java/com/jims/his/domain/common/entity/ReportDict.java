@@ -10,17 +10,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * ReportDict entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "REPORT_DICT", schema = "JIMS")
+@Table(name = "REPORT_SERVER_CONFIG", schema = "JIMS")
 public class ReportDict implements java.io.Serializable {
 
 	// Fields
 
 	private String id;
     private String hospitalId;
-	private String hospitalName;
 	private String ip;
 	private String port;
-
+    private String remoteIp ;
+    private String remotePort ;
+    private String hospitalName ;
 	// Constructors
 
 	/** default constructor */
@@ -30,12 +31,14 @@ public class ReportDict implements java.io.Serializable {
     /**
      * full constructor
      */
-    public ReportDict(String id, String hospitalId, String hospitalName, String ip, String port) {
+    public ReportDict(String id, String hospitalId, String ip, String port, String remoteIp, String remotePort, String hospitalName) {
         this.id = id;
         this.hospitalId = hospitalId;
-        this.hospitalName = hospitalName;
         this.ip = ip;
         this.port = port;
+        this.remoteIp = remoteIp;
+        this.remotePort = remotePort;
+        this.hospitalName = hospitalName;
     }
 
 	// Property accessors
@@ -51,14 +54,6 @@ public class ReportDict implements java.io.Serializable {
 		this.id = id;
 	}
 
-    @Column(name = "hospital_name", length = 100)
-	public String getHospitalName() {
-		return this.hospitalName;
-	}
-
-	public void setHospitalName(String hospitalName) {
-		this.hospitalName = hospitalName;
-	}
 
     @Column(name = "HOSPITAL_ID", length = 100)
     public String getHospitalId() {
@@ -85,5 +80,33 @@ public class ReportDict implements java.io.Serializable {
 
     public void setPort(String port) {
         this.port = port;
+    }
+
+    @Column(name="remote_ip")
+    public String getRemoteIp() {
+        return remoteIp;
+    }
+
+    public void setRemoteIp(String remoteIp) {
+        this.remoteIp = remoteIp;
+    }
+
+    @Column(name="remote_port")
+    public String getRemotePort() {
+        return remotePort;
+    }
+
+    public void setRemotePort(String remotePort) {
+        this.remotePort = remotePort;
+    }
+
+
+    @Column(name="hospital_name")
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
     }
 }

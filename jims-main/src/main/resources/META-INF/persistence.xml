@@ -10,6 +10,8 @@
         <!-- 用户 -->
         <class>com.jims.his.domain.common.entity.AppConfigerBaseinfo</class>
         <class>com.jims.his.domain.common.entity.AppConfigerParameter</class>
+        <class>com.jims.his.domain.common.entity.ReportDict</class>
+
         <class>com.jims.his.domain.ieqm.entity.MeasuresDict</class>
         <class>com.jims.his.domain.ieqm.entity.ExpExportMaster</class>
         <class>com.jims.his.domain.ieqm.entity.ExpOutBook</class>

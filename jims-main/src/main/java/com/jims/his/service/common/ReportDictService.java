@@ -30,8 +30,14 @@ public class ReportDictService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<ReportDict> findAllReport(){
         List<ReportDict> reportDicts = reportDictFacade.findAll(ReportDict.class) ;
-
         return reportDicts ;
+    }
+
+    @Path("find-by-hospitalId")
+    @GET
+    @Produces("application/json")
+    public ReportDict findReportDict(@QueryParam("hospitalId")String hospitalId){
+        return reportDictFacade.findByHospitalId(hospitalId) ;
     }
 
     @POST
