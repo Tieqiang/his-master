@@ -1,6 +1,8 @@
 package com.jims.his.domain.common.vo;
 
 
+import com.jims.his.domain.common.entity.ReportDict;
+
 import java.io.Serializable;
 
 /**
@@ -28,12 +30,13 @@ public class Config implements Serializable {
     private String password ;
     private String firstPage;//首页
     private String accessToken ;
+    private ReportDict reportDict ;//报表服务器
 
 
     public Config() {
     }
 
-    public Config(String loginName, String staffName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath, String acctDeptId, String password, String firstPage, String accessToken) {
+    public Config(String loginName, String staffName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath, String acctDeptId, String password, String firstPage, String accessToken, ReportDict reportDict) {
         this.loginName = loginName;
         this.staffName = staffName;
         this.hospitalId = hospitalId;
@@ -54,6 +57,7 @@ public class Config implements Serializable {
         this.password = password;
         this.firstPage = firstPage;
         this.accessToken = accessToken;
+        this.reportDict = reportDict;
     }
 
     public String getDefaultReportPath() {
@@ -218,6 +222,14 @@ public class Config implements Serializable {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public ReportDict getReportDict() {
+        return reportDict;
+    }
+
+    public void setReportDict(ReportDict reportDict) {
+        this.reportDict = reportDict;
     }
 }
 

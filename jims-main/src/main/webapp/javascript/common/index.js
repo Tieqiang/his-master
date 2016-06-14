@@ -3,12 +3,41 @@
  */
 var config = new common() ;
 
+var isPublicIp=function(ip){
+    if(ip=="localhost"){
+        return false ;
+    }
+    var ips=ip.split(".") ;
+    if(ips.length<4){
+        return false ;
+    }else{
+        if(ips[0]=="10" || (ips[0]=="172" && ips[1]>='16' && ips[1]<="31") ||(ips[0]=="192" && ips[1]=="168")){
+            return false ;
+        }else{
+            return true ;
+        }
+    }
+}
+
 
 window.addTab = function (title, href) {
     //如果路径为空，则直接返回
     if(!href){
         return ;
     }
+
+    var hostName = window.location.hostname ;
+    var reportIp=undefined ;
+    var reportPort =undefined ;
+
+    if(isPublicIp(hostName)){
+        reportIp = config.reportDict.remoteIp ;
+        reportPort = config.reportDict.remotePort ;
+    }else{
+        reportIp = config.reportDict.ip ;
+        reportPort = config.reportDict.port ;
+    }
+
     var tabs = $("#mainContent").tabs('tabs');
     if(tabs.length>10){
         $.messager.alert("系统提示","打开的Tab页面太多，请观不需要的，重新在打开",'info') ;
@@ -19,17 +48,12 @@ window.addTab = function (title, href) {
     } else {
         var content = undefined;
         if ($.startWith(href, 'http')) {
-            if (href.indexOf("reportlet") >= 0) {
-                href = href + "&dept_id=" + config.acctDeptId + "&emp_no=" + config.loginId + "&user_name=" + config.loginName;
-            }
-
             if (href.indexOf("OA") >= 0) {
                 var userName = config.loginName.replace(/\b(0+)/gi, "");
                 userName = userName.toLocaleLowerCase();
                 href = String.format(href, userName, config.password);
 
             }
-
             if(href.indexOf("?")>=0){
                 href = href+"&date="+new Date() ;
             }else{
@@ -37,7 +61,12 @@ window.addTab = function (title, href) {
             }
             content = '<iframe scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>';
         } else {
-            content = '<iframe scrolling="auto" frameborder="0"  src="views' + href + '.html" style="width:100%;height:100%;"></iframe>'
+            if (href.indexOf("reportlet") >= 0) {
+                href = "http://"+reportIp+":"+reportPort+href + "&dept_id=" + config.acctDeptId + "&emp_no=" + config.loginId + "&user_name=" + config.loginName;
+                content = '<iframe scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>';
+            }else{
+                content = '<iframe scrolling="auto" frameborder="0"  src="views' + href + '.html" style="width:100%;height:100%;"></iframe>'
+            }
         }
         if (href.indexOf("OA") >= 0) {
             window.open(href);
