@@ -316,16 +316,22 @@ public class ExpStockFacade extends BaseFacade {
         BeanChangeVo<ExpExportDetialVo> expExportDetialVoBeanChangeVo = importVo.getExpExportDetialVoBeanChangeVo();
         List<ExpExportDetialVo> update = expExportDetialVoBeanChangeVo.getUpdated();
         if (update.size() > 0) {
-            updateExpDetail(update);//设置使其更改rec_flag
+            String operator="";
+            List<ExpImportMaster> list=importVo.getExpImportMasterBeanChangeVo().getInserted();
+            if(list!=null&&!list.isEmpty()){
+                operator =list.get(0).getOperator();
+             }
+            updateExpDetail(update,operator);//设置使其更改rec_flag
         }
     }
 
-    private void updateExpDetail(List<ExpExportDetialVo> update) {
+    private void updateExpDetail(List<ExpExportDetialVo> update,String operator) {
 
         for (ExpExportDetialVo vo : update) {
-
             ExpExportDetail detail = expExportDetailFacade.getDetail(vo.getHospitalId(), vo.getDocumentNo(), vo.getItemNo());
             detail.setRecFlag(1);
+            detail.setRecDate(new Date());
+            detail.setRecOperator(operator);
             merge(detail);
         }
 

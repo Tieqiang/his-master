@@ -1024,8 +1024,8 @@ $(function () {
                 rows[i].invoiceDate=new Date(rows[i].invoiceDate);
                 rows[i].disinfectDate= new Date(rows[i].disinfectDate);
                 rows[i].produceDate= new Date(rows[i].produceDate);
-
-            }
+                rows[i].recOperator= parent.config.staffName;
+             }
             expImpVo.expExportDetialVoBeanChangeVo.updated=rows ;
             $.postJSON("/api/exp-stock/imp-batch", expImpVo, function (data) {
                 if (data.errorMessage) {
@@ -1071,6 +1071,7 @@ $(function () {
         importMaster.tenderNo = $("#tenderNo").textbox('getValue');
         importMaster.tenderType = $("#tenderType").combobox('getValue');
         importMaster.hospitalId = parent.config.hospitalId;
+        importMaster.acctdate=new Date();
         expImportMasterBeanChangeVo.inserted.push(importMaster);
 
         //明细记录

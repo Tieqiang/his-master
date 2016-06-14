@@ -74,6 +74,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expPrepareDetail.setExpBarCode(barCode);
             expPrepareDetail.setUseFlag("0");//0 未使用
             expPrepareDetail.setPrintFlag("0");//0 未打印
+//            expPrepareDetail.setImpDocnoFirst(document1);//入库单据号
+//            expPrepareDetail.setExpDocnoFirst(document2);//出库单据号
             expPrepareDetail=entityManager.merge(expPrepareDetail);
             if(list!=null&&!list.isEmpty()&&!list.contains(expPrepareDetail)){
                 list.add(expPrepareDetail);
@@ -224,29 +226,40 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             /**
              * 库存表 exp_stock
              */
-            ExpStock expStock=new ExpStock();
-            expStock.setDocumentNo(documentNo);
-            expStock.setStorage(expSubStorageDict.getStorageCode());//入库单据号
-            expStock.setExpCode(expPriceList.getExpCode());
-            expStock.setExpSpec(expPriceList.getMinSpec());
-            expStock.setPackageSpec(expPriceList.getExpSpec());
-            expStock.setUnits(expPriceList.getMinUnits());
-            expStock.setPackageUnits(expPriceList.getUnits());
-            expStock.setFirmId(e.getSupplierId());
-            expStock.setQuantity(0.0);
-            expStock.setPurchasePrice(expPriceList.getTradePrice());
-            expStock.setDiscount(100.0);
-            expStock.setSubStorage(this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId()).getSubStorage());
-            expStock.setHospitalId(hospitalId);
-             expStock.setSupplyIndicator(1);//可供标志
-            expStock.setBatchNo("x");
-            expStock=super.merge(expStock);
+            ExpStock expStock=null;
+            String sql="from ExpStock where expCode='"+expPriceList.getExpCode()+"' and expSpec='"+expPriceList.getMinSpec()+"' and packageSpec='"+expPriceList.getExpSpec()+"' and firmId='"+e.getSupplierId()+"'";
+            List<ExpStock> list=entityManager.createQuery(sql).getResultList();
+            if(list!=null&&!list.isEmpty()){
+                expStock.setDocumentNo(documentNo);
+            }else{
+                expStock=new ExpStock();
+                expStock.setDocumentNo(documentNo);
+                expStock.setStorage(expSubStorageDict.getStorageCode());//入库单据号
+                expStock.setExpCode(expPriceList.getExpCode());
+                expStock.setExpSpec(expPriceList.getMinSpec());
+                expStock.setPackageSpec(expPriceList.getExpSpec());
+                expStock.setUnits(expPriceList.getMinUnits());
+                expStock.setPackageUnits(expPriceList.getUnits());
+                expStock.setFirmId(e.getSupplierId());
+                expStock.setQuantity(0.0);
+                expStock.setPurchasePrice(expPriceList.getTradePrice());
+                expStock.setDiscount(100.0);
+                expStock.setSubStorage(this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId()).getSubStorage());
+                expStock.setHospitalId(hospitalId);
+                expStock.setSupplyIndicator(1);//可供标志
+                expStock.setBatchNo("x");
+            }
+            if(expStock!=null){
+                expStock=super.merge(expStock);
+            }
             /**
              * 回写exp_prepare_detail 表
              */
             ExpPrepareDetail expPrepareDetail=this.expPrepareDetailFacade.findByCode(barCode);
             expPrepareDetail.setUseFlag("1");//已经使用
             expPrepareDetail.setUseDate(sdf.format(new Date()));
+            expPrepareDetail.setImpDocnoFirst(documentNo);//入库单据号
+            expPrepareDetail.setExpDocnoFirst(documentNo2);//出库单据号
             expPrepareDetail.setUseDept(useDeptCode);
             expPrepareDetail.setUsePatientId(patientId);
             expPrepareDetail=super.merge(expPrepareDetail);
@@ -279,21 +292,12 @@ public class ExpPrepareMasterFacade extends BaseFacade {
 
     /**
      * 回滚操作
-     * @param inDocumentNo
-     * @param outDocumentNo
      * @param barCode
      * @return
      */
     @Transactional
-    public Map<String, Object> rollBack(String inDocumentNo, String outDocumentNo, String barCode) {
+    public Map<String, Object> rollBack(String barCode) {
          Map<String, Object> map=new HashMap<String,Object>();
-        /**
-         * import export
-         */
-        int rows1=entityManager.createQuery("delete from ExpImportMaster where documentNo='"+inDocumentNo+"'").executeUpdate();
-        int rows2=entityManager.createQuery("delete from ExpImportDetail where documentNo='"+inDocumentNo+"'").executeUpdate();
-        int rows3=entityManager.createQuery("delete from ExpExportMaster where documentNo='"+outDocumentNo+"'").executeUpdate();
-        int rows4=entityManager.createQuery("delete from ExpExportDetail where documentNo='"+outDocumentNo+"'").executeUpdate();
         /**
          *exp_prepare_detail
          */
@@ -303,10 +307,19 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         expPrepareDetail.setUseDate("");
         expPrepareDetail.setUsePatientId("");
         expPrepareDetail=merge(expPrepareDetail);
+
+        /**
+         * import export
+         */
+        int rows1=entityManager.createQuery("delete from ExpImportMaster where documentNo='"+expPrepareDetail.getImpDocnoFirst()+"'").executeUpdate();
+        int rows2=entityManager.createQuery("delete from ExpImportDetail where documentNo='"+expPrepareDetail.getImpDocnoFirst()+"'").executeUpdate();
+        int rows3=entityManager.createQuery("delete from ExpExportMaster where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
+        int rows4=entityManager.createQuery("delete from ExpExportDetail where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
+
         /**
          *exp_stock
          */
-        int rows5=entityManager.createQuery("delete from ExpStock where documentNo='"+inDocumentNo+"'").executeUpdate();
+        int rows5=entityManager.createQuery("delete from ExpStock where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
         if(rows1!=0&&rows2!=0&&rows3!=0&&rows4!=0&&rows5!=0){
             map.put("info","操作成功！");
         }else{

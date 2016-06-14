@@ -60,90 +60,80 @@ public class BuyExpPlanFacade extends BaseFacade {
      */
     public List<BuyExpPlanVo> listBuyListLow(String storageCode){
         String sql = "SELECT distinct exp_stock.storage,\n" +
-                "         exp_stock.exp_code,\n" +
-//                "         exp_stock.exp_spec,\n" +
-//                "         exp_stock.units,\n" +
-                "         exp_stock.firm_id,\n" +
-                "         avg(\"EXP_STOCK\".\"PURCHASE_PRICE\") purchase,\n" +
-                "         exp_stock.package_spec pack_spec,\n" +
-                "         exp_stock.package_units pack_unit,\n" +
-                "         sum(\"EXP_STOCK\".\"QUANTITY\") quantity,\n" +
-                "         exp_price_list.retail_price,\n" +
-                "         \"EXP_DICT\".\"EXP_NAME\",\n" +
-                "         EXP_DICT.exp_form \n" +
-                "    FROM \"EXP_DICT\",\n" +
-                "          exp_stock,\n" +
-                "          exp_storage_profile,\n" +
-                "          exp_price_list\n" +
-                "  WHERE  ( \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_STORAGE_PROFILE\".\"EXP_CODE\" ) and\n" +
-                "         ( \"EXP_STOCK\".\"PACKAGE_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\" ) and\n" +
-                "         ( \"EXP_STOCK\".\"STORAGE\"  = \"EXP_STORAGE_PROFILE\".\"STORAGE\" ) and\n" +
-                "         ( \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\" ) and\n" +
-                "         ( \"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\" ) and\n" +
-                "\t\t\t( exp_stock.exp_code = exp_price_list.exp_code) and\n" +
-                "         ( exp_stock.EXP_SPEC = exp_price_list.MIN_SPEC) and\n" +
-                "\t\t\t( exp_stock.firm_id = exp_price_list.firm_id) and\n" +
-                "         ( exp_price_list.start_date < sysdate and (sysdate <= exp_price_list.stop_date or exp_price_list.stop_date is null)) \n" +
-                "         and ( \"EXP_STOCK\".\"STORAGE\" = "+storageCode+" )\n" +
-                "group by exp_stock.storage,exp_stock.exp_code,exp_stock.exp_spec,\n" +
-                "         exp_stock.units,  exp_stock.firm_id, exp_stock.package_spec,\n" +
-                "         exp_stock.package_units,\"EXP_DICT\".\"EXP_NAME\",exp_storage_profile.LOW_LEVEL,\n" +
-                "         exp_storage_profile.UPPER_LEVEL,\n" +
-                "         exp_price_list.retail_price,EXP_DICT.exp_form \n" +
-                "having (sum(\"EXP_STOCK\".\"QUANTITY\") < exp_storage_profile.LOW_LEVEL) or\n" +
-                "       (exp_storage_profile.low_level + exp_storage_profile.UPPER_LEVEL = 0) or\n" +
-                "       (exp_storage_profile.UPPER_LEVEL is null) or\n" +
-                "       (exp_storage_profile.LOW_LEVEL IS NULL)";
+                "                exp_dict.exp_code,\n" +
+                "                exp_stock.firm_id,\n" +
+                "                avg(exp_price_list.trade_price) purchase,\n" +
+                "                exp_price_list.exp_spec pack_spec,\n" +
+                "                exp_price_list.units pack_unit,\n" +
+                "               EXP_STOCK.QUANTITY quantity,\n" +
+                "                exp_price_list.retail_price,\n" +
+                "                \"EXP_DICT\".\"EXP_NAME\",\n" +
+                "                EXP_DICT.exp_form\n" +
+                "  FROM \"EXP_DICT\", exp_stock, exp_storage_profile, exp_price_list\n" +
+                " WHERE (exp_dict.exp_code = \"EXP_STORAGE_PROFILE\".\"EXP_CODE\")\n" +
+                "   and  (\"EXP_STOCK\".\"PACKAGE_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\")\n" +
+                "   and (\"EXP_STOCK\".\"STORAGE\" = \"EXP_STORAGE_PROFILE\".\"STORAGE\")\n" +
+                "   and (\"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\")\n" +
+                "   and (\"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\")\n" +
+                "   and (exp_dict.exp_code = exp_price_list.exp_code)\n" +
+                "   and exp_storage_profile.exp_code=exp_dict.exp_code\n" +
+                "   and exp_storage_profile.exp_spec=exp_price_list.exp_spec\n" +
+                "   and  (exp_dict.EXP_SPEC = exp_price_list.MIN_SPEC)\n" +
+                "   and (exp_stock.firm_id = exp_price_list.firm_id)\n" +
+                "       and (exp_price_list.start_date < sysdate and\n" +
+                "        (sysdate <= exp_price_list.stop_date or\n" +
+                "       exp_price_list.stop_date is null))\n" +
+                "   and (\"EXP_STOCK\".\"STORAGE\" = '"+storageCode+"')\n" +
+                "   \n" +
+                "   \n" +
+                " group by exp_stock.storage,\n" +
+                "           exp_dict.exp_code,\n" +
+                "          exp_DICT.exp_spec,\n" +
+                "          exp_stock.Quantity,\n" +
+                "          exp_stock.firm_id,\n" +
+                "           exp_price_list.exp_spec ,\n" +
+                "           exp_price_list.units,\n" +
+                "          \"EXP_DICT\".\"EXP_NAME\",\n" +
+                "          exp_storage_profile.LOW_LEVEL,\n" +
+                "          exp_storage_profile.UPPER_LEVEL,\n" +
+                "          exp_price_list.retail_price,\n" +
+                "          EXP_DICT.exp_form\n" +
+                "having(sum(\"EXP_STOCK\".\"QUANTITY\") < exp_storage_profile.LOW_LEVEL) or (exp_storage_profile.low_level + exp_storage_profile.UPPER_LEVEL = 0) or (exp_storage_profile.UPPER_LEVEL is null) or (exp_storage_profile.LOW_LEVEL IS NULL)\n" +
+                "\n" +
+                " ";
 
         List<BuyExpPlanVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlanVo.class);
         return result;
     }
 
     public List<BuyExpPlanVo> listBuyListAll(String storageCode) {
-        String sql =  "  SELECT\n" +
-                "        distinct exp_stock.storage,\n" +
-                "        exp_stock.exp_code,\n" +
-                "        exp_stock.firm_id,\n" +
-                "        exp_price_list.exp_spec pack_spec,\n" +
-                "        exp_stock.package_units pack_unit,\n" +
-                "        exp_price_list.retail_price,\n" +
-                "        EXP_DICT.EXP_NAME,\n" +
-                "        EXP_STOCK.PURCHASE_PRICE purchase,\n" +
-                "        EXP_STOCK.QUANTITY quantity,\n" +
-                "        EXP_DICT.exp_form   \n" +
-                "    FROM\n" +
-                "        \"EXP_DICT\",\n" +
-                "         exp_stock,\n" +
-                "        exp_price_list  \n" +
-                "    WHERE\n" +
-                "        (\n" +
-                "            \"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\"\n" +
-                "        )    \n" +
-                "        and (\n" +
-                "            \"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\"\n" +
-                "        )    \n" +
-                "        and (\n" +
-                "            exp_stock.exp_code = exp_price_list.exp_code\n" +
-                "        )    \n" +
-                "        and (\n" +
-                "            exp_stock.EXP_SPEC = exp_price_list.MIN_SPEC\n" +
-                "        )    \n" +
-                "        and (\n" +
-                "            exp_stock.firm_id = exp_price_list.firm_id\n" +
-                "        )    \n" +
-                "        and (\n" +
-                "            exp_price_list.start_date < sysdate \n" +
-                "            and        (\n" +
-                "                sysdate <= exp_price_list.stop_date \n" +
-                "                or        exp_price_list.stop_date is null\n" +
-                "            )\n" +
-                "        )    \n" +
-                "        and (\n" +
-                "            \"EXP_STOCK\".\"STORAGE\" = '"+storageCode+"'\n" +
-                "        ) ";
-
-
-        List<BuyExpPlanVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlanVo.class);
+        String sql =  "SELECT distinct exp_stock.storage,\n" +
+                "                exp_dict.exp_code,\n" +
+                "                exp_stock.firm_id,\n" +
+                "               (exp_price_list.trade_price) purchase,\n" +
+                "                exp_price_list.exp_spec pack_spec,\n" +
+                "                exp_price_list.units pack_unit,\n" +
+                "               EXP_STOCK.QUANTITY quantity,\n" +
+                "                exp_price_list.retail_price,\n" +
+                "                \"EXP_DICT\".\"EXP_NAME\",\n" +
+                "                EXP_DICT.exp_form\n" +
+                "  FROM \"EXP_DICT\", exp_stock, exp_storage_profile, exp_price_list\n" +
+                " WHERE (exp_dict.exp_code = \"EXP_STORAGE_PROFILE\".\"EXP_CODE\")\n" +
+                "    and (\"EXP_STOCK\".\"PACKAGE_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\")\n" +
+                "   and (\"EXP_STOCK\".\"STORAGE\" = \"EXP_STORAGE_PROFILE\".\"STORAGE\")\n" +
+                "   and (\"EXP_STOCK\".\"EXP_CODE\" = \"EXP_DICT\".\"EXP_CODE\")\n" +
+                "   and (\"EXP_STOCK\".\"EXP_SPEC\" = \"EXP_DICT\".\"EXP_SPEC\")\n" +
+                "   and (exp_dict.exp_code = exp_price_list.exp_code)\n" +
+                "   and exp_storage_profile.exp_code=exp_dict.exp_code\n" +
+                "   and exp_storage_profile.exp_spec=exp_price_list.exp_spec\n" +
+                "   and  (exp_dict.EXP_SPEC = exp_price_list.MIN_SPEC)\n" +
+                "   and (exp_stock.firm_id = exp_price_list.firm_id)\n" +
+                "       and (exp_price_list.start_date < sysdate and\n" +
+                "        (sysdate <= exp_price_list.stop_date or\n" +
+                "       exp_price_list.stop_date is null))\n" +
+                "   and (\"EXP_STOCK\".\"STORAGE\" ="+storageCode+")\n" +
+                   " ";
+         List<BuyExpPlanVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), BuyExpPlanVo.class);
         return result;
     }
 
@@ -345,7 +335,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                             "      where exp_code = '"+temp.getExpCode()+"'\n" +
 //                            "      And exp_spec = '"+temp.getExpSpec()+"'\n" +
                             "      And firm_id = '"+temp.getFirmId()+"'\n" +
-                            "      And package_spec = '"+temp.getPackSpec()+"'";
+                            "      And package_spec = '"+temp.getPackSpec()+"' and storage='"+temp.getStorage()+"'";
                     List quantityList = super.createNativeQuery(stockSql).getResultList();
                     if (quantityList != null && quantityList.size() > 0) {
                         double quantity = ((BigDecimal) quantityList.get(0)).doubleValue();

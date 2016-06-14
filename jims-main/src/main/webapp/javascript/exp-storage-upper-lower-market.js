@@ -33,35 +33,35 @@ function w3(s) {
     }
 }
 $(function () {
-    var suppliers = [];
-    var promise = $.get("/api/exp-supplier-catalog/list-all", function (data) {
-        suppliers = data;
-    });
-    promise.done(function () {
-        $("#supplier").combogrid({
-            idField: 'supplierCode',
-            textField: 'supplierName',
-            data: suppliers,
-            panelWidth: 450,
-            fitColumns: true,
-            columns: [
-                [
-                    {
-                        title: '供应商名称',
-                        field: 'supplierName', width: 180, align: 'center'
-                    },
-                    {
-                        title: '供应商代码',
-                        field: 'supplierCode', width: 130, align: 'center'
-                    },
-                    {
-                        title: '输入码',
-                        field: 'inputCode', width: 50, align: 'center'
-                    }
-                ]
-            ]
-        })
-    });
+//    var suppliers = [];
+//    var promise = $.get("/api/exp-supplier-catalog/list-all", function (data) {
+//        suppliers = data;
+//    });
+//    promise.done(function () {
+//        $("#supplier").combogrid({
+//            idField: 'supplierCode',
+//            textField: 'supplierName',
+//            data: suppliers,
+//            panelWidth: 450,
+//            fitColumns: true,
+//            columns: [
+//                [
+//                    {
+//                        title: '供应商名称',
+//                        field: 'supplierName', width: 180, align: 'center'
+//                    },
+//                    {
+//                        title: '供应商代码',
+//                        field: 'supplierCode', width: 130, align: 'center'
+//                    },
+//                    {
+//                        title: '输入码',
+//                        field: 'inputCode', width: 50, align: 'center'
+//                    }
+//                ]
+//            ]
+//        })
+//    });
     $("#expName").searchbox({
         searcher: function (value, name) {
             var rows = $("#dg").datagrid("getRows");
@@ -201,8 +201,8 @@ $(function () {
             $.messager.alert("系统提醒", "请选择统计区间", "error");
             return;
         }
-        var supplierId=$("#supplier").combogrid("getValue");
-        var pricePromise = $.get("/api/exp-storage-profile-market/upper-lower?storageCode=" + parent.config.storageCode+"&startTime="+startDate+"&stopTime="+stopDate+"&hospitalId="+parent.config.hospitalId+"&supplier="+supplierId, function (data) {
+//        var supplierId=$("#supplier").combogrid("getValue");
+        var pricePromise = $.get("/api/exp-storage-profile-market/upper-lower?storageCode=" + parent.config.storageCode+"&startTime="+startDate+"&stopTime="+stopDate+"&hospitalId="+parent.config.hospitalId, function (data) {
             $.each(data, function (index, item) {
                     var price = {};
                     price.id = item.id;
@@ -213,13 +213,13 @@ $(function () {
                     price.expCode = item.expCode;
                     price.amountPerPackage = item.amountPerPackage;
                     price.packageUnits = item.packageUnits;
-                    if (item.stockQuantity != null) {
-                        price.upperLevel = item.stockQuantity*1.6;
-                        price.lowLevel = item.stockQuantity*0.6;
-                    }else{
+//                    if (item.stockQuantity != null) {
+//                        price.upperLevel = item.stockQuantity*1.6;
+//                        price.lowLevel = item.stockQuantity*0.6;
+//                    }else{
                         price.upperLevel = item.upperLevel;
                         price.lowLevel = item.lowLevel;
-                    }
+//                    }
                     price.location = item.expCode;
                     price.expireDate = item.expireDate;
                     price.supplier = item.supplier;

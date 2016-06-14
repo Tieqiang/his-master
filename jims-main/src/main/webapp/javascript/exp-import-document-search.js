@@ -49,9 +49,9 @@ $(function () {
     });
     //格式化日期函数
     function formatterDate(val, row) {
-        if(val.index("1970")>0){
-            return null;
-        }
+//        if(val.index("1970")>0){
+//            return null;
+//        }
         if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
@@ -65,7 +65,20 @@ $(function () {
             return dateTime
         }
     }
-
+    function formatterDate2(val, row) {
+       if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mm = date.getMinutes();
+        var s = date.getSeconds();
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+    }
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -183,11 +196,12 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
+
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
@@ -198,7 +212,7 @@ $(function () {
         value: 'dateTime',
         required: true,
         showSeconds: true,
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -239,7 +253,7 @@ $(function () {
 
     promise.done(function () {
         $("#supplier").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: suppliers,
             panelWidth: 500,
@@ -286,7 +300,7 @@ $(function () {
             masterDataVo.startDate ="";
             masterDataVo.stopDate="";
         }
-        masterDataVo.supplier = $("#supplier").combogrid("getText");
+        masterDataVo.supplier = $("#supplier").combogrid("getValue");
         masterDataVo.searchInput = $("#searchInput").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
@@ -399,25 +413,25 @@ $(function () {
         }
     });
 
-    //打印
-    //$("#printDiv").dialog({
-    //    title: '打印预览',
-    //    width: 1000,
-    //    height: 520,
-    //    catch: false,
-    //    modal: true,
-    //    closed: true,
-    //    onOpen: function () {
-    //        $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-document-search.cpt");
-    //    }
-    //})
-    //$("#printBtn").on('click', function () {
-    //    var printData = $("#importMaster").datagrid('getRows');
-    //    if (printData.length <= 0) {
-    //        $.messager.alert('系统提示', '请先查询数据', 'info');
-    //        return;
-    //    }
-    //    $("#printDiv").dialog('open');
-    //
-    //})
+
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-document-search.cpt");
+        }
+    })
+    $("#printBtn").on('click', function () {
+        var printData = $("#importMaster").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
 })

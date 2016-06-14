@@ -506,10 +506,9 @@ $(function () {
             return false;
         }
         for (var i = 0; i < rows.length; i++) {
-            //删除空行
-            if ($.trim(rows[i].expCode) == '' || $.trim(rows[i].expName) == '' || $.trim(rows[i].firmId) == '') {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
-                $("#right").datagrid('selectRow', i);
+
+            if ($.trim(rows[i].storage) == '' || $.trim(rows[i].storage) == '' ) {
+                rows[i].storage=parent.config.storageCode;
                 return false;
             }
         }
@@ -535,8 +534,7 @@ $(function () {
                 rows[i].planNumber=day;
             }
             $.postJSON('/api/buy-exp-plan/generate-num-sale', rows, function (data) {
-
-                $("#right").datagrid("loadData", data);
+                 $("#right").datagrid("loadData", data);
             });
         }
 
@@ -545,13 +543,13 @@ $(function () {
     var checkValidate = function (rows) {
         for (var i = 0; i < rows.length; i++) {
             //删除空行
-            if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
-                $("#right").datagrid('selectRow', i);
-                $("#right").datagrid("loadData", data);
-                return false;
-
-            }
+//            if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
+//                $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
+//                $("#right").datagrid('selectRow', i);
+//                $("#right").datagrid("loadData", data);
+//                return false;
+//
+//            }
             if (rows[i].wantNumber == undefined || rows[i].wantNumber <= 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:计划数量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);

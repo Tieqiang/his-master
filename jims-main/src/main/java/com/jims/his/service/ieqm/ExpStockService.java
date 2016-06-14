@@ -88,33 +88,46 @@ public class ExpStockService {
     @Path("stock-record")
     public List<ExpStockRecord> listExpStockRecord(@QueryParam("storageCode")String storageCode,@QueryParam("expCode")String expCode,
                                                    @QueryParam("hospitalId")String hospitalId){
-        String sql = " SELECT distinct b.EXP_NAME,\n" +
-                "                 b.EXP_FORM,\n" +
-                "                 c.EXP_CODE,\n" +
-                "                 c.EXP_SPEC,\n" +
-                "                 c.units,\n" +
-                "                 c.min_spec,\n" +
-                "                 c.min_UNITS,\n" +
-                "                 c.FIRM_ID,\n" +
-                "                 c.TRADE_PRICE,\n" +
-                "                 c.TRADE_PRICE purchase_Price,\n" +
-                "                 c.retail_price,\n" +
-                "                 c.material_code,\n" +
-                "                 c.Register_no,\n" +
-                "                 c.Permit_no,\n" +
-                "                 c.amount_per_package,\n" +
-                "                 nvl(d.quantity,0) as quantity\n" +
-                "   FROM exp_dict b, exp_price_list c,exp_stock d\n" +
-                "  WHERE b.EXP_CODE = c.EXP_CODE\n" +
-                "    AND b.exp_spec = c.min_spec\n" +
-                "    AND c.start_date <= sysdate\n" +
-                "    and c.min_spec = d.exp_spec(+)\n" +
-                "    and c.exp_code = d.exp_code(+)\n" +
-                "    AND (c.stop_date IS NULL OR c.stop_date > sysdate)\n" +
-                "    AND b.EXP_CODE = '"+expCode+"'\n" +
-                "    and c.exp_spec = d.package_spec(+)\n" +
-                "    and c.hospital_id = '"+hospitalId+"'\n" +
-                "    and d.storage(+) = '"+storageCode+"'" ;
+        String sql = "SELECT\n" +
+                "        distinct b.EXP_NAME,\n" +
+                "        b.EXP_FORM,\n" +
+                "        c.EXP_CODE,\n" +
+                "        c.EXP_SPEC,\n" +
+                "        c.units,\n" +
+                "        c.min_spec,\n" +
+                "        c.min_UNITS,\n" +
+                "        c.FIRM_ID,\n" +
+                "        c.TRADE_PRICE,\n" +
+                "        c.TRADE_PRICE purchase_Price,\n" +
+                "        c.retail_price,\n" +
+                "        c.material_code,\n" +
+                "        c.Register_no,\n" +
+                "        c.Permit_no,\n" +
+                "        c.amount_per_package,\n" +
+                "        nvl(d.quantity,\n" +
+                "        0) as quantity ,KillFlag \n" +
+                "    FROM\n" +
+                "        exp_dict b,\n" +
+                "        exp_price_list c,\n" +
+                "        exp_stock d   \n" +
+                "    WHERE\n" +
+                "        b.EXP_CODE = c.EXP_CODE     \n" +
+                "        AND b.exp_spec = c.min_spec     \n" +
+                "        AND c.start_date <= sysdate     \n" +
+                "        and c.min_spec = d.exp_spec(+)     \n" +
+                "        and c.exp_code = d.exp_code(+)     \n" +
+                "        AND (\n" +
+                "            c.stop_date IS NULL \n" +
+                "            OR c.stop_date > sysdate\n" +
+                "        )     \n" +
+                "        AND b.EXP_CODE = '"+expCode+"'     \n" +
+                "        and c.exp_spec = d.package_spec(+)     \n" +
+                "        and c.hospital_id = '"+hospitalId+"'     \n" +
+                "        and d.storage(+) = '"+storageCode+"'\n" +
+                "        and d.exp_code=b.exp_code\n" +
+                "        and d.exp_spec=b.exp_spec\n" +
+                "        and d.package_spec=c.exp_spec\n" +
+                "        and d.firm_id=c.firm_id" ;
          return expStockFacade.createNativeQuery(sql,new ArrayList<Object>(),ExpStockRecord.class) ;
      }
 

@@ -436,14 +436,37 @@ $(function () {
 //                        }
 //                        $("#accountReceivable").numberbox('setValue', totalAmount);
 //                    },,
+//                    onChange: function (newValue, oldValue) {
+//                        var selectRows = $("#right").datagrid('getData').rows;
+//
+//                        var retailPrice =selectRows[editIndex].retailPrice;
+//
+//                        var amountEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
+//                        $(amountEd.target).numberbox('setValue', newValue * retailPrice);
+//
+//                        var rows = $("#right").datagrid('getRows');
+//                        var totalAmount = 0;
+//                        for (var i = 0; i < rows.length; i++) {
+//                            var rowIndex = $("#right").datagrid('getRowIndex', rows[i]);
+//                            if (rowIndex == editIndex) {
+//                                continue;
+//                            }
+//                            totalAmount += Number(rows[i].planNumber);
+//                        }
+//                        if (totalAmount) {
+//                            totalAmount += newValue * retailPrice;
+//                        } else {
+//                            totalAmount = newValue * retailPrice;
+//                        }
+//                        $("#accountReceivable").numberbox('setValue', totalAmount);
+//                    },
                     onChange: function (newValue, oldValue) {
                         var selectRows = $("#right").datagrid('getData').rows;
+//                        console.log(selectRows[editIndex]);
 
                         var retailPrice =selectRows[editIndex].retailPrice;
-
-                        var amountEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
-                        $(amountEd.target).numberbox('setValue', newValue * retailPrice);
-
+                        var rowDetail = $("#right").datagrid('getData').rows[editIndex];
+                        rowDetail.amount=newValue * retailPrice;
                         var rows = $("#right").datagrid('getRows');
                         var totalAmount = 0;
                         for (var i = 0; i < rows.length; i++) {
@@ -1022,7 +1045,7 @@ $(function () {
         exportMaster.acctoperator = parent.config.staffName;
         //exportMaster.acctdate = "";
         exportMaster.principal = $("#principal").combogrid('getValue');
-        alert($("#principal").combogrid('getValue'));
+//        alert($("#principal").combogrid('getValue'));
         exportMaster.storekeeper = $("#storekeeper").combogrid('getValue');
 //        ？
         exportMaster.buyer = $("#buyer").combogrid('getValue');
@@ -1119,6 +1142,7 @@ $(function () {
                             $.get('/api/exp-export/export-apply?storage=' + provideStorage + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
                                      $("#left").datagrid("loadData", data);
                              });
+                            $("#right").datagrid("loadData",[]);
                         }, function (data) {
                             $.messager.alert('提示', data.responseJSON.errorMessage, "error");
                         });
