@@ -123,11 +123,7 @@ public class ExpStockService {
                 "        AND b.EXP_CODE = '"+expCode+"'     \n" +
                 "        and c.exp_spec = d.package_spec(+)     \n" +
                 "        and c.hospital_id = '"+hospitalId+"'     \n" +
-                "        and d.storage(+) = '"+storageCode+"'\n" +
-                "        and d.exp_code=b.exp_code\n" +
-                "        and d.exp_spec=b.exp_spec\n" +
-                "        and d.package_spec=c.exp_spec\n" +
-                "        and d.firm_id=c.firm_id" ;
+                "        and d.storage(+) = '"+storageCode+"'";
          return expStockFacade.createNativeQuery(sql,new ArrayList<Object>(),ExpStockRecord.class) ;
      }
 

@@ -29,13 +29,14 @@ window.addTab = function (title, href) {
     var hostName = window.location.hostname ;
     var reportIp=undefined ;
     var reportPort =undefined ;
-
-    if(isPublicIp(hostName)){
-        reportIp = config.reportDict.remoteIp ;
-        reportPort = config.reportDict.remotePort ;
-    }else{
-        reportIp = config.reportDict.ip ;
-        reportPort = config.reportDict.port ;
+    if(config.reportDict){
+        if(isPublicIp(hostName)){
+            reportIp = config.reportDict.remoteIp ;
+            reportPort = config.reportDict.remotePort ;
+        }else{
+            reportIp = config.reportDict.ip ;
+            reportPort = config.reportDict.port ;
+        }
     }
 
     var tabs = $("#mainContent").tabs('tabs');

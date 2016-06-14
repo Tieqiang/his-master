@@ -259,7 +259,7 @@ public class LoginService {
         config.setAcctDeptId((String) session.getAttribute("acctDeptId"));
         config.setPassword((String) session.getAttribute("password"));
         config.setFirstPage((String)session.getAttribute("firstPage"));
-        ReportDict reportDict = reportDictFacade.getByHospitalId((String) session.getAttribute("hospitalId")) ;
+        ReportDict reportDict = reportDictFacade.findByHospitalId((String) session.getAttribute("hospitalId")) ;
         config.setReportDict(reportDict);
 
         return config ;
