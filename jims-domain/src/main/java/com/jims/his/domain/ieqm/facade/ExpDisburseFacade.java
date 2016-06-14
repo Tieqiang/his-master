@@ -92,7 +92,7 @@ public class ExpDisburseFacade extends BaseFacade {
 
         }
         String sql = "SELECT EXP_DISBURSE_REC.DISBURSE_REC_NO,\n" +
-                "       EXP_DISBURSE_REC.STORAGE,\n" +
+//                "       EXP_DISBURSE_REC.STORAGE,\n" +
                 "       EXP_DISBURSE_REC.RECEIVER,\n" +
                 "       EXP_DISBURSE_REC.PAY_AMOUNT,\n" +
                 "       EXP_DISBURSE_REC.RETAIL_AMOUNT,\n" +
