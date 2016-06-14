@@ -529,14 +529,15 @@ public class ExpExportFacade extends BaseFacade {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String s1 = formatter.format(startDate.getTime());
         String s2 = formatter.format(stopDate.getTime());
-        String sql="select b.exp_form,a.fund_item,c.assign_name,sum(b.purchase_price*b.quantity) pay_Amount\n" +
-                "from exp_export_master a,exp_export_detail b ,exp_assign_dict c\n" +
+        String sql="select b.exp_form,d.fund_item,c.assign_name,sum(b.purchase_price*b.quantity) pay_Amount\n" +
+                "from exp_export_master a,exp_export_detail b ,exp_assign_dict c,exp_fund_item_dict d\n" +
                 "where a.document_no = b.document_no\n" +
                 "and   (b.assign_code = c.assign_code)\n" +
                 "and   a.acctdate between to_date('"+s1+"','yyyy-mm-dd hh24:mi:ss') and to_date('"+s2+"','yyyy-mm-dd hh24:mi:ss')\n" +
                 "and   a.storage = '"+storage+"'\n" +
-                "and   a.hospital_id = '"+hospitalId+"'\n" +
-                "group by b.exp_form,a.fund_item,c.assign_name";
+                "and   a.hospital_id = '"+hospitalId+"' " +
+                " and  cast(d.serial_no as varchar2(8))=a.fund_item\n" +
+                "group by b.exp_form,d.fund_item,c.assign_name";
         List<ExpExportDetialVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpExportDetialVo.class);
         return result;
     }
