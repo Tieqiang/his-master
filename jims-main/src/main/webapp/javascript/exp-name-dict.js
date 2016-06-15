@@ -401,7 +401,7 @@ $(function () {
             }
             var updateData = $("#expDict").datagrid('getChanges', "updated");
             var deleteData = $("#expDict").datagrid('getChanges', "deleted");
-            alert("qqq "+insertData.length)
+//            alert("qqq "+insertData.length)
             if (insertData.length > 0 || updateData.length > 0 || deleteData.length > 0) {
             var expNameDictChangeVo = {};
             expNameDictChangeVo.inserted = insertNameData;
