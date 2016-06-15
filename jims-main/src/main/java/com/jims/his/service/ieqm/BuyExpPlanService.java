@@ -47,8 +47,8 @@ public class BuyExpPlanService {
      */
     @GET
     @Path("list-exp-name-by-input")
-    public List<BuyExpPlanVo> listBuyExpPlanCa(@QueryParam("q") String q,@QueryParam("storageCode") String storageCode) {
-        List<BuyExpPlanVo> expBuyExpPlanCaVos = buyExpPlanFacade.listBuyExpPlanCaByInputCode(q,storageCode);
+    public List<BuyExpPlanVo> listBuyExpPlanCa(@QueryParam("q") String q/*,@QueryParam("storageCode") String storageCode*/) {
+        List<BuyExpPlanVo> expBuyExpPlanCaVos = buyExpPlanFacade.listBuyExpPlanCaByInputCode(q/*,storageCode*/);
         return expBuyExpPlanCaVos;
     }
 
