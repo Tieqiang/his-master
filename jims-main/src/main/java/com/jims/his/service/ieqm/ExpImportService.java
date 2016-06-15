@@ -68,6 +68,7 @@ public class ExpImportService {
     @GET
     @Consumes("application/json")
     public List<ExpImportDetailVo> searchImportDetailDataDict(@QueryParam("documentNo") String documentNo,@QueryParam("hospitalId") String hospitalId){
+
        if(documentNo == null && hospitalId == null){
            return new ArrayList<ExpImportDetailVo>();
        }else{

@@ -125,7 +125,7 @@ public class ExpExportFacade extends BaseFacade {
             hql += " and dict.exportDate<=to_date ( '" + stopDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
         if (receiver != null && receiver.trim().length() > 0) {
-            hql += " and (dict.receiver='" + receiver + "'";
+            hql += " and dict.receiver='" + receiver + "'";
         }
         if (searchInput != null && searchInput.trim().length() > 0) {
             hql += " and dc.expCode='" + searchInput + "' \n" +

@@ -48,6 +48,7 @@ public class ExpPriceListVo implements Serializable {
     private String inputCode;
     private String hospitalId;
     private String packageUnits ;
+    private String expForm;
 
     public ExpPriceListVo() {
     }
@@ -393,5 +394,13 @@ public class ExpPriceListVo implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getExpForm() {
+        return expForm;
+    }
+
+    public void setExpForm(String expForm) {
+        this.expForm = expForm;
     }
 }
