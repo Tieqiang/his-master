@@ -73,7 +73,7 @@ $(function () {
     }) ;
     deptPromse.done(function(){
         $("#supplier").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: depts,
             panelWidth: 500,
