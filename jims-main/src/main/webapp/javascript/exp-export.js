@@ -422,7 +422,7 @@ $(function () {
             success:function(data){
                 console.info(data);
                 for(var i=0;i<data.length;i++){
-                     $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
+                    $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
                 }
             }
         });
@@ -430,7 +430,7 @@ $(function () {
     loadExportClass();
 
     $("#exportClass").change(function() {
-         var checkValue = $("#exportClass").val();
+        var checkValue = $("#exportClass").val();
 //        alert(checkValue);
         var depts = [];
         var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
@@ -823,6 +823,7 @@ $(function () {
      * 进行数据校验
      */
     var dataValid = function () {
+        alert("valid");
         var rows = $("#exportDetail").datagrid('getRows');
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].quantity == 0) {
@@ -839,7 +840,7 @@ $(function () {
 
         //判断供货商是否为空
         var receiver = $("#receiver").combogrid('getValue');
-        var exportClass1 = $("#exportClass").combobox('getValue');
+        var exportClass1 = $("#exportClass").val();
         if (!receiver && exportClass1 != '盘亏出库') {
             $.messager.alert("系统提示", "产品出库，发往不能为空", 'error');
             return false;
@@ -863,8 +864,9 @@ $(function () {
         var expExportMasterBeanChangeVo = {};
         expExportMasterBeanChangeVo.inserted = [];
         var exportMaster = {};
-        exportMaster.documentNo = $("#documentNo").textbox('getValue');
-        exportMaster.exportClass = $("#exportClass").combobox('getText');
+        exportMaster.documentNo = $("#documentNo").val();
+        exportMaster.exportClass = getSelectedText("exportClass");
+        alert( exportMaster.exportClass);
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');
@@ -958,6 +960,7 @@ $(function () {
         }
         if (dataValid()) {
             var importVo = getCommitData();
+            alert(1);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
                 if (data.errorMessage) {
                     $.messager.alert("系统提示", data.errorMessage, 'error');
@@ -1011,5 +1014,12 @@ $(function () {
             $("#printDiv").dialog('open');
         }
     })
-
+    function getSelectedText(name){
+        var obj=document.getElementById(name);
+        for(i=0;i<obj.length;i++){
+            if(obj[i].selected==true){
+                return obj[i].innerText;//关键是通过option对象的innerText属性获取到选项文本
+            }
+        }
+    }
 })
