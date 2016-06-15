@@ -58,7 +58,7 @@ public class BuyExpPlanService {
      */
     @GET
     @Path("list-low")
-    @Produces({MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_JSON})
     public List<BuyExpPlanVo> listBuyListLow(@QueryParam("storageCode") String storageCode){
         return buyExpPlanFacade.listBuyListLow(storageCode);
     }
@@ -142,8 +142,8 @@ public class BuyExpPlanService {
      */
     @POST
     @Path("generate-num-up")
-    public List<BuyExpPlan> generateNumUp(List<BuyExpPlan> inData){
-        return buyExpPlanFacade.generateNumUp(inData);
+    public List<BuyExpPlan> generateNumUp(@QueryParam("storageCode") String storageCode,List<BuyExpPlan> inData){
+        return buyExpPlanFacade.generateNumUp(inData,storageCode);
     }
 
     /**
@@ -153,8 +153,8 @@ public class BuyExpPlanService {
      */
     @POST
     @Path("generate-num-low")
-    public List<BuyExpPlan> generateNumLow(List<BuyExpPlan> inData) {
-        return buyExpPlanFacade.generateNumLow(inData);
+    public List<BuyExpPlan> generateNumLow(@QueryParam("storageCode") String storageCode,List<BuyExpPlan> inData) {
+        return buyExpPlanFacade.generateNumLow(inData,storageCode);
     }
 
     /**

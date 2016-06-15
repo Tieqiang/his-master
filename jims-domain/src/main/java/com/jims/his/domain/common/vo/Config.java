@@ -27,12 +27,13 @@ public class Config implements Serializable {
     private String acctDeptId ;//核算单元
     private String password ;
     private String firstPage;//首页
+    private String accessToken ;
 
 
     public Config() {
     }
 
-    public Config(String loginName, String staffName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath, String acctDeptId, String password, String firstPage) {
+    public Config(String loginName, String staffName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath, String acctDeptId, String password, String firstPage, String accessToken) {
         this.loginName = loginName;
         this.staffName = staffName;
         this.hospitalId = hospitalId;
@@ -52,6 +53,7 @@ public class Config implements Serializable {
         this.acctDeptId = acctDeptId;
         this.password = password;
         this.firstPage = firstPage;
+        this.accessToken = accessToken;
     }
 
     public String getDefaultReportPath() {
@@ -208,6 +210,14 @@ public class Config implements Serializable {
 
     public void setFirstPage(String firstPage) {
         this.firstPage = firstPage;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }
 

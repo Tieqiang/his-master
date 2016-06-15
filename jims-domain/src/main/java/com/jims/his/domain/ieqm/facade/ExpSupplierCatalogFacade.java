@@ -127,4 +127,123 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         List<ExpSupplierCatalog> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpSupplierCatalog.class);
         return nativeQuery;
     }
+    /**
+     * 根据当前库房以及出库类别查询可以发放的科室等
+     * @author chenxy
+     * @param hospitalId
+     * @param storageCode
+     * @param exportClass
+     * @return
+     */
+    public List<ExpSupplierVo> listLevelByThis(String hospitalId, String storageCode, String exportClass) {
+        List<ExpSupplierVo> list=new ArrayList<ExpSupplierVo>();
+
+        /**
+         * 先查询当前库房的level
+         */
+        Integer currentLevel=this.findLevelByStorageCode(storageCode);
+        if(exportClass.equals("全部")){//
+            list=findByStorageLevel(currentLevel,2,list);
+            list=findAll(list);
+        }else if(exportClass.equals("上级库房或者供货商")){
+            if(1==currentLevel){//一级库房---
+                list=findAll(list);
+            }else{
+                list=findByStorageLevel(currentLevel,1,list);
+            }
+        }else if(exportClass.equals("同级库房")){
+            list=findByStorageLevel(currentLevel,0,list);
+        }else if(exportClass.equals("下级库房")){
+            list=findByStorageLevel(currentLevel,-1,list);
+        }
+        return list;
+    }
+    //
+//    /**
+//     * 通过库房代码查询库房等级
+//     * @param storageCode
+//     * @return
+//     */
+    private Integer findLevelByStorageCode(String storageCode) {
+
+        String sql="select storageLevel from ExpStorageDept where storageCode='"+storageCode+"'";
+        Object o=entityManager.createQuery(sql).getSingleResult();
+        if(o!=null&&!"".equals(o)){
+            return (Integer)o;
+        }
+        return null;
+    }
+
+
+    /**
+     *flag==0 同级 flag=-1 下级  flag==1 上级
+     * @param storageLevel
+     * @return
+     */
+    private List<ExpSupplierVo> findByStorageLevel(Integer storageLevel,Integer flag, List<ExpSupplierVo> expSupplierVos){
+//        List<ExpSupplierVo> expSupplierVos=new ArrayList<ExpSupplierVo>();
+        String sql="from ExpStorageDept where 1=1";
+        if(0==flag){
+            sql+=" and storageLevel="+storageLevel;
+        }else if(-1==flag){
+            sql+=" and storageLevel="+(storageLevel+1);
+        }else if(1==flag){
+            sql+=" and storageLevel>"+(storageLevel-1);
+        }
+        List<ExpStorageDept>  list=entityManager.createQuery(sql).getResultList();
+        for(ExpStorageDept e:list){
+            ExpSupplierVo v=new ExpSupplierVo();
+            v.setSupplierName(e.getStorageName());
+            v.setSupplierCode(e.getStorageCode());
+            v.setInputCode(e.getDisburseNoPrefix());
+            expSupplierVos.add(v);
+        }
+        return expSupplierVos;
+    }
+
+    /**
+     * 查找所有供货商和生产商
+     * @return
+     */
+    public List<ExpSupplierVo> findAll(List<ExpSupplierVo> expSupplierVos){
+//        List<ExpSupplierVo> expSupplierVos=new ArrayList<ExpSupplierVo>();
+        List<ExpSupplierCatalog> list=this.findAll(ExpSupplierCatalog.class);
+        for(ExpSupplierCatalog expSupplierCatalog:list){
+            ExpSupplierVo e=new ExpSupplierVo();
+            e.setInputCode(expSupplierCatalog.getInputCode());
+            e.setSupplierCode(expSupplierCatalog.getSupplierId());
+            e.setSupplierName(expSupplierCatalog.getSupplier());
+            e.setId(expSupplierCatalog.getId());
+            expSupplierVos.add(e);
+        }
+        return expSupplierVos;
+    }
+
+    /**
+     *
+     * @param supplierId
+     * @return
+     */
+    public String findNameById(String supplierId) {
+        String sql="select supplier from ExpSupplierCatalog where id='"+supplierId+"'";
+        return (String)entityManager.createQuery(sql).getSingleResult();
+    }
+
+    /**
+     * chenxy
+     * @param firmId
+     * @return
+     */
+    public String findBySuppierId(String firmId) {
+         return (String)entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getSingleResult();
+    }
+
+    /**
+     *
+     * @param firmId
+     * @return
+     */
+    public ExpSupplierCatalog findById(String firmId) {
+       return (ExpSupplierCatalog)entityManager.createQuery("from ExpSupplierCatalog where id='"+firmId+"'").getSingleResult();
+    }
 }

@@ -194,6 +194,7 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         toolbar: '#ft',
         footer: '#tb',
+        rownumbers: true,
         singleSelect: false,
         nowrap: false,
         columns: [[{
@@ -209,27 +210,22 @@ $(function () {
         }, {
             title: '规格',
             field: 'packageSpec',
-            align: 'center',
-            width: "9%"
+            width: "10%"
         }, {
             title: '单位',
             field: 'packageUnits',
-            align: 'center',
-            width: "9%"
+            width: "10%"
         }, {
             title: '厂家',
             field: 'firmId',
-            align: 'center',
-            width: "11%"
+            width: "10%"
         }, {
             title: '数量',
             field: 'quantity',
-            align: 'center',
             width: "10%"
         }, {
             title: '批发价',
             field: 'tradePrice',
-            align: 'center',
             width: "10%"
         }, {
             title: '进价金额',
@@ -242,9 +238,12 @@ $(function () {
             align: 'center',
             width: "10%"
         }, {
+            title: '零售价金额',
+            field: 'payAmount',
+            width: "10%"
+        }, {
             title: '类别',
             field: 'expForm',
-            align: 'center',
             width: "10%"
         }]]
     });

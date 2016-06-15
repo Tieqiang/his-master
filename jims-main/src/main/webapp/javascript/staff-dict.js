@@ -158,7 +158,16 @@ $(function(){
             staff.deptDict ={} ;
             staff.deptDict.id= $("#deptName").combobox('getValue') ;
             staff.loginName = $("#loginName").textbox('getValue') ;
-            var pwd = staff.password = psdEdit($("#password").textbox('getValue')) ;
+            var length=staff.loginName.length;
+            var suffer="";
+            if(length<6){
+                for(var i=0;i<6-length;i++){
+                    suffer+="0";
+                }
+            }
+             staff.loginName=suffer+(staff.loginName.toUpperCase());
+            alert(staff.loginName);
+             var pwd = staff.password = psdEdit($("#password").textbox('getValue')) ;
             var confirm_pwd= psdEdit($("#confirm_password").textbox('getValue'));
             staff.title= $("#title").textbox('getValue') ;
             staff.job= $("#job").textbox('getValue') ;

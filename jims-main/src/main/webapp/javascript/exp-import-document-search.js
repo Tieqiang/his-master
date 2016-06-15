@@ -49,6 +49,9 @@ $(function () {
     });
     //格式化日期函数
     function formatterDate(val, row) {
+//        if(val.index("1970")>0){
+//            return null;
+//        }
         if (val != null) {
             var date = new Date(val);
             var y = date.getFullYear();
@@ -62,7 +65,20 @@ $(function () {
             return dateTime
         }
     }
-
+    function formatterDate2(val, row) {
+       if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mm = date.getMinutes();
+        var s = date.getSeconds();
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+    }
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -100,31 +116,28 @@ $(function () {
         fit: true,
         fitColumns: true,
         singleSelect: true,
-        showFooter:true,
-        rownumbers:true,
+        //showFooter:true,
+        //rownumbers:true,
         title: "本库房入库单据查询",
         footer: '#ft',
         toolbar:'#expImportDetail',
         columns: [[{
             title: '库房',
             field: 'storage',
-            width: '9%',
-            hidden:true,
-            editor: {type: 'textbox'}
+            hidden:true
         }, {
             title: '入库单号',
             field: 'documentNo',
-            width: '15%',
-            editor: {type: 'textbox'}
+            width: '10%'
         }, {
             title: '入库日期',
             field: 'importDate',
-            width: '11%',
+            width: '10%',
             formatter: formatterDate
         }, {
             title: '供货商',
             field: 'supplier',
-            width: '15%',
+            width: '10%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
@@ -135,33 +148,31 @@ $(function () {
             }
         }, {
             title: "应付金额",
-            width: '7%',
+            width: '10%',
             field: 'accountReceivable'
         }, {
             title: '已付金额',
             field: 'accountPayed',
-            width: '7%',
-            editor: {type: 'textbox'}
+            width: '10%'
         }, {
             title: '附加费用',
             field: 'additionalFee',
-            width: '7%',
-            editor: {type: 'numberbox'}
+            width: '10%'
         }, {
             title: '入库类别',
-            width: '11%',
+            width: '10%',
             field: 'importClass'
         }, {
             title: '记账',
-            width: '7%',
+            width: '10%',
             field: 'accountIndicator'
         }, {
             title: '操作员',
-            width: '7%',
+            width: '10%',
             field: 'operator'
         }, {
             title: '作废',
-            width: '7%',
+            width: '10%',
             field: 'docStatus'
         }]],
         onClickRow: function (index, row) {
@@ -185,11 +196,12 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
+
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
@@ -200,7 +212,7 @@ $(function () {
         value: 'dateTime',
         required: true,
         showSeconds: true,
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -241,7 +253,7 @@ $(function () {
 
     promise.done(function () {
         $("#supplier").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: suppliers,
             panelWidth: 500,
@@ -288,7 +300,7 @@ $(function () {
             masterDataVo.startDate ="";
             masterDataVo.stopDate="";
         }
-        masterDataVo.supplier = $("#supplier").combogrid("getText");
+        masterDataVo.supplier = $("#supplier").combogrid("getValue");
         masterDataVo.searchInput = $("#searchInput").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
@@ -359,7 +371,7 @@ $(function () {
             field: 'firmId'
         }, {
             title: '批发价',
-            field: 'tradePrice'
+            field: 'purchasePrice'
         }, {
             title: '零售价',
             field: 'retailPrice'
@@ -401,25 +413,25 @@ $(function () {
         }
     });
 
-    //打印
-    //$("#printDiv").dialog({
-    //    title: '打印预览',
-    //    width: 1000,
-    //    height: 520,
-    //    catch: false,
-    //    modal: true,
-    //    closed: true,
-    //    onOpen: function () {
-    //        $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-document-search.cpt");
-    //    }
-    //})
-    //$("#printBtn").on('click', function () {
-    //    var printData = $("#importMaster").datagrid('getRows');
-    //    if (printData.length <= 0) {
-    //        $.messager.alert('系统提示', '请先查询数据', 'info');
-    //        return;
-    //    }
-    //    $("#printDiv").dialog('open');
-    //
-    //})
+
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-document-search.cpt");
+        }
+    })
+    $("#printBtn").on('click', function () {
+        var printData = $("#importMaster").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    })
 })

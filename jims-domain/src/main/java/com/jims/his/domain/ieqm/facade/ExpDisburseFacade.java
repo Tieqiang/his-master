@@ -91,22 +91,27 @@ public class ExpDisburseFacade extends BaseFacade {
             s2 = formatter.format(stopDate.getTime());
 
         }
-        String sql = "SELECT EXP_DISBURSE_REC.DISBURSE_REC_NO,   \n" +
-                "         EXP_DISBURSE_REC.STORAGE,   \n" +
-                "         EXP_DISBURSE_REC.RECEIVER,   \n" +
-                "         EXP_DISBURSE_REC.PAY_AMOUNT,   \n" +
-                "         EXP_DISBURSE_REC.RETAIL_AMOUNT,   \n" +
-                "         EXP_DISBURSE_REC.TRADE_AMOUNT,   \n" +
-                "         EXP_DISBURSE_REC.BANK,   \n" +
-                "         EXP_DISBURSE_REC.ACCOUNT_NO,   \n" +
-                "         EXP_DISBURSE_REC.CHECKER_NO,   \n" +
-                "         EXP_DISBURSE_REC.DISBURSE_DATE,   \n" +
-                "         EXP_DISBURSE_REC.OPERATOR  \n" +
-                "    FROM EXP_DISBURSE_REC  \n" +
-                "   WHERE ( EXP_DISBURSE_REC.STORAGE = '"+storage+"' ) AND  \n" +
-                "         ( EXP_DISBURSE_REC.HOSPITAL_ID = '"+hospitalId+"' ) AND  \n" +
-                "         EXP_DISBURSE_REC.DISBURSE_DATE >= to_date('"+s1+"','YYYY-MM-DD HH24:MI:SS') AND  \n" +
-                "         EXP_DISBURSE_REC.DISBURSE_DATE < to_date('"+s2+"','YYYY-MM-DD HH24:MI:SS') + 1  " ;
+        String sql = "SELECT EXP_DISBURSE_REC.DISBURSE_REC_NO,\n" +
+//                "       EXP_DISBURSE_REC.STORAGE,\n" +
+                "       EXP_DISBURSE_REC.RECEIVER,\n" +
+                "       EXP_DISBURSE_REC.PAY_AMOUNT,\n" +
+                "       EXP_DISBURSE_REC.RETAIL_AMOUNT,\n" +
+                "       EXP_DISBURSE_REC.TRADE_AMOUNT,\n" +
+                "       EXP_DISBURSE_REC.BANK,\n" +
+                "       EXP_DISBURSE_REC.ACCOUNT_NO,\n" +
+                "       EXP_DISBURSE_REC.CHECKER_NO,\n" +
+                "       EXP_DISBURSE_REC.DISBURSE_DATE,\n" +
+                "       staff_dict.name as operator,\n" +
+                "       exp_storage_dept.storage_name as storage\n" +
+                "  FROM EXP_DISBURSE_REC,staff_dict,exp_storage_dept \n" +
+                " WHERE (EXP_DISBURSE_REC.STORAGE = '"+storage+"')\n" +
+                " and staff_dict.login_name=EXP_DISBURSE_REC.OPERATOR \n" +
+                "and exp_storage_dept.storage_code= EXP_DISBURSE_REC.storage\n" +
+                "   AND (EXP_DISBURSE_REC.HOSPITAL_ID = '"+hospitalId+"')\n" +
+                "   AND EXP_DISBURSE_REC.DISBURSE_DATE >=\n" +
+                "       to_date('"+s1+"', 'YYYY-MM-DD HH24:MI:SS')\n" +
+                "   AND EXP_DISBURSE_REC.DISBURSE_DATE <\n" +
+                "       to_date('"+s2+"', 'YYYY-MM-DD HH24:MI:SS') + 1 " ;
 
         if (disburseRecNo != null && disburseRecNo.trim().length() > 0) {
             sql += " and EXP_DISBURSE_REC.disburse_Rec_No='" + disburseRecNo + "'";
@@ -144,9 +149,9 @@ public class ExpDisburseFacade extends BaseFacade {
                 "         EXP_DISBURSE_REC_DETAIL.DISBURSE_REC_NO,   \n" +
                 "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
                 "         EXP_DISBURSE_REC_DETAIL.DISBURSE_COUNT,   \n" +
-                "         EXP_DISBURSE_REC_DETAIL.PAY_AMOUNT,   \n" +
-                "         EXP_DISBURSE_REC_DETAIL.RETAIL_AMOUNT,   \n" +
-                "         EXP_DISBURSE_REC_DETAIL.TRADE_AMOUNT  \n" +
+                "          EXP_DISBURSE_REC_Detail.PAY_AMOUNT,   \n" +
+                "          EXP_DISBURSE_REC_Detail.RETAIL_AMOUNT,   \n" +
+                "          EXP_DISBURSE_REC_Detail.TRADE_AMOUNT  \n" +
                 "    FROM EXP_IMPORT_DETAIL,   \n" +
                 "         EXP_DISBURSE_REC_DETAIL , \n" +
                 "         EXP_DISBURSE_REC , \n" +

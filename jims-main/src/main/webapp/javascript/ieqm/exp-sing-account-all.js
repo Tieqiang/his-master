@@ -197,6 +197,7 @@ $(function () {
         importDetailDataVO.hospitalId = parent.config.hospitalId;
         importDetailDataVO.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-import/exp-single-account",importDetailDataVO,function(data){
+
             if(data.length<=0){
                 $.messager.alert('系统提示','数据库暂无数据','info');
                 $("#importDetail").datagrid('loadData',[]);
@@ -204,24 +205,6 @@ $(function () {
             }
             var specCode ={};
             var i = 0;
-            //if(specCodeAll.length<=0){
-            //    specCode.expCode=data[i].expCode;
-            //    specCode.expName=data[i].expName;
-            //    specCode.packageSpec=data[i].packageSpec;
-            //    specCodeAll.push(specCode);
-            //}
-            //if(specCodeAll.length>0){
-            //    for(var q=0;q<data.length;q++){
-            //        for(var w=0 ;w<specCodeAll.length;w++){
-            //            if(data[q].expCode!=specCodeAll[w].expCode &&data[q].packageSpec!=specCodeAll[w].packageSpec&&data[q].expName!=specCodeAll[w].expName){
-            //                specCode.expCode=data[q].expCode;
-            //                specCode.packageSpec=data[q].packageSpec;
-            //                specCodeAll.push(specCode);
-            //            }
-            //        }
-            //    }
-            //}
-            //console.log(specCodeAll.length);
             if(specCodeAll.length<=0 ){
                 var importPrice = 0.00;
                 var exportPrice = 0.00;
@@ -233,6 +216,7 @@ $(function () {
                         importPrice+=data[l].importPrice;
                         exportPrice+=data[l].exportPrice;
                         detailsData.push(data[l]);
+
                     }
                 }
                 var sp = {};
@@ -246,22 +230,23 @@ $(function () {
                 var exportPrice = 0.00;
                 for(var m=0;m<data.length;m++){
                     for(var j =0;j<specCodeAll.length;j++){
-                        //console.log(specCodeAll[j].expCode);
-                        //console.log(specCodeAll[j].packageSpec);
                         if(data[m].expCode!=specCodeAll[j].expCode && data[m].packageSpec!=specCodeAll[j].packageSpec){
                             specCode.expCode=data[m].expCode;
                             specCode.packageSpec=data[m].packageSpec;
                             specCodeAll.push(specCode);
-                            //console.log(specCodeAll+"1");
-                            //console.log(specCodeAll);
+
                             for(var l = 0 ;l<data.length;l++){
-                                if(data[l].expCode==specCodeAll[specCodeAll.length-1].expCode && data[l].packageSpec==specCodeAll[specCodeAll.length-1].packageSpec){
+
+                               if(data[l].expCode==specCodeAll[specCodeAll.length-1].expCode && data[l].packageSpec==specCodeAll[specCodeAll.length-1].packageSpec){
                                     importPrice+=data[l].importPrice;
                                     exportPrice+=data[l].exportPrice;
                                     detailsData.push(data[l]);
-                                    //console.log(detailsData);
-                                    //console.log("huan");
-                                }
+
+                                }else if(data[l].expCode==specCodeAll[specCodeAll.length-1].expCode && data[l].packageSpec!=specCodeAll[specCodeAll.length-1].packageSpec){
+                                   importPrice+=data[l].importPrice;
+                                   exportPrice+=data[l].exportPrice;
+                                   detailsData.push(data[l]);
+                               }
                             }
                             var sp = {};
                             sp.ioClass= "单品总合计：";
@@ -279,10 +264,10 @@ $(function () {
         },'json');
         promise.done(function(){
             $("#importDetail").datagrid('loadData',detailsData);
-        })
+        });
         detailsData.splice(0,detailsData.length);
 
 
 
     }
-})
+});

@@ -966,7 +966,7 @@ $(function () {
             rows[i].amount = rows[i].quantity * rows[i].retailPrice ;
             totals += rows[i].amount ;
             datas.push(rows[i]) ;
-            console.log(rows[i].documentNo);
+//            console.log(rows[i].documentNo);
         }
         if(totals){
             $("#accountReceivable").numberbox('setValue',totals);
@@ -1020,12 +1020,12 @@ $(function () {
             var expImpVo = getCommitData() ;
             expImpVo.expExportDetialVoBeanChangeVo={} ;
             for(var i =0;i<rows.length;i++){
-                rows[i].expireDate=new Date(rows[i].expireDate);
+//                rows[i].expireDate=new Date(rows[i].expireDate);
                 rows[i].invoiceDate=new Date(rows[i].invoiceDate);
                 rows[i].disinfectDate= new Date(rows[i].disinfectDate);
                 rows[i].produceDate= new Date(rows[i].produceDate);
-
-            }
+                rows[i].recOperator= parent.config.staffName;
+             }
             expImpVo.expExportDetialVoBeanChangeVo.updated=rows ;
             $.postJSON("/api/exp-stock/imp-batch", expImpVo, function (data) {
                 if (data.errorMessage) {
@@ -1071,6 +1071,7 @@ $(function () {
         importMaster.tenderNo = $("#tenderNo").textbox('getValue');
         importMaster.tenderType = $("#tenderType").combobox('getValue');
         importMaster.hospitalId = parent.config.hospitalId;
+        importMaster.acctdate=new Date();
         expImportMasterBeanChangeVo.inserted.push(importMaster);
 
         //明细记录
@@ -1095,7 +1096,7 @@ $(function () {
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
-            detail.tradePrice = rows[i].retailPrice;
+            detail.tradePrice = rows[i].purchasePrice;
             detail.tallyFlag = 0;
             detail.killflag = rows[i].killflag;
             detail.discount = rows[i].discount;

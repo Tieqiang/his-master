@@ -118,4 +118,33 @@ public class ExpSubStorageDictFacade extends BaseFacade {
         }
         return null;
     }
+
+    /**
+     * chenxy
+     * @param storageCode
+     * @return
+     */
+    public ExpSubStorageDict findByStorageCode(String storageCode) {
+        String sql="from ExpSubStorageDict where storageCode='"+storageCode+"'";
+        return (ExpSubStorageDict)entityManager.createQuery(sql).getSingleResult();
+    }
+
+    /**
+     * save
+     * @param expSubStorageDict1
+     * @return
+     */
+    @Transactional
+    public ExpSubStorageDict save(ExpSubStorageDict expSubStorageDict1) {
+        return super.merge(expSubStorageDict1);
+    }
+
+    /**
+     *findById
+     * @param subStorageId
+     * @return
+     */
+    public ExpSubStorageDict findById(String subStorageId) {
+         return (ExpSubStorageDict)entityManager.createQuery("from ExpSubStorageDict where id='"+subStorageId+"'").getSingleResult();
+     }
 }

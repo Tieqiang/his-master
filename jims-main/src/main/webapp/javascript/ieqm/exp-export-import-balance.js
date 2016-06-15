@@ -227,7 +227,7 @@ $(function () {
         panelHeight: 'auto',
         url: '/api/exp-fund-item-dict/list',
         method: 'GET',
-        valueField: 'fundItem',
+        valueField: 'serialNo',
         textField: 'fundItem',
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
@@ -681,7 +681,7 @@ $(function () {
 
 
             rowDetail.expSpec = row.minSpec;
-            rowDetail.units = row.units;
+            rowDetail.units = row.minUnits;
             rowDetail.memos = row.memos;
             rowDetail.expImportDetailRegistNo = row.expImportDetailRegistNo;
             rowDetail.expImportDetailLicenceno = row.expImportDetailLicenceno;
@@ -886,8 +886,8 @@ $(function () {
                     textField: 'assignName',
                     method: 'GET',
                     onLoadSuccess: function () {
-                        var data = $(this).combobox('getData');
-                        $(this).combobox('select', data[0].assignName);
+//                        var data = $(this).combobox('getData');
+                        $(this).combobox('select',"请选择");
                     }
                 }
             }
@@ -927,99 +927,60 @@ $(function () {
         }, {
             title: '发票日期',
             field: 'invoiceDate',
-            width: '7%',
+            width: '10%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#dg").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'invoiceDate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
+                //options: {
+                //    value: 'dateTime',
+                //    showSeconds: true,
+                //    formatter: formatterDate,
+                //    parser: w3,
+                //    onSelect: function (date) {
+                //        var dateEd = $("#dg").datagrid('getEditor', {
+                //            index: editIndex,
+                //            field: 'invoiceDate'
+                //        });
+                //        var y = date.getFullYear();
+                //        var m = date.getMonth() + 1;
+                //        var d = date.getDate();
+                //        //var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+                //        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) ;
+                //
+                //        $(dateEd.target).textbox('setValue', dateTime);
+                //        $(this).datetimebox('hidePanel');
+                //    }
+                //}
             }
         }, {
             title: '生产日期',
             field: 'producedate',
-            width: '7%',
+            width: '10%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#dg").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'producedate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
             }
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
-            width: '7%',
+            width: '10%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#dg").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'disinfectdate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
             }
         }, {
             title: '灭菌标识',
             field: 'killflag',
             width: '7%',
             align: 'center',
-            formatter: function (value, row, index) {
-                if (value == '1') {
-                    return '<input type="checkbox" name="DGC" checked="true" style="width: 15px" />';
-                }
-                if (value == '0') {
-                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
-                } else {//if(value==undefined){
-                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
-                }
-            }
+            editor: {type: 'combobox', options: {
+                valueField:'value',
+                textField:'title',
+                data:[{
+                    value:'1',
+                    title:'已灭菌'
+                },{
+                    title:'未灭菌',
+                    value:'0'
+                }]
+            }}
         }, {
             title: '子包装1',
             field: 'subPackage1',
@@ -1352,7 +1313,7 @@ $(function () {
                     var exportImportVo = {};
                     exportImportVo.exportVo= exportVo;
                     exportImportVo.importVo= importVo;
-
+                    console.log(exportImportVo);
                     $.postJSON("/api/exp-stock/exp-export-import", exportImportVo, function (data) {
                         if (data.errorMessage) {
                             $.messager.alert("系统提示", data.errorMessage, 'error');

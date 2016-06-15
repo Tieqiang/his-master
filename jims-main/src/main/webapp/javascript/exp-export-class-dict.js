@@ -29,7 +29,33 @@ $(function(){
             width:"20%",
             editor:{type:'text',options:{
                 required:true,validType:'length[0,8]',missingMessage:'请输入四个以内的汉字'}
-            }}]],
+            }},{
+            title:'可出供应商',
+            field:'direction',
+            align: 'center',
+            width:"20%",
+            editor: {
+                type: "combobox", options: {
+                    valueField: "value",
+                    textField: "text",
+                    data: [
+                        {
+                            value: "上级库房或者供货商",
+                            text: "上级库房或者供货商"
+                         }, {
+                            value: "同级库房",
+                            text: "同级库房"
+                        }, {
+                            value: "下级库房",
+                            text:  "下级库房"
+                        },{
+                            value: "全部",
+                            text:  "全部"
+                        }
+                    ]
+                }
+            }
+        }]],
         onClickRow: function (index, row) {
             stopEdit();
             $(this).datagrid('beginEdit', index);

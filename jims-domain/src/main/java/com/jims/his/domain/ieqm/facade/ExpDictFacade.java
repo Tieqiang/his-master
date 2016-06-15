@@ -105,4 +105,25 @@ public class ExpDictFacade extends BaseFacade {
         return nativeQuery;
 
     }
+
+    /***
+     *
+     * chenxy
+     * @param expCode
+     * @return
+     */
+    public ExpDict findByCode(String expCode) {
+        String sql="from ExpDict where expCode='"+expCode+"'";
+        return (ExpDict)entityManager.createQuery(sql).getSingleResult();
+
+    }
+
+    /**
+     * chenxy
+     * @param expId
+     * @return
+     */
+    public ExpDict findById(String expId) {
+        return (ExpDict)entityManager.createQuery("from ExpDict where id='"+expId+"'").getSingleResult();
+    }
 }

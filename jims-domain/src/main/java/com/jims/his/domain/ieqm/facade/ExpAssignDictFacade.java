@@ -34,7 +34,7 @@ public class ExpAssignDictFacade extends BaseFacade {
      * @return
      */
     public ExpAssignDict findByCode(String code) {
-       Object obj=entityManager.createQuery("from ExpAssignDict  where assignName='"+code+"'").getSingleResult();
+       Object obj=entityManager.createQuery("from ExpAssignDict  where assignCode='"+code+"'").getSingleResult();
        if(obj!=null&&!"".equals(obj)){
            return (ExpAssignDict)obj;
        }

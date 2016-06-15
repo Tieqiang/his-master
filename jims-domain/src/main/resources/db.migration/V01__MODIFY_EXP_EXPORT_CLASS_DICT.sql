@@ -1,0 +1,1 @@
+alter table EXP_EXPORT_CLASS_DICT add DIRECTION varchar2(40);

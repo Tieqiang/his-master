@@ -42,80 +42,67 @@ $(function () {
 //        toolbar:'#tb',
         fit: true,
         fitColumns: true,
-        rownumbers: true,
         singleSelect: true,
         showFooter:true,
 //        rownumbers:true,
         columns: [[{
             title: '库房名称',
             field: 'subStorage',
-            align: 'center',
             width: '7%',
             editor: {type: 'textbox'}
         }, {
             title: '产品类别',
             field: 'expForm',
-            align: 'center',
             width: '7%'
 
         }, {
             title: '产品代码',
             field: 'expCode',
-            align: 'center',
             width: '11%',
             editor: {type: 'textbox'}
         }, {
             title: '产品名称',
             field: 'expName',
-            align: 'center',
             width: '11%',
             editor: {type: 'textbox'}
         }, {
             title: "产品规格",
-            align: 'center',
-            width: '9%',
+            width: '11%',
             field: 'packageSpec'
         }, {
             title: '生产厂家',
             field: 'firmId',
-            align: 'center',
             width: '11%',
             editor: {type: 'textbox'}
         }, {
             title: '产品单位',
-            field: 'packageUnits',
-            align: 'center',
+            field: 'units',
             width: '7%'
         }, {
             title: '库存数量',
-            field: 'quantity',
-            align: 'center',
             width: '7%',
+            field: 'quantity',
             editor: {type: 'numberbox'}
 
         }, {
             title: '进货单价',
-            field: 'purchasePrice',
-            align: 'center',
             width: '7%',
+            field: 'purchasePrice',
             editor: {type: 'numberbox'}
         }, {
             title: '零售单价',
-            field: 'retailPrice',
-            align: 'center',
             width: '7%',
+            field: 'retailPrice',
             editor: {type: 'numberbox'}
         }, {
             title: '进货金额',
-            field: 'tradeAllPrice',
-            align: 'center',
             width: '7%',
+            field: 'tradeAllPrice',
             editor: {type: 'numberbox'}
         }, {
             title: '零售金额',
-            field: 'retailAllPrice',
-            align: 'center',
             width: '7%',
+            field: 'retailAllPrice',
             editor: {type: 'numberbox'}
         }]]
     });

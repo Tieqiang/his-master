@@ -13,6 +13,7 @@ public class ExpSupplierVo implements Serializable {
     private String supplierName ;
     private String supplierCode ;
     private String inputCode ;
+    private String id;
 
     public ExpSupplierVo(String supplierName, String supplierCode, String inputCode) {
         this.supplierName = supplierName;
@@ -45,5 +46,13 @@ public class ExpSupplierVo implements Serializable {
 
     public void setInputCode(String inputCode) {
         this.inputCode = inputCode;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
