@@ -131,6 +131,8 @@
         <class>com.jims.his.domain.htca.entity.CalcIncomeDetailForHoliday</class>
         <class>com.jims.his.domain.htca.entity.HolidayDict</class>
         <class>com.jims.his.domain.htca.entity.AcctSaveRecord</class>
+        <class>com.jims.his.domain.ieqm.entity.ExpPrepareMaster</class>
+        <class>com.jims.his.domain.ieqm.entity.ExpPrepareDetail</class>
         <properties>
              <!--Oracle Dialect -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
