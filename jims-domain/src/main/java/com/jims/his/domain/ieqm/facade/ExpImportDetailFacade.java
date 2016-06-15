@@ -32,93 +32,54 @@ public class ExpImportDetailFacade extends BaseFacade {
      * 消耗品入库账单明细查询
      * @param documentNo  入库单号
      * @param hospitalId  医院Id
-     * @return
+     * @return  PURCHASE_PRICE
      */
     public List<ExpImportDetailVo> searchImportDetailDict(String documentNo, String hospitalId) {
         String supplier=findSupplierByDocumentNo(documentNo);//supplierId
         boolean flag=findIsExist(supplier);
-        String sql="";
-        if(flag){//进价
-            sql = "SELECT distinct EXP_IMPORT_DETAIL.DOCUMENT_NO,   \n" +
-                    "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
-                    "         EXP_IMPORT_DETAIL.EXP_CODE,   \n" +
-                    "         EXP_IMPORT_DETAbIL.EXP_SPEC,   \n" +
-                    "         EXP_IMPORT_DETAIL.UNITS,   \n" +
-                    "         EXP_IMPORT_DETAIL.BATCH_NO,   \n" +
-                    "         EXP_IMPORT_DETAIL.EXPIRE_DATE,   \n" +
-                    "         EXP_IMPORT_DETAIL.FIRM_ID,\n" +
-                    "\t       EXP_IMPORT_MASTER.SUPPLIER,   \n" +
-                    "\t       EXP_IMPORT_DETAIL.PURCHASE_PRICE*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
-                    "         EXP_IMPORT_DETAIL.PURCHASE_PRICE,   \n" +
-                    "         EXP_IMPORT_DETAIL.DISCOUNT,   \n" +
-                    "         EXP_IMPORT_DETAIL.PACKAGE_SPEC,   \n" +
-                    "         EXP_IMPORT_DETAIL.QUANTITY,   \n" +
-                    "         EXP_IMPORT_DETAIL.PACKAGE_UNITS,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_1,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_1,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_2,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_2,   \n" +
-                    "         EXP_IMPORT_DETAIL.INVOICE_NO,   " +
-                    "" +
-                    "         EXP_IMPORT_DETAIL.INVOICE_DATE,   \n" +
-                    "         EXP_DICT.EXP_NAME,\n" +
-                    "         EXP_IMPORT_DETAIL.TRADE_PRICE,   \n" +
-                    "         EXP_IMPORT_DETAIL.RETAIL_PRICE,\n" +
-                    "\t       EXP_IMPORT_DETAIL.MEMO,  \n" +
-                    "\t       EXP_IMPORT_DETAIL.INVENTORY,\n" +
-                    "\t       EXP_IMPORT_DETAIL.RegistNo,\n" +
-                    "\t       EXP_IMPORT_DETAIL.LicenceNo\n" +
-                    "    FROM EXP_IMPORT_DETAIL, \n" +
-                    "\t       EXP_IMPORT_MASTER,  \n" +
-                    "         EXP_DICT  \n" +
-                    "   WHERE ( EXP_IMPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
-                    "         ( EXP_IMPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC ) and \n" +
-                    "         ( EXP_IMPORT_DETAIL.document_no = exp_import_master.document_no ) and \n" +
-                    "           EXP_IMPORT_DETAIL.DOCUMENT_NO = '" + documentNo + "' and \n" +
-                    "           EXP_IMPORT_DETAIL.HOSPITAL_ID = '" + hospitalId + "'  ";
+        String  sql = "SELECT distinct EXP_IMPORT_DETAIL.DOCUMENT_NO,   \n" +
+                "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
+                "         EXP_IMPORT_DETAIL.EXP_CODE,   \n" +
+                "         EXP_IMPORT_DETAIL.EXP_SPEC,   \n" +
+                "         EXP_IMPORT_DETAIL.UNITS,   \n" +
+                "         EXP_IMPORT_DETAIL.BATCH_NO,   \n" +
+                "         EXP_IMPORT_DETAIL.EXPIRE_DATE,   \n" +
+                "         EXP_IMPORT_DETAIL.FIRM_ID,\n" +
+                "\t       EXP_IMPORT_MASTER.SUPPLIER,   \n" +
+                "\t       EXP_IMPORT_DETAIL.RETAIL_PRICE*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
+                "         EXP_IMPORT_DETAIL.PURCHASE_PRICE,   \n" +
+                "         EXP_IMPORT_DETAIL.DISCOUNT,   \n" +
+                "         EXP_IMPORT_DETAIL.PACKAGE_SPEC,   \n" +
+                "         EXP_IMPORT_DETAIL.QUANTITY,   \n" +
+                "         EXP_IMPORT_DETAIL.PACKAGE_UNITS,   \n" +
+                "         EXP_IMPORT_DETAIL.SUB_PACKAGE_1,   \n" +
+                "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_1,   \n" +
+                "         EXP_IMPORT_DETAIL.SUB_PACKAGE_2,   \n" +
+                "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_2,   \n" +
+                "         EXP_IMPORT_DETAIL.INVOICE_NO,   " +
+                "" +
+                "         EXP_IMPORT_DETAIL.INVOICE_DATE,   \n" +
+                "         EXP_DICT.EXP_NAME,\n" +
+                "         EXP_IMPORT_DETAIL.TRADE_PRICE,   \n" +
+                "         EXP_IMPORT_DETAIL.RETAIL_PRICE,\n" +
+                "\t       EXP_IMPORT_DETAIL.MEMO,  \n" +
+                "\t       EXP_IMPORT_DETAIL.INVENTORY,\n" +
+                "\t       EXP_IMPORT_DETAIL.RegistNo,\n" +
+                "\t       EXP_IMPORT_DETAIL.LicenceNo\n" +
+                "    FROM EXP_IMPORT_DETAIL, \n" +
+                "\t       EXP_IMPORT_MASTER,  \n" +
+                "         EXP_DICT  \n" +
+                "   WHERE ( EXP_IMPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
+                "         ( EXP_IMPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC ) and \n" +
+                "         ( EXP_IMPORT_DETAIL.document_no = exp_import_master.document_no ) and \n" +
+                "           EXP_IMPORT_DETAIL.DOCUMENT_NO = '" + documentNo + "' and \n" +
+                "           EXP_IMPORT_DETAIL.HOSPITAL_ID = '" + hospitalId + "'  ";
 
-        }else{//零售价
-            sql = "SELECT distinct EXP_IMPORT_DETAIL.DOCUMENT_NO,   \n" +
-                    "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
-                    "         EXP_IMPORT_DETAIL.EXP_CODE,   \n" +
-                    "         EXP_IMPORT_DETAbIL.EXP_SPEC,   \n" +
-                    "         EXP_IMPORT_DETAIL.UNITS,   \n" +
-                    "         EXP_IMPORT_DETAIL.BATCH_NO,   \n" +
-                    "         EXP_IMPORT_DETAIL.EXPIRE_DATE,   \n" +
-                    "         EXP_IMPORT_DETAIL.FIRM_ID,\n" +
-                    "\t       EXP_IMPORT_MASTER.SUPPLIER,   \n" +
-                    "\t       EXP_IMPORT_DETAIL.RETAIL_PRICE*EXP_IMPORT_DETAIL.QUANTITY account_receivable,   \n" +
-                    "         EXP_IMPORT_DETAIL.PURCHASE_PRICE,   \n" +
-                    "         EXP_IMPORT_DETAIL.DISCOUNT,   \n" +
-                    "         EXP_IMPORT_DETAIL.PACKAGE_SPEC,   \n" +
-                    "         EXP_IMPORT_DETAIL.QUANTITY,   \n" +
-                    "         EXP_IMPORT_DETAIL.PACKAGE_UNITS,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_1,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_1,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_2,   \n" +
-                    "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_2,   \n" +
-                    "         EXP_IMPORT_DETAIL.INVOICE_NO,   " +
-                    "" +
-                    "         EXP_IMPORT_DETAIL.INVOICE_DATE,   \n" +
-                    "         EXP_DICT.EXP_NAME,\n" +
-                    "         EXP_IMPORT_DETAIL.TRADE_PRICE,   \n" +
-                    "         EXP_IMPORT_DETAIL.RETAIL_PRICE,\n" +
-                    "\t       EXP_IMPORT_DETAIL.MEMO,  \n" +
-                    "\t       EXP_IMPORT_DETAIL.INVENTORY,\n" +
-                    "\t       EXP_IMPORT_DETAIL.RegistNo,\n" +
-                    "\t       EXP_IMPORT_DETAIL.LicenceNo\n" +
-                    "    FROM EXP_IMPORT_DETAIL, \n" +
-                    "\t       EXP_IMPORT_MASTER,  \n" +
-                    "         EXP_DICT  \n" +
-                    "   WHERE ( EXP_IMPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE ) and  \n" +
-                    "         ( EXP_IMPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC ) and \n" +
-                    "         ( EXP_IMPORT_DETAIL.document_no = exp_import_master.document_no ) and \n" +
-                    "           EXP_IMPORT_DETAIL.DOCUMENT_NO = '" + documentNo + "' and \n" +
-                    "           EXP_IMPORT_DETAIL.HOSPITAL_ID = '" + hospitalId + "'  ";
-
-        }
-        List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
-        return nativeQuery;
+         if(flag){//进价
+            sql=sql.replace("RETAIL_PRICE","PURCHASE_PRICE");
+         }
+         List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
+         return nativeQuery;
 
     }
 
