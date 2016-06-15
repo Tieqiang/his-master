@@ -34,7 +34,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         this.expDictFacade=expDictFacade;
         this.expPriceListFacade=expPriceListFacade;
         this.expSubStorageDictFacade=expSubStorageDictFacade;
-     }
+    }
 
     /**
      *备货方法
@@ -83,7 +83,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             if(list.isEmpty()){
                 list.add(expPrepareDetail);
             }
-          }
+        }
         return list;
     }
 
@@ -93,7 +93,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
      * @return
      */
     public ExpPrepareMaster findById(String masterId) {
-         return (ExpPrepareMaster)entityManager.createQuery("from ExpPrepareMaster where id='"+masterId+"'").getSingleResult();
+        return (ExpPrepareMaster)entityManager.createQuery("from ExpPrepareMaster where id='"+masterId+"'").getSingleResult();
     }
 
     /**
@@ -111,8 +111,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         ExpPrepareVo expPrepareVo=new ExpPrepareVo();
         try {
             /**
-            * 入库主表 expImportMaster
-            */
+             * 入库主表 expImportMaster
+             */
             ExpSubStorageDict expSubStorageDict=this.expSubStorageDictFacade.findById(expPrepareMaster.getSubStorageId());
             ExpImportMaster expImportMaster =new ExpImportMaster();
 //            expImportMaster.setOperator(operator);
@@ -227,9 +227,10 @@ public class ExpPrepareMasterFacade extends BaseFacade {
              * 库存表 exp_stock
              */
             ExpStock expStock=null;
-            String sql="from ExpStock where expCode='"+expPriceList.getExpCode()+"' and expSpec='"+expPriceList.getMinSpec()+"' and packageSpec='"+expPriceList.getExpSpec()+"' and firmId='"+e.getSupplierId()+"'";
+            String sql="from ExpStock where expCode='"+expPriceList.getExpCode()+"' and expSpec='"+expPriceList.getMinSpec()+"' and packageSpec='"+expPriceList.getExpSpec()+"' and firmId='"+e.getSupplierId()+"' and storage='"+expSubStorageDict.getStorageCode()+"'";
             List<ExpStock> list=entityManager.createQuery(sql).getResultList();
             if(list!=null&&!list.isEmpty()){
+                expStock=list.get(0);
                 expStock.setDocumentNo(documentNo);
             }else{
                 expStock=new ExpStock();
@@ -284,7 +285,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expSubStorageDict1.setImportNoAva(expSubStorageDict1.getImportNoAva()+1);
             expSubStorageDict1.setExportNoAva(expSubStorageDict1.getExportNoAva()+1);
             expSubStorageDict1=expSubStorageDictFacade.save(expSubStorageDict1);
-         } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return expPrepareVo;
@@ -297,7 +298,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
      */
     @Transactional
     public Map<String, Object> rollBack(String barCode) {
-         Map<String, Object> map=new HashMap<String,Object>();
+        Map<String, Object> map=new HashMap<String,Object>();
         /**
          *exp_prepare_detail
          */

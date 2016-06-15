@@ -418,32 +418,37 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
-//                    onChange: function (newValue, oldValue) {
-//                        var row = $("#right").datagrid('getData').rows[editIndex];
-//                        var rows = $("#right").datagrid('getRows');
-//                        var totalAmount = 0;
-//                        for (var i = 0; i < rows.length; i++) {
-//                            var rowIndex = $("#right").datagrid('getRowIndex', rows[i]);
-//                            if (rowIndex == editIndex) {
-//                                continue;
-//                            }
-//                            totalAmount += Number(rows[i].planNumber);
-//                        }
-//                        if (totalAmount) {
-//                            totalAmount += newValue * row.retailPrice;
-//                        } else {
-//                            totalAmount = newValue * row.retailPrice;
-//                        }
-//                        $("#accountReceivable").numberbox('setValue', totalAmount);
-//                    },,
-//                    onChange: function (newValue, oldValue) {
+                    onChange: function (newValue, oldValue) {
+                        var selectRows = $("#right").datagrid('getData').rows;
+                        var retailPrice =selectRows[editIndex].retailPrice;
+
+                        //var amountEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'amount'});
+                        //$(amountEd.target).numberbox('setValue', newValue * retailPrice);
+                        var rowDetail = $("#right").datagrid('getData').rows[editIndex];
+                        rowDetail.amount=newValue * retailPrice;
+
+
+                        var rows = $("#right").datagrid('getRows');
+                        var totalAmount = 0;
+                        for (var i = 0; i < rows.length; i++) {
+                            var rowIndex = $("#right").datagrid('getRowIndex', rows[i]);
+                            if (rowIndex == editIndex) {
+                                continue;
+                            }
+                            totalAmount += Number(rows[i].amount);
+                        }
+                        if (totalAmount) {
+                            totalAmount += newValue * retailPrice;
+                        } else {
+                            totalAmount = newValue * retailPrice;
+                        }
+                        $("#accountReceivable").numberbox('setValue', totalAmount);
 //                        var selectRows = $("#right").datagrid('getData').rows;
+////                        console.log(selectRows[editIndex]);
 //
 //                        var retailPrice =selectRows[editIndex].retailPrice;
-//
-//                        var amountEd = $("#right").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
-//                        $(amountEd.target).numberbox('setValue', newValue * retailPrice);
-//
+//                        var rowDetail = $("#right").datagrid('getData').rows[editIndex];
+//                        rowDetail.amount=newValue * retailPrice;
 //                        var rows = $("#right").datagrid('getRows');
 //                        var totalAmount = 0;
 //                        for (var i = 0; i < rows.length; i++) {
@@ -459,29 +464,6 @@ $(function () {
 //                            totalAmount = newValue * retailPrice;
 //                        }
 //                        $("#accountReceivable").numberbox('setValue', totalAmount);
-//                    },
-                    onChange: function (newValue, oldValue) {
-                        var selectRows = $("#right").datagrid('getData').rows;
-//                        console.log(selectRows[editIndex]);
-
-                        var retailPrice =selectRows[editIndex].retailPrice;
-                        var rowDetail = $("#right").datagrid('getData').rows[editIndex];
-                        rowDetail.amount=newValue * retailPrice;
-                        var rows = $("#right").datagrid('getRows');
-                        var totalAmount = 0;
-                        for (var i = 0; i < rows.length; i++) {
-                            var rowIndex = $("#right").datagrid('getRowIndex', rows[i]);
-                            if (rowIndex == editIndex) {
-                                continue;
-                            }
-                            totalAmount += Number(rows[i].planNumber);
-                        }
-                        if (totalAmount) {
-                            totalAmount += newValue * retailPrice;
-                        } else {
-                            totalAmount = newValue * retailPrice;
-                        }
-                        $("#accountReceivable").numberbox('setValue', totalAmount);
                     },
                     max: 99999.99,
                     size: 8,
@@ -516,102 +498,102 @@ $(function () {
 //            },
 //            hidden:true
 //        }
-        /*, {
-            {title: '进价',
-            field: 'tradePrice',
-            width: "7%",
-            editor: {
-                type: 'numberbox',
-                options: {}
-            },
-            hidden: true
-        }*/, {
-            title: '金额',
-            field: 'planNumber',
-            width: "7%",
-            editor: {
-                type: 'numberbox',
-                options: {
-                    precision: '2',
-                    editable: false,
-                    disabled: true
-                }
-            },
-            formatter:function(value,row,index){
-                if($.trim(row.retailPrice)!=""){
-                    return row.retailPrice * row.quantity;
-                }
-            }
-        }, {
-            title: '厂家',
-            field: 'firmId',
-            width: "7%"
-        }, {
-            title: '分摊方式',
-            field: 'assignCode',
-            width: "7%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    url: '/api/exp-assign-dict/list',
-                    valueField: 'assignCode',
-                    textField: 'assignName',
-                    method: 'GET',
-                    onLoadSuccess: function () {
-//                        var data = $(this).combobox('getData');
-                        $(this).combobox('select',"请选择");
+            /*, {
+             {title: '进价',
+             field: 'tradePrice',
+             width: "7%",
+             editor: {
+             type: 'numberbox',
+             options: {}
+             },
+             hidden: true
+             }*/, {
+                title: '金额',
+                field: 'planNumber',
+                width: "7%",
+                editor: {
+                    type: 'numberbox',
+                    options: {
+                        precision: '2',
+                        editable: false,
+                        disabled: true
+                    }
+                },
+                formatter:function(value,row,index){
+                    if($.trim(row.retailPrice)!=""){
+                        return row.retailPrice * row.quantity;
                     }
                 }
-            }
-        }, {
-            title: '备注',
-            field: 'memos',
-            width: "7%",
-            editor: {type: 'text'}
-        }, {
-            title: '批号',
-            field: 'batchNo',
-            width: "7%"
-        }, {
-            title: '有效期',
-            field: 'expireDate',
-            formatter: formatterDate,
-            width: "7%"
-        }, {
-            title: '生产日期',
-            field: 'producedate',
-            formatter: formatterDate,
-            width: "7%"
-        }, {
-            title: '消毒日期',
-            field: 'disinfectdate',
-            formatter: formatterDate,
-            width: "7%"
-        }, {
-            title: '灭菌标识',
-            field: 'killflag',
-            width: '7%',
-            formatter: function (value, row, index) {
-                if (value == '1') {
-                    return '<input type="checkbox" name="DataGridCheckbox" checked="true" />';
+            }, {
+                title: '厂家',
+                field: 'firmId',
+                width: "7%"
+            }, {
+                title: '分摊方式',
+                field: 'assignCode',
+                width: "7%",
+                editor: {
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        url: '/api/exp-assign-dict/list',
+                        valueField: 'assignCode',
+                        textField: 'assignName',
+                        method: 'GET',
+                        onLoadSuccess: function () {
+//                        var data = $(this).combobox('getData');
+                            $(this).combobox('select',"请选择");
+                        }
+                    }
                 }
-                if (value == '0') {
-                    return '<input type="checkbox" name="DataGridCheckbox" />';
+            }, {
+                title: '备注',
+                field: 'memos',
+                width: "7%",
+                editor: {type: 'text'}
+            }, {
+                title: '批号',
+                field: 'batchNo',
+                width: "7%"
+            }, {
+                title: '有效期',
+                field: 'expireDate',
+                formatter: formatterDate,
+                width: "7%"
+            }, {
+                title: '生产日期',
+                field: 'producedate',
+                formatter: formatterDate,
+                width: "7%"
+            }, {
+                title: '消毒日期',
+                field: 'disinfectdate',
+                formatter: formatterDate,
+                width: "7%"
+            }, {
+                title: '灭菌标识',
+                field: 'killflag',
+                width: '7%',
+                formatter: function (value, row, index) {
+                    if (value == '1') {
+                        return '<input type="checkbox" name="DataGridCheckbox" checked="true" />';
+                    }
+                    if (value == '0') {
+                        return '<input type="checkbox" name="DataGridCheckbox" />';
+                    }
+                    if (value == undefined) {
+                        return value = '<input type="checkbox" name="DataGridCheckbox" />';
+                    }
                 }
-                if (value == undefined) {
-                    return value = '<input type="checkbox" name="DataGridCheckbox" />';
-                }
-            }
-        }, {
-            title: '单位',
-            field: 'units',
-            width: "7%"
-        }, {
-            title: '结存量',
-            field: 'disNum',
-            width: "7%"
-        }]],
+            }, {
+                title: '单位',
+                field: 'units',
+                width: "7%"
+            }, {
+                title: '结存量',
+                field: 'disNum',
+                width: "7%"
+            }]],
         onDblClickRow: function (index, row) {
             if (index != editIndex) {
                 $(this).datagrid('endEdit', editIndex);
@@ -1140,8 +1122,8 @@ $(function () {
                             var provideStorage = parent.config.storageCode;
                             var hospitalId = parent.config.hospitalId;
                             $.get('/api/exp-export/export-apply?storage=' + provideStorage + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
-                                     $("#left").datagrid("loadData", data);
-                             });
+                                $("#left").datagrid("loadData", data);
+                            });
                             $("#right").datagrid("loadData",[]);
                         }, function (data) {
                             $.messager.alert('提示', data.responseJSON.errorMessage, "error");

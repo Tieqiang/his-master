@@ -38,30 +38,30 @@ public class Main {
 
 
         root.setParentLoaderPriority(true);
-        //migrationDb();
+//        migrationDb();
         server.setHandler(root);
         server.start();
         server.join();
     }
 
 
-    //public static void migrationDb(){
-    //    Flyway flyway = new Flyway();
-    //
-    //    //设置数据库链接配置
-    //    flyway.setDataSource("jdbc:oracle:thin:@127.0.0.1:1521:orcl","system","oracle");
-    //
-    //    //设置schema用户
-    //    flyway.setSchemas("PHAR");
-    //    flyway.setTable("SCHEMA_VERSION");
-    //    flyway.setEncoding("UTF-8");
-    //    flyway.setValidateOnMigrate(true);
-    //
-    //    //清空所有表结构
-    //    //flyway.clean();
-    //    //初始化flyWAy
-    //    //flyway.init();
-    //    //执行版本控制
-    //    //flyway.migrate();
-    //}
+//    public static void migrationDb(){
+//        Flyway flyway = new Flyway();
+//
+//        //设置数据库链接配置
+//        flyway.setDataSource("jdbc:oracle:thin:@127.0.0.1:1521:orcl","system","oracle");
+//
+//        //设置schema用户
+//        flyway.setSchemas("PHAR");
+//        flyway.setTable("SCHEMA_VERSION");
+//        flyway.setEncoding("UTF-8");
+//        flyway.setValidateOnMigrate(true);
+//
+//        //清空所有表结构
+//        //flyway.clean();
+//        //初始化flyWAy
+//        //flyway.init();
+//        //执行版本控制
+//        //flyway.migrate();
+//    }
 }

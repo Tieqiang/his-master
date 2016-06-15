@@ -322,7 +322,7 @@ $(function () {
     });
     promise.done(function () {
         $("#supplier").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: suppliers,
             panelWidth: 500,
@@ -355,7 +355,7 @@ $(function () {
         masterDataVo.disburseRecNo = $("#startBill").textbox("getText");
         masterDataVo.startDate = new Date($("#startDate").datetimebox("getText"));
         masterDataVo.stopDate = new Date($("#stopDate").datetimebox("getText"));
-        masterDataVo.supplier = $("#supplier").combogrid("getText");
+        masterDataVo.supplier = $("#supplier").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-dis/exp-pay-document-print",masterDataVo,function(data){
@@ -375,7 +375,7 @@ $(function () {
             var disburseRecNo = $("#startBill").textbox("getText");
             var startDate = $("#startDate").datetimebox("getText");
             var stopDate = $("#stopDate").datetimebox("getText");
-            var supplier = $("#supplier").combogrid("getText");
+            var supplier = $("#supplier").combogrid("getValue");
             var hospitalId = parent.config.hospitalId;
             var storage = parent.config.storageCode;
             $("#report").prop("src",parent.config.defaultReportPath + "exp-pay-document-print-approving.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier);

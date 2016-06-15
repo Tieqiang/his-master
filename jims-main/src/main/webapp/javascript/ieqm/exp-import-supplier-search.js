@@ -198,7 +198,7 @@ $(function () {
     });
     promise.done(function () {
         $("#supplier").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: suppliers,
             panelWidth: 500,
@@ -247,7 +247,7 @@ $(function () {
     var loadDict = function(){
         importDetailDataVO.stopDate = new Date($("#stopDate").datebox("getText"));
         importDetailDataVO.startDate = new Date($("#startDate").datebox("getText"));
-        importDetailDataVO.supplier = $("#supplier").combogrid("getText");
+        importDetailDataVO.supplier = $("#supplier").combogrid("getValue");
         importDetailDataVO.hospitalId = parent.config.hospitalId;
         importDetailDataVO.storage = parent.config.storageCode;
         var payAmount = 0.00;

@@ -3,6 +3,8 @@
  */
 
 
+
+
 $(function () {
 
     var exportToFlag = undefined;//退库的时候，标志，用于区分是否退货给供应商。
@@ -405,87 +407,66 @@ $(function () {
             var ed = $(this).datagrid('getEditor', {index: index, field: field});
         }
     });
-    //出库类别
-    $("#exportClass").combobox({
-        url: '/api/exp-export-class-dict/list',
-        valueField: 'direction',
-        textField: 'exportClass',
-//        idField:'exportClass',
-         method: 'GET',
-        onSelect:function(){
-            var exportClass=$("#exportClass").combobox("getValue");
-            var depts = [];
-            var deptsBack = [];
-            var saveFlag;
-            var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode+"&exportClass="+exportClass, function (data) {
-                depts = data;
-                deptsBack = data;
-                return depts;
-            });
-            promise.done(function () {
-                $("#receiver").combogrid({
-                    idField: 'supplierCode',
-                    textField: 'supplierName',
-                    data: depts,
-                    panelWidth: 300,
-                    columns: [[{
-                        title: '科室名称',
-                        field: 'supplierName',
-                        width: 200
-                    }, {
-                        title: '科室代码',
-                        field: 'supplierCode',
-                        width: 50
-                    }, {
-                        title: '输入码',
-                        field: 'inputCode',
-                        width: 50
-                    }]]
-                })
-            });
-        }
-//        onLoadSuccess: function () {
-//            var data = $(this).combobox('getData');
-//            for (var i = 0; i < data.length; i++) {
-//                if (data[i].exportClass == "发放出库") {
-//                    $(this).combobox('select', data[i].exportClass);
-//                }
-//            }
-//        },
-//        onChange: function (newValue, oldValue) {
-//            if (newValue.indexOf("退") >= 0) {
-//                $('#receiver').combogrid('enable');
-//                $.messager.defaults.ok = "供货商";
-//                $.messager.defaults.cancel = "上级库房";
-//                $.messager.confirm('系统消息', '请选择退货对象', function (r) {
-//                    if (r) {
-//                        exportToFlag = "toSupplier";
-//                        depts = new Array;
-//                        upStorageFlag = true;
-//                        for (var i = 0; i < suppliers.length; i++) {
-//                            var dept = {};
-//                            dept.storageName = suppliers[i].supplierName;
-//                            dept.storageCode = suppliers[i].supplierCode;
-//                            dept.disburseNoPrefix = suppliers[i].inputCode;
-//                            depts.push(dept)
-//                        }
-//                        $('#receiver').combogrid('grid').datagrid('loadData', depts);
-//                    } else {
-//                        exportToFlag = "toHigherStorage"
-//                    }
-//                    $.messager.defaults.ok = "确定";
-//                    $.messager.defaults.cancel = "取消";
-//                });
-//            } else if (newValue == "盘亏出库") {
-//                $('#receiver').combogrid('disable');
-//            } else {
-//                $('#receiver').combogrid('enable');
-//                depts = deptsBack;
-//            }
-//            $('#receiver').combogrid('grid').datagrid('loadData', depts);
-//        }
-    });
+    /**
+     * 加载出库类别数据
+     * exp_export_class_dict
+     */
+    function loadExportClass(){
+        $.ajax({
 
+
+            url:"/api/exp-export-class-dict/list",
+            type:"GET",
+            dataType:"JSON",
+            cache:false,
+            success:function(data){
+                console.info(data);
+                for(var i=0;i<data.length;i++){
+                     $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
+                }
+            }
+        });
+    }
+    loadExportClass();
+
+    $("#exportClass").change(function() {
+         var checkValue = $("#exportClass").val();
+//        alert(checkValue);
+        var depts = [];
+        var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
+            console.info(data);
+            depts = data;
+            //                deptsBack = data;
+            return depts;
+        });
+        promise.done(function () {
+            $("#receiver").combogrid({
+                idField: 'supplierCode',
+                textField: 'supplierName',
+                data: depts,
+                panelWidth: 300,
+                columns: [
+                    [
+                        {
+                            title: '科室名称',
+                            field: 'supplierName',
+                            width: 200
+                        },
+                        {
+                            title: '科室代码',
+                            field: 'supplierCode',
+                            width: 50
+                        },
+                        {
+                            title: '输入码',
+                            field: 'inputCode',
+                            width: 50
+                        }
+                    ]
+                ]
+            })
+        })
+    });
     $("#documentNo").textbox({
         disabled: true
     });
@@ -1000,7 +981,7 @@ $(function () {
         parent.updateTab('出库处理', '/his/ieqm/exp-export');
     })
 
-    //打印
+
     $("#printDiv").dialog({
         title: '打印预览',
         width: 1000,
@@ -1030,4 +1011,5 @@ $(function () {
             $("#printDiv").dialog('open');
         }
     })
+
 })

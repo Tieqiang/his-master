@@ -112,8 +112,8 @@ $(function () {
             align: 'center',
             width: "6%",
             formatter:function(value,row,index){
-                if($.trim(row.amountPerPackage)!=''&& $.trim(row.minSpec)!=''){
-                    row.expSpec = row.amountPerPackage+"*"+ row.minSpec;
+                if(/*$.trim(row.amountPerPackage)!=''&& */$.trim(row.minSpec)!=''){
+                    row.expSpec = /*row.amountPerPackage+"*"+*/ row.minSpec;
                     return row.expSpec;
                 }
                 return value;
@@ -123,16 +123,17 @@ $(function () {
             field: 'units',
             align: 'center',
             width: "6%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 200,
-                    valueField: 'measuresName',
-                    textField: 'measuresName',
-                    method: 'get',
-                    url: '/api/measures-dict/list'
-                }
-            }
+            editable:false
+//            editor: {
+//                type: 'combobox',
+//                options: {
+//                    panelHeight: 200,
+//                    valueField: 'measuresName',
+//                    textField: 'measuresName',
+//                    method: 'get',
+//                    url: '/api/measures-dict/list'
+//                }
+//            }
 
         }, {
             title: '厂家',
@@ -207,6 +208,7 @@ $(function () {
             field: 'maxRetailPrice',
             align: 'center',
             width: "7%",
+            hidden:true,
             editor: {
                 type:'numberbox',
                 options: {
@@ -227,6 +229,7 @@ $(function () {
             title: '最小规格',
             field: 'minSpec',
             align: 'center',
+            hidden:true,
             width: "6%",
             editor: {
                 type: 'textbox',
@@ -278,6 +281,7 @@ $(function () {
             field: 'minUnits',
             align: 'center',
             width: "6%",
+            hidden:true,
             editor: {
                 type: 'textbox',
                 options: {
@@ -549,6 +553,12 @@ $(function () {
         var updateData = $("#dg").datagrid("getChanges", "updated");
         var deleteData = $("#dg").datagrid("getChanges", "deleted");
         var expDictChangeVo = {};
+        if(insertData.length>0){
+            for(var i=0;i<insertData.length;i++){
+                insertData[i].minSpec=insertData[i].expSpec;
+                insertData[i].minUnits=insertData[i].units;
+            }
+        }
         expDictChangeVo.inserted = insertData;
         expDictChangeVo.updated = updateData;
         expDictChangeVo.deleted = deleteData;
@@ -604,7 +614,8 @@ $(function () {
                 price.expName = item.expName;
                 price.amountPerPackage = item.dosePerUnit;
                 price.minSpec = item.expSpec;
-                price.minUnits = item.units;
+                price.minUnits = item.doseUnits;
+                price.units = item.doseUnits;
                 price.hospitalId = parent.config.hospitalId;
                 simplePrice.push(price);
             });
@@ -616,6 +627,7 @@ $(function () {
         var expCode = $('#expName').combogrid('getValue');
         prices.splice(0, prices.length);
         var pricePromise = $.get("/api/exp-price-list/list?expCode=" + expCode + "&hospitalId=" + parent.config.hospitalId, function (data) {
+           console.info(data);
             $.each(data, function (index, item) {
                 var price = {};
                 price.id=item.id;
@@ -623,7 +635,7 @@ $(function () {
                 price.expName = item.expName;
                 price.amountPerPackage = item.amountPerPackage;
                 price.expSpec = item.expSpec;
-                price.units = item.units;
+                price.units = item.doseUnits;
                 price.firmId = item.firmId;
                 price.materialCode = item.materialCode;
                 price.tradePrice = item.tradePrice;
