@@ -94,12 +94,14 @@ $(function () {
         fit: true,//让#dg数据创铺满父类容器
         toolbar: '#ft',
         footer: '#tb',
+        rownumbers: true,
         singleSelect: true,
         nowrap: false,
         columns: [[{
             title: '去向库房',
             field: 'receiver',
-            width: "30%",
+            align: 'center',
+            width: "20%",
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
@@ -111,14 +113,17 @@ $(function () {
         }, {
             title: '品次',
             field: 'importNo',
-            width: "25%"
+            align: 'center',
+            width: "20%"
         }, {
             title: '品种',
             field: 'importCode',
-            width: "25%"
+            align: 'center',
+            width: "20%"
         }, {
             title: '金额',
             field: 'importAmount',
+            align: 'center',
             width: "20%"
         }]]
     });

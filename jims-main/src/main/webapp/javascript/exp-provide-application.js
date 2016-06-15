@@ -41,16 +41,15 @@ $(document).ready(function () {
         columns:[[{
             title:"applicationId",
             field:"applicationId",
-            width:"10%",
             hidden:true
         }, {
             title: "applicantStorage",
             field: "applicantStorage",
-            width: "10%",
             hidden: true
         }, {
             title: "申请单号",
             field: "applicantNo",
+            align: 'center',
             width: "10%",
             editor: {
                 type: "textbox",
@@ -61,6 +60,7 @@ $(document).ready(function () {
         },{
             title:"代码",
             field:"expCode",
+            align: 'center',
             width:"10%",
             editor:{
                 type:"textbox",
@@ -70,9 +70,10 @@ $(document).ready(function () {
         },{
             title:"名称",
             field:"expName",
+            align: 'center',
             width:"10%",
             editor:{type:"combogrid",options:{
-                panelWidth:580,
+                panelWidth:515,
                 idField:"expName",
                 textField:"expName",
                 url: "/api/exp-price-list/find-exp-list",
@@ -82,13 +83,13 @@ $(document).ready(function () {
                 },
                 method: 'GET',
                 columns: [[
-                    {field: 'expCode', title: '编码', width: 100, align: 'center'},
-                    {field: 'expName', title: '名称', width: 100, align: 'center'},
-                    {field: 'amountPerPackage', title: '可申请数量', width: 50, align: 'center'},
-                    {field: 'expSpec', title: '包装规格', width: 50, align: 'center'},
-                    {field: 'minSpec', title: '最小规格', width: 50, align: 'center'},
+                    {field: 'expCode', title: '编码', width: 60, align: 'center'},
+                    {field: 'expName', title: '名称', width: 60, align: 'center'},
+                    {field: 'amountPerPackage', title: '可申请数量', width: 90, align: 'center'},
+                    {field: 'expSpec', title: '包装规格', width: 60, align: 'center'},
+                    {field: 'minSpec', title: '最小规格', width: 60, align: 'center'},
                     {field: 'units', title: '单位', width: 50, align: 'center'},
-                    {field: 'firmId', title: '厂家', width: 100, align: 'center'},
+                    {field: 'firmId', title: '厂家', width: 80, align: 'center'},
                     {field: 'inputCode', title: '拼音码', width: 50, align: 'center'},
                 ]],
                 onClickRow: function (rowIndex,rowData) {
@@ -137,6 +138,7 @@ $(document).ready(function () {
         }, {
             title: "最小规格",
             field: "expSpec",
+            align: 'center',
             width: "10%",
             editor: {
                 type: "textbox",
@@ -147,6 +149,7 @@ $(document).ready(function () {
         },{
             title:"包装规格",
             field:"packageSpec",
+            align: 'center',
             width:"10%",
             editor:{
                 type:"textbox",
@@ -156,6 +159,7 @@ $(document).ready(function () {
         },{
             title:"单位",
             field:"packageUnits",
+            align: 'center',
             width:"10%",
             editor:{
                 type:"textbox",
@@ -165,6 +169,7 @@ $(document).ready(function () {
         },{
             title:"数量",
             field:"quantity",
+            align: 'center',
             width:"10%",
             value:0,
             editor:{type:"numberbox"},
@@ -180,7 +185,6 @@ $(document).ready(function () {
         },{
             title:"申请人",
             field:"applicationMan",
-            width:"10%",
             hidden:true,
             editor:{
                 type:"textbox",
@@ -190,7 +194,6 @@ $(document).ready(function () {
         },{
             title:"被申请科室",
             field:"provideName",
-            width:"10%",
             hidden:true,
             editor:{
                 type:"textbox",
@@ -200,7 +203,6 @@ $(document).ready(function () {
         }, {
             title: "申请科室",
             field: "applicantName",
-            width: "10%",
             hidden: true,
             editor: {
                 type: "textbox",

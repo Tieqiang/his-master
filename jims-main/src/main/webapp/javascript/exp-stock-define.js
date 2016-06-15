@@ -4,9 +4,7 @@
 /**
  * 产品库存定义
  */
-
 function checkRadio(){
-
 
     if($("#productName:checked").val()){
         $("#productTypeSelect").combobox("disable");
@@ -101,7 +99,8 @@ $(document).ready(function () {
         },{
             title:"品名",
             field:"expName",
-            width:"20%",
+            align: 'center',
+            width:"18%",
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
@@ -114,16 +113,19 @@ $(document).ready(function () {
                     columns: [[{
                         title: '代码',
                         field: 'expCode',
-                        width: "30%"
+                        align: 'center',
+                        width: "120"
                     }, {
                         title: '品名',
                         field: 'expName',
-                        width: "40%",
+                        align: 'center',
+                        width: "150",
                         editor: {type: 'text', options: {required: true}}
                     }, {
                         title: '拼音码',
                         field: 'inputCode',
-                        width: "30%",
+                        align: 'center',
+                        width: "120",
                         editor: 'text'
                     }]],
                     onClickRow: function (index, row) {
@@ -163,29 +165,33 @@ $(document).ready(function () {
 //                        }
 //                    })
                 }
-            },
-            width:"7%"
+            }
         }, {
             title: "类型",
             field: "expForm",
+            align: 'center',
             width: "10%"
         },{
             title:"规格",
             field:"expSpec",
+            align: 'center',
             width:"10%"
         },{
             title:"单位",
             field:"units",
+            align: 'center',
             width:"10%"
         },{
             title:"常规包装数量",
             field:"amountPerPackage",
-            width:"10%"
+            align: 'center',
+            width:"14%"
 //            editor:{type:"validatebox"}
         },{
             title:"常规包装单位",
             field:"packageUnits",
-            width:"10%"
+            align: 'center',
+            width:"14%"
 //            editor:{type:"combobox",options:{
 //                data:packageUnits,
 //                valueField:"measuresCode",
@@ -194,11 +200,13 @@ $(document).ready(function () {
         },{
             title:"高位水平",
             field:"upperLevel",
+            align: 'center',
             width:"10%",
             editor:{type:"validatebox"}
         },{
             title:"低位水平",
             field:"lowLevel",
+            align: 'center',
             width:"10%",
             editor:{type:"validatebox"}
         },{
@@ -334,40 +342,63 @@ $(document).ready(function () {
         method: 'GET',
         columns: [[{
             title: '代码',
-            field: 'expCode'
+            field: 'expCode',
+            align: 'center',
+            width: '6%'
         }, {
             title: '名称',
-            field: 'expName'
+            field: 'expName',
+            align: 'center',
+            width: '8%'
         },  {
             title: '规格',
-            field: 'expSpec'
+            field: 'expSpec',
+            align: 'center',
+            width: '5%'
         }, {
             title: '最小规格',
-            field: 'minSpec'
+            field: 'minSpec',
+            align: 'center',
+            width: '8%'
         }, {
             title: '单位',
-            field: 'units'
+            field: 'units',
+            align: 'center',
+            width: '5%'
         }, {
             title: '最小单位',
-            field: 'minUnits'
+            field: 'minUnits',
+            align: 'center',
+            width: '8%'
         }, {
             title: '厂家',
-            field: 'firmId'
+            field: 'firmId',
+            align: 'center',
+            width: '6%'
         }, {
             title: '批发价',
-            field: 'tradePrice'
+            field: 'tradePrice',
+            align: 'center',
+            width: '6%'
         }, {
             title: '零售价',
-            field: 'retailPrice'
+            field: 'retailPrice',
+            align: 'center',
+            width: '6%'
         }, {
             title: '注册证号',
-            field: 'registerNo'
+            field: 'registerNo',
+            align: 'center',
+            width: '7%'
         }, {
             title: '许可证号',
-            field: 'permitNo'
+            field: 'permitNo',
+            align: 'center',
+            width: '7%'
         },{
             title: '常规包装数量',
-            field: 'amountPerPackage'
+            field: 'amountPerPackage',
+            width: '10%'
         }]],
         onLoadSuccess:function(data){
             flag = flag+1;
