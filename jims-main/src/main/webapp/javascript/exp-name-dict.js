@@ -171,28 +171,35 @@ $(function () {
                     valueField: 'measuresName',
                     textField: 'measuresName',
                     method: 'get',
-                    url: '/api/measures-dict/list'
-                }
+                    url: '/api/measures-dict/list',
+                    filter: function (q, row) {
+                        var opts = $(this).combobox('options');
+                        var r=$("#expDict").datagrid("getData").rows[editIndex];
+                        r.doseUnits=row[opts.textField];
+                    }
+                 }
             }
-        }, {
-            title: '类型',
+          },{
+            title: '产品类型',
             field: 'expForm',
             align: 'center',
             width: "10%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 200,
-                    valueField: 'formName',
-                    textField: 'formName',
-                    method: 'get',
-                    url: '/api/exp-form-dict/list'
-                }
-            }
+            editable:false
+//            editor: {
+//                type: 'combobox',
+//                options: {
+//                    panelHeight: 200,
+//                    valueField: 'formName',
+//                    textField: 'formName',
+//                    method: 'get',
+//                    url: '/api/exp-form-dict/list'
+//                }
+//            }
         }, {
             title: '属性',
             field: 'toxiProperty',
             align: 'center',
+            hidden:true,
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -209,22 +216,24 @@ $(function () {
             field: 'dosePerUnit',
             align: 'center',
             width: "10%",
-            editor: 'numberbox'
+            editable:false
         }, {
             title: '数量单位',
             field: 'doseUnits',
             align: 'center',
+//            hidden:true,
             width: "10%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 200,
-                    valueField: 'measuresName',
-                    textField: 'measuresName',
-                    method: 'get',
-                    url: '/api/measures-dict/list'
-                }
-            }
+            editable:false
+//            editor: {
+//                type: 'combobox',
+//                options: {
+//                    panelHeight: 200,
+//                    valueField: 'measuresName',
+//                    textField: 'measuresName',
+//                    method: 'get',
+//                    url: '/api/measures-dict/list'
+//                }
+//            }
         }, {
             title: 'storageCode',
             field: 'storageCode',
@@ -234,6 +243,7 @@ $(function () {
             field: 'singleGroupIndicator',
             align: 'center',
             width: "10%",
+            hidden:true,
             editor: {
                 type: 'combobox',
                 options: {
@@ -262,23 +272,24 @@ $(function () {
             field: 'expIndicator',
             align: 'center',
             width: "11%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    panelHeight: 'auto',
-                    valueField: 'code',
-                    textField: 'name',
-                    data: [{'code': '1', 'name': '全院产品'}, {'code': '2', 'name': '普通产品'}]
-                }
-            },
-            formatter:function(value,row,index){
-                if(value=="1"){
-                    value="全院产品";
-                }else if(value == "2"){
-                    value = "普通产品";
-                }
-                return value;
-            }
+            editable:false
+//            editor: {
+//                type: 'combobox',
+//                options: {
+//                    panelHeight: 'auto',
+//                    valueField: 'code',
+//                    textField: 'name',
+//                    data: [{'code': '1', 'name': '全院产品'}, {'code': '2', 'name': '普通产品'}]
+//                }
+//            },
+//             formatter:function(value,row,index){
+//                if(value=="1"){
+//                    value="全院产品";
+//                }else if(value == "2"){
+//                    value = "普通产品";
+//                }
+//                return value;
+//            }
         }
         ]],
         onClickRow: function (index, row) {
@@ -355,6 +366,8 @@ $(function () {
 
     //保存
     $("#save").on('click',function(){
+        var row = $("#expDict").datagrid('getData').rows[editIndex];
+        row.doseUnits=row.units;
         if (editIndex || editIndex == 0) {
             $("#expNameDict").datagrid('endEdit', editIndex);
             $("#expDict").datagrid('endEdit', editIndex);
@@ -362,7 +375,7 @@ $(function () {
         var insertNameData = $("#expNameDict").datagrid("getChanges", "inserted");
         var updateNameData = $("#expNameDict").datagrid('getChanges', "updated");
         var deleteNameData = $("#expNameDict").datagrid('getChanges', "deleted");
-        if(insertNameData.length>0||updateNameData.length>0||deleteNameData.length>0){
+//        if(insertNameData.length>0||updateNameData.length>0||deleteNameData.length>0){
             $.each(insertNameData, function (index, item) {
                 item.stdIndicator = 1;
             });
@@ -370,14 +383,25 @@ $(function () {
                 item.stdIndicator = 1;
             })
             var insertData = $("#expDict").datagrid("getChanges", "inserted");
+
             for(var i=0;i<insertData.length;i++){
-                if($.trim(insertData[i].expSpec)==""|| $.trim(insertData[i].expName) == ""|| $.trim(insertData[i].units) == ""|| $.trim(insertData[i].expForm) == ""|| $.trim(insertData[i].dosePerUnit) == ""|| $.trim(insertData[i].doseUnits) == ""|| $.trim(insertData[i].singleGroupIndicator) == ""|| $.trim(insertData[i].expIndicator) == ""){
+                insertData[i].doseUnits=insertData[i].units;
+                if(insertData[i].expIndicator=="全院产品"){
+                    insertData[i].expIndicator="1";
+                }
+                if(insertData[i].expIndicator=="普通产品"){
+                    insertData[i].expIndicator="2";
+                }
+
+                insertData[i].doseUnits=insertData[i].units;
+                if($.trim(insertData[i].expSpec)==""|| $.trim(insertData[i].expName) == ""|| $.trim(insertData[i].units) == ""|| $.trim(insertData[i].expForm) == ""|| $.trim(insertData[i].dosePerUnit) == ""|| $.trim(insertData[i].doseUnits) == ""|| $.trim(insertData[i].expIndicator) == ""){
                     $.messager.alert('系统提示', '请检查数据完整型！', 'info');
                     return;
                 }
             }
             var updateData = $("#expDict").datagrid('getChanges', "updated");
             var deleteData = $("#expDict").datagrid('getChanges', "deleted");
+            alert("qqq "+insertData.length)
             if (insertData.length > 0 || updateData.length > 0 || deleteData.length > 0) {
             var expNameDictChangeVo = {};
             expNameDictChangeVo.inserted = insertNameData;
@@ -415,10 +439,10 @@ $(function () {
                 $.messager.alert('系统提示', '没有需要保存的信息，请规范操作系统！', 'info');
                 return;
             }
-        }else{
-            $.messager.alert('系统提示','没有需要保存的信息，请规范操作系统！','info');
-            return;
-        }
+//        }else{
+//            $.messager.alert('系统提示','没有需要保存的信息，请规范操作系统！','info');
+//            return;
+//        }
 
     });
 
@@ -522,6 +546,14 @@ $(function () {
     });
     //添加ExpDict
     $("#appendExp").on('click',function(){
+        /**
+         *  产品范围：<select id="expScope" class="easyui-combobox" name="state" style="width:200px ;" data-options="panelHeight:'auto' " >
+         <option value="1" selected>全院产品</option>
+         <option value="2">普通产品</option>
+         </select>
+         产品类别：<select id="expType" class="easyui-combobox"></select>
+         产品类型：<select id="expCategory" class="easyui-combobox"></select>
+         */
         stopEdit();
         $("#listPrice").linkbutton("disable");
         var allRowsTop = $('#expNameDict').datagrid("getRows");
@@ -538,13 +570,15 @@ $(function () {
             name = row.expName;
 
             $('#expDict').datagrid('appendRow', {
-                expCode: code, expName: name, expSpec: '', units: '', expForm: '', toxiProperty: '', dosePerUnit: '',
-                doseUnits: '', storageCode: parent.config.storageCode, expIndicator: ''
+                expCode: code, expName: name, expSpec: '', units: '', expForm:$("#expCategory").combobox("getText"), toxiProperty: '', dosePerUnit: '1',
+                doseUnits: '', storageCode: parent.config.storageCode, expIndicator:$("#expScope").combobox("getText")
             });
-
             var rows = $("#expDict").datagrid("getRows");
             var addRowIndex = $("#expDict").datagrid('getRowIndex', rows[rows.length - 1]);
             editIndex = addRowIndex;
+//            if(rows[editIndex].units!=""){
+//                rows[editIndex].doseUnits=  rows[editIndex].units;
+//            }
             $("#expDict").datagrid('selectRow', editIndex);
             $("#expDict").datagrid('beginEdit', editIndex);
         }
