@@ -76,7 +76,7 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "           EXP_IMPORT_DETAIL.HOSPITAL_ID = '" + hospitalId + "'  ";
 
          if(flag){//进价
-            sql=sql.replace("RETAIL_PRICE","PURCHASE_PRICE");
+            sql=sql.replace("RETAIL_PRICE*EXP_IMPORT_DETAIL.QUANTITY","PURCHASE_PRICE*EXP_IMPORT_DETAIL.QUANTITY");
          }
          List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
          return nativeQuery;
