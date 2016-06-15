@@ -226,7 +226,7 @@ $(function () {
         onOpen: function () {
             var stopDate = $("#stopDate").datetimebox("getText");
             var startDate =$("#startDate").datetimebox("getText");
-            var supplier = $("#supplier").combogrid("getText");
+            var supplier = $("#supplier").combogrid("getValue");
             var documentNo = $("#documentNo").textbox("getValue");
             var searchInput = $("#searchInput").textbox("getValue");
             var radio = $("#detailForm input[name='radioOne']:checked").val();
@@ -249,7 +249,7 @@ $(function () {
     var loadDict = function(){
         importDetailDataVO.stopDate = new Date($("#stopDate").datetimebox("getText"));
         importDetailDataVO.startDate =new Date($("#startDate").datetimebox("getText"));
-        importDetailDataVO.supplier = $("#supplier").combogrid("getText");
+        importDetailDataVO.supplier = $("#supplier").combogrid("getValue");
         importDetailDataVO.documentNo = $("#documentNo").textbox("getValue");
         importDetailDataVO.searchInput = $("#searchInput").textbox("getValue");
         importDetailDataVO.radio = $("#detailForm input[name='radioOne']:checked").val();

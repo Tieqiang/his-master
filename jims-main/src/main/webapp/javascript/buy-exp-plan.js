@@ -205,8 +205,11 @@ $(function () {
                                     planNumber: 0,
                                     expForm: row.expForm,
                                     storer: parent.config.staffName,
-                                    retailPrice: row.retailPrice
-                                }
+                                    retailPrice: row.retailPrice,
+                                    packSpec:row.packSpec,
+                                    packUnit:row.packUnit,
+                                    stockquantityRef:row.quantity
+                                 }
                             }
                         );
                     },

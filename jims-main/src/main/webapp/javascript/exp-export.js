@@ -431,7 +431,7 @@ $(function () {
 
     $("#exportClass").change(function() {
          var checkValue = $("#exportClass").val();
-        alert(checkValue);
+//        alert(checkValue);
         var depts = [];
         var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
             console.info(data);

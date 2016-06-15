@@ -47,8 +47,8 @@ public class BuyExpPlanService {
      */
     @GET
     @Path("list-exp-name-by-input")
-    public List<BuyExpPlanVo> listBuyExpPlanCa(@QueryParam("q") String q) {
-        List<BuyExpPlanVo> expBuyExpPlanCaVos = buyExpPlanFacade.listBuyExpPlanCaByInputCode(q);
+    public List<BuyExpPlanVo> listBuyExpPlanCa(@QueryParam("q") String q,@QueryParam("storageCode") String storageCode) {
+        List<BuyExpPlanVo> expBuyExpPlanCaVos = buyExpPlanFacade.listBuyExpPlanCaByInputCode(q,storageCode);
         return expBuyExpPlanCaVos;
     }
 
@@ -143,7 +143,7 @@ public class BuyExpPlanService {
     @POST
     @Path("generate-num-up")
     public List<BuyExpPlan> generateNumUp(@QueryParam("storageCode") String storageCode,List<BuyExpPlan> inData){
-        return buyExpPlanFacade.generateNumUp(inData,storageCode);
+        return buyExpPlanFacade.generateNumUp(inData,storageCode );
     }
 
     /**
@@ -154,7 +154,7 @@ public class BuyExpPlanService {
     @POST
     @Path("generate-num-low")
     public List<BuyExpPlan> generateNumLow(@QueryParam("storageCode") String storageCode,List<BuyExpPlan> inData) {
-        return buyExpPlanFacade.generateNumLow(inData,storageCode);
+        return buyExpPlanFacade.generateNumLow(inData,storageCode );
     }
 
     /**

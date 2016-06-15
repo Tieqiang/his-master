@@ -171,7 +171,7 @@ $(function () {
     $("#search").on('click', function () {
         var startDate = $("#startDate").datetimebox('getText');
         var endDate = $("#endDate").datetimebox('getText');
-        var receiver = $("#receiver").combobox('getText');
+        var receiver = $("#receiver").combobox('getValue');
         var storageCode = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
         $.get('/api/exp-export/export-detail-by-exp-class?type=receiver&storage=' + storageCode  + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate+"&value="+receiver, function (data) {
