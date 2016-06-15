@@ -228,6 +228,10 @@ $(function () {
                 var operators="";
                 var phones="";
                 for (var i = 0; i < rows.length; i++) {
+                    var phone=rows[i].phone;
+                    if(phone.length>12){
+                        $.messager.alert("系统提示", "手机号码不合法!", 'error');
+                    }
                     expCodes += rows[i].expCode + ",";
                     amounts += rows[i].amount + ",";
                     prices += rows[i].purchasePrice + ",";

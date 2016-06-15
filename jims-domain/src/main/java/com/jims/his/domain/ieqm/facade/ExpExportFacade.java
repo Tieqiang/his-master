@@ -125,7 +125,7 @@ public class ExpExportFacade extends BaseFacade {
             hql += " and dict.exportDate<=to_date ( '" + stopDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
         if (receiver != null && receiver.trim().length() > 0) {
-            hql += " and (dict.receiver='" + receiver + "' or dict.receiver=(select storageCode from ExpStorageDept where storageName like '%"+ receiver+"%' ) or dict.receiver=(select supplierId from ExpSupplierCatalog where supplier like '%"+receiver+"%')) ";
+            hql += " and (dict.receiver='" + receiver + "'";
         }
         if (searchInput != null && searchInput.trim().length() > 0) {
             hql += " and dc.expCode='" + searchInput + "' \n" +
@@ -145,7 +145,6 @@ public class ExpExportFacade extends BaseFacade {
 
     /**
      * 出库单号明细查询
-     *
      * @param documentNo 出库单号
      * @param hospitalId 医院Id
      * @return
@@ -419,7 +418,7 @@ public class ExpExportFacade extends BaseFacade {
             sql += " AND EXP_EXPORT_DETAIL.EXP_form='" + formClass + "'\n";
         }
         if (null != deptAttr && !deptAttr.trim().equals("")) {
-            sql += "  dept_clinic_attr_dict.clinic_attr_code= '"+deptAttr+"'";
+            sql += " and dept_clinic_attr_dict.clinic_attr_code= '"+deptAttr+"'";
         }
         List<ExpExportDetialVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpExportDetialVo.class);
         return result;

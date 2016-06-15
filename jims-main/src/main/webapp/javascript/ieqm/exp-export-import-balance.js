@@ -1191,7 +1191,7 @@ $(function () {
             detail.expireDate = new Date(rows[i].expireDate);
             detail.firmId = rows[i].firmId;
             detail.expForm = rows[i].expForm;
-            detail.importDocumentNo = rows[i].importDocumentNo;
+            detail.importDocumentNo = $("#documentNoIn").textbox('getValue');
             detail.purchasePrice = rows[i].purchasePrice;
             detail.tradePrice = rows[i].tradePrice;
             detail.retailPrice = rows[i].retailPrice;
