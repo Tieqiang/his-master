@@ -29,7 +29,7 @@ $(function () {
             panelWidth: 450,
             fitColumns: true,
             columns: [
-                 [
+                [
                     {
                         title: '子库房名称',
                         field: 'subStorage', width: 180, align: 'center'
@@ -38,7 +38,7 @@ $(function () {
                         title: '子库房代码',
                         field: 'storageCode', width: 130, align: 'center'
                     }
-                 ]
+                ]
             ]
         })
     });
@@ -221,27 +221,31 @@ $(function () {
             $.messager.alert("系统提示", "请选择子库房", 'error');
         }else {
             if(dataValid()){
-            var expCodes = "";
-            var amounts = "";
-            var prices = "";
-            var packageSpecs = "";
-            for (var i = 0; i < rows.length; i++) {
-                expCodes += rows[i].expCode + ",";
-                amounts += rows[i].amount + ",";
-                prices += rows[i].purchasePrice + ",";
-                packageSpecs += rows[i].packageSpec + ",";
-            }
-            expCodes = expCodes.substring(0, expCodes.length - 1);
-            var supplierId = $("#supplier").combogrid("getValue");
-            $.postJSON("/api/exp-prepare/make-data?supplierId=" + supplierId + "&expCodes=" + expCodes + "&operator=" + parent.config.staffName + "&amounts=" + amounts + "&prices=" + prices + "&packageSpecs=" + packageSpecs+"&subStorage="+subStorageValue, function (data) {
-                //List<ExpPrepareDetail>
+                var expCodes = "";
+                var amounts = "";
+                var prices = "";
+                var packageSpecs = "";
+                var operators="";
+                var phones="";
+                for (var i = 0; i < rows.length; i++) {
+                    expCodes += rows[i].expCode + ",";
+                    amounts += rows[i].amount + ",";
+                    prices += rows[i].purchasePrice + ",";
+                    packageSpecs += rows[i].packageSpec + ",";
+                    phones+=rows[i].phone+",";
+                    operators+=rows[i].preparePersonName+",";
+                }
+                expCodes = expCodes.substring(0, expCodes.length - 1);
+                var supplierId = $("#supplier").combogrid("getValue");
+                $.postJSON("/api/exp-prepare/make-data?supplierId=" + supplierId + "&expCodes=" + expCodes + "&operator=" + parent.config.staffName + "&amounts=" + amounts + "&prices=" + prices + "&packageSpecs=" + packageSpecs+"&subStorage="+subStorageValue+"&phones="+phones+"&operators="+operators, function (data) {
+                    //List<ExpPrepareDetail>
 //                console.info(data);
-                $("#right").datagrid("loadData", data);
-            }, function (data) {//List<ExpPrepareDetail>
+                    $("#right").datagrid("loadData", data);
+                }, function (data) {//List<ExpPrepareDetail>
 //                console.info(data);
-                $("#right").datagrid("loadData", data);
+                    $("#right").datagrid("loadData", data);
 //                $.messager.alert("系统提示", "error", 'error');
-            })
+                })
             }else{
                 $("#left").datagrid('beginEdit', editIndex);
             }
