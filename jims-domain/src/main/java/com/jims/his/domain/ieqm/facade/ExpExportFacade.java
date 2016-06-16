@@ -198,7 +198,7 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByExportClass(String storage, String hospitalId, String expClass, String startDate, String endDate) {
-        String sql = "SELECT RECEIVER," +
+        String sql = "SELECT distinct RECEIVER," +
                 "          count(exp_export_detail.document_no) import_no,  \n" +
                 "          count(distinct exp_export_detail.exp_code) import_code,  \n" +
                 "          sum(quantity*purchase_price) import_amount  \t\t  \n" +
@@ -235,7 +235,7 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByStorage(String storage, String hospitalId, String subStorage, String startDate, String endDate) {
-        String sql = "SELECT  sum(EXP_EXPORT_DETAIL.PURCHASE_PRICE*EXP_EXPORT_DETAIL.QUANTITY) import_amount,           \n" +
+        String sql = "SELECT  distinct sum(EXP_EXPORT_DETAIL.PURCHASE_PRICE*EXP_EXPORT_DETAIL.QUANTITY) import_amount,           \n" +
                 "  EXP_EXPORT_MASTER.RECEIVER ,           \n" +
                 "  EXP_EXPORT_DETAIL.EXP_FORM     \n" +
                 "  FROM EXP_EXPORT_DETAIL,EXP_EXPORT_MASTER     \n" +
@@ -270,7 +270,7 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByTo(String storage, String hospitalId, String receiver, String startDate, String endDate) {
-        String sql = "SELECT EXP_EXPORT_MASTER.SUB_STORAGE , \n" +
+        String sql = "SELECT distinct EXP_EXPORT_MASTER.SUB_STORAGE , \n" +
                 "         EXP_EXPORT_DETAIL.EXP_CODE,   \n" +
                 "         EXP_DICT.EXP_NAME,   \n" +
                 "         EXP_EXPORT_DETAIL.PACKAGE_SPEC,   \n" +
@@ -326,7 +326,7 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByExpCode(String storage, String hospitalId, String expCode, String startDate, String endDate){
-        String sql = "select exp_dict.exp_name ,a.* from exp_dict,(SELECT receiver,\n" +
+        String sql = "select distinct exp_dict.exp_name ,a.* from exp_dict,(SELECT receiver,\n" +
                 "package_spec,\n" +
                 "package_units,\n" +
                 "firm_id,\n" +

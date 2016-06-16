@@ -156,7 +156,11 @@ $(function () {
             }
         }
     });
-
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     $("#dg").datagrid({
         title: '入库记录查询',
         fit: true,//让#dg数据创铺满父类容器
@@ -198,7 +202,15 @@ $(function () {
             title: '厂家',
             field: 'firmId',
             align: 'center',
-            width: "7%"
+            width: "7%",
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: '价格',
             field: 'purchasePrice',
