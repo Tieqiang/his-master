@@ -198,14 +198,35 @@ $(function () {
                         var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
                         var value = $('#receiver').combobox('getValue');
                         if (value != null && value != "") {
-                            if (exportToFlag == "toSupplier") {//进价
-                                $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
-                            } else {//
-                                $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+//                            var supplierId=$("#receiver").combogrid("getValue");
+//                            if(supplierId!=""){
+                                $.ajax({
+                                    url:'/api/exp-supplier-catalog/find-by-supplier-id?supplierId='+value,
+                                    TYPE:'POST',
+                                    dataType:"JSON",
+                                    cache:false,
+                                    success:function(data){
+                                        alert(data);
+                                          if(data!=null&&data!=""){//是供货商
+                                              $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+                                          }else{
+                                              $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+                                          }
+                                    }
+                                });
+                            }else{
+                                $.messager.alert("系统提示","请选择发往科室！","info");
+                                return;
                             }
-                        } else {
-                            $.messager.alert("系统提示", "请选择出库单位", "error");
-                        }
+
+//                            if (exportToFlag == "toSupplier") {//进价
+//                                $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+//                            } else {//
+//                                $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+//                            }
+//                        } else {
+//                            $.messager.alert("系统提示", "请选择出库单位", "error");
+//                        }
 
                         var rows = $("#exportDetail").datagrid('getRows');
                         var totalAmount = 0;
