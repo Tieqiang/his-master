@@ -809,6 +809,9 @@ $(function () {
             rowDetail.storer= parent.config.staffName;
             rowDetail.expForm=row.expForm;
             rowDetail.stockquantityRef=row.quantity;
+            rowDetail.units=row.minUnits;
+            rowDetail.expSpec=row.minSpec;
+
             //rowDetail.invoiceDate = setDefaultDate();
             //rowDetail.invoiceNo = row.invoiceNo;
 
