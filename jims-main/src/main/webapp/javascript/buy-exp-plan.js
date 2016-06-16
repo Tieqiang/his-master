@@ -791,6 +791,7 @@ $(function () {
             ]
         ],
         onDblClickRow: function (index, row) {
+            console.info("123"+row);
             $("#right").datagrid('endEdit', editIndex);
             var rows = $("#right").datagrid('getRows') ;
             for(var i = 0;i<rows.length;i++){
