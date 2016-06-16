@@ -229,18 +229,12 @@ $(function () {
             width: "10%"
         }, {
             title: '零售价金额',
-            field: 'purchaseAmount',
-            align: 'center',
-            width: "10%"
-        }, {
-            title: '进价金额',
-            field: 'purchaseAmount',
-            align: 'center',
-            hidden:true,
-            width: "10%"
-        }, {
-            title: '进价金额',
             field: 'payAmount',
+            align: 'center',
+            width: "10%"
+        }, {
+            title: '进价金额',
+            field: 'purchaseAmount',
             width: "10%"
         }, {
             title: '类别',
