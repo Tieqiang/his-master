@@ -519,27 +519,7 @@ $(function () {
             title: '有效期',
             field: 'expireDate',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#importDetail").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'expireDate'
-                        });
-                        var y = date.getFullYear() + 1;
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
             }
         }, {
             title: '入库单号',
@@ -919,27 +899,7 @@ $(function () {
             field: 'expireDate',
             width: '7%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#importDetail").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'expireDate'
-                        });
-                        var y = date.getFullYear() + 1;
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datebox'
             }
         }, {
             title: '发票号',
