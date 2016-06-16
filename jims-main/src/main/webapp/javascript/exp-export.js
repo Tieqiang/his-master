@@ -206,7 +206,7 @@ $(function () {
                                     dataType:"JSON",
                                     cache:false,
                                     success:function(data){
-                                        alert(data);
+//                                        alert(data);
                                           if(data!=null&&data!=""){//是供货商
                                               $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
                                           }else{
