@@ -165,37 +165,20 @@ $(document).ready(function () {
 //                        $(ed.target).textbox('setValue', row.expCode);
                         currentExpCode = row.expCode;
                         $("#stockRecordDialog").dialog('open');
-                    }
-
-//                    keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
-//                        enter: function (e) {
-//                            var row = $(this).combogrid('grid').datagrid('getSelected');
-//                            $(this).combogrid('hidePanel');
-//                            $('#dg').datagrid('endEdit',editIndex);
-//                            if (row) {
-//                                $('#dg').datagrid('updateRow',{
-//                                    index: editIndex,
-//                                    row: {
-//                                        expSpec: row.expSpec,
-//                                        expName: row.expName,
-//                                        expForm: row.expForm,
-//                                        upperLevel: 0,
-//                                        lowLevel: 0,
-//                                        amountPerPackage: 0,
-//                                        storage: parent.config.storageCode,
-//                                        expCode: row.expCode,
-//                                        location: row.expCode,
-//                                        units: row.units
-//                                    }
-//                                });
-//                                //currentExpCode = row.expCode;
-//                                //$("#stockRecordDialog").dialog('open');
-//                            }
-//                            $('#dg').datagrid('beginEdit',editIndex);
-//
-//                        }
-//                    })
-                }
+                    },
+                    keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+                        enter: function (e) {
+                            var row = $(this).combogrid('grid').datagrid('getSelected');
+                            if (row) {
+                                var rowDetail=$("#dg").datagrid("getData").rows[editIndex];
+//                                var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expCode'});
+                                rowDetail.expCode=row.expCode;
+                                currentExpCode = row.expCode;
+                                $("#stockRecordDialog").dialog('open');
+                            }
+                            $(this).combogrid('hidePanel');
+                        }
+                    })                }
             }
         }, {
             title: "类型",

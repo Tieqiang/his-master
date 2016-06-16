@@ -87,7 +87,7 @@ public class ExpStorageProfileFacade extends BaseFacade {
                 "         EXP_STORAGE_PROFILE.PACKAGE_UNITS,   \n" +
                 "         EXP_STORAGE_PROFILE.UPPER_LEVEL,   \n" +
                 "         EXP_STORAGE_PROFILE.LOW_LEVEL,  \n" +
-                "         EXP_STORAGE_PROFILE.LOCATION \n" +
+                "         EXP_STORAGE_PROFILE.supplier \n" +
                 "    FROM EXP_DICT,   \n" +
                 "         EXP_STORAGE_PROFILE,exp_price_list \n" +
                 "   WHERE EXP_STORAGE_PROFILE.EXP_CODE = EXP_DICT.EXP_CODE AND \n" +
