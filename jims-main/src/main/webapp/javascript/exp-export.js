@@ -236,26 +236,26 @@ $(function () {
                             if (rowIndex == editIndex) {
                                 continue;
                             }
-                            totalAmount += Number(rows[i].retailPrice * rows[i].quantity);
-                            backAmount += Number(rows[i].purchasePrice * rows[i].quantity);
+                            totalAmount += Number(rows[i].amount);
+//                            backAmount += Number(rows[i].amount);
                         }
-                        if (totalAmount) {
-                            totalAmount += newValue * row.retailPrice;
-                        } else {
-                            totalAmount = newValue * row.retailPrice;
-                        }
-                        if (backAmount) {
-                            backAmount += newValue * row.purchasePrice;
-                        } else {
-                            backAmount = newValue * row.purchasePrice;
-                        }
-                        if (exportToFlag == "toSupplier") {
-                            $("#accountReceivable").numberbox('setValue', backAmount);
-                            upStorageFlag = false;
-                        }else{
+//                        if (totalAmount) {
+//                        totalAmount += newValue * row.retailPrice;
+//                        } else {
+//                            totalAmount = newValue * row.retailPrice;
+//                        }
+//                        if (backAmount) {
+//                            backAmount += newValue * row.purchasePrice;
+//                        } else {
+//                            backAmount = newValue * row.purchasePrice;
+//                        }
+//                        if (exportToFlag == "toSupplier") {
+//                            $("#accountReceivable").numberbox('setValue', backAmount);
+//                            upStorageFlag = false;
+//                        }else{
                             $("#accountReceivable").numberbox('setValue', totalAmount);
-                            upStorageFlag = false;
-                        }
+//                            upStorageFlag = false;
+//                        }
                     }
                 }
             }, formatter: function (value, row, index) {
