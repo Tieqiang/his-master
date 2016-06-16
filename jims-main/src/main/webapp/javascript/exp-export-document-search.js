@@ -246,7 +246,7 @@ $(function () {
     });
     promise.done(function () {
         $("#depts").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: suppliers,
             panelWidth: 500,
@@ -300,7 +300,7 @@ $(function () {
             masterDataVo.startDate ="";
             masterDataVo.stopDate = "";
         }
-        masterDataVo.receiver = $("#depts").combogrid("getText");
+        masterDataVo.receiver = $("#depts").combogrid("getValue");
         masterDataVo.searchInput = $("#searchInput").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
