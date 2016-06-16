@@ -866,7 +866,7 @@ $(function () {
         var exportMaster = {};
         exportMaster.documentNo = $("#documentNo").val();
         exportMaster.exportClass = getSelectedText("exportClass");
-        alert( exportMaster.exportClass);
+//        alert( exportMaster.exportClass);
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');

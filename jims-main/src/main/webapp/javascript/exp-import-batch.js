@@ -692,7 +692,7 @@ $(function () {
                 return  false;
             }else{
                 for(var i = 0 ;i<depts.length;i++){
-                    if(depts[i].supplierName==supplierName){
+                    if(depts[i].supplierCode==supplierName){
                         storageCode = depts[i].supplierCode ;
                     }
                 }
