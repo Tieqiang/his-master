@@ -924,6 +924,7 @@ $(function () {
         var hospitalId = parent.config.hospitalId;
         $.get('/api/exp-export/export-apply?storage=' + provideStorage + "&applyStorage=" + applyStorage +"&hospitalId="+ hospitalId+ "&startDate=" + startDate + "&endDate=" + endDate, function (data) {
             if (data.length <= 0) {
+                $("#left").datagrid("loadData", []);
                 $.messager.alert('系统提示', '数据库暂无数据', 'info');
             } else {
                 $("#left").datagrid("loadData", data);
