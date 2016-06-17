@@ -436,7 +436,7 @@ $(function () {
             detail.disburseRecNo = $("#payDocument").textbox("getValue");
             detail.documentNo = rows[i].documentNo;
             detail.itemNo = rows[i].itemNo;
-            detail.disburseCount = parseFloat(rows[i].disburseCount) + parseFloat(rows[i].needDisburse);
+            detail.disburseCount =parseFloat(rows[i].needDisburse);
             detail.payAmount = rows[i].purchasePrice*detail.disburseCount;
             detail.retailAmount = rows[i].retailPrice*detail.disburseCount;
             detail.tradeAmount = rows[i].tradePrice*detail.disburseCount;
