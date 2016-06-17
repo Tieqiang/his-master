@@ -49,7 +49,7 @@ public class ExpDisburseFacade extends BaseFacade {
                List<ExpDisburseRecDetail> details = disburseVo.getExpDisburseRecDetailBeanChangeVo().getInserted() ;
                String documentNo  =  details.get(0).getDocumentNo();
                ExpImportMaster expImportMaster=findByDocument(documentNo);
-               expImportMaster.setAccountPayed(details.get(0).getDisburseCount());
+               expImportMaster.setAccountPayed(details.get(0).getPayAmount());
                merge(expImportMaster);
      }
 

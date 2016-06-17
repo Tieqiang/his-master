@@ -237,7 +237,7 @@ public class ExpStockFacade extends BaseFacade {
                     stock.setSupplyIndicator(1);
                     //设置结存量
                     detail.setInventory(detail.getQuantity());
-                    expStock.setKillflag(detail.getKillflag());
+                    stock.setKillflag(detail.getKillflag());
                     merge(stock);
                 }
             }
