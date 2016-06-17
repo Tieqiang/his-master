@@ -47,10 +47,13 @@ public class ExpDisburseFacade extends BaseFacade {
 
     private void updateImportMaster(ExpDisburseVo disburseVo) {
                List<ExpDisburseRecDetail> details = disburseVo.getExpDisburseRecDetailBeanChangeVo().getInserted() ;
-               String documentNo  =  details.get(0).getDocumentNo();
-               ExpImportMaster expImportMaster=findByDocument(documentNo);
-               expImportMaster.setAccountPayed(details.get(0).getPayAmount());
-               merge(expImportMaster);
+               for(ExpDisburseRecDetail detail:details){
+                   String documentNo= detail.getDocumentNo();
+                   ExpImportMaster expImportMaster=findByDocument(documentNo);
+                   expImportMaster.setAccountPayed(expImportMaster.getAccountPayed()+detail.getPayAmount());
+                   merge(expImportMaster);
+               }
+
      }
 
     private ExpImportMaster findByDocument(String documentNo) {
@@ -85,7 +88,7 @@ public class ExpDisburseFacade extends BaseFacade {
             String id  =  detail.getId();
             Double disCount = detail.getDisburseCount();
             ExpImportDetail imDetail = get(ExpImportDetail.class,id);
-            imDetail.setDisburseCount(disCount);
+            imDetail.setDisburseCount(imDetail.getDisburseCount()+disCount);
             merge(imDetail);
         }
     }
