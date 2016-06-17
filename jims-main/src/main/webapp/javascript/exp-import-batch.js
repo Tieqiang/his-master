@@ -73,7 +73,7 @@ $(function () {
     }) ;
     deptPromse.done(function(){
         $("#supplier").combogrid({
-            idField: 'supplierName',
+            idField: 'supplierCode',
             textField: 'supplierName',
             data: depts,
             panelWidth: 500,
@@ -692,7 +692,7 @@ $(function () {
                 return  false;
             }else{
                 for(var i = 0 ;i<depts.length;i++){
-                    if(depts[i].supplierName==supplierName){
+                    if(depts[i].supplierCode==supplierName){
                         storageCode = depts[i].supplierCode ;
                     }
                 }

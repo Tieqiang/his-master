@@ -5,6 +5,7 @@ import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.ieqm.entity.ExpImportDetail;
 import com.jims.his.domain.ieqm.entity.ExpImportMaster;
+import com.jims.his.domain.ieqm.entity.ExpSupplierCatalog;
 import com.jims.his.domain.ieqm.vo.ExpDisburseRecVo;
 import com.jims.his.domain.ieqm.vo.ExpImportDetailVo;
 import com.jims.his.domain.ieqm.vo.ExpImportVo;
@@ -31,14 +32,12 @@ public class ExpImportDetailFacade extends BaseFacade {
      * 消耗品入库账单明细查询
      * @param documentNo  入库单号
      * @param hospitalId  医院Id
-     * @return
+     * @return  PURCHASE_PRICE
      */
     public List<ExpImportDetailVo> searchImportDetailDict(String documentNo, String hospitalId) {
-        /**
-         * accountReceivable
-         *
-         */
-        String sql = "SELECT distinct EXP_IMPORT_DETAIL.DOCUMENT_NO,   \n" +
+        String supplier=findSupplierByDocumentNo(documentNo);//supplierId
+        boolean flag=findIsExist(supplier);
+        String  sql = "SELECT distinct EXP_IMPORT_DETAIL.DOCUMENT_NO,   \n" +
                 "         EXP_IMPORT_DETAIL.ITEM_NO,   \n" +
                 "         EXP_IMPORT_DETAIL.EXP_CODE,   \n" +
                 "         EXP_IMPORT_DETAIL.EXP_SPEC,   \n" +
@@ -57,7 +56,8 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_1,   \n" +
                 "         EXP_IMPORT_DETAIL.SUB_PACKAGE_2,   \n" +
                 "         EXP_IMPORT_DETAIL.SUB_PACKAGE_UNITS_2,   \n" +
-                "         EXP_IMPORT_DETAIL.INVOICE_NO,   \n" +
+                "         EXP_IMPORT_DETAIL.INVOICE_NO,   " +
+                "" +
                 "         EXP_IMPORT_DETAIL.INVOICE_DATE,   \n" +
                 "         EXP_DICT.EXP_NAME,\n" +
                 "         EXP_IMPORT_DETAIL.TRADE_PRICE,   \n" +
@@ -75,11 +75,37 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "           EXP_IMPORT_DETAIL.DOCUMENT_NO = '" + documentNo + "' and \n" +
                 "           EXP_IMPORT_DETAIL.HOSPITAL_ID = '" + hospitalId + "'  ";
 
+         if(flag){//进价
+            sql=sql.replace("RETAIL_PRICE*EXP_IMPORT_DETAIL.QUANTITY","PURCHASE_PRICE*EXP_IMPORT_DETAIL.QUANTITY");
+         }
+         List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
+         return nativeQuery;
 
-        List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
-        return nativeQuery;
 
     }
+
+    /**
+     *
+     * @param supplier
+     * @return
+     */
+    private boolean findIsExist(String supplier) {
+        String sql="from ExpSupplierCatalog where supplierId='"+supplier+"' ";
+        List<ExpSupplierCatalog> list=entityManager.createQuery(sql).getResultList();
+        if(list!=null&&!list.isEmpty())
+            return true;
+            return false;
+    }
+
+    /**
+     *
+     * @param documentNo
+     * @return
+     */
+    private String findSupplierByDocumentNo(String documentNo) {
+        String sql="select supplier from ExpImportMaster where documentNo='"+documentNo+"' ";
+        return (String)entityManager.createQuery(sql).getSingleResult();
+     }
 
     /**
      * 付款处理

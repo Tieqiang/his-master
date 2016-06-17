@@ -116,9 +116,11 @@ public class ExpPrepareService {
      */
     @POST
     @Path("make-data")
-    public List<ExpPrepareDetail> makeData(@QueryParam("supplierId") String supplierId, @QueryParam("expCodes") String expCodes, @QueryParam("operator") String operator, @QueryParam("amounts") String amounts, @QueryParam("prices") String priceStr,@QueryParam("packageSpecs") String packageSpecs,@QueryParam("subStorage") String subStorageId) {
+    public List<ExpPrepareDetail> makeData(@QueryParam("supplierId") String supplierId, @QueryParam("expCodes") String expCodes, @QueryParam("operator") String operator, @QueryParam("amounts") String amounts, @QueryParam("prices") String priceStr,@QueryParam("packageSpecs") String packageSpecs,@QueryParam("subStorage") String subStorageId,@QueryParam("operators") String operators,@QueryParam("phones") String phones) {
         List<ExpPrepareDetail> list = new ArrayList<ExpPrepareDetail>();
         if (expCodes != null && !"".equals(expCodes)) {
+            String[] phoneArr=phones.split(",");
+            String[] operArr=operators.split(",");
             String[] amountArr = amounts.split(",");
             String[] expCodeArr = expCodes.split(",");
             String[] priceArr = priceStr.split(",");
@@ -126,7 +128,7 @@ public class ExpPrepareService {
             for (int i = 0; i < expCodeArr.length; i++) {
 //                ExpDict expDict = expDictFacade.findByCode(expCodeArr[i],packageSpecArr[i]);
                 ExpPriceList expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(expCodeArr[i],packageSpecArr[i]);
-                list = expPrepareMasterFacade.save(expPriceList.getId(), supplierId, amountArr[i], operator, Double.parseDouble(priceArr[i]), list,expPriceList.getFirmId(),subStorageId);
+                list = expPrepareMasterFacade.save(expPriceList.getId(), supplierId, amountArr[i], operator, Double.parseDouble(priceArr[i]), list,expPriceList.getFirmId(),subStorageId,phoneArr[i],operArr[i]);
             }
         }
         return list;

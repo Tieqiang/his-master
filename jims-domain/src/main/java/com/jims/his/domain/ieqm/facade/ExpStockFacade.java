@@ -212,6 +212,7 @@ public class ExpStockFacade extends BaseFacade {
                     expStock.setHospitalId(detail.getHospitalId());
                     expStock.setDisinfectdate(detail.getDisinfectdate());
                     expStock.setProducedate(detail.getProducedate());
+                    expStock.setKillflag(detail.getKillflag());
                     detail.setInventory(expStock.getQuantity());
                     merge(expStock);
                 } else {
@@ -236,6 +237,7 @@ public class ExpStockFacade extends BaseFacade {
                     stock.setSupplyIndicator(1);
                     //设置结存量
                     detail.setInventory(detail.getQuantity());
+                    expStock.setKillflag(detail.getKillflag());
                     merge(stock);
                 }
             }

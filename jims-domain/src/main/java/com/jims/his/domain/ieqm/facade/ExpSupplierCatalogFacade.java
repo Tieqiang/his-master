@@ -188,7 +188,7 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         }else if(-1==flag){
             sql+=" and storageLevel="+(storageLevel+1);
         }else if(1==flag){
-            sql+=" and storageLevel>"+(storageLevel-1);
+            sql+=" and storageLevel="+(storageLevel-1);
         }
         List<ExpStorageDept>  list=entityManager.createQuery(sql).getResultList();
         for(ExpStorageDept e:list){
@@ -198,6 +198,7 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
             v.setInputCode(e.getDisburseNoPrefix());
             expSupplierVos.add(v);
         }
+
         return expSupplierVos;
     }
 

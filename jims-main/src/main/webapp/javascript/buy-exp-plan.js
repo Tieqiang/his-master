@@ -128,15 +128,15 @@ $(function () {
                     title: '库房',
                     field: 'storage',
                     hidden: true
-                }/*, {
-             title: '最小规格',
-             field: 'packSpec',
-             hidden: true
-             }, {
-             title: '最小单位',
-             field: 'packUnit',
-             hidden: true
-             }*/
+                }, {
+                 title: '最小规格',
+                 field: 'expSpec',
+                 hidden: true
+                 }, {
+                 title: '最小单位',
+                 field: 'units',
+                 hidden: true
+             }
             ]
         ],
         onDblClickRow: function (index, row) {
@@ -346,15 +346,15 @@ $(function () {
                     title: '库房',
                     field: 'storage',
                     hidden: true
-                }/*, {
+                },{
              title: '最小规格',
-             field: 'packSpec',
+             field: 'expSpec',
              hidden: true
              }, {
              title: '最小单位',
-             field: 'packUnit',
+             field: 'units',
              hidden: true
-             }*/
+             }
             ]
         ],
         onClickRow: function (index, row) {
@@ -443,8 +443,8 @@ $(function () {
                     stockquantityRef: row.quantity,
                     retailPrice: row.retailPrice,
                     storage: row.storage,
-//                    packSpec: row.packSpec,
-//                    packUnit: row.packUnit,
+                    expSpec:row.expSpec,
+                    units:row.units,
                     buyId: newBuyId
                 });
 
@@ -791,6 +791,7 @@ $(function () {
             ]
         ],
         onDblClickRow: function (index, row) {
+            console.info("123"+row);
             $("#right").datagrid('endEdit', editIndex);
             var rows = $("#right").datagrid('getRows') ;
             for(var i = 0;i<rows.length;i++){
@@ -809,6 +810,9 @@ $(function () {
             rowDetail.storer= parent.config.staffName;
             rowDetail.expForm=row.expForm;
             rowDetail.stockquantityRef=row.quantity;
+            rowDetail.units=row.minUnits;
+            rowDetail.expSpec=row.minSpec;
+
             //rowDetail.invoiceDate = setDefaultDate();
             //rowDetail.invoiceNo = row.invoiceNo;
 

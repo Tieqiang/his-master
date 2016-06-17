@@ -93,7 +93,11 @@ $.extend($.fn.datagrid.methods, {
 });
 
 $(function () {
-
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     /**
      * 定义明细表格
      */
@@ -115,7 +119,15 @@ $(function () {
             title: '供应商',
             field: 'supplier',
             align: 'center',
-            width: '15%'
+            width: '15%',
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: '品次',
             field: 'accountReceivable',
@@ -179,6 +191,7 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var promiseDetail = loadDict();
     });
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',

@@ -635,7 +635,7 @@ $(function () {
                 price.expName = item.expName;
                 price.amountPerPackage = item.amountPerPackage;
                 price.expSpec = item.expSpec;
-                price.units = item.doseUnits;
+                price.units = item.units;
                 price.firmId = item.firmId;
                 price.materialCode = item.materialCode;
                 price.tradePrice = item.tradePrice;

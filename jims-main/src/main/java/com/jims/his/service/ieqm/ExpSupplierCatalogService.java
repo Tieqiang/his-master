@@ -86,13 +86,21 @@ public class ExpSupplierCatalogService {
         return expSupplierCatalogFacade.listExpSupplierWithDept(hospitalId) ;
     }
 
-    /***
+   /***
      * 查询所有供应商
      * @return
      */
     @GET
     @Path("list-all")
     public List<ExpSupplierVo> listAll(){
-         return expSupplierCatalogFacade.findAll(new ArrayList<ExpSupplierVo>()) ;
+        return expSupplierCatalogFacade.findAll(new ArrayList<ExpSupplierVo>()) ;
     }
- }
+
+
+    @GET
+    @Path("find-by-supplier-id")
+    public ExpSupplierCatalog findBySupplierId(@QueryParam("supplierId") String supplierId){
+        String id= expSupplierCatalogFacade.findBySuppierId(supplierId);
+        return expSupplierCatalogFacade.findById(id);
+    }
+}

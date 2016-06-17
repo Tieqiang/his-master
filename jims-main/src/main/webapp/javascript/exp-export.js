@@ -109,6 +109,7 @@ $(function () {
     /**
      * 设置明细信息
      */
+    var data1='';
     $("#exportDetail").datagrid({
         fit: true,
         fitColumns: true,
@@ -193,49 +194,109 @@ $(function () {
             value: 0,
             editor: {
                 type: 'numberbox', options: {
-                    onChange: function (newValue, oldValue) {
-                        var row = $("#exportDetail").datagrid('getData').rows[editIndex];
-                        var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
+                    onChange: function (newValue, oldValue)
+                    {
                         var value = $('#receiver').combobox('getValue');
-                        if (value != null && value != "") {
-                            if (exportToFlag == "toSupplier") {//进价
-                                $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
-                            } else {//
-                                $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+                         $.ajax({
+                            url:'/api/exp-supplier-catalog/find-by-supplier-id?supplierId='+value,
+                            TYPE:'POST',
+                            dataType:"JSON",
+                            cache:false,
+                            success:function(data){
+                                data1=data;
                             }
-                        } else {
-                            $.messager.alert("系统提示", "请选择出库单位", "error");
-                        }
+                        });
+                        var selectRows = $("#exportDetail").datagrid('getData').rows;
+                        var purchasePrice =selectRows[editIndex].purchasePrice;
+                        var retailPrice =selectRows[editIndex].retailPrice;
 
+                        var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
+                        if(data1!=null&&data1!=""){
+                            $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
+                        }else{
+                            $(amountEd.target).numberbox('setValue', newValue * retailPrice);
+                        }
                         var rows = $("#exportDetail").datagrid('getRows');
                         var totalAmount = 0;
-                        var backAmount = 0;
                         for (var i = 0; i < rows.length; i++) {
                             var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
                             if (rowIndex == editIndex) {
                                 continue;
                             }
-                            totalAmount += Number(rows[i].retailPrice * rows[i].quantity);
-                            backAmount += Number(rows[i].purchasePrice * rows[i].quantity);
+                            totalAmount += Number(rows[i].amount);
+                        }
+
+                        if(data1!=null&&data1!=""){
+
+                            $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
+                        }else{
+                            $(amountEd.target).numberbox('setValue', newValue * retailPrice);
                         }
                         if (totalAmount) {
-                            totalAmount += newValue * row.retailPrice;
+                            if(data1!=null&&data1!=""){
+                            totalAmount += newValue * purchasePrice;}else{
+                                totalAmount += newValue * retailPrice;
+                            }
                         } else {
-                            totalAmount = newValue * row.retailPrice;
+                            if(data1!=null&&data1!=""){
+                                totalAmount = newValue * purchasePrice;}else{
+                                totalAmount = newValue * retailPrice;
+                            }
                         }
-                        if (backAmount) {
-                            backAmount += newValue * row.purchasePrice;
-                        } else {
-                            backAmount = newValue * row.purchasePrice;
-                        }
-                        if (exportToFlag == "toSupplier") {
-                            $("#accountReceivable").numberbox('setValue', backAmount);
-                            upStorageFlag = false;
-                        }else{
-                            $("#accountReceivable").numberbox('setValue', totalAmount);
-                            upStorageFlag = false;
-                        }
+                        $("#accountReceivable").numberbox('setValue', totalAmount);
                     }
+//                    onChange: function (newValue, oldValue) {
+//                        var row = $("#exportDetail").datagrid('getData').rows[editIndex];
+//                        var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
+//                        var value = $('#receiver').combobox('getValue');
+//                        if (value != null && value != "") {
+////                            var supplierId=$("#receiver").combogrid("getValue");
+////                            if(supplierId!=""){
+//                                $.ajax({
+//                                    url:'/api/exp-supplier-catalog/find-by-supplier-id?supplierId='+value,
+//                                    TYPE:'POST',
+//                                    dataType:"JSON",
+//                                    cache:false,
+//                                    success:function(data){
+//                                          data1=data;
+//                                          if(data!=null&&data!=""){//是供货商
+//                                              $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+//                                          }else{
+//                                              $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+//                                          }
+//                                    }
+//                                });
+//                            }else{
+//                                $.messager.alert("系统提示","请选择发往科室！","info");
+//                                return;
+//                            }
+//
+////                            if (exportToFlag == "toSupplier") {//进价
+////                                $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
+////                            } else {//
+////                                $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
+////                            }
+////                        } else {
+////                            $.messager.alert("系统提示", "请选择出库单位", "error");
+////                        }
+//
+//                        var rows = $("#exportDetail").datagrid('getRows');
+//                        var totalAmount = 0;
+//                        for (var i = 0; i < rows.length; i++) {
+//                            var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
+//                            if (rowIndex == editIndex) {
+//                                continue;
+//                            }
+//                            totalAmount += Number(rows[i].amount);
+//                        }
+//                        if (totalAmount) {
+//                            totalAmount += newValue * purchasePrice;
+//                        } else {
+//                            totalAmount = newValue * purchasePrice;
+//                        }
+//                        $("#accountReceivable").numberbox('setValue', totalAmount);
+//                    }
+
                 }
             }, formatter: function (value, row, index) {
                 if (value > row.disNum) {
@@ -422,7 +483,7 @@ $(function () {
             success:function(data){
                 console.info(data);
                 for(var i=0;i<data.length;i++){
-                     $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
+                    $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
                 }
             }
         });
@@ -430,7 +491,7 @@ $(function () {
     loadExportClass();
 
     $("#exportClass").change(function() {
-         var checkValue = $("#exportClass").val();
+        var checkValue = $("#exportClass").val();
 //        alert(checkValue);
         var depts = [];
         var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
@@ -823,6 +884,7 @@ $(function () {
      * 进行数据校验
      */
     var dataValid = function () {
+        alert("valid");
         var rows = $("#exportDetail").datagrid('getRows');
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].quantity == 0) {
@@ -839,7 +901,7 @@ $(function () {
 
         //判断供货商是否为空
         var receiver = $("#receiver").combogrid('getValue');
-        var exportClass1 = $("#exportClass").combobox('getValue');
+        var exportClass1 = $("#exportClass").val();
         if (!receiver && exportClass1 != '盘亏出库') {
             $.messager.alert("系统提示", "产品出库，发往不能为空", 'error');
             return false;
@@ -863,8 +925,9 @@ $(function () {
         var expExportMasterBeanChangeVo = {};
         expExportMasterBeanChangeVo.inserted = [];
         var exportMaster = {};
-        exportMaster.documentNo = $("#documentNo").textbox('getValue');
-        exportMaster.exportClass = $("#exportClass").combobox('getText');
+        exportMaster.documentNo = $("#documentNo").val();
+        exportMaster.exportClass = getSelectedText("exportClass");
+//        alert( exportMaster.exportClass);
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');
@@ -958,6 +1021,7 @@ $(function () {
         }
         if (dataValid()) {
             var importVo = getCommitData();
+            alert(1);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
                 if (data.errorMessage) {
                     $.messager.alert("系统提示", data.errorMessage, 'error');
@@ -1011,5 +1075,12 @@ $(function () {
             $("#printDiv").dialog('open');
         }
     })
-
+    function getSelectedText(name){
+        var obj=document.getElementById(name);
+        for(i=0;i<obj.length;i++){
+            if(obj[i].selected==true){
+                return obj[i].innerText;//关键是通过option对象的innerText属性获取到选项文本
+            }
+        }
+    }
 })

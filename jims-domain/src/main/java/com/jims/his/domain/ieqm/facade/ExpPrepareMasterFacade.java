@@ -44,7 +44,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
      * @return
      */
     @Transactional
-    public List<ExpPrepareDetail> save(String expId, String supplierId, String amount,String staffName,double price,List<ExpPrepareDetail> list,String firmId,String subStorageId) {
+    public List<ExpPrepareDetail> save(String expId, String supplierId, String amount,String staffName,double price,List<ExpPrepareDetail> list,String firmId,String subStorageId,String phone,String oper) {
         /**
          * 在 exp_prepare_master 表中写入数据
          */
@@ -55,6 +55,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         expPrepareMaster.setPrepareDate(sdf.format(new Date()));
         expPrepareMaster.setOperator(staffName);
         expPrepareMaster.setPrice(price);
+        expPrepareMaster.setPhone(phone);
+        expPrepareMaster.setPreparePersonName(oper);
         expPrepareMaster.setSubStorageId(subStorageId);
         /**
          *
@@ -321,7 +323,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
          *exp_stock
          */
         int rows5=entityManager.createQuery("delete from ExpStock where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
-        if(rows1!=0&&rows2!=0&&rows3!=0&&rows4!=0&&rows5!=0){
+        if(rows1!=0&&rows2!=0&&rows3!=0&&rows4!=0){
             map.put("info","操作成功！");
         }else{
             map.put("info","参数不正确！");

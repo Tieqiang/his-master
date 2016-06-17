@@ -64,7 +64,7 @@ public class ExpImportMasterFacade extends BaseFacade {
             hql += " and dict.importDate<=to_date ( '" + stopDate + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
         if (supplier != null && supplier.trim().length() > 0) {
-            hql += " and (dict.supplier='" + supplier + "' or dict.supplier = (select storageCode from ExpStorageDept where storageName like '"+ supplier+"%') or dict.supplier = (select supplierId from ExpSupplierCatalog where supplier like '"+supplier+"%'))" ;
+            hql += " and dict.supplier='" + supplier + "'" ;
         }
         if (searchInput != null && searchInput.trim().length() > 0) {
             hql += " and dc.expCode='" + searchInput + "' \n" +
