@@ -91,7 +91,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 "          exp_DICT.exp_spec,\n" +
                 "          exp_stock.Quantity,\n" +
                 "          exp_stock.firm_id,\n" +
-                "           exp_price_list.exp_spec ,\n" +
+                "           exp_price_list.exp_spec , exp_dict.units,\n" +
                 "           exp_price_list.units,\n" +
                 "          \"EXP_DICT\".\"EXP_NAME\",\n" +
                 "          exp_storage_profile.LOW_LEVEL,\n" +
