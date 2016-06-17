@@ -124,16 +124,7 @@ $(function () {
             align: 'center',
             width: "6%",
             editable:false
-//            editor: {
-//                type: 'combobox',
-//                options: {
-//                    panelHeight: 200,
-//                    valueField: 'measuresName',
-//                    textField: 'measuresName',
-//                    method: 'get',
-//                    url: '/api/measures-dict/list'
-//                }
-//            }
+
 
         }, {
             title: '厂家',
@@ -237,46 +228,7 @@ $(function () {
                     editable: false
                 }
             }
-            //,
-            //editor: {
-            //    type: 'combogrid',
-            //    options: {
-            //        idField: 'minSpec',
-            //        textValue: 'minSpec',
-            //        singleSelect: true,
-            //        method: 'GET',
-            //        url: '/api/exp-dict/list-query',
-            //        mode: 'remote',
-            //        onBeforeLoad: function (para) {
-            //            para.expCode = expCode;
-            //        },
-            //        columns: [[{
-            //            field: 'expSpec', title: '包装规格', width: "50%"
-            //        }, {
-            //            field: 'units', title: '包装单位', width: "50%"
-            //        }]],
-            //        onClickRow: function (index, row) {
-            //            var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-            //            $(ed.target).combogrid('setValue', row.expSpec);
-            //            var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-            //            $(edu.target).combobox('setValue', row.units);
-            //        },
-            //        keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
-            //            enter: function (e) {
-            //
-            //                var row = $(this).combogrid('grid').datagrid('getSelected');
-            //                if (row) {
-            //                    var ed = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minSpec'});
-            //                    $(ed.target).combogrid('setValue', row.expSpec);
-            //                    var edu = $("#dg").datagrid('getEditor', {index: editIndex, field: 'minUnits'});
-            //                    $(edu.target).combobox('setValue', row.units);
-            //                }
-            //                $(this).combogrid('hidePanel');
-            //            }
-            //        })
-            //    }
-            //}
-        }, {
+         }, {
             title: '最小单位',
             field: 'minUnits',
             align: 'center',
@@ -288,18 +240,7 @@ $(function () {
                     editable: false
                 }
             }
-            //,
-            //editor: {
-            //    type: 'combobox',
-            //    options: {
-            //        panelHeight: 'auto',
-            //        valueField: 'measuresName',
-            //        textField: 'measuresName',
-            //        method: 'get',
-            //        url: '/api/measures-dict/list'
-            //    }
-            //}
-        }, {
+         }, {
             title: '住院收据费用分类',
             field: 'classOnInpRcpt',
             align: 'center',
@@ -578,7 +519,7 @@ $(function () {
                 });
 
             }, function (data) {
-                $.messager.alert('提示', data.responseJSON.errorMessage, "error");
+                $.messager.alert('提示', "保存失败", "error");
             })
         }
     });

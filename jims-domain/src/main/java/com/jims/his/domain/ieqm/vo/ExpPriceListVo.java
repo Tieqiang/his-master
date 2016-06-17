@@ -49,6 +49,45 @@ public class ExpPriceListVo implements Serializable {
     private String hospitalId;
     private String packageUnits ;
     private String expForm;
+    private String  toxiProperty;
+    private String dosePerUnit;
+    private String doseUnits;
+    private String  expIndicator;
+   private String  singleGroupIndicator;
+    private String storageCode;
+
+
+    public String getSingleGroupIndicator() {
+        return singleGroupIndicator;
+    }
+
+    public void setSingleGroupIndicator(String singleGroupIndicator) {
+        this.singleGroupIndicator = singleGroupIndicator;
+    }
+
+    public String getStorageCode() {
+        return storageCode;
+    }
+
+    public void setStorageCode(String storageCode) {
+        this.storageCode = storageCode;
+    }
+
+    public String getExpIndicator() {
+        return expIndicator;
+    }
+
+    public void setExpIndicator(String expIndicator) {
+        this.expIndicator = expIndicator;
+    }
+
+    public String getDoseUnits() {
+        return doseUnits;
+    }
+
+    public void setDoseUnits(String doseUnits) {
+        this.doseUnits = doseUnits;
+    }
 
     public ExpPriceListVo() {
     }
@@ -402,5 +441,21 @@ public class ExpPriceListVo implements Serializable {
 
     public void setExpForm(String expForm) {
         this.expForm = expForm;
+    }
+
+    public String getToxiProperty() {
+        return toxiProperty;
+    }
+
+    public void setToxiProperty(String toxiProperty) {
+        this.toxiProperty = toxiProperty;
+    }
+
+    public String getDosePerUnit() {
+        return dosePerUnit;
+    }
+
+    public void setDosePerUnit(String dosePerUnit) {
+        this.dosePerUnit = dosePerUnit;
     }
 }
