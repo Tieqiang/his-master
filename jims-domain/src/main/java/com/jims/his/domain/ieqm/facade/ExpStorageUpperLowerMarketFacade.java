@@ -59,7 +59,7 @@ public class ExpStorageUpperLowerMarketFacade extends BaseFacade {
                     " a.hospital_id='"+hospitalId+"' and b.exp_code='"+e.getExpCode()+"' and b.package_spec='"+e.getExpSpec()+"' ";
             List<String> obj = super.createNativeQuery(sql2).getResultList();
            if(obj!=null&&!obj.isEmpty()){
-               e.setStockQuantity(Integer.parseInt(obj.get(0).toString()));
+               e.setStockQuantity(Integer.parseInt(String.valueOf(obj.get(0))));
            }else{
                e.setStockQuantity(0);
            }
