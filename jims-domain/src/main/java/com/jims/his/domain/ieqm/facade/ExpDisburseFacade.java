@@ -50,7 +50,7 @@ public class ExpDisburseFacade extends BaseFacade {
                for(ExpDisburseRecDetail detail:details){
                    String documentNo= detail.getDocumentNo();
                    ExpImportMaster expImportMaster=findByDocument(documentNo);
-                   expImportMaster.setAccountPayed(expImportMaster.getAccountPayed()+detail.getPayAmount());
+                   expImportMaster.setAccountPayed((expImportMaster.getAccountPayed()==null?0.0:expImportMaster.getAccountPayed())+detail.getPayAmount());
                    merge(expImportMaster);
                }
 
@@ -88,7 +88,7 @@ public class ExpDisburseFacade extends BaseFacade {
             String id  =  detail.getId();
             Double disCount = detail.getDisburseCount();
             ExpImportDetail imDetail = get(ExpImportDetail.class,id);
-            imDetail.setDisburseCount(imDetail.getDisburseCount()+disCount);
+            imDetail.setDisburseCount((imDetail.getDisburseCount()==null?0.0:imDetail.getDisburseCount())+disCount);
             merge(imDetail);
         }
     }
