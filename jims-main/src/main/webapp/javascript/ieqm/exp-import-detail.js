@@ -202,15 +202,8 @@ $(function () {
             title: '厂家',
             field: 'firmId',
             align: 'center',
-            width: "7%",
-            formatter: function (value, row, index) {
-                for (var i = 0; i < suppliers.length; i++) {
-                    if (value == suppliers[i].supplierCode) {
-                        return suppliers[i].supplierName;
-                    }
-                }
-                return value;
-            }
+            width: "7%"
+
         }, {
             title: '价格',
             field: 'purchasePrice',
@@ -246,7 +239,15 @@ $(function () {
             title: '供货单位',
             field: 'supplier',
             align: 'center',
-            width: "8%"
+            width: "8%",
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: '批号',
             field: 'batchNo',
