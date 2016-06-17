@@ -62,4 +62,17 @@ public class ReportDictFacade extends BaseFacade {
         return newUpdateDict;
     }
 
+    /**
+     * 查询某一个医院的报表服务器配置
+     * @param hospitalId
+     * @return
+     */
+    public ReportDict findByHospitalId(String hospitalId) {
+        String hql = "from ReportDict as dict where dict.hospitalId='"+hospitalId+"'" ;
+        List<ReportDict> reportDicts = createQuery(ReportDict.class,hql,new ArrayList<Object>()).getResultList() ;
+        if(reportDicts.size()>0){
+            return reportDicts.get(0) ;
+        }
+        return null;
+    }
 }

@@ -93,13 +93,23 @@ $(function(){
             },{
                 title:'IP地址',
                 field:'ip',
-                width:"30%",
+                width:"15%",
                 editor:{type:'text'}
             },{
                 title:'端口号',
                 field:'port',
-                width:"20%",
+                width:"10%",
                 editor: {type: 'text'}
+            },{
+                title:"公网IP",
+                field:'remoteIp',
+                width:'15%',
+                editor:{type:'text'}
+            },{
+                title:"公网端口号",
+                field:'remotePort',
+                width:'10%',
+                editor:{type:'text'}
             }]],
             onClickRow: function (index, row) {
                 stopEdit();

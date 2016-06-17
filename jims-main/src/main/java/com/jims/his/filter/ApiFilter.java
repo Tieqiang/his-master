@@ -33,7 +33,7 @@ public class ApiFilter implements Filter {
         StringBuffer requestURL = httpServletRequest.getRequestURL();
         String path = requestURL.toString() ;
 
-        if(path.contains("sso")||path.contains("check-login")){
+        if(path.contains("sso")||path.contains("check-login")||path.contains("exp-prepare")){
             chain.doFilter(request,response);
             return ;
         }
@@ -46,7 +46,7 @@ public class ApiFilter implements Filter {
         if(cache !=null&&cache.getValue().equals(acceToken)){
             chain.doFilter(request,response);
         }else{
-            ((HttpServletResponse) response).sendError(302,"没有对应的权限");
+            ((HttpServletResponse) response).sendError(302,"has no right");
         }
         System.out.println(acceToken);
     }

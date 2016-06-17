@@ -10,6 +10,8 @@
         <!-- 用户 -->
         <class>com.jims.his.domain.common.entity.AppConfigerBaseinfo</class>
         <class>com.jims.his.domain.common.entity.AppConfigerParameter</class>
+        <class>com.jims.his.domain.common.entity.ReportDict</class>
+
         <class>com.jims.his.domain.ieqm.entity.MeasuresDict</class>
         <class>com.jims.his.domain.ieqm.entity.ExpExportMaster</class>
         <class>com.jims.his.domain.ieqm.entity.ExpOutBook</class>
@@ -84,6 +86,9 @@
         <class>com.jims.his.domain.common.entity.BaseDict</class>
         <class>com.jims.his.domain.ieqm.entity.BuyExpPlan</class>
         <class>com.jims.his.domain.common.entity.ReportDict</class>
+        <!--备货-->
+        <class>com.jims.his.domain.ieqm.entity.ExpPrepareMaster</class>
+        <class>com.jims.his.domain.ieqm.entity.ExpPrepareDetail</class>
         <!-- 提供商——Hibernate -->
 
 
@@ -136,10 +141,9 @@
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
              <!--Database Connection URL -->
             <!--<property name="hibernate.connection.url" value="jdbc:oracle:thin:@192.168.0.12:1521:orcl"/>-->
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@(description=(address=(protocol=tcp)(port=1521)(host=127.0.0.1))(connect_data=(service_name=orcl)))"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@(description=(address=(protocol=tcp)(port=1521)(host=192.168.6.143))(connect_data=(service_name=oracle)))"/>
             <property name="hibernate.connection.username" value="jims"/>
             <property name="hibernate.connection.password" value="jims"/>
-
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
