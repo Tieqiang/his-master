@@ -71,7 +71,11 @@ $(function () {
         height: 'auto',
         title: "付款单据打印"
     });
-
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     /**
      * 定义主表信息表格
      */
@@ -93,7 +97,16 @@ $(function () {
             title: '供货单位',
             field: 'receiver',
             width: '9%',
-            editor: {type: 'textbox'}
+            editor: {type: 'textbox'},
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
+
         },{
             title: '付款金额',
             field: 'payAmount',

@@ -49,7 +49,7 @@ public class ExpStorageUpperLowerMarketFacade extends BaseFacade {
                  "and EXP_STORAGE_PROFILE.STORAGE = '"+storageCode+"'" ;
         List<ExpStorageProfileVo> expStorageProfileVos = super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageProfileVo.class);
         for(ExpStorageProfileVo e:expStorageProfileVos){
-            String sql2="select nvl(b.quantity,0)  from exp_export_master a,exp_export_detail b WHERE a.document_no=b.document_no  and " +
+            String sql2="select nvl(sum(b.quantity),0)  from exp_export_master a,exp_export_detail b WHERE a.document_no=b.document_no  and " +
                     "a.storage='"+storageCode+"' and a.export_date >=\n" +
                     "                           to_date('"+startTime+"',\n" +
                     "                                   'yyyy-MM-dd HH24:MI:SS')\n" +

@@ -79,7 +79,11 @@ $(function () {
     var masterDataVo = {};//主表vo
     var masters = [];//信息
 
-
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     /**
      * 定义主表信息表格
      */
@@ -124,7 +128,15 @@ $(function () {
         },  {
             title: '供货商',
             field: 'supplier',
-            width: '7%'
+            width: '7%',
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
         }, {
             title: '入库类别',
             width: '7%',

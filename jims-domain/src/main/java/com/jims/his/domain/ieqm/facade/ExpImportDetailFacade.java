@@ -156,9 +156,9 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "          AND M.DOCUMENT_NO(+) = D.DOCUMENT_NO   \n" +
                 "          AND D.exp_spec = A.exp_spec   \n" +
                 "          AND D.exp_code = A.exp_code   \n" +
-                "          AND D.units = A.units   \n" +
+                "          AND D.units = A.units   \n";
 //                "          AND M.storage = A.storage_code   \n" +
-                "\t        AND D.QUANTITY > NVL(D.DISBURSE_COUNT,0)\n";
+//                "\t        AND D.QUANTITY > NVL(D.DISBURSE_COUNT,0)\n";
         if (s1 != null) {
             sql += " and M.import_Date>=to_date ( '" + s1 + "' , 'yyyy-MM-dd HH24:MI:SS' ) ";
         }
