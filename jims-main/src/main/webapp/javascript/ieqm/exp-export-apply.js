@@ -593,8 +593,13 @@ $(function () {
                 title: '结存量',
                 field: 'disNum',
                 width: "7%"
+            },{
+                title: '入库单据号',
+                field: 'importDocumentNo',
+                hidden:true
             }]],
         onDblClickRow: function (index, row) {
+            console.info(row);
             if (index != editIndex) {
                 $(this).datagrid('endEdit', editIndex);
                 editIndex = index;
@@ -731,6 +736,9 @@ $(function () {
                     precision: 2
                 }
             }
+        },{
+            field:"importDocumentNo",
+            hidden:true
         }]],
         onLoadSuccess:function(data){
             if(data.total==0){
@@ -900,6 +908,7 @@ $(function () {
             rowDetail.producedate = row.producedate;
             rowDetail.disinfectdate = row.disinfectdate;
             rowDetail.killflag = row.killflag;
+//            rowDetail.importDocumentNo=row.importDocumentNo;
             $("#right").datagrid('refreshRow', editIndex);
             $("#expDetailDialog").dialog('close');
             $("#right").datagrid('beginEdit', editIndex);

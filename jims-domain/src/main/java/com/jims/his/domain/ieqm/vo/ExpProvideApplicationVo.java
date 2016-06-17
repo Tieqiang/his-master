@@ -41,8 +41,11 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
 
     private String enterDate;
     private String deptName;
+
+
     private String deptId;
     private String expForm;
+    private String importDocumentNo;
 
     public ExpProvideApplicationVo(BeanChangeVo<ExpProvideApplication> changeVo, String applicationId, String expName, String applicantStorage, String applicantName, String provideStorage, String provideName, Short itemNo, String expCode, String expSpec, String packageSpec, Double quantity, String packageUnits, Date enterDateTime, String provideFlag, String exportDocumentNo, String applicantNo, String applicationMan, String patientId, Byte visitId, Boolean retflag, Date retdate, String retoperator, String auditingOperator, Double auditingQuantity, String enterDate, String deptName, String deptId, String expForm) {
         this.changeVo = changeVo;
@@ -145,6 +148,13 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
 
     public String getExpCode() {
         return expCode;
+    }
+    public String getImportDocumentNo() {
+        return importDocumentNo;
+    }
+
+    public void setImportDocumentNo(String importDocumentNo) {
+        this.importDocumentNo = importDocumentNo;
     }
 
     public void setExpCode(String expCode) {
@@ -310,4 +320,6 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
     public void setExpForm(String expForm) {
         this.expForm = expForm;
     }
+
+
 }
