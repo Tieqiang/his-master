@@ -68,7 +68,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 "               EXP_STOCK.QUANTITY quantity,\n" +
                 "                exp_price_list.retail_price,\n" +
                 "                \"EXP_DICT\".\"EXP_NAME\",\n" +
-                "                EXP_DICT.exp_form\n" +
+                "                EXP_DICT.exp_form,exp_dict.exp_spec,exp_dict.units\n" +
                 "  FROM \"EXP_DICT\", exp_stock, exp_storage_profile, exp_price_list\n" +
                 " WHERE (exp_dict.exp_code = \"EXP_STORAGE_PROFILE\".\"EXP_CODE\")\n" +
                 "   and  (\"EXP_STOCK\".\"PACKAGE_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\")\n" +
@@ -116,7 +116,7 @@ public class BuyExpPlanFacade extends BaseFacade {
                 "               EXP_STOCK.QUANTITY quantity,\n" +
                 "                exp_price_list.retail_price,\n" +
                 "                \"EXP_DICT\".\"EXP_NAME\",\n" +
-                "                EXP_DICT.exp_form\n" +
+                "                EXP_DICT.exp_form,exp_dict.exp_spec,exp_dict.units\n" +
                 "  FROM \"EXP_DICT\", exp_stock, exp_storage_profile, exp_price_list\n" +
                 " WHERE (exp_dict.exp_code = \"EXP_STORAGE_PROFILE\".\"EXP_CODE\")\n" +
                 "    and (\"EXP_STOCK\".\"PACKAGE_SPEC\" = \"EXP_STORAGE_PROFILE\".\"EXP_SPEC\")\n" +
