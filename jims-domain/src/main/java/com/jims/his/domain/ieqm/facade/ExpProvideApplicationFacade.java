@@ -183,6 +183,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
         String sql = "SELECT distinct " +
                 "         s1.storage_name provide_name," +
                 "         s2.storage_name applicant_name," +
+                "         s3.document_no import_document_no," +
                 "         EXP_PROVIDE_APPLICATION.ITEM_NO," +
                 "         EXP_PROVIDE_APPLICATION.EXP_CODE," +
                 "         EXP_PROVIDE_APPLICATION.ID APPLICATION_ID," +

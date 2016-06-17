@@ -38,9 +38,27 @@ public class ExpDisburseFacade extends BaseFacade {
         saveDisburseRecDetail(disburseVo);
         //3、更新exp_import_detail中的已付款数量
         updateImportDetail(disburseVo);
+
+
         //4、更新exp_storage_detp中的当前序号
         updateStorageDept(disburseVo);
+
+        //5跟新exp_import_master 表中的accounted-pay
+        updateImportMaster(disburseVo);
     }
+
+    private void updateImportMaster(ExpDisburseVo disburseVo) {
+               List<ExpDisburseRecDetail> details = disburseVo.getExpDisburseRecDetailBeanChangeVo().getInserted() ;
+               String documentNo  =  details.get(0).getDocumentNo();
+               ExpImportMaster expImportMaster=findByDocument(documentNo);
+               expImportMaster.setAccountPayed(details.get(0).getPayAmount());
+               merge(expImportMaster);
+     }
+
+    private ExpImportMaster findByDocument(String documentNo) {
+        return (ExpImportMaster)entityManager.createQuery("from ExpImportMaster where documentNo='"+documentNo+"'").getSingleResult();
+    }
+
     //4、更新exp_storage_detp中的当前序号
     private void updateStorageDept(ExpDisburseVo disburseVo) {
         ExpDisburseRec dis = disburseVo.getExpDisburseRecBeanChangeVo().getInserted().get(0);
