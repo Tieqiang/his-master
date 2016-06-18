@@ -350,32 +350,42 @@ public class ExpStockFacade extends BaseFacade {
         Date day = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String startTime = formatter.format(day.getTime());
-        String sql = "select a.exp_code,\n" +
-                "       a.package_spec,\n" +
-                "       a.package_units,\n" +
-                "       a.quantity stock_quantity,\n" +
-                "       b.upper_level,\n" +
-                "       b.low_level,\n" +
-                "       c.exp_name,\n" +
-                "       d.trade_price,\n" +
-                "       d.retail_price\n" +
-                " from exp_stock a, exp_storage_profile b, exp_dict c, exp_price_list d \n" +
-                " where a.exp_code = b.exp_code(+)\n" +
-                "   and a.storage = b.storage(+)\n" +
+        String sql = " select a.exp_code,\n" +
+                "        a.package_spec,\n" +
+                "        a.package_units,\n" +
+                "        a.quantity stock_quantity,\n" +
+                "        b.upper_level,\n" +
+                "        b.low_level,\n" +
+                "        c.exp_name,\n" +
+                "        d.trade_price,\n" +
+                "        d.retail_price\n" +
+                "   from exp_stock a, exp_storage_profile b, exp_dict c, exp_price_list d\n" +
+                "  where a.firm_id = d.firm_id\n" +
+                "       and d.firm_id=b.supplier \n" +
+                "    and a.storage = b.storage(+)\n" +
+                "    and a.storage = '"+storage+"'\n" +
+                "    and a.hospital_id = d.hospital_id\n" +
+                "    and a.hospital_id = '"+hospitalId+"'\n" +
+                "       \n" +
+                "    and a.PACKAGE_units = b.PACKAGE_units(+)\n" +
+                "    and a.units = c.units\n" +
+                "    and b.package_units = d.units\n" +
+                "    and c.units = d.min_units\n" +
                 "    and a.PACKAGE_spec = b.exp_spec\n" +
-                "   and a.PACKAGE_units = b.PACKAGE_units(+)\n" +
-                "   and a.storage = '" + storage + "'\n" +
-                "   and a.hospital_id = '" + hospitalId + "'" +
-                "   and a.exp_code = c.exp_code\n" +
-//                "   and a.exp_spec = c.exp_spec\n" +
-                "   and a.units = c.units\n" +
-                "   and a.exp_code = d.exp_code\n" +
-                "   AND a.PACKAGE_spec = d.exp_spec \n" +
-                "   and (a.quantity>b.upper_level or  a.quantity<b.low_level)  \n" +
-                "    AND a.PACKAGE_units = d.units \n" +
-                "   and a.firm_id = d.firm_id\n" +
-                "   and ((to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) > d.start_date and to_date ( '" + startTime + "' , 'yyyy-MM-dd HH24:MI:SS' ) < d.stop_date) or\n" +
-                "       d.stop_date is null)";
+                "    and a.exp_spec = c.exp_spec\n" +
+                "    and c.exp_spec = d.min_spec\n" +
+                "    and b.exp_spec = d.exp_spec\n" +
+                "    AND a.PACKAGE_spec = d.exp_spec\n" +
+                "    and a.exp_code = b.exp_code(+)\n" +
+                "    and b.exp_code = c.exp_code\n" +
+                "    and c.exp_code = d.exp_code\n" +
+                "       \n" +
+                "    and (a.quantity > b.upper_level or a.quantity < b.low_level)\n" +
+                "       \n" +
+                "    and ((to_date('"+startTime+"', 'yyyy-MM-dd HH24:MI:SS') >\n" +
+                "        d.start_date and\n" +
+                "        to_date('"+startTime+"', 'yyyy-MM-dd HH24:MI:SS') <\n" +
+                "        d.stop_date) or d.stop_date is null)\n ";
         if(expName!=null&&!"".equals(expName)){
             sql+=" and c.exp_name like '%"+expName+"%'";
         }
