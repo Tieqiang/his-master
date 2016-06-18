@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  *消耗品入库
@@ -251,9 +252,8 @@ public class ExpImportService {
     @GET
     @Path("exp-single-account")
     public List<ExpImportDetailVo> getExpSingleAccount(@QueryParam("hospitalId") String hospitalId, @QueryParam("startDate") Date startDate, @QueryParam("stopDate") Date stopDate, @QueryParam("storage") String storage, @QueryParam("expCode") String expCode, @QueryParam("packageSpec") String packageSpec) {
-        List<ExpImportDetailVo> dicts = expImportDetailFacade.getSingleAccount(hospitalId, startDate, stopDate, storage, expCode, packageSpec);
-        return dicts;
-
+        List<ExpImportDetailVo> map = expImportDetailFacade.getSingleAccount(hospitalId, startDate, stopDate, storage, expCode, packageSpec);
+        return map;
     }
 
     /**

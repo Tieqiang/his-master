@@ -884,7 +884,7 @@ $(function () {
      * 进行数据校验
      */
     var dataValid = function () {
-        alert("valid");
+//        alert("valid");
         var rows = $("#exportDetail").datagrid('getRows');
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].quantity == 0) {

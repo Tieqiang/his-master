@@ -9,13 +9,12 @@ import com.jims.his.domain.ieqm.entity.ExpSupplierCatalog;
 import com.jims.his.domain.ieqm.vo.ExpDisburseRecVo;
 import com.jims.his.domain.ieqm.vo.ExpImportDetailVo;
 import com.jims.his.domain.ieqm.vo.ExpImportVo;
+import com.jims.his.domain.ieqm.vo.PropertyVo;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by wangbinbin on 2015/10/22.
@@ -428,7 +427,7 @@ public class ExpImportDetailFacade extends BaseFacade {
      * @param packageSpec  消耗品规格
      * @return
      */
-    public List<ExpImportDetailVo> getSingleAccount(String hospitalId, Date startDate, Date stopDate, String storage, String expCode, String packageSpec) {
+    public List<ExpImportDetailVo>  getSingleAccount(String hospitalId, Date startDate, Date stopDate, String storage, String expCode, String packageSpec) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String s1 = formatter.format(startDate.getTime());
         String s2 = formatter.format(stopDate.getTime());
@@ -465,10 +464,45 @@ public class ExpImportDetailFacade extends BaseFacade {
         if (null != packageSpec && !packageSpec.trim().equals("")) {
             sql += "      AND PACKAGE_SPEC = '"+packageSpec+"'\n";
         }
-        List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
-        return nativeQuery;
+
+
+         List<ExpImportDetailVo> list = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
+         List<PropertyVo> propertyVos=new ArrayList<PropertyVo>();
+        for(ExpImportDetailVo e:list){
+            PropertyVo p=new PropertyVo(e.getExpCode(),e.getPackageSpec(),e.getFirmId());
+            if(!propertyVos.contains(p)){
+                propertyVos.add(p);
+            }
+        }
+        List<ExpImportDetailVo> l=new ArrayList<ExpImportDetailVo>();
+        for(int i=0;i<propertyVos.size();i++){
+            l=findData(list,propertyVos.get(i),l) ;
+            ExpImportDetailVo e=new ExpImportDetailVo();
+            e.setIoClass("单品总合计");
+            double importPrice=0.00;
+            double exportPrice=0.00;
+            for(ExpImportDetailVo v:l){
+                importPrice+=v.getImportPrice();
+                exportPrice+=v.getExportPrice();
+            }
+            e.setImportPrice(importPrice);
+            e.setExportPrice(exportPrice);
+            l.add(e);
+         }
+         return l;
     }
 
+
+    private List<ExpImportDetailVo> findData(List<ExpImportDetailVo> list,PropertyVo strArr,List<ExpImportDetailVo> l){
+//        List<ExpImportDetailVo> result=new ArrayList<ExpImportDetailVo>();
+        for(ExpImportDetailVo e:list){
+            PropertyVo s=new PropertyVo(e.getExpCode(),e.getPackageSpec(),e.getFirmId());
+             if(s.equals(strArr)){
+                l.add(e);
+             }
+        }
+        return l;
+     }
     /**
      * 按入库类型入库统计
      * @param hospitalId   医院id
