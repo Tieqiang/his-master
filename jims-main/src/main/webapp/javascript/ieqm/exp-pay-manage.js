@@ -59,7 +59,11 @@ $(function () {
         }
     }
     var editRowIndex  ; //编辑行
-
+    var suppliers = {};
+    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+        suppliers = data;
+        return suppliers;
+    });
     /**
      * 定义明细表格
      */
@@ -76,7 +80,16 @@ $(function () {
         columns: [[{
             title: '供货商',
             field: 'supplier',
-            width: '6%'
+            width: '6%',
+            formatter: function (value, row, index) {
+                for (var i = 0; i < suppliers.length; i++) {
+                    if (value == suppliers[i].supplierCode) {
+                        return suppliers[i].supplierName;
+                    }
+                }
+                return value;
+            }
+
         }, {
             title: '代码',
             field: 'expCode',

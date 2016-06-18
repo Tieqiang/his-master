@@ -234,38 +234,51 @@ $(function () {
     });
     //设置时间
     var curr_time = new Date();
-    $("#startDate").datetimebox("setValue", myFormatter2(curr_time));
-    $("#stopDate").datetimebox("setValue", myFormatter2(curr_time));
+    $("#startDate").datetimebox("setValue", myFormatter(curr_time));
+    $("#stopDate").datetimebox("setValue", myFormatter(curr_time));
     $('#startDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
-        onSelect: function (date) {
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-            $('#startDate').datetimebox('setText', dateTime);
-            $('#startDate').datetimebox('hidePanel');
-        }
+        formatter: myFormatter
+//        onSelect: function (date) {
+//            var y = date.getFullYear();
+//            var m = date.getMonth() + 1;
+//            var d = date.getDate();
+//            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+//            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//            $('#startDate').datetimebox('setText', dateTime);
+//            $('#startDate').datetimebox('hidePanel');
+//        }
     });
     $('#stopDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
-        onSelect: function (date) {
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
-            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-            $('#stopDate').datetimebox('setText', dateTime);
-            $('#stopDate').datetimebox('hidePanel');
-        }
+        formatter: myFormatter
+//        onSelect: function (date) {
+//            var y = date.getFullYear();
+//            var m = date.getMonth() + 1;
+//            var d = date.getDate();
+//            var time = $('#stopDate').datetimebox('spinner').spinner('getValue');
+//            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+//            $('#stopDate').datetimebox('setText', dateTime);
+//            $('#stopDate').datetimebox('hidePanel');
+//        }
     });
+    function myFormatter(val,row) {
+        if(val!=null){
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+            var str = y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(min<10?('0'+min):min)+':'+(sec<10?('0'+sec):sec);
+            return str;
+        }
+    }
     //入库分类字典
     $("#importClass").combobox({
         url: '/api/exp-import-class-dict/list',
