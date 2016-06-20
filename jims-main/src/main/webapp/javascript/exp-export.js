@@ -203,47 +203,47 @@ $(function () {
                             dataType:"JSON",
                             cache:false,
                             success:function(data){
-                                data1=data;
+                                var selectRows = $("#exportDetail").datagrid('getData').rows;
+                                var purchasePrice =selectRows[editIndex].purchasePrice;
+                                var retailPrice =selectRows[editIndex].retailPrice;
+
+                                var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
+                                if(data!=null&&data!=""){
+                                    $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
+                                }else{
+                                    $(amountEd.target).numberbox('setValue', newValue * retailPrice);
+                                }
+                                var rows = $("#exportDetail").datagrid('getRows');
+                                var totalAmount = 0;
+                                for (var i = 0; i < rows.length; i++) {
+                                    var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
+                                    if (rowIndex == editIndex) {
+                                        continue;
+                                    }
+                                    totalAmount += Number(rows[i].amount);
+                                }
+
+//                                if(data1!=null&&data1!=""){
+//
+//                                    $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
+//                                }else{
+//                                    $(amountEd.target).numberbox('setValue', newValue * retailPrice);
+//                                }
+                                if (totalAmount) {
+                                    if(data!=null&&data!=""){
+                                        totalAmount += newValue * purchasePrice;}else{
+                                        totalAmount += newValue * retailPrice;
+                                    }
+                                } else {
+                                    if(data!=null&&data!=""){
+                                        totalAmount = newValue * purchasePrice;}else{
+                                        totalAmount = newValue * retailPrice;
+                                    }
+                                }
+                                $("#accountReceivable").numberbox('setValue', totalAmount);
                             }
                         });
-                        var selectRows = $("#exportDetail").datagrid('getData').rows;
-                        var purchasePrice =selectRows[editIndex].purchasePrice;
-                        var retailPrice =selectRows[editIndex].retailPrice;
 
-                        var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
-                        if(data1!=null&&data1!=""){
-                            $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
-                        }else{
-                            $(amountEd.target).numberbox('setValue', newValue * retailPrice);
-                        }
-                        var rows = $("#exportDetail").datagrid('getRows');
-                        var totalAmount = 0;
-                        for (var i = 0; i < rows.length; i++) {
-                            var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
-                            if (rowIndex == editIndex) {
-                                continue;
-                            }
-                            totalAmount += Number(rows[i].amount);
-                        }
-
-                        if(data1!=null&&data1!=""){
-
-                            $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
-                        }else{
-                            $(amountEd.target).numberbox('setValue', newValue * retailPrice);
-                        }
-                        if (totalAmount) {
-                            if(data1!=null&&data1!=""){
-                            totalAmount += newValue * purchasePrice;}else{
-                                totalAmount += newValue * retailPrice;
-                            }
-                        } else {
-                            if(data1!=null&&data1!=""){
-                                totalAmount = newValue * purchasePrice;}else{
-                                totalAmount = newValue * retailPrice;
-                            }
-                        }
-                        $("#accountReceivable").numberbox('setValue', totalAmount);
                     }
 //                    onChange: function (newValue, oldValue) {
 //                        var row = $("#exportDetail").datagrid('getData').rows[editIndex];
