@@ -225,7 +225,7 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].stockquantityRef == undefined || rows[i].stockquantityRef <= 0) {
+            if (rows[i].stockquantityRef == undefined || rows[i].stockquantityRef <0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:库存参考量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);
