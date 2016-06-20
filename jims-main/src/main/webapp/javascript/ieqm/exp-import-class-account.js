@@ -192,6 +192,11 @@ $(function () {
         var promiseDetail = loadDict();
     });
 
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var printImportClass='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -201,7 +206,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-import-class-account.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-class-account.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&importClass=" + printImportClass;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {
@@ -224,6 +230,12 @@ $(function () {
         var importPrice = 0.00;
         var promise =$.get("/api/exp-import/exp-import-class-account",importDetailDataVO,function(data){
             detailsData=data;
+
+            //为报表准备字段
+            printImportClass=importDetailDataVO.importClass;
+            startDates=importDetailDataVO.startDate;
+            stopDates=importDetailDataVO.stopDate;
+
             for(var i = 0 ;i<data.length;i++){
                 importPrice+=data[i].importPrice;
             }

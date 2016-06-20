@@ -295,7 +295,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-by-subStorage-export-count.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-by-subStorage-export-count.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&sunStorage="+sunStorage+"&expForm="+expForms;
+            $("#report").prop("src",cjkEncode(https));
+            //$("#report").prop("src", parent.config.defaultReportPath + "exp-by-subStorage-export-count.cpt");
         }
     });
     $("#printBtn").on('click', function () {
@@ -307,6 +309,12 @@ $(function () {
         $("#printDiv").dialog('open');
 
     });
+    //为报表准备数据
+    var startDates='';
+    var stopDates='';
+    var sunStorage='';
+    var expForms='';
+
     var loadDict = function(){
         masterDataVo.formClass = $("#formClass").combobox("getText");
         var sub = $("#subStorage").textbox("getText");
@@ -323,6 +331,13 @@ $(function () {
         var retailAmount = 0.00;
         var promise =$.get("/api/exp-export/exp-by-subStorage-export-count",masterDataVo,function(data){
             console.log(data);
+
+            //为报表准备数据
+            startDates=masterDataVo.startDate;
+            stopDates=masterDataVo.stopDate;
+            sunStorage=masterDataVo.subStorage;
+            expForms=masterDataVo.formClass;
+
             masters =data ;
             for(var i = 0 ;i<data.length;i++){
                 retailAmount+=data[i].retailAmount;

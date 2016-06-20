@@ -221,6 +221,12 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var promiseDetail = loadDict();
     });
+
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var suppliers='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -230,7 +236,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-import-supplier-search.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-supplier-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&supplier=" + suppliers;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {
@@ -244,6 +251,8 @@ $(function () {
     });
     var importDetailDataVO = {};//传递vo
     var detailsData = [];//信息
+
+
     var loadDict = function(){
         importDetailDataVO.stopDate = new Date($("#stopDate").datebox("getText"));
         importDetailDataVO.startDate = new Date($("#startDate").datebox("getText"));
@@ -254,6 +263,12 @@ $(function () {
         var purchaseAmount = 0.00;
         var promise =$.get("/api/exp-import/exp-import-supplier-search",importDetailDataVO,function(data){
             detailsData=data;
+
+            //为报表准备字段
+            startDates=importDetailDataVO.startDate  ;
+            stopDates=importDetailDataVO.stopDate ;
+            suppliers=importDetailDataVO.supplier;
+
             for(var i = 0 ;i<data.length;i++){
                 purchaseAmount+=data[i].purchaseAmount;
                 payAmount+=data[i].payAmount;

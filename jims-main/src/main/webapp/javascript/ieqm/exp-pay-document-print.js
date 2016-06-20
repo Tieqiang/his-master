@@ -386,12 +386,11 @@ $(function () {
         closed: true,
         onOpen: function () {
             var disburseRecNo = $("#startBill").textbox("getText");
-            var startDate = $("#startDate").datetimebox("getText");
-            var stopDate = $("#stopDate").datetimebox("getText");
-            var supplier = $("#supplier").combogrid("getValue");
-            var hospitalId = parent.config.hospitalId;
-            var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "exp-pay-document-print-approving.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier);
+            var startDates = $("#startDate").datetimebox("getText");
+            var stopDates = $("#stopDate").datetimebox("getText");
+            var supplier = $("#supplier").combogrid("getText");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-pay-document-print-approving.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&disburseRecNo=" + disburseRecNo + "&receive=" + supplier;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printAccBtn").on('click',function(){
