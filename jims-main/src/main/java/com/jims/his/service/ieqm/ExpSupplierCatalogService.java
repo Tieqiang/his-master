@@ -101,6 +101,8 @@ public class ExpSupplierCatalogService {
     @Path("find-by-supplier-id")
     public ExpSupplierCatalog findBySupplierId(@QueryParam("supplierId") String supplierId){
         String id= expSupplierCatalogFacade.findBySuppierId(supplierId);
+        if(id!=null)
         return expSupplierCatalogFacade.findById(id);
+        return null;
     }
 }
