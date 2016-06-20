@@ -550,7 +550,7 @@ $(function () {
 //                return false;
 //
 //            }
-            if (rows[i].wantNumber == undefined || rows[i].wantNumber <= 0) {
+            if (rows[i].wantNumber == undefined || rows[i].wantNumber < 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:计划数量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
 

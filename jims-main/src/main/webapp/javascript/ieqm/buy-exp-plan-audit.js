@@ -336,7 +336,7 @@ $(function () {
                 $("#right").datagrid('selectRow', i);
                 return false;
             }*/
-            if (rows[i].checkNumber == undefined || rows[i].checkNumber <= 0) {
+            if (rows[i].checkNumber == undefined || rows[i].checkNumber < 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:审核数量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);
@@ -354,13 +354,13 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].stockquantityRef == undefined || rows[i].stockquantityRef <= 0) {
+            if (rows[i].stockquantityRef == undefined || rows[i].stockquantityRef < 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:库存参考数不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <= 0) {
+            if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:消耗量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);

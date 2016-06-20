@@ -246,7 +246,7 @@ $(function () {
                 $("#right").datagrid('selectRow', i);
                 return false;
             }*/
-            if (rows[i].stockNumber == undefined || rows[i].stockNumber <= 0) {
+            if (rows[i].stockNumber == undefined || rows[i].stockNumber <0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:采购数量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);
@@ -270,7 +270,7 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <= 0) {
+            if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:消耗量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);
