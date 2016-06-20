@@ -498,6 +498,7 @@ $(function () {
             for(var i=0;i<insertData.length;i++){
                 insertData[i].minSpec=insertData[i].expSpec;
                 insertData[i].minUnits=insertData[i].units;
+                insertData[i].hospitalId=parent.config.hospitalId;
             }
         }
         expDictChangeVo.inserted = insertData;
