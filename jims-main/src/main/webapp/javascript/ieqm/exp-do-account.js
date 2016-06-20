@@ -335,7 +335,9 @@ $(function () {
             var hospitalId = parent.config.hospitalId;
             var storage = parent.config.storageCode;
 
-            $("#report").prop("src",parent.config.defaultReportPath + "exp-do-account.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&imClass="+imClass+"&startBill="+startBill+"&stopBill="+stopBill+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&billRadio="+billRadio+"&expCode="+expCode+"&loginId="+parent.config.loginId);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-do-account.cpt"+"&startDate=" + startDate + "&stopDate=" + stopDate+"&maxDocumentNo=" + stopBill + "&minDocumentNo=" + startBill+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&expCode="+expCode+"&tallyFlag="+billRadio+"&supplier="+supplier;
+            $("#report").prop("src",cjkEncode(https));
+            //$("#report").prop("src",parent.config.defaultReportPath + "exp-do-account.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&imClass="+imClass+"&startBill="+startBill+"&stopBill="+stopBill+"&startDate="+startDate+"&stopDate="+stopDate+"&supplier="+supplier+"&billRadio="+billRadio+"&expCode="+expCode+"&loginId="+parent.config.loginId);
         }
     })
     $("#printBtn").on('click',function(){

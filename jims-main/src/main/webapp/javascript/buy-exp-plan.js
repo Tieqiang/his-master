@@ -505,14 +505,14 @@ $(function () {
             $.messager.alert("系统提示", "采购计划为空，不允许计算", 'error');
             return false;
         }
-        for (var i = 0; i < rows.length; i++) {
+        //for (var i = 0; i < rows.length; i++) {
             //删除空行
-            if ($.trim(rows[i].expCode) == '' || $.trim(rows[i].expName) == '' || $.trim(rows[i].firmId) == '') {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
-                $("#right").datagrid('selectRow', i);
-                return false;
-            }
-        }
+            //if ($.trim(rows[i].expCode) == '' || $.trim(rows[i].expName) == '' || $.trim(rows[i].firmId) == '') {
+            //    $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
+            //    $("#right").datagrid('selectRow', i);
+            //    return false;
+            //}
+        //}
         if ($("#expScope").combobox("getValue") == 1) {
             $.postJSON('/api/buy-exp-plan/generate-num-up?storageCode='+ parent.config.storageCode, rows, function (data) {
 
@@ -543,13 +543,13 @@ $(function () {
     var checkValidate = function (rows) {
         for (var i = 0; i < rows.length; i++) {
             //删除空行
-            if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
-                $("#right").datagrid('selectRow', i);
-                $("#right").datagrid("loadData", data);
-                return false;
-
-            }
+            //if (rows[i].expCode == undefined || rows[i].expName == undefined || rows[i].firmId == undefined || rows[i].units == undefined) {
+            //    $.messager.alert("系统提示", "第" + (i + 1) + "行为空请删除", 'error');
+            //    $("#right").datagrid('selectRow', i);
+            //    $("#right").datagrid("loadData", data);
+            //    return false;
+            //
+            //}
             if (rows[i].wantNumber == undefined || rows[i].wantNumber <= 0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:计划数量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
@@ -582,6 +582,8 @@ $(function () {
             expChangeVo.updated = updated;
             expChangeVo.deleted = deleted;
             $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
+                //console.log(data);
+                buyIds=data[0].buyId;
                 $.messager.alert("系统提示", "暂存成功", "info");
                 $("#right").datagrid('loadData', {total: 0, rows: []});
                 $.get("/api/buy-exp-plan/get-buy-id", function (data) {
@@ -662,6 +664,7 @@ $(function () {
         }
 
     });
+    var buyIds='';
     //打印按钮操作
     $("#printDiv").dialog({
         title: '打印预览',
@@ -671,9 +674,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-
-
-            $("#report").prop("src", parent.config.defaultReportPath + "buy-exp-plan.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/buy-exp-plan.cpt"+"&buyId=" +buyIds ;
+            $("#report").prop("src",cjkEncode(https));
+            //$("#report").prop("src", parent.config.defaultReportPath + "buy-exp-plan.cpt");
         }
     });
     $("#print").on('click', function () {

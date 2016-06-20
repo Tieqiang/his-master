@@ -1188,8 +1188,8 @@ $(function () {
         closed: true,
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue');
-            //$("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-import.cpt&__bypagesize__=false&documentNo=" + printDocumentNo);
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-import.cpt&documentNo=" + printDocumentNo);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import.cpt&documentNo=" + printDocumentNo;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printClose").on('click', function () {

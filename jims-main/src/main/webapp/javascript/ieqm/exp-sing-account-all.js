@@ -167,6 +167,11 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var promiseDetail = loadDict();
     });
+
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -176,7 +181,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-single-account-all.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-single-account-all.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {
@@ -197,6 +203,10 @@ $(function () {
         importDetailDataVO.hospitalId = parent.config.hospitalId;
         importDetailDataVO.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-import/exp-single-account",importDetailDataVO,function(data){
+
+            //为报表准备字段
+            startDates=importDetailDataVO.startDate;
+            stopDates=importDetailDataVO.stopDate;
 
             if(data.length<=0){
                 $.messager.alert('系统提示','数据库暂无数据','info');

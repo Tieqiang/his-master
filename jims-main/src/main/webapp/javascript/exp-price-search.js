@@ -197,7 +197,8 @@ $(function () {
         closed: true,
         onOpen: function () {
             var expCode = $("#search").combogrid('getValue')
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-price-search.cpt&expCode=" + expCode);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-price-search.cpt&expCode=" + expCode+"&hospitalId="+parent.config.hospitalId;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printBtn").on('click', function () {

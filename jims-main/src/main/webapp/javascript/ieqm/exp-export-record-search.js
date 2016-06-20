@@ -283,6 +283,13 @@ $(function () {
     $("#searchBtn").on('click', function () {
         loadDict();
     });
+
+    //准备报表字段
+    var expCodes='';
+    var expForms='';
+    var startDates='';
+    var stopDates='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -292,7 +299,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-export-record-search.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-record-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expForm=" + expForms + "&expCode=" + expCodes;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printBtn").on('click', function () {
@@ -316,6 +324,12 @@ $(function () {
         var retailAmount = 0.00;
         var promise =$.get("/api/exp-export/exp-export-record-search",masterDataVo,function(data){
             masters =data ;
+
+            expCodes=masterDataVo.expCode;
+            expForms=masterDataVo.formClass;
+            startDates=masterDataVo.startDate;
+            stopDates=masterDataVo.stopDate;
+
             for(var i = 0 ;i<data.length;i++){
                 retailAmount+=data[i].retailAmount;
                 payAmount+=data[i].payAmount;

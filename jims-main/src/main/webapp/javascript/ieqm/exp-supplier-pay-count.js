@@ -3,5 +3,6 @@
  * Created by wangbinbin on 2015/11、02.
  */
 $(function(){
-    $("#report").prop("src",parent.config.defaultReportPath + "exp-supplier-pay-count.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId);
+    var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-supplier-pay-count.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode;
+    $("#report").prop("src",cjkEncode(https));
 });

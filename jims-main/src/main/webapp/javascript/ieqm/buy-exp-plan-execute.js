@@ -40,11 +40,13 @@ $(function () {
         }]],
         onClickRow: function (index, row) {
             $.get("/api/buy-exp-plan/get-detail?buyId=" + row.buyId, function (data) {
+                buyIds=row.buyId;
                 $("#right").datagrid("loadData", data);
             });
         }
     });
 
+    var buyIds='';
     //右侧列表初始化
     $("#right").datagrid({
         title: '采购单详情',
@@ -296,10 +298,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-
-            //var hospitalId = parent.config.hospitalId;
-            //var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "buy-exp-plan-execute.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/buy-exp-plan-execute.cpt"+"&buyId=" + buyIds;
+            $("#report").prop("src",cjkEncode(https));
+            //$("#report").prop("src",parent.config.defaultReportPath + "buy-exp-plan-execute.cpt");
         }
     })
     $("#print").on('click',function(){
