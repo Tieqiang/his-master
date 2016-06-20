@@ -120,6 +120,7 @@ $(function () {
         })
 
     });
+    var overDates='';
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -129,7 +130,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-expire-stock-count.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-expire-stock-count.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode+"&overDate=" + overDates;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printBtn").on('click', function () {
@@ -145,6 +147,7 @@ $(function () {
     var loadDict = function () {
         var overDate = $("#overDate").combogrid('getText');
         expires.slice(0,expires.length);
+        overDates=overDate;
         var expirePromise =   $.get("/api/exp-stock/expire-count?storage=" + parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&overDate="+overDate, function(data){
            expires = data;
         });

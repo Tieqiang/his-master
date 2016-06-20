@@ -39,7 +39,7 @@ comment on column EXP_PREPARE_MASTER.prepare_person_name
   is '备货人';
 comment on column EXP_PREPARE_MASTER.sub_storage_id
   is '子库房主键';
-comment on column EXP_PREPARE_MASTER.prepare_person_name
+comment on column EXP_PREPARE_MASTER.flag
   is '备用字段';
 comment on column EXP_PREPARE_MASTER.phone
   is '备货人电话';

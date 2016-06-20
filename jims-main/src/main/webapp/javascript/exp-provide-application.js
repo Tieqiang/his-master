@@ -328,7 +328,8 @@ $(document).ready(function () {
         onOpen: function () {
             var applicationStorage = $("#storage").combobox("getValue");
             var applicantNo = $("#applicantNo").textbox("getValue");
-            $("#report").prop("src",parent.config.defaultReportPath + "exp-provide-application.cpt&storageCode="+parent.config.storageCode+"&appNo="+applicantNo+"&applyStorage="+applicationStorage);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-provide-application.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&appNo="+applicantNo+"&applyStorage="+applicationStorage;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printBtn").on('click',function(){

@@ -114,6 +114,9 @@ $(function () {
     }
     var loadDict = function () {
         var expName=$("#expName").val();
+        //为报表准备字段
+        expNames=expName;
+
 //        alert(expName+"expName");
         var dicts = {};
         var promise = $.get("/api/exp-storage-zero-manage/list?storageCode=" +parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&expName="+expName, function(data){
@@ -135,6 +138,9 @@ $(function () {
     $("#searchBtn").on('click',function(){
         loadDict();
     });
+
+    //为报表准备字段
+    var expNames='';
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -144,7 +150,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-storage-zero-manage.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-storage-zero-manage.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode+"&expName="+expNames;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {

@@ -124,7 +124,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-change-price-count.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-change-price-count.cpt"+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates;
+            $("#report").prop("src",cjkEncode(https));
+            //$("#report").prop("src", parent.config.defaultReportPath + "exp-change-price-count.cpt");
         }
     })
     $("#printBtn").on('click', function () {
@@ -136,9 +138,18 @@ $(function () {
         $("#printDiv").dialog('open');
 
     })
+
+    //为报表准备数据
+    var startDates='';
+    var stopDates='';
+
     var loadDict = function () {
         var startDate = $('#startDate').datebox('getText');
         var stopDate = $('#stopDate').datebox('getText');
+        //为报表准备数据
+        startDates=startDate;
+        stopDates=stopDate;
+
         if(!startDate || !stopDate){
             $.messager.alert("系统提醒","请选择开始和结束日期","error") ;
             return ;

@@ -582,6 +582,8 @@ $(function () {
             expChangeVo.updated = updated;
             expChangeVo.deleted = deleted;
             $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
+                //console.log(data);
+                buyIds=data[0].buyId;
                 $.messager.alert("系统提示", "暂存成功", "info");
                 $("#right").datagrid('loadData', {total: 0, rows: []});
                 $.get("/api/buy-exp-plan/get-buy-id", function (data) {
@@ -662,6 +664,7 @@ $(function () {
         }
 
     });
+    var buyIds='';
     //打印按钮操作
     $("#printDiv").dialog({
         title: '打印预览',
@@ -671,9 +674,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-
-
-            $("#report").prop("src", parent.config.defaultReportPath + "buy-exp-plan.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/buy-exp-plan.cpt"+"&buyId=" +buyIds ;
+            $("#report").prop("src",cjkEncode(https));
+            //$("#report").prop("src", parent.config.defaultReportPath + "buy-exp-plan.cpt");
         }
     });
     $("#print").on('click', function () {

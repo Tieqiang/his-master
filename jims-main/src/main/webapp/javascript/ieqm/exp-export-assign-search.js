@@ -104,6 +104,10 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var promiseDetail = loadDict();
     });
+
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -113,7 +117,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-export-assign-search.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-assign-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {
@@ -136,6 +141,11 @@ $(function () {
         importDetailDataVO.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-export/exp-export-assign-search",importDetailDataVO,function(data){
             detailsData=data;
+
+            //为报表准备字段
+            startDates=importDetailDataVO.startDate;
+            stopDates=importDetailDataVO.stopDate;
+
             for(var l = 0 ;l<data.length;l++){
                     importPrice+=data[l].payAmount;
         }
