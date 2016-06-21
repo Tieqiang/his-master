@@ -39,6 +39,7 @@ $(function () {
         onChange: function (newValue, oldValue) {
             $.get("/api/buy-exp-plan/list-temp?buyId=" + newValue, function (data) {
                 $("#right").datagrid('loadData', data);
+                buyIds=newValue;
                 newBuyId = newValue;
                 $.get("/api/buy-exp-plan/get-buy-no?buyId=" + newBuyId, function (data) {
                     maxBuyNo = data;
@@ -584,6 +585,7 @@ $(function () {
             $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
                 //console.log(data);
                 buyIds=data[0].buyId;
+                $("#print").trigger('click');
                 $.messager.alert("系统提示", "暂存成功", "info");
                 $("#right").datagrid('loadData', {total: 0, rows: []});
                 $.get("/api/buy-exp-plan/get-buy-id", function (data) {
@@ -598,6 +600,8 @@ $(function () {
                     textField: 'className',
                     onChange: function (newValue, oldValue) {
                         $.get("/api/buy-exp-plan/list-temp?buyId=" + newValue, function (data) {
+                            printFlag='1';
+                            buyIds=newValue;
                             $("#right").datagrid('loadData', data);
                             newBuyId = newValue;
                             $.get("/api/buy-exp-plan/get-buy-no?buyId=" + newBuyId, function (data) {
@@ -637,6 +641,7 @@ $(function () {
 
             $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
+                $("#print").trigger('click');
                 $("#right").datagrid('loadData', {total: 0, rows: []});
                 $.get("/api/buy-exp-plan/get-buy-id", function (data) {
                     newBuyId = data;
@@ -665,6 +670,7 @@ $(function () {
 
     });
     var buyIds='';
+    var printFlag='0';
     //打印按钮操作
     $("#printDiv").dialog({
         title: '打印预览',
@@ -676,12 +682,14 @@ $(function () {
         onOpen: function () {
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/buy-exp-plan.cpt"+"&buyId=" +buyIds ;
             $("#report").prop("src",cjkEncode(https));
+            console.log(https);
             //$("#report").prop("src", parent.config.defaultReportPath + "buy-exp-plan.cpt");
         }
     });
     $("#print").on('click', function () {
+        console.log(buyIds);
         var printData = $("#right").datagrid('getRows');
-        if (printData.length <= 0) {
+        if (buyIds==''){
             $.messager.alert('系统提示', '请先查询数据', 'info');
             return;
         }
