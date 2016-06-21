@@ -1122,6 +1122,7 @@ $(function () {
                         }
                         $.messager.alert('系统提示', '出库成功', 'success',function(){
                             saveFlag = true;
+                            $("#print").trigger('click');
 //                            $("#print").trigger('click');
                             //parent.updateTab('申请出库', '/his/ieqm/exp-export-apply');
                             //刷新左侧列表
