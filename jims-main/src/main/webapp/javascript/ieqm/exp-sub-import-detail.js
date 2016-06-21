@@ -298,8 +298,17 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-sub-import-detail.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&subStorage="+subStor;+"&expForm="+expForms;
-            $("#report").prop("src",cjkEncode(https));        }
+            if(subStor=='全部'){
+                subStor='';
+            }
+            if(expForms=='全部'){
+                expForms='';
+            }
+            console.log(expForms);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-sub-import-detail.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&subStorage="+subStor+"&expForm="+expForms;
+            $("#report").prop("src",cjkEncode(https));
+            console.log(https);
+        }
     });
     $("#print").on('click', function () {
         var printData = $("#dg").datagrid('getRows');
