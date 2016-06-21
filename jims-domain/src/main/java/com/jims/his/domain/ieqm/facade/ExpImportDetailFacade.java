@@ -13,6 +13,7 @@ import com.jims.his.domain.ieqm.vo.PropertyVo;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -540,6 +541,17 @@ public class ExpImportDetailFacade extends BaseFacade {
             sql+="   GROUP BY   exp_import_master.IMPORT_CLASS,SUPPLIER";
         }
         List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
+        if(nativeQuery!=null&&!nativeQuery.isEmpty()){
+              BigDecimal price=new BigDecimal(0.0);
+              for(ExpImportDetailVo e:nativeQuery){
+                BigDecimal bigDecimal=new BigDecimal(e.getImportPrice());
+                price=price.add(bigDecimal);
+             }
+            ExpImportDetailVo v=new ExpImportDetailVo();
+            v.setSupplier("合计");
+            v.setImportPrice(price.doubleValue());
+            nativeQuery.add(v);
+        }
         return nativeQuery;
     }
 
