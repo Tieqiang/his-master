@@ -270,6 +270,11 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var promiseDetail = loadDict();
     });
+
+    var startDates='';
+    var stopDates='';
+    var expCodes='';
+    var packageSpecs='';
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -279,7 +284,11 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-single-account.cpt");
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
+            console.log(expCodes+packageSpecs);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-single-account-all.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expCode=" + expCodes + "&packageSpec=" + packageSpecs;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {
@@ -316,6 +325,12 @@ $(function () {
                 $("#searchInput").combogrid("clear");
                 return;
             }
+            // 为报表准备数据
+            expCodes=importDetailDataVO.expCode;
+            packageSpecs=importDetailDataVO.packageSpec;
+            startDates=importDetailDataVO.startDate;
+            stopDates=importDetailDataVO.stopDate;
+
             detailsData=data;
             for(var i = 0 ;i<data.length;i++){
                 importNum+=data[i].importNum;
