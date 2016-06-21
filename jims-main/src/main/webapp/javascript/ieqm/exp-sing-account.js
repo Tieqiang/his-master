@@ -287,7 +287,7 @@ $(function () {
             startDates=myFormatter2(startDates);
             stopDates=myFormatter2(stopDates);
             console.log(expCodes+packageSpecs);
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-single-account-all.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expCode=" + expCodes + "&packageSpec=" + packageSpecs;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-single-account.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expCode=" + expCodes + "&packageSpec=" + packageSpecs;
             $("#report").prop("src",cjkEncode(https));
         }
     });
