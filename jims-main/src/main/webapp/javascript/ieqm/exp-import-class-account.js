@@ -206,8 +206,11 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-class-account.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&importClass=" + printImportClass;
             $("#report").prop("src",cjkEncode(https));
+            console.log(https);
         }
     });
     $("#printBtn").on('click', function () {
