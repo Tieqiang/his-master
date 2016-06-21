@@ -235,10 +235,10 @@ $(function () {
             printImportClass=importDetailDataVO.importClass;
             startDates=importDetailDataVO.startDate;
             stopDates=importDetailDataVO.stopDate;
-
-            for(var i = 0 ;i<data.length;i++){
-                importPrice+=data[i].importPrice;
-            }
+//
+//            for(var i = 0 ;i<data.length;i++){
+//                importPrice+=Number(data[i].importPrice);
+//            }
         },'json');
         promise.done(function(){
             if(detailsData.length<=0){
@@ -247,13 +247,12 @@ $(function () {
                 return;
             }
             $("#importDetail").datagrid('loadData',detailsData);
-            $('#importDetail').datagrid('appendRow', {
-                supplier: "合计：",
-                importPrice: importPrice
-            });
-            $("#importDetail").datagrid("autoMergeCells", ['importClass']);
+//            $('#importDetail').datagrid('appendRow', {
+//                supplier: "合计：",
+//                importPrice: importPrice
+//            });
+//            $("#importDetail").datagrid("autoMergeCells", ['importClass']);
         })
-        detailsData.splice(0,detailsData.length);
-
-    }
+//        detailsData.splice(0,detailsData.length);
+     }
 })
