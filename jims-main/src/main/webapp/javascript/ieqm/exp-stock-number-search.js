@@ -226,7 +226,6 @@ $(function () {
             }
             var printSubStorageClass = $("#subStorageClass").combogrid('getText');
             var printSupplier = $("#supplier").combogrid('getText');
-            alert(stocksDatas);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-stock-number-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode +"&expCode="+printExpName+"&subStorage="+printSubStorageClass+"&expForm="+printFormClass+"&firmId="+printSupplier+"&quantity="+ stocksDatas;
             $("#report").prop("src",cjkEncode(https));
         }
