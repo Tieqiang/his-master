@@ -236,7 +236,10 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-supplier-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&supplier=" + suppliers;
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
+            console.log(startDates+"+"+stopDates+suppliers);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-supplier-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&supplier=" + suppliers+"&storage="+parent.config.storageCode;
             $("#report").prop("src",cjkEncode(https));
         }
     });
