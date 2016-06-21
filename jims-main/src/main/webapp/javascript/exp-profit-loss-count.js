@@ -174,6 +174,12 @@ $(function () {
         })
 
     })
+
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var storages='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -183,7 +189,11 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-profit-loss-count.cpt");
+            if(storages=='全部库存单位'){
+                storages='';
+            }
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-profit-loss-count.cpt"+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+ "&storage=" + storages;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printBtn").on('click', function () {
@@ -200,6 +210,11 @@ $(function () {
         var stopDate = $('#stopDate').datetimebox('getText');
         var storageCode = $("#storageName").combogrid("getValue");
         var flag = "全部库存单位";
+
+        //为报表准备字段
+        startDates=startDate;
+        stopDates=stopDate;
+
         if(!startDate || !stopDate){
             $.messager.alert("系统提醒","请选择开始和结束日期","error") ;
             return ;
@@ -232,6 +247,7 @@ $(function () {
                 $("#dg").datagrid('loadData', []);
                 return;
             }
+            storages=storageCode;
         });
         return pricePromise ;
     }

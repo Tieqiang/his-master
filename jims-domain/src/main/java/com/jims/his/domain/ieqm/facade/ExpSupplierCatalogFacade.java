@@ -236,7 +236,11 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
      * @return
      */
     public String findBySuppierId(String firmId) {
-         return (String)entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getSingleResult();
+         List<String> obj=entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getResultList();
+         if(obj!=null&&!obj.isEmpty()){
+             return (String)obj.get(0);
+         }
+         return null;
     }
 
     /**

@@ -498,6 +498,7 @@ $(function () {
             for(var i=0;i<insertData.length;i++){
                 insertData[i].minSpec=insertData[i].expSpec;
                 insertData[i].minUnits=insertData[i].units;
+                insertData[i].hospitalId=parent.config.hospitalId;
             }
         }
         expDictChangeVo.inserted = insertData;
@@ -533,7 +534,8 @@ $(function () {
         closed: true,
         onOpen: function () {
             expCode = $('#expName').combogrid('getValue');
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-price-list.cpt&expCode=" + expCode);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-price-list.cpt&expCode=" + expCode+"&hospitalId="+parent.config.hospitalId;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#print").on('click', function () {

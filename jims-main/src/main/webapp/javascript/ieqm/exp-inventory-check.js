@@ -663,7 +663,8 @@ $(function () {
         buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-inventory-check.cpt&checkYearMonth="+printDate);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-inventory-check.cpt&checkYearMonth="+printDate;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#print").on('click', function () {

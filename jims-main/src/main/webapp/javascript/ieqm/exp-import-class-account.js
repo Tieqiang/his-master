@@ -192,6 +192,11 @@ $(function () {
         var promiseDetail = loadDict();
     });
 
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var printImportClass='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -201,7 +206,11 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-import-class-account.cpt");
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-class-account.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&importClass=" + printImportClass;
+            $("#report").prop("src",cjkEncode(https));
+            console.log(https);
         }
     });
     $("#printBtn").on('click', function () {
@@ -224,9 +233,15 @@ $(function () {
         var importPrice = 0.00;
         var promise =$.get("/api/exp-import/exp-import-class-account",importDetailDataVO,function(data){
             detailsData=data;
-            for(var i = 0 ;i<data.length;i++){
-                importPrice+=data[i].importPrice;
-            }
+
+            //为报表准备字段
+            printImportClass=importDetailDataVO.importClass;
+            startDates=importDetailDataVO.startDate;
+            stopDates=importDetailDataVO.stopDate;
+//
+//            for(var i = 0 ;i<data.length;i++){
+//                importPrice+=Number(data[i].importPrice);
+//            }
         },'json');
         promise.done(function(){
             if(detailsData.length<=0){
@@ -235,13 +250,12 @@ $(function () {
                 return;
             }
             $("#importDetail").datagrid('loadData',detailsData);
-            $('#importDetail').datagrid('appendRow', {
-                supplier: "合计：",
-                importPrice: importPrice
-            });
-            $("#importDetail").datagrid("autoMergeCells", ['importClass']);
+//            $('#importDetail').datagrid('appendRow', {
+//                supplier: "合计：",
+//                importPrice: importPrice
+//            });
+//            $("#importDetail").datagrid("autoMergeCells", ['importClass']);
         })
-        detailsData.splice(0,detailsData.length);
-
-    }
+//        detailsData.splice(0,detailsData.length);
+     }
 })

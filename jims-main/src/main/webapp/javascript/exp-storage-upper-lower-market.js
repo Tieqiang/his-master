@@ -173,6 +173,13 @@ $(function () {
     $("#searchBtn").on('click', function () {
          loadDict();
     });
+
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var supplierIds='';
+
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -182,7 +189,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-storage-upper-lower-market.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-storage-upper-lower-market.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&supplierId="+supplierIds;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {
@@ -201,6 +209,9 @@ $(function () {
             $.messager.alert("系统提醒", "请选择统计区间", "error");
             return;
         }
+        //为报表准备字段
+        startDates=startDate;
+        stopDates=endDate;
 //        var supplierId=$("#supplier").combogrid("getValue");
         var pricePromise = $.get("/api/exp-storage-profile-market/upper-lower?storageCode=" + parent.config.storageCode+"&startTime="+startDate+"&stopTime="+stopDate+"&hospitalId="+parent.config.hospitalId, function (data) {
             $.each(data, function (index, item) {

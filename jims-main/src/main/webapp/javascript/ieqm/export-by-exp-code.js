@@ -166,6 +166,12 @@ $(function () {
             if (data.length > 0) {
                 var sumQuantity = 0.00;
                 var sumAmount = 0.00;
+
+                //为报表准备字段
+                startDates=startDate;
+                stopDates=endDate;
+                expCodes=expCode;
+
                 $.each(data, function (index, item) {
                     sumQuantity += item.quantity;
                     sumAmount += item.amount;
@@ -185,6 +191,12 @@ $(function () {
     $("#saveAs").on('click', function () {
         $.messager.alert("系统提示", "另存为", "info");
     });
+
+//为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var expCodes='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -194,7 +206,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "export-by-exp-code.cpt");
+
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/"+"export-by-exp-code.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expCode="+expCodes;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#print").on('click', function () {

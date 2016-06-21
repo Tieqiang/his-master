@@ -133,6 +133,11 @@ $(function () {
     $("#searchBtn").on('click', function () {
         var supplierId=$("#supplier").combogrid("getValue");
         var dept=$("#dept").combogrid("getValue");
+
+        //为报表准备字段
+        supplierIds=supplierId;
+        expCodes=dept;
+
         $.get("/api/exp-prepare/find-detail?supplierId=" + supplierId + "&dept=" + dept, function (data) {
             list=data;
               for(var i=0;i<list.length;i++){
@@ -146,7 +151,6 @@ $(function () {
 //            console.log(list);
             $("#dg").datagrid('loadData', list);
         });
-
     })
      /**
      * 删除按钮
@@ -181,4 +185,32 @@ $(function () {
             $.messager.alert("系统提示", "请选择要删除的行", 'info');
         }
     });
+
+    //为报表准备字段
+    var supplierIds='';
+    var expCodes='';
+    //打印
+    $("#printDiv").dialog({
+        title: '打印预览',
+        width: 1000,
+        height: 520,
+        catch: false,
+        modal: true,
+        closed: true,
+        onOpen: function () {
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/"+"exp-prepare-detail.cpt"+"&id=" + supplierIds + "&expCode=" + expCodes;
+            $("#report").prop("src",cjkEncode(https));
+        }
+
+    });
+    $("#print").on('click', function () {
+        var printData = $("#dg").datagrid('getRows');
+        if (printData.length <= 0) {
+            $.messager.alert('系统提示', '请先查询数据', 'info');
+            return;
+        }
+        $("#printDiv").dialog('open');
+
+    });
+
 });

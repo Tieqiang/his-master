@@ -129,13 +129,27 @@ $(function () {
         }]]
     });
 
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var subStor='';
+
     $("#search").on('click', function () {
         var startDate = $("#startDate").datetimebox('getText');
         var endDate = $("#endDate").datetimebox('getText');
         var subStorage = $("#subStorage").combobox("getText");
         var storageCode = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
-        //
+        //为报表字段准备数据
+        startDates=startDate;
+        stopDates=endDate;
+        if(subStorage=='全部'){
+            subStor='';
+        }else{
+            subStor=subStorage;
+        }
+        console.log(subStor);
+
         $.get("/api/exp-export/export-detail-by-exp-class?type=storage&storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate + "&value=" + subStorage, function (data) {
             if (data.length > 0) {
                 var sum = 0.00;
@@ -155,6 +169,7 @@ $(function () {
             }
         });
     });
+
     $("#setPrint").on('click', function () {
         $.messager.alert("系统提示", "打印设置", "info");
     });
@@ -170,8 +185,11 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "export-detail-by-storage.cpt");
-        }
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/"+"export-detail-by-storage.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+ "&startDate=" + startDates + "&stopDate=" + stopDates + "&subStorage="+subStor;
+            console.info(cjkEncode(https));
+            $("#report").prop("src",cjkEncode(https));
+         }
+
     });
     $("#print").on('click', function () {
         var printData = $("#dg").datagrid('getRows');
@@ -182,4 +200,6 @@ $(function () {
         $("#printDiv").dialog('open');
 
     });
+
+
 });

@@ -40,11 +40,13 @@ $(function () {
         }]],
         onClickRow: function (index, row) {
             $.get("/api/buy-exp-plan/get-detail?buyId=" + row.buyId, function (data) {
+                buyIds=row.buyId;
                 $("#right").datagrid("loadData", data);
             });
         }
     });
 
+    var buyIds='';
     //右侧列表初始化
     $("#right").datagrid({
         title: '采购单详情',
@@ -223,7 +225,7 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].stockquantityRef == undefined || rows[i].stockquantityRef <= 0) {
+            if (rows[i].stockquantityRef == undefined || rows[i].stockquantityRef <0) {
                 $.messager.alert("系统提示", "第" + (i + 1) + "行:库存参考量不能小于0 请重新填写", 'error');
                 $("#right").datagrid('selectRow', i);
                 //$("#right").datagrid('beginEdit', i);
@@ -296,10 +298,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-
-            //var hospitalId = parent.config.hospitalId;
-            //var storage = parent.config.storageCode;
-            $("#report").prop("src",parent.config.defaultReportPath + "buy-exp-plan-execute.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/buy-exp-plan-execute.cpt"+"&buyId=" + buyIds;
+            $("#report").prop("src",cjkEncode(https));
+            //$("#report").prop("src",parent.config.defaultReportPath + "buy-exp-plan-execute.cpt");
         }
     })
     $("#print").on('click',function(){

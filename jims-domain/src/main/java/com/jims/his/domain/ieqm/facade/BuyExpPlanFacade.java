@@ -249,7 +249,8 @@ public class BuyExpPlanFacade extends BaseFacade {
                         "\t\t\tFROM exp_storage_profile\n" +
                         "\t\t\tWHERE storage ='"+storageCode+"'\n" +
                         "\t\t\tAND EXP_code = '"+temp.getExpCode()+"'\n" +
-                        "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'";
+                        "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'" +
+                        "and supplier='"+temp.getFirmId()+"'";
 
                 List result = super.createNativeQuery(sql).getResultList();
                 if (result != null && result.size() > 0) {
@@ -279,7 +280,8 @@ public class BuyExpPlanFacade extends BaseFacade {
                         "\t\t\tFROM exp_storage_profile\n" +
                         "\t\t\tWHERE storage = '"+storageCode+"'\n" +
                         "\t\t\tAND EXP_code = '"+temp.getExpCode()+"'\n" +
-                        "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'";
+                        "\t\t\tAnd exp_spec = '"+temp.getPackSpec()+"'" +
+                        "and supplier='"+temp.getFirmId()+"'";
                 List result = super.createNativeQuery(sql).getResultList();
                 if (result != null && result.size() > 0) {
                     BigDecimal up = (BigDecimal) result.get(0);

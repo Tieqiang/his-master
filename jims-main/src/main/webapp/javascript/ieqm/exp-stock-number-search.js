@@ -226,8 +226,8 @@ $(function () {
             }
             var printSubStorageClass = $("#subStorageClass").combogrid('getText');
             var printSupplier = $("#supplier").combogrid('getText');
-            var url = parent.config.defaultReportPath + "exp-stock-number-search.cpt&expName=" + printExpName + "&hospitalId=" + parent.config.hospitalId + "&supplier=" + printSupplier + "&subStorage=" +printSubStorageClass + "&storageCode="+parent.config.storageCode+"&formClass=" + printFormClass ;
-            $("#report").prop("src", url);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-stock-number-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode +"&expCode="+printExpName+"&subStorage="+printSubStorageClass+"&expForm="+printFormClass+"&firmId="+printSupplier;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printClose").on('click', function () {

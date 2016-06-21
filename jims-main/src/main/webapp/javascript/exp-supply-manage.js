@@ -126,6 +126,14 @@ $(function () {
             var flag1= 1;
             var flag2= 2;
             var radio = $("#ft input[name='radioOne']:checked").val();
+
+            if(radio!=1||radio!=2){
+                supplyIndicators='';
+            }else{
+                supplyIndicators=radio;
+            }
+            expStocks=expCode;
+
             if(expCode!=null){
                 for(var i = 0 ;i<stocks.length;i++){
                     if(expCode==stocks[i].expCode){
@@ -185,6 +193,11 @@ $(function () {
             });
         }
     });
+
+    //为报表准备字段
+    var supplyIndicators='';
+    var expStocks='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -194,7 +207,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-supply-manage.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/"+"exp-supply-manage.cpt"+"&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&expStock=" + expStocks + "&supplyIndicator=" + supplyIndicators;
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {

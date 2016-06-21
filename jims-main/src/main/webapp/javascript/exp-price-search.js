@@ -132,10 +132,13 @@ $(function () {
         promise.done(function(){
             if(prices.length<=0){
                 $.messager.alert("系统提示", "数据库暂无数据");
+                printFlag=false;
                 $("#dg").datagrid('loadData', []);
                 return;
             }
             $("#dg").datagrid('loadData', prices);
+            times=0;
+            printFlag=true;
         })
 
     });
@@ -156,10 +159,13 @@ $(function () {
             $("#dg").datagrid('loadData', nowPriceData);
             if(nowPriceData.length<=0){
                 $.messager.alert("系统提示", "数据库暂无数据");
+                printFlag=false;
                 $("#dg").datagrid('loadData', []);
                 return;
             }
             nowPriceData.splice(0,nowPriceData.length);
+            times=1;
+            printFlag=true;
         });
 
     })
@@ -181,12 +187,18 @@ $(function () {
             if(oldPriceData.length<=0){
                 $.messager.alert("系统提示", "数据库暂无数据");
                 $("#dg").datagrid('loadData', []);
+                printFlag=false;
                 return;
             }
             $("#dg").datagrid('loadData', oldPriceData);
+            printFlag=true;
+            times=2;
             oldPriceData.splice(0,oldPriceData.length);
         });
     })
+
+    var times='';
+    var printFlag=false;
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -197,12 +209,16 @@ $(function () {
         closed: true,
         onOpen: function () {
             var expCode = $("#search").combogrid('getValue')
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-price-search.cpt&expCode=" + expCode);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-price-search.cpt&expCode=" + expCode+"&hospitalId="+parent.config.hospitalId+"&times="+times;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     $("#printBtn").on('click', function () {
-        var printData = $("#dg").datagrid('getRows');
-        if (printData.length <= 0) {
+        var rows = $("#dg").datagrid("getRows");
+        console.log(rows);
+        if (printFlag){
+
+        }else {
             $.messager.alert('系统提示', '请先查询数据', 'info');
             return;
         }

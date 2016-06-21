@@ -13,6 +13,7 @@ import com.jims.his.domain.ieqm.vo.PropertyVo;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -476,25 +477,31 @@ public class ExpImportDetailFacade extends BaseFacade {
         }
         List<ExpImportDetailVo> l=new ArrayList<ExpImportDetailVo>();
         for(int i=0;i<propertyVos.size();i++){
-            l=findData(list,propertyVos.get(i),l) ;
+            List<ExpImportDetailVo> list1=new ArrayList<ExpImportDetailVo>();
+            list1=findData(list,propertyVos.get(i)) ;
             ExpImportDetailVo e=new ExpImportDetailVo();
             e.setIoClass("单品总合计");
             double importPrice=0.00;
             double exportPrice=0.00;
-            for(ExpImportDetailVo v:l){
+            for(ExpImportDetailVo v:list1){
                 importPrice+=v.getImportPrice();
                 exportPrice+=v.getExportPrice();
             }
             e.setImportPrice(importPrice);
             e.setExportPrice(exportPrice);
-            l.add(e);
-         }
+            list1.add(e);
+            for(ExpImportDetailVo v1:list1){
+                l.add(v1);
+            }
+            list1.clear();
+          }
          return l;
     }
 
 
-    private List<ExpImportDetailVo> findData(List<ExpImportDetailVo> list,PropertyVo strArr,List<ExpImportDetailVo> l){
-//        List<ExpImportDetailVo> result=new ArrayList<ExpImportDetailVo>();
+    private List<ExpImportDetailVo> findData(List<ExpImportDetailVo> list,PropertyVo strArr){
+        List<ExpImportDetailVo> l=new ArrayList<ExpImportDetailVo>();
+        l.clear();
         for(ExpImportDetailVo e:list){
             PropertyVo s=new PropertyVo(e.getExpCode(),e.getPackageSpec(),e.getFirmId());
              if(s.equals(strArr)){
@@ -534,6 +541,17 @@ public class ExpImportDetailFacade extends BaseFacade {
             sql+="   GROUP BY   exp_import_master.IMPORT_CLASS,SUPPLIER";
         }
         List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
+        if(nativeQuery!=null&&!nativeQuery.isEmpty()){
+              BigDecimal price=new BigDecimal(0.0);
+              for(ExpImportDetailVo e:nativeQuery){
+                BigDecimal bigDecimal=new BigDecimal(e.getImportPrice());
+                price=price.add(bigDecimal);
+             }
+            ExpImportDetailVo v=new ExpImportDetailVo();
+            v.setSupplier("合计");
+            v.setImportPrice(price.doubleValue());
+            nativeQuery.add(v);
+        }
         return nativeQuery;
     }
 

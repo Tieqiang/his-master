@@ -78,7 +78,8 @@ $(function () {
         buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "exp-menu-search.cpt&storageCode=" + parent.config.storageCode + "&hospitalId=" + parent.config.hospitalId);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-menu-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode;
+            $("#report").prop("src",cjkEncode(https));
         }
     })
     //打印
