@@ -139,6 +139,10 @@ $(function () {
             if (data.length > 0) {
                 var sum = 0.00;
 
+                startDates=startDate;
+                stopDates=endDate;
+                expClasss=expClass;
+
                 $.each(data, function (index, item) {
                     sum += item.importAmount;
                 });
@@ -158,6 +162,10 @@ $(function () {
     $("#saveAs").on('click', function () {
         $.messager.alert("系统提示", "另存为", "info");
     });
+
+    var startDates='';
+    var stopDates='';
+    var expClasss='';
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -167,7 +175,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "export-detail-by-exp-class.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/export-detail-by-exp-class.cpt"+"&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expClass=" + expClasss;
+
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#print").on('click', function () {

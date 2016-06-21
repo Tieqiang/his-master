@@ -117,6 +117,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-assign-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates;
             $("#report").prop("src",cjkEncode(https));
         }
