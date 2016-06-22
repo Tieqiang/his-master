@@ -148,6 +148,9 @@ $(function () {
             var loadDicts = function(){
                 var  dis = {};
                 dis.disburseRecNo = rowData.disburseRecNo;
+
+                nober=rowData.disburseRecNo;
+
                 dis.hospitalId = parent.config.hospitalId;
                 dis.storage = parent.config.storageCode;
                 var promiseDis =$.get("/api/exp-dis/exp-pay-detail-print",dis,function(data){
@@ -364,7 +367,7 @@ $(function () {
         })
     })
     var loadDict = function(){
-
+        nober='';
         masterDataVo.disburseRecNo = $("#startBill").textbox("getText");
         masterDataVo.startDate = new Date($("#startDate").datetimebox("getText"));
         masterDataVo.stopDate = new Date($("#stopDate").datetimebox("getText"));
@@ -377,6 +380,8 @@ $(function () {
         return promise;
 
     }
+
+    var nober='';
     $("#printDiv").dialog({
         title: '打印预览',
         width: 1000,
@@ -389,7 +394,7 @@ $(function () {
             var startDates = $("#startDate").datetimebox("getText");
             var stopDates = $("#stopDate").datetimebox("getText");
             var supplier = $("#supplier").combogrid("getValue");
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-pay-document-print-appro.cpt&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&disburseRecNo=" + disburseRecNo + "&receive=" + supplier;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-pay-document-print-appro.cpt&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&disburseRecNo=" + disburseRecNo + "&receive=" + supplier+"&nober=" + nober;
             $("#report").prop("src",cjkEncode(https));
         }
     })
