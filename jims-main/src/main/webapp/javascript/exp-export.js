@@ -582,7 +582,7 @@ $(function () {
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
             if (data.length > 0) {
-                $(this).combobox('select', data[0].fundItem);
+                $(this).combobox('setValue',data[0].serialNo);
             }
         }
     });
