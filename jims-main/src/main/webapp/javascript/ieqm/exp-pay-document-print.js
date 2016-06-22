@@ -388,8 +388,8 @@ $(function () {
             var disburseRecNo = $("#startBill").textbox("getText");
             var startDates = $("#startDate").datetimebox("getText");
             var stopDates = $("#stopDate").datetimebox("getText");
-            var supplier = $("#supplier").combogrid("getText");
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-pay-document-print-approving.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&disburseRecNo=" + disburseRecNo + "&receive=" + supplier;
+            var supplier = $("#supplier").combogrid("getValue");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-pay-document-print-appro.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&disburseRecNo=" + disburseRecNo + "&receive=" + supplier;
             $("#report").prop("src",cjkEncode(https));
         }
     })
@@ -414,7 +414,7 @@ $(function () {
             var disburseRecNo = printData[0].disburseRecNo;
             var hospitalId = parent.config.hospitalId;
             var storage = parent.config.storageCode;
-            $("#reports").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-document-print-appro.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo);
+            $("#reports").prop("src",parent.config.defaultReportPath + "/exp/exp_print/exp-pay-document-print-approving.cpt&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&disburseRecNo="+disburseRecNo);
         }
     })
     $("#printDocBtn").on('click',function(){
