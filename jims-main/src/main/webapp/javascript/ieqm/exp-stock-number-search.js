@@ -254,6 +254,7 @@ $(function () {
             var radios=$("#numberForm input[name='radioOne']:checked").val();
             if(radios=='0'){
                 stocksData=data;
+                stocksDatas=0;
             }else{
                 for(var i = 0 ;i<data.length;i++){
                     if(data[i].quantity!='0'){
