@@ -138,19 +138,18 @@ $(function () {
         $.get("/api/exp-export/export-detail-by-exp-class?type=expClass&storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate + "&value=" + expClass, function (data) {
             if (data.length > 0) {
                 var sum = 0.00;
-
                 startDates=startDate;
                 stopDates=endDate;
                 expClasss=expClass;
-
                 $.each(data, function (index, item) {
-                    sum += item.importAmount;
+                    sum += parseFloat(item.importAmount);
                 });
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     receiver: "合计：",
-                    importAmount: sum
+                    importAmount: sum.toFixed(2)
                 });
+                $("#dg").datagrid('loadData', data);
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！")
             }

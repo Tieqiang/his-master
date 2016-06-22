@@ -42,7 +42,7 @@ public class ExpPriceListFacade extends BaseFacade {
      * @param expCode
      * @return
      */
-    public List<ExpPriceList> findExpPriceList(String expCode, String hospitalId) {
+    public List<ExpPriceList> findExpPriceList(String expCode, String hospitalId,String flag) {
         String sql = "SELECT distinct a.ID,a.EXP_CODE,\n" +
                 "         a.MATERIAL_CODE,   \n" +
                 "         a.EXP_SPEC,   \n" +
@@ -72,16 +72,18 @@ public class ExpPriceListFacade extends BaseFacade {
                 "         a.OTHER_NO,\n" +
                 "         a.OTHER_DATE   \n" +
                 "    FROM EXP_PRICE_LIST a,EXP_DICT b   \n" +
-                "   WHERE  a.EXP_CODE = b.EXP_CODE and a.min_spec=b.exp_spec" +
-                "   and ( a.STOP_DATE >= sysdate OR a.STOP_DATE is null ) \n" +
-                "     and  a.START_DATE <= sysdate \n";
+                "   WHERE  a.EXP_CODE = b.EXP_CODE and a.min_spec=b.exp_spec" ;
+
         if(null != expCode && !expCode.trim().equals("")){
             sql += " AND a.EXP_CODE ='" + expCode + "'";
         }
         if(null != hospitalId && !hospitalId.trim().equals("")){
             sql += " AND a.HOSPITAL_ID ='" + hospitalId + "'";
         }
-
+        if("".equals(flag) || flag==null){
+            sql+=" and ( a.STOP_DATE >= sysdate OR a.STOP_DATE is null ) " +
+                    " and  a.START_DATE <= sysdate";
+        }
         List<ExpPriceList> resultList = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceList.class);
         return resultList;
     }
