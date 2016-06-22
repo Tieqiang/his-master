@@ -312,8 +312,14 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
+            if(expForms=='全部'){
+                expForms='';
+            }
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-record-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expForm=" + expForms + "&expCode=" + expCodes;
             $("#report").prop("src",cjkEncode(https));
+            console.log(https);
         }
     })
     $("#printBtn").on('click', function () {

@@ -231,12 +231,12 @@ $(function () {
                 //$("#right").datagrid('beginEdit', i);
                 return false;
             }
-            if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <= 0) {
-                $.messager.alert("系统提示", "第" + (i + 1) + "行:消耗量不能小于0 请重新填写", 'error');
-                $("#right").datagrid('selectRow', i);
-                //$("#right").datagrid('beginEdit', i);
-                return false;
-            }
+//            if (rows[i].exportquantityRef == undefined || rows[i].exportquantityRef <= 0) {
+//                $.messager.alert("系统提示", "第" + (i + 1) + "行:消耗量不能小于0 请重新填写", 'error');
+//                $("#right").datagrid('selectRow', i);
+//                //$("#right").datagrid('beginEdit', i);
+//                return false;
+//            }
 
             //if (rows[i].flag != 5&& rows[i].flag != 3) {
             //    $.messager.alert("系统提示", "第" + (i + 1) + "行:只有采购员保存确认或主任审批的单据才能执行!", 'error');

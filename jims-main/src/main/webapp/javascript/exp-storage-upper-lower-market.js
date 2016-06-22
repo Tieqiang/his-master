@@ -211,7 +211,7 @@ $(function () {
         }
         //为报表准备字段
         startDates=startDate;
-        stopDates=endDate;
+        stopDates=stopDate;
 //        var supplierId=$("#supplier").combogrid("getValue");
         var pricePromise = $.get("/api/exp-storage-profile-market/upper-lower?storageCode=" + parent.config.storageCode+"&startTime="+startDate+"&stopTime="+stopDate+"&hospitalId="+parent.config.hospitalId, function (data) {
             $.each(data, function (index, item) {

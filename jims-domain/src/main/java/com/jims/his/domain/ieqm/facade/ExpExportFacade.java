@@ -8,6 +8,7 @@ import com.jims.his.domain.ieqm.vo.ExpImportDetailVo;
 import com.jims.his.domain.ieqm.vo.ExpProvideApplicationVo;
 
 import javax.persistence.Query;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -257,6 +258,13 @@ public class ExpExportFacade extends BaseFacade {
         }
         sql += "GROUP BY EXP_EXPORT_MASTER.RECEIVER,EXP_EXPORT_DETAIL.EXP_FORM";
         List<ExpExportVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpExportVo.class);
+        ExpExportVo v=new ExpExportVo();
+        BigDecimal bigDecimal=new BigDecimal(0.0);
+        for(ExpExportVo e:result){
+            bigDecimal=bigDecimal.add(new BigDecimal(e.getImportAmount()));
+        }
+        v.setReceiver("合计");
+        v.setImportAmount(bigDecimal.doubleValue());
         return result;
     }
 

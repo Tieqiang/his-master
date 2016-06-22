@@ -226,7 +226,7 @@ $(function () {
             }
             var printSubStorageClass = $("#subStorageClass").combogrid('getText');
             var printSupplier = $("#supplier").combogrid('getText');
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-stock-number-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode +"&expCode="+printExpName+"&subStorage="+printSubStorageClass+"&expForm="+printFormClass+"&firmId="+printSupplier;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-stock-number-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode +"&expCode="+printExpName+"&subStorage="+printSubStorageClass+"&expForm="+printFormClass+"&firmId="+printSupplier+"&quantity="+ stocksDatas;
             $("#report").prop("src",cjkEncode(https));
         }
     });
@@ -242,6 +242,7 @@ $(function () {
         }
         $("#printDiv").dialog('open');
     });
+    var stocksDatas=0;
     var loadDict = function(){
         stockDataVo.formClass = $("#formClass").combobox("getText");
         stockDataVo.subStorageClass = $("#subStorageClass").combobox("getText");
@@ -250,16 +251,18 @@ $(function () {
         stockDataVo.hospitalId = parent.config.hospitalId;
         stockDataVo.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-stock/exp-stock-number-search",stockDataVo,function(data){
-            if($("#numberForm input[name='radioOne']:checked").val()=='0'){
-            stocksData=data;
+            var radios=$("#numberForm input[name='radioOne']:checked").val();
+            if(radios=='0'){
+                stocksData=data;
+                stocksDatas=0;
             }else{
                 for(var i = 0 ;i<data.length;i++){
                     if(data[i].quantity!='0'){
                         var stock = data[i];
                         stocksData.push(stock);
-                        console.log(stocksData);
                     }
                 }
+                stocksDatas=1;
             }
         },'json');
         return promise;

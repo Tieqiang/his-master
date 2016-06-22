@@ -138,15 +138,18 @@ $(function () {
         $.get("/api/exp-export/export-detail-by-exp-class?type=expClass&storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate + "&value=" + expClass, function (data) {
             if (data.length > 0) {
                 var sum = 0.00;
-
+                startDates=startDate;
+                stopDates=endDate;
+                expClasss=expClass;
                 $.each(data, function (index, item) {
-                    sum += item.importAmount;
+                    sum += parseFloat(item.importAmount);
                 });
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     receiver: "合计：",
-                    importAmount: sum
+                    importAmount: sum.toFixed(2)
                 });
+                $("#dg").datagrid('loadData', data);
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！")
             }
@@ -158,6 +161,10 @@ $(function () {
     $("#saveAs").on('click', function () {
         $.messager.alert("系统提示", "另存为", "info");
     });
+
+    var startDates='';
+    var stopDates='';
+    var expClasss='';
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -167,7 +174,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "export-detail-by-exp-class.cpt");
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/export-detail-by-exp-class.cpt"+"&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expClass=" + expClasss;
+
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#print").on('click', function () {

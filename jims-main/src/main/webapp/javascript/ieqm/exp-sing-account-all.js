@@ -181,7 +181,9 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-single-account-all.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates;
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-single-account-all.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates;
             $("#report").prop("src",cjkEncode(https));
         }
     });
