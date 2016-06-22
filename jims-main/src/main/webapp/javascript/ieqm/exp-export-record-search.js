@@ -302,6 +302,7 @@ $(function () {
     var expForms='';
     var startDates='';
     var stopDates='';
+    var clinicAttrCodes='';
 
     //打印
     $("#printDiv").dialog({
@@ -317,7 +318,7 @@ $(function () {
             if(expForms=='全部'){
                 expForms='';
             }
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-record-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expForm=" + expForms + "&expCode=" + expCodes;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-record-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expForm=" + expForms + "&expCode=" + expCodes+"&clinicAttrCode=" +clinicAttrCodes;
             $("#report").prop("src",cjkEncode(https));
             console.log(https);
         }
@@ -348,7 +349,7 @@ $(function () {
             expForms=masterDataVo.formClass;
             startDates=masterDataVo.startDate;
             stopDates=masterDataVo.stopDate;
-
+            clinicAttrCodes=masterDataVo.deptAttr;
             for(var i = 0 ;i<data.length;i++){
                 retailAmount+=data[i].retailAmount;
                 payAmount+=data[i].payAmount;
