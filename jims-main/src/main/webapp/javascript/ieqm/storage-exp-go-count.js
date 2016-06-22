@@ -257,6 +257,13 @@ $(function () {
     $("#searchBtn").on('click', function () {
         loadDict();
     });
+
+    //为报表准备字段
+    var startDates='';
+    var stopDates='';
+    var subStor='';
+    var expForms='';
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -266,7 +273,17 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "storage-exp-go-count.cpt");
+            if(subStor=='全部'){
+                subStor='';
+            }
+            if(expForms=='全部'){
+                expForms='';
+            }
+            startDates=myFormatter2(startDates);
+            stopDates=myFormatter2(stopDates);
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/storage-exp-go-count.cpt"+"&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&subStorage="+subStor+"&expForm="+expForms;
+
+            $("#report").prop("src",cjkEncode(https));
         }
     });
     $("#printBtn").on('click', function () {
@@ -305,6 +322,12 @@ $(function () {
                 $("#importMaster").datagrid('loadData',[]);
                 return;
             }
+
+            startDates=masterDataVo.startDate;
+            stopDates=masterDataVo.stopDate;
+            subStor=masterDataVo.subStorage;
+            expForms=masterDataVo.formClass;
+
             $("#importMaster").datagrid('loadData',masters);
             $('#importMaster').datagrid('appendRow', {
                 expName: "合计：",
