@@ -152,16 +152,17 @@ $(function () {
 
         $.get("/api/exp-export/export-detail-by-exp-class?type=storage&storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate + "&value=" + subStorage, function (data) {
             if (data.length > 0) {
-                var sum = 0.00;
-
-                $.each(data, function (index, item) {
-                    sum += item.importAmount;
-                });
+//                var sum = 0.00;
+//
+//                $.each(data, function (index, item) {
+//                    sum += item.importAmount;
+//                });
+//                $("#dg").datagrid('loadData', data);
+//                $('#dg').datagrid('appendRow', {
+//                    receiver: "合计：",
+//                    importAmount: sum
+//                });
                 $("#dg").datagrid('loadData', data);
-                $('#dg').datagrid('appendRow', {
-                    receiver: "合计：",
-                    importAmount: sum
-                });
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！");
                 var nullData = [];
