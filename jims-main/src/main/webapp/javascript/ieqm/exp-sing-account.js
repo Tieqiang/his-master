@@ -345,9 +345,9 @@ $(function () {
             $('#importDetail').datagrid('appendRow', {
                 ioClass: "合计：",
                 importNum: importNum,
-                importPrice: importPrice,
+                importPrice: Math.round(importPrice*100/2)/100,
                 exportNum: exportNum,
-                exportPrice: exportPrice
+                exportPrice:Math.round(exportPrice*100/2)/100
             });
             $("#importDetail").datagrid("autoMergeCells", ['way', 'expCode']);
             $("#singleSpec").combobox("clear");
