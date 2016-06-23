@@ -179,8 +179,8 @@ $(function () {
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     firmId: "合计：",
-                    quantity: sumQuantity,
-                    amount: sumAmount
+                    quantity: Math.round(sumQuantity*100)/100,
+                    amount: Math.round(sumAmount*100)/100
                 });
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！")
