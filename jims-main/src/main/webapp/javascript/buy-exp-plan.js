@@ -659,6 +659,7 @@ $(function () {
                             newBuyId = newValue;
                             $.get("/api/buy-exp-plan/get-buy-no?buyId=" + newBuyId, function (data) {
                                 maxBuyNo = data;
+                                buyIds=newValue;
                             });
                         });
                     }
