@@ -641,6 +641,7 @@ $(function () {
 
             $.postJSON("/api/buy-exp-plan/save", expChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
+                buyIds='';
                 $("#right").datagrid('loadData', {total: 0, rows: []});
                 $.get("/api/buy-exp-plan/get-buy-id", function (data) {
                     newBuyId = data;
