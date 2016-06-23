@@ -9,7 +9,9 @@ import com.jims.his.domain.ieqm.vo.ExpStockDefineVo;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,8 +92,10 @@ public class ExpDictFacade extends BaseFacade {
     }
 
     public List<ExpPriceList> expDictListByExpCode(String expCode) {
-        String hql = "from ExpPriceList a where a.expCode = '"+expCode+"' ";
-        return entityManager.createQuery(hql).getResultList();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String sql = "select * from EXP_PRICE_LIST a where a.exp_Code = '"+expCode+"' and( a.stop_Date is null or a.stop_Date > to_date('"+df.format(new Date())+"','yyyy-mm-dd hh24:mi:ss'))";
+        List <ExpPriceList> list=super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceList.class);
+        return list;
     }
 
     public List<ExpDict> expDictListDefineExpCode(String expCode) {
