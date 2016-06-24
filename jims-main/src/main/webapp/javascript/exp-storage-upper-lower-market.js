@@ -123,12 +123,16 @@ $(function () {
         }, {
             title: '包装规格',
             field: 'expSpec',
-            width: "10%"
+            width: "5%"
         }, {
             title: '单位',
             field: 'units',
-            width: "7%"
+            width: "5%"
         }, {
+            title: '生产商',
+            field: 'supplier',
+            width: "7%"
+        },{
             title: '每包装含量',
             field: 'amountPerPackage',
             width: "7%"
@@ -222,6 +226,7 @@ $(function () {
                     price.expSpec = item.expSpec;
                     price.units = item.units;
                     price.expCode = item.expCode;
+                    price.supplier=item.supplier;
                     price.amountPerPackage = item.amountPerPackage;
                     price.packageUnits = item.packageUnits;
 //                    if (item.stockQuantity != null) {

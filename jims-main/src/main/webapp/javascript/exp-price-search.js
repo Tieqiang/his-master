@@ -231,7 +231,7 @@ $(function () {
     var loadDict = function () {
         var expCode = $("#search").combogrid('getValue');
         prices.splice(0,prices.length);
-        var pricePromise =   $.get("/api/exp-price-list/list?expCode=" + expCode+"&hospitalId="+parent.config.hospitalId, function(data){
+        var pricePromise =   $.get("/api/exp-price-list/list?expCode=" + expCode+"&hospitalId="+parent.config.hospitalId+"&flag=1", function(data){
             $.each(data,function(index,item){
                 var price ={};
                 price.expCode = item.expCode;

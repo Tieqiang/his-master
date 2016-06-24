@@ -228,6 +228,7 @@ $(function () {
             rowData.tallyFlag='未记账'
             $(this).datagrid("refreshRow",rowIndex);
         },onCheck:function(rowIndex,rowData){
+            stopEdit();
             rowData.tallyFlag='已记账'
             $(this).datagrid("refreshRow",rowIndex);
         }

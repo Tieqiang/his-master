@@ -487,6 +487,9 @@ public class ExpImportDetailFacade extends BaseFacade {
                 importPrice+=v.getImportPrice();
                 exportPrice+=v.getExportPrice();
             }
+            java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
+            importPrice=Double.valueOf(df.format(importPrice));
+            exportPrice=Double.valueOf(df.format(exportPrice));
             e.setImportPrice(importPrice);
             e.setExportPrice(exportPrice);
             list1.add(e);

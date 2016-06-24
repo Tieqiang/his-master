@@ -49,8 +49,8 @@ public class ExpPriceListService {
     @GET
     @Path("list")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<ExpPriceList> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId) {
-        List<ExpPriceList> result = expPriceListFacade.findExpPriceList(expCode, hospitalId);
+    public List<ExpPriceList> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId,@QueryParam("flag") String flag) {
+        List<ExpPriceList> result = expPriceListFacade.findExpPriceList(expCode, hospitalId,flag);
         if(result != null && result.size() > 0){
             Iterator ite = result.iterator();
             while(ite.hasNext()){
