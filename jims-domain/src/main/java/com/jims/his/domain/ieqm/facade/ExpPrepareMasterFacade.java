@@ -174,7 +174,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportMaster.setDocumentNo(documentNo2);
             expExportMaster.setStorage(expSubStorageDict.getStorageCode());
             expExportMaster.setExportDate(new Date());
-            expExportMaster.setReceiver(expSubStorageDict.getStorageCode());//
+            expExportMaster.setReceiver(useDeptCode);//
             expExportMaster.setAccountReceivable(expPriceList.getRetailPrice());//零售价
             expExportMaster.setAccountPayed(0.0);
             expExportMaster.setAdditionalFee(0.0);
@@ -309,6 +309,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         expPrepareDetail.setUseFlag("0");
         expPrepareDetail.setUseDate("");
         expPrepareDetail.setUsePatientId("");
+        expPrepareDetail.setImpDocnoFirst("");
+        expPrepareDetail.setExpDocnoFirst("");
         expPrepareDetail=merge(expPrepareDetail);
 
         /**
@@ -318,8 +320,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         int rows2=entityManager.createQuery("delete from ExpImportDetail where documentNo='"+expPrepareDetail.getImpDocnoFirst()+"'").executeUpdate();
         int rows3=entityManager.createQuery("delete from ExpExportMaster where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
         int rows4=entityManager.createQuery("delete from ExpExportDetail where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
-
-        /**
+         /**
          *exp_stock
          */
         int rows5=entityManager.createQuery("delete from ExpStock where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
