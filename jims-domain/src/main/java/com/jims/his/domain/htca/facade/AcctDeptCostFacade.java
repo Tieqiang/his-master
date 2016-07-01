@@ -415,8 +415,8 @@ public class AcctDeptCostFacade extends BaseFacade {
             startDate = strings[0] + "-" + month + "-01 00:00:00";
             endDate = strings[0] + "-" + month + "-31 23:59:59";
         } else if (month == 4 || month == 6 || month == 9) {
-            startDate = strings[0] + month + "-01 00:00:00";
-            endDate = strings[0] + month + "-30 23:59:59";
+            startDate = strings[0]+ "-" + month + "-01 00:00:00";
+            endDate = strings[0]+ "-" + month + "-30 23:59:59";
         } else if (month == 11) {
             startDate = strings[0] + "-" + month + "-01 00:00:00";
             endDate = strings[0] + "-" + month + "-30 23:59:59";
