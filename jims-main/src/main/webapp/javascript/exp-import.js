@@ -64,6 +64,7 @@ $(function () {
      * 定义明细信息表格
      */
     $("#importDetail").datagrid({
+        singleSelect: true,
         fit: true,
         fitColumns: true,
         showFooter: true,
@@ -71,6 +72,12 @@ $(function () {
         footer: '#ft',
         toolbar: '#expImportMaster',
         columns: [[{
+            title: '单据号',
+            field: 'documNo',
+            align: 'center',
+            width: '6%'
+
+        },{
             title: '项目代码',
             field: 'expCode',
             align: 'center',
@@ -78,7 +85,7 @@ $(function () {
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
-        }, {
+        },  {
             title: '品名',
             field: 'expName',
             align: 'center',
@@ -155,7 +162,6 @@ $(function () {
                 type: 'numberbox', options: {
                     onChange: function (newValue, oldValue) {
                         var selectRows = $("#importDetail").datagrid('getData').rows;
-//                        console.log(selectRows[editIndex]);
                         //var purchasePriceEd = $("#importDetail").datagrid('getEditor', {
                         //    index: editIndex,
                         //    field: 'purchasePrice'
@@ -442,13 +448,15 @@ $(function () {
         }
         ]],
         onClickCell: function (index, field, row) {
-            if (index != editIndex) {
-                $(this).datagrid('endEdit', editIndex);
-                editIndex = index;
+            if(field!='documNo'){
+                if (index != editIndex) {
+                    $(this).datagrid('endEdit', editIndex);
+                    editIndex = index;
+                }
+                $(this).datagrid('beginEdit', editIndex);
+                var ed = $(this).datagrid('getEditor', {index: index, field: field});
+                $(ed.target).focus();
             }
-            $(this).datagrid('beginEdit', editIndex);
-            var ed = $(this).datagrid('getEditor', {index: index, field: field});
-            $(ed.target).focus();
         }
     });
 
@@ -669,7 +677,7 @@ $(function () {
 
     $("#addRow").on('click', function () {
         flag=0;
-        $("#importDetail").datagrid('appendRow', {});
+        $("#importDetail").datagrid('appendRow', {documNo:documentNo});
         var rows = $("#importDetail").datagrid('getRows');
         var appendRowIndex = $("#importDetail").datagrid('getRowIndex', rows[rows.length - 1]);
 
@@ -1041,9 +1049,6 @@ $(function () {
         if (dataValid()) {
             var importVo = getCommitData() ;
             $.postJSON("/api/exp-stock/imp", importVo, function (data) {
-                console.log(data.errorMessage)
-                //console.log(data.responseJSON.errorMessage)
-                console.log(data)
                 if(data.errorMessage){
                     $.messager.alert("系统提示", data.errorMessage, 'error');
                     return;
