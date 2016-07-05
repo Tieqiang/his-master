@@ -110,7 +110,10 @@ $(function(){
         },{
             title:'单项奖金额',
             field:'rewardNum',
-            width:'10%'
+            width:'10%',
+            editor:{type:'validatebox',options:{
+                validType:'number'
+            }}
         },{
             title:'操作人',
             field:'operator',
@@ -201,7 +204,6 @@ $(function(){
         //保存按钮
         $("#saveBtn").on('click',function(){
             var rows = $("#acctCostTable").datagrid('getRows') ;
-            console.log(rows) ;
             if(!rows.length){
                 $.messager.alert("系统提示","请选择要保存的记录","info") ;
                 return  ;

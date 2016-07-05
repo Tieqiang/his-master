@@ -478,11 +478,11 @@ var rowValue = undefined;
         }]]
     }) ;
 
-    $("#acctStaffGrid").datagrid({
-        title:'核算单元人员对照',
-        fit:true,
-        fitColumns:true
-    });
+    //$("#acctStaffGrid").datagrid({
+    //    title:'核算单元人员对照',
+    //    fit:true,
+    //    fitColumns:true
+    //});
     //取消对照
     $("#cancleVsBtn").on('click',function(){
         var rows = $("#acctVsDatagrid").datagrid('getSelections') ;
@@ -605,11 +605,11 @@ var rowValue = undefined;
 
     //对照后的
     $("#acctStaffGrid").datagrid({
-        fit:true,
         fitColumns:true,
         url:"/api/staff-dict/list-with-acct?hospitalId="+parent.config.hospitalId,
         method:'GET',
         toolbar:'#staffFoot',
+        height:330,
         columns:[[{
             title:'id',
             field:'id',
@@ -625,7 +625,7 @@ var rowValue = undefined;
         }, {
             title: '职称',
             field: 'title',
-            width: '30%'
+            width: '20%'
         }]]
     });
 
