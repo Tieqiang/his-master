@@ -206,8 +206,8 @@ public class AcctDeptProfitFacade extends BaseFacade {
                 "                                from htca.acct_single_reward_record b\n" +
                 "                               where a.acct_dept_id = b.acct_dept_id\n" +
                 "                                 and a.year_month = b.year_month\n" +
-                "                                 and b.year_month = '"+yearMonth+"')\n" +
-                "                                 and b.hospital_id = '"+hospitalId+"'" +
+                "                                 and b.year_month = '"+yearMonth+"'" +
+                "                                 and b.hospital_id = '"+hospitalId+"')\n" +
                 "    where a.year_month = '"+yearMonth+"'\n" +
                 "      and a.hospital_id = '"+hospitalId+"'" ;
         return createNativeQuery(sql).executeUpdate() ;
