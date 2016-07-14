@@ -1145,6 +1145,17 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.json/1.0.0/org.apache.oltu.commons.json-1.0.0-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: org.bouncycastle:bcprov-jdk15on:1.50">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/bouncycastle/bcprov-jdk15on/1.50/bcprov-jdk15on-1.50.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/bouncycastle/bcprov-jdk15on/1.50/bcprov-jdk15on-1.50-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/bouncycastle/bcprov-jdk15on/1.50/bcprov-jdk15on-1.50-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/jackson-core-asl/1.9.9/jackson-core-asl-1.9.9.jar!/" />
@@ -1543,4 +1554,3 @@
     </library>
   </component>
 </project>
-
