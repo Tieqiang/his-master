@@ -241,7 +241,14 @@ $(function () {
     })
 
     var promise = $.get('/api/login/get-login-info?date=' + new Date(), function (data) {
+        if(data.errorMessage){
+            $.messager.alert("系统提示",data.errorMessage,'error');
+
+        }
         config = data;
+        if(config.limitDays<30){
+            $.messager.alert("系统提示","系统将在"+config.limitDays+"天后过期",'info');
+        }
     })
 
     promise.done(function () {

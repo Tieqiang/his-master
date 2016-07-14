@@ -40,6 +40,6 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.2.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.2.4" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.50" level="project" />
   </component>
 </module>
-

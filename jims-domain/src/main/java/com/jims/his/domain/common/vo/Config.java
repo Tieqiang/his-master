@@ -31,12 +31,12 @@ public class Config implements Serializable {
     private String firstPage;//首页
     private String accessToken ;
     private ReportDict reportDict ;//报表服务器
-
+    private int limitDays ;//距离过期时间
 
     public Config() {
     }
 
-    public Config(String loginName, String staffName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath, String acctDeptId, String password, String firstPage, String accessToken, ReportDict reportDict) {
+    public Config(String loginName, String staffName, String hospitalId, String hospitalName, String storageCode, String storageName, String loginId, String moduleId, String moduleName, String exportClass, String reportServerIp, String reportServerPort, String reportServerResourcePath, String defaultSupplier, String reportServerName, String defaultReportPath, String acctDeptId, String password, String firstPage, String accessToken, ReportDict reportDict, int limitDays) {
         this.loginName = loginName;
         this.staffName = staffName;
         this.hospitalId = hospitalId;
@@ -58,6 +58,7 @@ public class Config implements Serializable {
         this.firstPage = firstPage;
         this.accessToken = accessToken;
         this.reportDict = reportDict;
+        this.limitDays = limitDays;
     }
 
     public String getDefaultReportPath() {
@@ -230,6 +231,14 @@ public class Config implements Serializable {
 
     public void setReportDict(ReportDict reportDict) {
         this.reportDict = reportDict;
+    }
+
+    public int getLimitDays() {
+        return limitDays;
+    }
+
+    public void setLimitDays(int limitDays) {
+        this.limitDays = limitDays;
     }
 }
 

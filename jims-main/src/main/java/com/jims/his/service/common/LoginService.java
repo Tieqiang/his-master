@@ -1,10 +1,7 @@
 package com.jims.his.service.common;
 
 import com.jims.his.common.expection.ErrorException;
-import com.jims.his.common.util.Cache;
-import com.jims.his.common.util.CacheManager;
-import com.jims.his.common.util.EnscriptAndDenScript;
-import com.jims.his.common.util.MD5Generator;
+import com.jims.his.common.util.*;
 import com.jims.his.domain.common.entity.*;
 import com.jims.his.domain.common.facade.*;
 import com.jims.his.domain.common.vo.BeanChangeVo;
@@ -25,6 +22,8 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -43,11 +42,12 @@ public class LoginService {
     private AcctDeptDictFacade acctDeptDictFacade ;
     private ReportDictFacade reportDictFacade;
     private LocalProgramSettingFacade localProgramSettingFacade ;
+    private KeyDictFacade keyDictFacade ;
 
 
 
     @Inject
-    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade, AcctDeptDictFacade acctDeptDictFacade, ReportDictFacade reportDictFacade, LocalProgramSettingFacade localProgramSettingFacade) {
+    public LoginService(HttpServletRequest request, HttpServletResponse resp, ModuleDictFacade moduleDictFacade, StaffDictFacade staffDictFacade, RoleDictFacade roleDictFacade, ExpStorageDeptFacade expStorageDeptFacade, AcctDeptDictFacade acctDeptDictFacade, ReportDictFacade reportDictFacade, LocalProgramSettingFacade localProgramSettingFacade, KeyDictFacade keyDictFacade) {
         this.moduleDictFacade = moduleDictFacade;
         this.staffDictFacade = staffDictFacade;
         this.roleDictFacade = roleDictFacade;
@@ -57,6 +57,7 @@ public class LoginService {
         this.acctDeptDictFacade = acctDeptDictFacade;
         this.reportDictFacade = reportDictFacade;
         this.localProgramSettingFacade = localProgramSettingFacade;
+        this.keyDictFacade = keyDictFacade;
     }
 
 
@@ -243,7 +244,7 @@ public class LoginService {
 
     @Path("get-login-info")
     @GET
-    public Config getLoginInfo(){
+    public Response getLoginInfo() throws Exception {
         Config config = new Config() ;
         HttpSession session = request.getSession();
         //ReportDict reportDict = reportDictFacade.getByHospitalId((String) session.getAttribute("hospitalId"));
@@ -261,8 +262,31 @@ public class LoginService {
         config.setFirstPage((String)session.getAttribute("firstPage"));
         ReportDict reportDict = reportDictFacade.findByHospitalId((String) session.getAttribute("hospitalId")) ;
         config.setReportDict(reportDict);
+        String hospitalName = (String) session.getAttribute("hospitalName");
+        String key = EncryptUtil.encrypt(hospitalName.trim());
+        KeyDict keyDict = keyDictFacade.findByKey(key) ;
+        if(keyDict==null){
+            config.setHospitalName("未经授权，仅限于试用");
+            config.setModuleName("请及时授权");
+            config.setLimitDays(30);
+            return Response.status(Response.Status.OK).entity(config).build() ;
+        }
+        String keyCode = keyDict.getKeyCode() ;
 
-        return config ;
+        keyCode = EncryptUtil.decrypt(keyCode) ;
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd") ;
+        Date lastDate = dateFormat.parse(keyCode) ;
+        Date now = new Date();
+        long time = (lastDate.getTime() -now.getTime())/24/60/60/1000 ;
+        if(time<=0){
+            ErrorMessager errorMessager = new ErrorMessager() ;
+            errorMessager.setErrorMessage("授权已过期，请重新授权");
+            return Response.status(Response.Status.OK).entity(errorMessager).build() ;
+        }else{
+            config.setLimitDays((int)time);
+        }
+
+        return Response.status(Response.Status.OK).entity(config).build() ;
     }
 
     /**
@@ -334,7 +358,6 @@ public class LoginService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
 
