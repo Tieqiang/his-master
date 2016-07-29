@@ -9,6 +9,7 @@ import com.jims.his.domain.ieqm.vo.ExpPriceListVo;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -249,16 +250,18 @@ public class ExpPriceListFacade extends BaseFacade {
         }
     }
 
-    /**
-     * chenxy
-     * @param expCode
-     * @param packageSpec
-     * @return
-     */
-    public ExpPriceList findByCodeAndPackageSpec(String expCode, String packageSpec) {
-        String  sql="from ExpPriceList where  expCode='"+expCode+"' and expSpec='"+packageSpec+"'";
-        return (ExpPriceList)entityManager.createQuery(sql).getSingleResult();
+    public ExpPriceListVo findByCodeAndPackageSpec(String expCode, String packageSpec) {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time=sdf.format(new Date());
+        String sql="select *  from exp_price_list where exp_code='"+expCode+"' and exp_spec='"+packageSpec+"' and (stop_date>=to_date('"+time+"','yyyy-MM-dd HH24:MI:SS') or stop_date is null)";
+        List<ExpPriceListVo> list= super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceListVo.class);
+        if(list!=null&&!list.isEmpty()){
+            return list.get(0);
+        }else{
+            return null;
+        }
     }
+
 
     /**
      * chenxy
