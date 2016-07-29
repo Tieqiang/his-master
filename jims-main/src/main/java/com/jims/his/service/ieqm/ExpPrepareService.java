@@ -4,9 +4,7 @@ import com.google.inject.Inject;
 import com.jims.his.common.util.StringUtils;
 import com.jims.his.domain.ieqm.entity.*;
 import com.jims.his.domain.ieqm.facade.*;
-import com.jims.his.domain.ieqm.vo.ExpNameCaVo;
-import com.jims.his.domain.ieqm.vo.ExpPrepareVo;
-import com.jims.his.domain.ieqm.vo.ExpStockRecord;
+import com.jims.his.domain.ieqm.vo.*;
 import org.eclipse.jetty.util.StringUtil;
 import com.jims.his.domain.ieqm.facade.ExpPrepareDetailFacade;
 import com.jims.his.domain.ieqm.vo.ExpPrepareVo;
@@ -126,8 +124,7 @@ public class ExpPrepareService {
             String[] priceArr = priceStr.split(",");
             String[] packageSpecArr=packageSpecs.split(",");
             for (int i = 0; i < expCodeArr.length; i++) {
-//                ExpDict expDict = expDictFacade.findByCode(expCodeArr[i],packageSpecArr[i]);
-                ExpPriceList expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(expCodeArr[i],packageSpecArr[i]);
+                ExpPriceListVo expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(expCodeArr[i],packageSpecArr[i]);
                 list = expPrepareMasterFacade.save(expPriceList.getId(), supplierId, amountArr[i], operator, Double.parseDouble(priceArr[i]), list,expPriceList.getFirmId(),subStorageId,phoneArr[i],operArr[i]);
             }
         }
