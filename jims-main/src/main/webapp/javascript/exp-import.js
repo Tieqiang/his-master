@@ -195,8 +195,8 @@ $(function () {
             align: 'center',
             width: '5%',
             editor: {type: 'textbox', options: {
-                editable: false,
-                disabled: true}}
+                editable: true,
+                disabled: false}}
         }, {
             title: '进价',
             field: 'purchasePrice',
@@ -1012,7 +1012,11 @@ $(function () {
             detail.packageSpec = rows[i].packageSpec;
             detail.packageUnits = rows[i].packageUnits;
             detail.quantity = rows[i].quantity;
-            detail.batchNo = rows[i].batchNo;
+            var batchNo=rows[i].batchNo;
+            if(batchNo==null || batchNo.trim()==""){
+                batchNo="X";
+            }
+            detail.batchNo=batchNo;
             detail.purchasePrice = rows[i].purchasePrice;
             detail.expireDate = new Date(rows[i].expireDate);
             detail.expForm = rows[i].expForm;
