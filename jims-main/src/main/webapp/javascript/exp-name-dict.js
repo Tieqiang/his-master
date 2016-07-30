@@ -199,7 +199,7 @@ $(function () {
             title: '属性',
             field: 'toxiProperty',
             align: 'center',
-            hidden:true,
+            hidden:false,
             width: "10%",
             editor: {
                 type: 'combobox',
@@ -294,10 +294,13 @@ $(function () {
         ]],
         onClickRow: function (index, row) {
             stopEdit();
-            if (row.columnProtect != 1) {
-                $(this).datagrid('beginEdit', index);
-                editIndex = index;
-            }
+            //if (row.columnProtect != 1) {
+            //    $(this).datagrid('beginEdit', index);
+            //    editIndex = index;
+            //}
+
+            $(this).datagrid('beginEdit', index);
+            editIndex = index;
         }
     });
 
@@ -368,6 +371,9 @@ $(function () {
     $("#save").on('click',function(){
         var row = $("#expDict").datagrid('getData').rows[editIndex];
         row.doseUnits=row.units;
+        if(row.columnProtect){
+            delete row.columnProtect;
+        }
         if (editIndex || editIndex == 0) {
             $("#expNameDict").datagrid('endEdit', editIndex);
             $("#expDict").datagrid('endEdit', editIndex);

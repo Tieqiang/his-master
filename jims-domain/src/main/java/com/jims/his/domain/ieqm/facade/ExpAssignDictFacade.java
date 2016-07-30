@@ -17,6 +17,7 @@ import java.util.List;
 public class ExpAssignDictFacade extends BaseFacade {
     /**
      * 按名称查询
+     *
      * @param name
      * @return
      */
@@ -28,18 +29,21 @@ public class ExpAssignDictFacade extends BaseFacade {
         List<ExpAssignDict> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpAssignDict.class);
         return nativeQuery;
     }
+
     /**
      * 按code查询
+     *
      * @param code
      * @return
      */
     public ExpAssignDict findByCode(String code) {
-       Object obj=entityManager.createQuery("from ExpAssignDict  where assignCode='"+code+"'").getSingleResult();
-       if(obj!=null&&!"".equals(obj)){
-           return (ExpAssignDict)obj;
-       }
-       return null;
+        List<ExpAssignDict> expAssignDicts = createQuery(ExpAssignDict.class, "from ExpAssignDict  where assignCode='" + code + "'", new ArrayList<>()).getResultList();
+        if(expAssignDicts.size()>0){
+            return expAssignDicts.get(0);
+        }
+        return null;
     }
+
     /**
      * 保存增删改
      *
