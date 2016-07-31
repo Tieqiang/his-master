@@ -305,16 +305,16 @@ $(function () {
             field: 'recStatus',
             align: 'center',
             width: "6%",
-            editor: {
-                type: 'combobox',
-                options: {
-                    editable: false,
-                    panelHeight: 'auto',
-                    valueField: 'code',
-                    textField: 'name',
-                    data: [{'code': 0, 'name': '暂存'}, {'code': 1, 'name': '保存'}, {'code': 2, 'name': '确认'}]
-                }
-            },
+            //editor: {
+            //    type: 'combobox',
+            //    options: {
+            //        editable: false,
+            //        panelHeight: 'auto',
+            //        valueField: 'code',
+            //        textField: 'name',
+            //        data: [{'code': 0, 'name': '暂存'}, {'code': 1, 'name': '保存'}, {'code': 2, 'name': '确认'}]
+            //    }
+            //},
             formatter:function(value,row,index){
                 if(value=="0"){
                     return value='暂存';
@@ -602,6 +602,10 @@ $(function () {
             //$("#dg").datagrid("deleteRow", $("#dg").datagrid("getRows").length - 1);
             var rows = $("#dg").datagrid("getRows");
             if(findExport()>0){
+                if(rows[0].recStatus==1){
+                    $.messager.alert("系统提示",'已经保存，不能重复保存','info');
+                    return ;
+                }
                 $.messager.confirm("提示信息", "存在需要入出库数据，是否确认保存盘点数据并且自动入出库？", function (r) {
                     if (r) {
                         $.each(rows, function (index, item) {

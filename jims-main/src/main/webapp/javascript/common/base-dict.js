@@ -27,13 +27,13 @@ $(function(){
             title:'键值',
             field:'baseCode',
             align: 'center',
-            width:"20%",
+            width:"10%",
             editor:'text'
         },{
             title:'键名',
             field:'baseName',
             align: 'center',
-            width:'20%',
+            width:'30%',
             editor:'text'
         },{
             title:'字典名称',

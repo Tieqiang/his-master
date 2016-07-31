@@ -41,7 +41,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
      * @return
      */
     public int getInventoryNum(String hospitalId, String storageCode, String subStorage, String checkMonth){
-        String sql = "select nvl(count (*),0) from exp_INVENTORY_CHECK where storage ='"+storageCode+"' and hospital_id='"+hospitalId+"' and check_year_month =to_date('" + checkMonth + "','YYYY-MM-DD HH24:MI:SS') and ( sub_storage ='"+subStorage+"' or '"+subStorage+"' ='全部' ) \n";
+        String sql = "select nvl(count (*),0) from exp_INVENTORY_CHECK where storage ='"+storageCode+"' and hospital_id='"+hospitalId+"' and to_char(check_year_month,'YYYY-MM') =to_char(to_date('" + checkMonth + "','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM') and ( sub_storage ='"+subStorage+"' or '"+subStorage+"' ='全部' ) \n";
         List result = super.createNativeQuery(sql).getResultList();
         return ((BigDecimal)result.get(0)).intValue();
     }

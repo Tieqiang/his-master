@@ -15,6 +15,8 @@ $(function(){
         fit:true,//让#dg数据创铺满父类容器
         footer:'#tb',
         singleSelect:true,
+        sortName:'classCode',
+        sortOrder:'asc',
         columns:[[{
             title:'编号',
             field:'id',
@@ -23,7 +25,16 @@ $(function(){
             title:'类别代码',
             field:'classCode',
             width:"20%",
-            editor: 'textbox'
+            editor: 'textbox',
+            sortable:true,
+            sorter:function(a,b){
+                console.log(a.substring(0,2));
+                if(a.substring(0,2)> b.substring(0,2)){
+                    return 1
+                }else{
+                    return -1 ;
+                }
+            }
         },{
             title:'类别名称',
             field:'className',
@@ -88,6 +99,25 @@ $(function(){
         //var name = $("#name").textbox("getValue");
 
         $.get("/api/exp-class-dict/list", function (data) {
+            data.sort(function(a,b){
+                if(a.classCode.length== b.classCode.length){
+                    return a.classCode- b.classCode ;
+                }
+                if(a.classCode.length> b.classCode.length){
+                    if(a.classCode.substring(0,2)== b.classCode.substring(0,2)){
+                        return -1;
+                    }else{
+                        return a.classCode.substr(0,2) - b.classCode.substr(0,2);
+                    }
+                }else{
+                    if(a.classCode.substring(0,2)== b.classCode.substring(0,2)){
+                        return -1;
+                    }else{
+                        return a.classCode.substr(0,2) - b.classCode.substr(0,2);
+                    }
+                }
+
+            })
             $("#dg").datagrid('loadData', data);
         });
     }
