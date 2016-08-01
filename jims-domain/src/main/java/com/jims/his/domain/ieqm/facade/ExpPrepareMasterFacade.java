@@ -325,8 +325,10 @@ public class ExpPrepareMasterFacade extends BaseFacade {
          */
         int rows5=entityManager.createQuery("delete from ExpStock where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
         if(rows1!=0&&rows2!=0&&rows3!=0&&rows4!=0){
+            map.put("success",true);
             map.put("info","操作成功！");
         }else{
+            map.put("success",false);
             map.put("info","参数不正确！");
         }
         return map;
