@@ -27,7 +27,7 @@ public class ExpPrepareVo {
     private String operator ;            //操作人
     private String preparePersonName ;   //备货人
     private String phone ;               //备货人电话
-    private Double price ;               //备货价格
+    private String price ;               //备货价格
     private String expCode;               //耗材编码
     private String expName;               //耗材名称
     private String expSpec;               //规格
@@ -46,7 +46,7 @@ public class ExpPrepareVo {
 
     }
 
-    public ExpPrepareVo(String supplier,String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
+    public ExpPrepareVo(String supplier,String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String useDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, String price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
 //    public ExpPrepareVo(String expBarCode, String masterId, String useFlag, String useDate, String usePatientId, String userDept, String impDocnoFirst, String expDocnoFirst, String impDocnoSecond, String expDocnoSecond, String barCodeOperator, String printFlag, String expId, String supplierId, String prepareDate, String prepareCount, String operator, String preparePersonName, String phone, Double price, String expCode, String expName, String expSpec, String units, String expFrom, String usePrice) {
         this.expBarCode = expBarCode;
         this.masterId = masterId;
@@ -237,11 +237,11 @@ public class ExpPrepareVo {
         this.phone = phone;
     }
 
-    public Double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
