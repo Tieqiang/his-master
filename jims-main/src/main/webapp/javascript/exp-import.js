@@ -664,17 +664,19 @@ $(function () {
         pageSize: 50,
         pageNumber: 1
     });
-    var suppliers = [];
-    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
-        suppliers = data;
-    });
+//    var suppliers = [];
+//    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+//        suppliers = data;
+//    });
 
-    promise.done(function () {
+//    promise.done(function () {
         $("#supplier").combogrid({
+            mode: 'remote',
             idField: 'supplierCode',
             textField: 'supplierName',
-            data: suppliers,
+            url:'/api/exp-supplier-catalog/list-with-dept?hospitalId='+ parent.config.hospitalId,
             panelWidth: 450,
+            method:"GET",
             fitColumns: true,
             columns: [[{
                 title: '供应商名称',
@@ -687,7 +689,7 @@ $(function () {
                 field: 'inputCode', width: 50, align: 'center'
             }]]
         })
-    });
+//    });
 
     //追加
 
