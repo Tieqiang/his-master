@@ -413,25 +413,47 @@ $(function () {
         }
     });
 
-
+//打印
     $("#printDiv").dialog({
         title: '打印预览',
         width: 1000,
         height: 520,
         catch: false,
         modal: true,
+        buttons: '#printft',
         closed: true,
         onOpen: function () {
-            $("#report").prop("src", parent.config.defaultReportPath + "/exp/exp_print/exp-import-document-search.cpt");
+            var printData = $("#importMaster").datagrid('getRows');
+            var  printDocumentNo=printData[0].documentNo;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import.cpt&documentNo=" + printDocumentNo;
+            $("#report").prop("src",cjkEncode(https));
         }
-    })
+
+    });
     $("#printBtn").on('click', function () {
-        var printData = $("#importMaster").datagrid('getRows');
-        if (printData.length <= 0) {
-            $.messager.alert('系统提示', '请先查询数据', 'info');
+        var printData = $("#importMaster").datagrid('getSelections');
+        alert(printData.length);
+        if (printData.length !=1) {
+            $.messager.alert('系统提示', '只能先选择一条数据!', 'error');
             return;
         }
         $("#printDiv").dialog('open');
+
+    })
+    /**
+     * 打印
+     */
+    $("#printBtn").on('click', function () {
+        if(saveFlag){
+            $("#printDiv").dialog('open');
+        }else{
+            var printData = $("#importDetail").datagrid('getRows');
+            if (printData.length <= 0) {
+                $.messager.alert('系统提示', '请先查询数据', 'info');
+                return;
+            }
+            $("#printDiv").dialog('open');
+        }
 
     })
 })
