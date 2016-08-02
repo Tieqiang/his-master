@@ -3,6 +3,12 @@
  */
 $(function(){
 
+
+    $.get("/api/login/get-login-info",function(data){
+        console.log("登陆信息：")
+        console.log(data) ;
+    })
+
     $("#win").window({
         modal:true,
         width:350,

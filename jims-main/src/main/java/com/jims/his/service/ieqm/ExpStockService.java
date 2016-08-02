@@ -103,7 +103,7 @@ public class ExpStockService {
                 "                c.Register_no,\n" +
                 "                c.Permit_no,\n" +
                 "                c.amount_per_package,\n" +
-                "                nvl((select quantity\n" +
+                "                nvl((select sum(quantity)\n" +
                 "                      from exp_stock d\n" +
                 "                     where c.min_spec = d.exp_spec\n" +
                 "                       and c.exp_code = d.exp_code\n" +
@@ -111,7 +111,7 @@ public class ExpStockService {
                 "                       and c.firm_id = d.firm_id\n" +
                 "                       and d.storage = '"+storageCode+"'),\n" +
                 "                    0) as quantity,\n" +
-                "                (select killflag\n" +
+                "                (select distinct killflag\n" +
                 "                   from exp_stock f\n" +
                 "                  where c.min_spec = f.exp_spec\n" +
                 "                    and c.exp_code = f.exp_code\n" +

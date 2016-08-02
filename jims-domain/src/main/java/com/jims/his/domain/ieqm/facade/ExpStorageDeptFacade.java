@@ -98,4 +98,9 @@ public class ExpStorageDeptFacade extends BaseFacade {
 
 
     }
+
+    public List<ExpStorageDept> findStroageByHospitalId(String hospitalId) {
+        String hql = "from ExpStorageDept as dept where dept.hospitalId='"+hospitalId+"'" ;
+        return createQuery(ExpStorageDept.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
 }

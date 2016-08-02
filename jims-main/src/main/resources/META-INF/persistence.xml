@@ -87,6 +87,7 @@
         <class>com.jims.his.domain.ieqm.entity.BuyExpPlan</class>
         <class>com.jims.his.domain.common.entity.ReportDict</class>
         <class>com.jims.his.domain.common.entity.KeyDict</class>
+        <class>com.jims.his.domain.ieqm.entity.StaffVsStorage</class>
         <!--备货-->
         <class>com.jims.his.domain.ieqm.entity.ExpPrepareMaster</class>
         <class>com.jims.his.domain.ieqm.entity.ExpPrepareDetail</class>
