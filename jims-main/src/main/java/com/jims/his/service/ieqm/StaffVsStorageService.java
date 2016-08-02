@@ -52,7 +52,8 @@ public class StaffVsStorageService {
     @GET
     @Path("find-storage-by-staffId")
     public List<ExpStorageDept> findByStaffId(@QueryParam("staffId")String staffId){
-        return staffVsStorageFacade.findStorageByStaffId(staffId) ;
+        List<ExpStorageDept> list= staffVsStorageFacade.findStorageByStaffId(staffId) ;
+        return list;
     }
 
 }

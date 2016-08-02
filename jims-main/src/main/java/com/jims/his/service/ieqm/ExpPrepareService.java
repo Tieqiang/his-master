@@ -190,17 +190,22 @@ public class ExpPrepareService {
                 } else if (suffer2.length() == 6) {
                     documentNo2 = expSubStorageDict.getExportNoPrefix() + "0000".substring((expSubStorageDict.getExportNoAva() + "").length()) + expSubStorageDict.getExportNoAva();
                 }
-
-//            ExpPrepareMaster expPrepareMaster=this.expPrepareMasterFacade.findById(masterId);
-                ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,operator,patientId,hospitalId,barCode,userDeptCode);
-                returnVal.put("info",expPrepareVo);
-                if(expPrepareVo!=null){
-                    returnVal.put("success",true);
-                }else{
+                 try {
+                    ExpPrepareVo expPrepareVo=this.expPrepareMasterFacade.prepareFee(expPrepareMaster,documentNo,documentNo2,operator,patientId,hospitalId,barCode,userDeptCode);
+                    returnVal.put("info",expPrepareVo);
+                    if(expPrepareVo!=null){
+                        returnVal.put("success",true);
+                    }else{
+                        returnVal.put("success",false);
+                    }
+                } catch (Exception e) {
+                    returnVal.put("info","参数错误！");
                     returnVal.put("success",false);
+                    return returnVal;
                 }
             }else{
                 returnVal.put("info","参数错误！");
+
                 returnVal.put("success",false);
             }
             return returnVal;
@@ -216,7 +221,17 @@ public class ExpPrepareService {
     @GET
     @Path("roll-back-prepare")
     public Map<String,Object> rollBackPrepare(@QueryParam("barCode") String barCode){
-        Map<String,Object> retVal=this.expPrepareMasterFacade.rollBack(barCode);
+        Map<String,Object> retVal= null;
+        try {
+            retVal = this.expPrepareMasterFacade.rollBack(barCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(retVal==null){
+                retVal=new HashMap<>();
+            }
+            retVal.put("success",false);
+            retVal.put("info","barCode 错误！");
+        }
         return retVal;
     }
 

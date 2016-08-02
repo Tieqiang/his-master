@@ -359,6 +359,18 @@ public class LoginService {
             e.printStackTrace();
         }
     }
+
+
+    @GET
+    @Path("write-staff_id")
+    public String writeStaffId(@QueryParam("staffId") String staffId){
+        try {
+            resp.sendRedirect("/views/his/common/module-select.html?sId="+staffId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }
 
 

@@ -53,16 +53,17 @@
 
 <div id="ft">
     <a class="easyui-linkbutton" id="searchBtn" href="#" data-options="iconCls:'icon-search'">查询</a>
-    <!--<a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'">打印</a>-->
-    <!--<a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-clear'">退出</a>-->
-</div>
+    <a  id="printBtn" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'">打印</a>
+ </div>
 
 <div id="retailDialog" class="easyui-dialog" style="width:500px;height:300px;">
     <div id="importRetailData">
 
     </div>
 </div>
-
+<div id="printft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel'" id="printClose">关闭</a>
+</div>
 <div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
     <iframe width="1100px" height="520px" id="report">
     </iframe>
