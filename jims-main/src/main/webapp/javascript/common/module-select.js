@@ -4,11 +4,20 @@
 $(function(){
 
 
-    $.get("/api/login/get-login-info",function(data){
-        console.log("登陆信息：")
-        console.log(data) ;
-    })
-
+//    $.get("/api/login/get-login-info",function(data){
+//        console.log("登陆信息：")
+//        console.log(data) ;
+//    })
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(window.parent.location.href);
+        if (results == null)    return ""; else {
+            return results[1];
+        }
+    }
+    var staffId=getUrlParameter("sId");
     $("#win").window({
         modal:true,
         width:350,
@@ -56,13 +65,15 @@ $(function(){
                         //库房选择
                         $('#stock').combobox({
                             panelHeight: 200,
-                            url: '/api/exp-storage-dept/list?hospitalId=' + $("#hospital").combobox('getValue'),
+//                            url: '/api/exp-storage-dept/list?hospitalId=' + $("#hospital").combobox('getValue'),
+                            url:'/api/staff-vs-storage/find-storage-by-staffId?staffId='+staffId,
                             method: 'GET',
                             valueField: 'id',
                             textField: 'storageName',
                             onLoadSuccess: function () {
                                 var data = $(this).combobox('getData');
                                 if (data.length > 0) {
+                                    console.info(data[0]);
                                     $(this).combobox('select', data[0].id);
                                     $("#stockDiv").show();
                                 } else {

@@ -17,9 +17,8 @@ public class StaffVsStorageFacade extends BaseFacade {
     public List<StaffVsStorage> findStaffByStorageCode(String storageCode, String hospitalId) {
         String hql = "select vs from StaffVsStorage vs,ExpStorageDept dept where dept.storageCode='"+storageCode+"' " +
                 "and dept.hospitalId='"+hospitalId+"' and vs.storageId=dept.id";
-        createQuery(StaffVsStorage.class,hql,new ArrayList<Object>()) ;
-        return null;
-    }
+        return  createQuery(StaffVsStorage.class,hql,new ArrayList<Object>()).getResultList();
+     }
 
 
     public List<StaffDict> findStaffDictByStroageCode(String storageCode, String hospitalId) {
@@ -31,11 +30,13 @@ public class StaffVsStorageFacade extends BaseFacade {
 
 
     public List<ExpStorageDept> findStorageByStaffId(String staffId) {
-        //没有考虑多机构
-        String hql = "from ExpStorageDept as dept,StaffVsStorage st " +
+         //没有考虑多机构
+        String hql = "select dept from ExpStorageDept as dept,StaffVsStorage st " +
                 "where dept.id=st.storageId and st.staffId='"+staffId+"'" ;
-
-        return createQuery(ExpStorageDept.class,hql,new ArrayList<Object>()).getResultList() ;
-
+        List<ExpStorageDept> list=entityManager.createQuery(hql).getResultList();
+        if(list!=null&&!list.isEmpty()){
+            return list;
+        }
+        return null;
     }
 }

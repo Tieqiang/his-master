@@ -221,7 +221,17 @@ public class ExpPrepareService {
     @GET
     @Path("roll-back-prepare")
     public Map<String,Object> rollBackPrepare(@QueryParam("barCode") String barCode){
-        Map<String,Object> retVal=this.expPrepareMasterFacade.rollBack(barCode);
+        Map<String,Object> retVal= null;
+        try {
+            retVal = this.expPrepareMasterFacade.rollBack(barCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(retVal==null){
+                retVal=new HashMap<>();
+            }
+            retVal.put("success",false);
+            retVal.put("info","barCode 错误！");
+        }
         return retVal;
     }
 
