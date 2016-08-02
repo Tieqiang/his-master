@@ -390,6 +390,6 @@ public class EncryptUtil {
     public static void main(String[] args) throws Exception {
         System.out.println(encrypt("双滦区人民医院"));
         System.out.println(decrypt("ZWABPx9A2mefOWOEv9PAUO+5ubGv7hfYf54tzIPPpeIFK51MhFBp7Q=="));
-        System.out.println(encrypt("20160716"));
+        System.out.println(encrypt("20300716"));
     }
 }

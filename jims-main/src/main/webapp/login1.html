@@ -80,7 +80,7 @@
                     if(data.errorMessage){
                         alert(data.errorMessage) ;
                     }else{
-                        location.href="/views/his/common/module-select.html" ;
+                        location.href="/views/his/common/module-select.html?sId="+data.id ;
                     }
                 },'json')
             }) ;
