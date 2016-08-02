@@ -423,7 +423,7 @@ $(function () {
         buttons: '#printft',
         closed: true,
         onOpen: function () {
-            var printData = $("#importMaster").datagrid('getRows');
+            var printData = $("#importMaster").datagrid('getSelections');
             var  printDocumentNo=printData[0].documentNo;
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import.cpt&documentNo=" + printDocumentNo;
             $("#report").prop("src",cjkEncode(https));
