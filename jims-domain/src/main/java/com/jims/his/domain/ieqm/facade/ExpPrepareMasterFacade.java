@@ -315,6 +315,12 @@ public class ExpPrepareMasterFacade extends BaseFacade {
          *exp_prepare_detail
          */
         ExpPrepareDetail expPrepareDetail=(ExpPrepareDetail)entityManager.createQuery("from ExpPrepareDetail where expBarCode='"+barCode+"'").getSingleResult();
+
+        int rows1=entityManager.createQuery("delete from ExpImportMaster where documentNo='"+expPrepareDetail.getImpDocnoFirst()+"'").executeUpdate();
+        int rows2=entityManager.createQuery("delete from ExpImportDetail where documentNo='"+expPrepareDetail.getImpDocnoFirst()+"'").executeUpdate();
+        int rows3=entityManager.createQuery("delete from ExpExportMaster where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
+        int rows4=entityManager.createQuery("delete from ExpExportDetail where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
+
         expPrepareDetail.setUseDept("");
         expPrepareDetail.setUseFlag("0");
         expPrepareDetail.setUseDate("");
@@ -326,10 +332,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
         /**
          * import export
          */
-        int rows1=entityManager.createQuery("delete from ExpImportMaster where documentNo='"+expPrepareDetail.getImpDocnoFirst()+"'").executeUpdate();
-        int rows2=entityManager.createQuery("delete from ExpImportDetail where documentNo='"+expPrepareDetail.getImpDocnoFirst()+"'").executeUpdate();
-        int rows3=entityManager.createQuery("delete from ExpExportMaster where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
-        int rows4=entityManager.createQuery("delete from ExpExportDetail where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
+
          /**
          *exp_stock
          */
