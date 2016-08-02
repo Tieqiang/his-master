@@ -153,8 +153,11 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             if(expDict!=null){
                 expImportDetail.setExpForm(expDict.getExpForm());
             }
-            ExpSupplierCatalog e=this.expSupplierCatalogFacade.findById(expPrepareMaster.getFirmId());
-            expImportDetail.setFirmId(e.getSupplierId());//生产厂家
+            ExpSupplierCatalog e=null;
+            if(expPrepareMaster.getFirmId()==null || "".equals(expPrepareMaster.getFirmId())?false:true){
+                e=this.expSupplierCatalogFacade.findById(expPrepareMaster.getFirmId());
+                expImportDetail.setFirmId(e.getSupplierId());//生产厂家
+            }
             expImportDetail.setPackageSpec(expPriceList.getExpSpec());
             expImportDetail.setPurchasePrice(expPriceList.getTradePrice());//进价
             expImportDetail.setTradePrice(expPriceList.getTradePrice());//林售价
@@ -212,7 +215,10 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportDetail.setExpSpec(expPriceList.getMinSpec());
             expExportDetail.setExpCode(expPriceList.getExpCode());
             expExportDetail.setUnits(expPriceList.getMinUnits());
-            expExportDetail.setFirmId(e.getSupplierId());
+            if(e!=null){
+                expExportDetail.setFirmId(e.getSupplierId());
+                expExportDetail.setBigFirmId(e.getSupplierId());
+            }
             expExportDetail.setExpForm(expDict.getExpForm());
             expExportDetail.setPurchasePrice(expPriceList.getTradePrice());//
             expExportDetail.setRetailPrice(expPriceList.getRetailPrice());
@@ -223,13 +229,17 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expExportDetail.setPackageUnits(expPriceList.getUnits());
             expExportDetail.setInventory(0.0);//现有数量为0
             expExportDetail.setAssignCode("");//分摊方式
-            expExportDetail.setBigFirmId(e.getSupplierId());
+
+
             expExportDetail= super.merge(expExportDetail);
             /**
              * 库存表 exp_stock
              */
             ExpStock expStock=null;
-            String sql="from ExpStock where expCode='"+expPriceList.getExpCode()+"' and expSpec='"+expPriceList.getMinSpec()+"' and packageSpec='"+expPriceList.getExpSpec()+"' and firmId='"+e.getSupplierId()+"' and storage='"+expSubStorageDict.getStorageCode()+"'";
+            String sql="from ExpStock where expCode='"+expPriceList.getExpCode()+"' and expSpec='"+expPriceList.getMinSpec()+"' and packageSpec='"+expPriceList.getExpSpec()+"' and storage='"+expSubStorageDict.getStorageCode()+"'";
+            if(e!=null){
+                sql+="and firmId='"+e.getSupplierId()+"'";
+            }
             List<ExpStock> list=entityManager.createQuery(sql).getResultList();
             if(list!=null&&!list.isEmpty()){
                 expStock=list.get(0);
@@ -325,8 +335,10 @@ public class ExpPrepareMasterFacade extends BaseFacade {
          */
         int rows5=entityManager.createQuery("delete from ExpStock where documentNo='"+expPrepareDetail.getExpDocnoFirst()+"'").executeUpdate();
         if(rows1!=0&&rows2!=0&&rows3!=0&&rows4!=0){
+            map.put("success",true);
             map.put("info","操作成功！");
         }else{
+            map.put("success",false);
             map.put("info","参数不正确！");
         }
         return map;
