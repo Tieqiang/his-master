@@ -39,13 +39,20 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
     //    return resultList;
     //}
     //查询供应商
-    public List<ExpSupplierCatalog> findSupplierBySupplierClass(String supplierClass){
+    public List<ExpSupplierCatalog> findSupplierBySupplierClass(String supplierClass,String q){
         String hql = "from ExpSupplierCatalog a where a.supplierClass = '"+supplierClass+"'";
+        if(q!=null&&!"".equals(q)){
+            //upper(a.input_code) like upper('" + q + "%')"
+            hql+=" and upper(a.inputCode) like upper('" + q + "%')";
+        }
         return entityManager.createQuery(hql).getResultList();
     }
     //查询供应商
-    public List<ExpSupplierCatalog> findSupplierByInputCode(String inputCode){
+    public List<ExpSupplierCatalog> findSupplierByInputCode(String inputCode,String q){
         String hql = "from ExpSupplierCatalog a where a.supplier =  '"+inputCode+"'  ";
+        if(q!=null&&!"".equals(q)){
+            hql+=" and upper(a.inputCode) like upper('" + q + "%')";
+        }
         return entityManager.createQuery(hql).getResultList();
     }
 
@@ -87,12 +94,12 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
      * @param hospitalId
      * @return
      */
-    public List<ExpSupplierVo> listExpSupplierWithDept(String hospitalId) {
-        List<ExpSupplierCatalog> supplierCatalogs = this.findSupplierBySupplierClass("供应商");
-        List<ExpSupplierCatalog> supplierCatalogs1 = this.findSupplierBySupplierClass("生产商");
+    public List<ExpSupplierVo> listExpSupplierWithDept(String hospitalId,String q) {
+        List<ExpSupplierCatalog> supplierCatalogs = this.findSupplierBySupplierClass("供应商",q);
+        List<ExpSupplierCatalog> supplierCatalogs1 = this.findSupplierBySupplierClass("生产商",q);
         List<ExpSupplierVo> expSupplierVos = new ArrayList<>() ;
         //List<DeptDict> deptDicts = deptDictFacade.findByHospitalId(hospitalId);
-        List<ExpStorageDept> expStorageDepts = expStorageDeptFacade.getByHospitalId(hospitalId,null,null) ;
+        List<ExpStorageDept> expStorageDepts = expStorageDeptFacade.getByHospitalId(hospitalId,q,null) ;
 
         for (ExpSupplierCatalog catalog:supplierCatalogs){
             ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(),catalog.getSupplierId(),catalog.getInputCode()) ;

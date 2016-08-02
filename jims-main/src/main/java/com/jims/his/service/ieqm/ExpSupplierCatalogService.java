@@ -37,10 +37,10 @@ public class ExpSupplierCatalogService {
     public List<ExpSupplierCatalog> findSupplier(@QueryParam("supplierName")String supplierName,@QueryParam("supplier")String inputCode){
         List<ExpSupplierCatalog> expSupplierCatalogList = null;
         if (supplierName != null && supplierName.trim().length() > 0){
-            expSupplierCatalogList = expSupplierCatalogFacade.findSupplierBySupplierClass(supplierName);
+            expSupplierCatalogList = expSupplierCatalogFacade.findSupplierBySupplierClass(supplierName,null);
         }
         if(inputCode != null && inputCode.trim().length() > 0) {
-            expSupplierCatalogList =expSupplierCatalogFacade.findSupplierByInputCode(inputCode);
+            expSupplierCatalogList =expSupplierCatalogFacade.findSupplierByInputCode(inputCode,null);
         }
         return expSupplierCatalogList;
     }
@@ -81,9 +81,9 @@ public class ExpSupplierCatalogService {
 
     @GET
     @Path("list-with-dept")
-    public List<ExpSupplierVo> listSupplierVoByHospitalId(@QueryParam("hospitalId")String hospitalId){
+    public List<ExpSupplierVo> listSupplierVoByHospitalId(@QueryParam("hospitalId")String hospitalId,@QueryParam("q") String q){
 
-        return expSupplierCatalogFacade.listExpSupplierWithDept(hospitalId) ;
+        return expSupplierCatalogFacade.listExpSupplierWithDept(hospitalId,q) ;
     }
 
    /***

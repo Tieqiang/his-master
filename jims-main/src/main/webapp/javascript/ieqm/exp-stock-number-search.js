@@ -85,6 +85,12 @@ $(function () {
             editor: {type: 'numberbox'}
 
         }, {
+            title: '批号',
+            width: '7%',
+            field: 'batchNo',
+            editor: {type: 'numberbox'}
+
+        }, {
             title: '进货单价',
             width: '7%',
             field: 'purchasePrice',

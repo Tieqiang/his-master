@@ -195,15 +195,18 @@ $(function () {
         }
     });
 
-    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
-        suppliers = data;
-    });
+//    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
+//        suppliers = data;
+//    });
     //供货方数据加载
-    promise.done(function () {
+//    promise.done(function () {
         $("#supplier").combogrid({
+            mode:'remote',
+            url:'/api/exp-supplier-catalog/list-with-dept?hospitalId=' + parent.config.hospitalId,
             idField: 'supplierCode',
             textField: 'supplierName',
-            data: suppliers,
+            method:'GET',
+//            data: suppliers,
             panelWidth: 500,
             fitColumns: true,
             columns: [[{
@@ -220,7 +223,7 @@ $(function () {
                 return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
             }
         })
-    });
+//    });
 
     //开支类别数据加载
     $('#fundItem').combobox({
