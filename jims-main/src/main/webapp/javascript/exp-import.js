@@ -75,21 +75,13 @@ $(function () {
             title: '单据号',
             field: 'documNo',
             align: 'center',
-            width: '6%'
+            width: '10%'
 
-        },{
-            title: '项目代码',
-            field: 'expCode',
-            align: 'center',
-            width: '6%',
-            editor: {type: 'textbox', options: {
-                editable: false,
-                disabled: true}}
         },  {
             title: '品名',
             field: 'expName',
             align: 'center',
-            width: '9%',
+            width: '20%',
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
@@ -193,7 +185,7 @@ $(function () {
             title: '批号',
             field: 'batchNo',
             align: 'center',
-            width: '5%',
+            width: '10%',
             editor: {type: 'textbox', options: {
                 editable: true,
                 disabled: false}}
@@ -210,7 +202,7 @@ $(function () {
             title: '金额',
             field: 'amount',
             align: 'center',
-            width: '5%',
+            width: '10%',
             editor: {
                 type: 'numberbox', options: {
                     precision: '2',
@@ -222,7 +214,7 @@ $(function () {
             title: '产品类型',
             field: 'expForm',
             align: 'center',
-            width: '6%',
+            width: '10%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
@@ -230,31 +222,43 @@ $(function () {
             title: '有效日期',
             field: 'expireDate',
             align: 'center',
-            width:'9%',
+            width:'10%',
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate
-//                    parser: w3,
-//                    onSelect: function (date) {
-//                        var dateEd = $("#importDetail").datagrid('getEditor', {
-//                            index: editIndex,
-//                            field: 'expireDate'
-//                        });
-//                        var y = date.getFullYear()+1;
-//                        var m = date.getMonth() + 1;
-//                        var d = date.getDate();
-//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-//
-//                        $(dateEd.target).textbox('setValue', dateTime);
-//                        $(this).datetimebox('hidePanel');
-//                    }
-                }
+                type: 'datebox'
             }
+//            editor: {
+//                type: 'datetimebox',
+//                options: {
+//                    value: 'dateTime',
+//                    showSeconds: true,
+//                    formatter: formatterDate
+////                    parser: w3,
+////                    onSelect: function (date) {
+////                        var dateEd = $("#importDetail").datagrid('getEditor', {
+////                            index: editIndex,
+////                            field: 'expireDate'
+////                        });
+////                        var y = date.getFullYear()+1;
+////                        var m = date.getMonth() + 1;
+////                        var d = date.getDate();
+////                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
+////                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+////
+////                        $(dateEd.target).textbox('setValue', dateTime);
+////                        $(this).datetimebox('hidePanel');
+////                    }
+//                }
+//            }
+
         }, {
+            title: '项目代码',
+            field: 'expCode',
+            align: 'center',
+            width: '10%',
+            editor: {type: 'textbox', options: {
+                editable: false,
+                disabled: true}}
+        },{
             title: '厂家',
             field: 'firmId',
             align: 'center',
@@ -266,7 +270,8 @@ $(function () {
             title: '注册证号',
             field: 'expImportDetailRegistNo',
             align: 'center',
-            width: '6%',
+            //width: '6%',
+            hidden:true,
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}
@@ -275,7 +280,8 @@ $(function () {
             title: '许可证号',
             field: 'expImportDetailLicenceno',
             align: 'center',
-            width: '6%',
+            //width: '6%',
+            hidden:true,
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
@@ -283,13 +289,15 @@ $(function () {
             title: '发票号',
             field: 'invoiceNo',
             align: 'center',
-            width: '5%',
+            //width: '5%',
+            hidden:true,
             editor: {type: 'textbox', options: {}}
         }, {
             title: '发票日期',
             field: 'invoiceDate',
             align: 'center',
-            width:'9%',
+            hidden:true,
+            //width:'9%',
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -317,13 +325,15 @@ $(function () {
             title: '备注',
             field: 'memo',
             align: 'center',
-            width: '5%',
+            hidden:true,
+            //width: '5%',
             editor: {type: 'textbox', options: {}}
         }, {
             title: '生产日期',
             field: 'producedate',
             align: 'center',
-            width:'9%',
+            hidden:true,
+            //width:'9%',
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -351,7 +361,8 @@ $(function () {
             title: '消毒日期',
             field: 'disinfectdate',
             align: 'center',
-            width:'9%',
+            hidden:true,
+            //width:'9%',
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -379,7 +390,8 @@ $(function () {
             title: '灭菌标志',
             field: 'killFlag',
             align: 'center',
-            width: '6%',
+            hidden:true,
+            //width: '6%',
             editor: {type: 'combobox', options: {
                 valueField:'value',
                 textField:'title',
@@ -395,27 +407,31 @@ $(function () {
             title: '折扣',
             field: 'discount',
             align: 'center',
-            width: '5%',
+            hidden:true,
+            //width: '5%',
             editor: {type: 'textbox', options: {}}
         }, {
 
             title: '招标文号',
             field: 'orderBatch',
             align: 'center',
-            width: '6%',
+            hidden:true,
+            //width: '6%',
             editor: {type: 'textbox', options: {}}
 
         }, {
             title: '招标文号序号',
             field: 'tenderNo',
             align: 'center',
-            width: '8%',
+            hidden:true,
+            //width: '8%',
             editor: {type: 'numberbox', options: {}}
         }, {
             title: '现有数量',
             field: 'inventory',
+            hidden:true,
             align: 'center',
-            width: '6%',
+            //width: '6%',
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: true,precision: '2'}}
@@ -423,7 +439,7 @@ $(function () {
             title: '零售价',
             field: 'retailPrice',
             align: 'center',
-            width: '6%',
+            //width: '6%',
             editor: {type: 'numberbox', options: {
                 editable: false,
                 disabled: true,precision: '2'}}
@@ -1018,7 +1034,10 @@ $(function () {
             }
             detail.batchNo=batchNo;
             detail.purchasePrice = rows[i].purchasePrice;
-            detail.expireDate = new Date(rows[i].expireDate);
+            var expireDate = rows[i].expireDate ;
+            detail.expireDate = new Date(expireDate);
+
+
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
