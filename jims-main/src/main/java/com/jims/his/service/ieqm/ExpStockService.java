@@ -111,13 +111,14 @@ public class ExpStockService {
                 "                       and c.firm_id = d.firm_id\n" +
                 "                       and d.storage = '"+storageCode+"'),\n" +
                 "                    0) as quantity,\n" +
-                "                (select distinct killflag\n" +
-                "                   from exp_stock f\n" +
-                "                  where c.min_spec = f.exp_spec\n" +
-                "                    and c.exp_code = f.exp_code\n" +
-                "                    and c.exp_spec = f.package_spec\n" +
-                "                    and c.firm_id = f.firm_id\n" +
-                "                    and f.storage = '"+storageCode+"') as killflag\n" +
+                "                     0 killflag\n" +
+                //"                (select distinct killflag\n" +
+                //"                   from exp_stock f\n" +
+                //"                  where c.min_spec = f.exp_spec\n" +
+                //"                    and c.exp_code = f.exp_code\n" +
+                //"                    and c.exp_spec = f.package_spec\n" +
+                //"                    and c.firm_id = f.firm_id\n" +
+                //"                    and f.storage = '"+storageCode+"') as killflag\n" +
                 "  FROM exp_dict b, exp_price_list c\n" +
                 " WHERE b.EXP_CODE = c.EXP_CODE\n" +
                 "   AND b.exp_spec = c.min_spec\n" +

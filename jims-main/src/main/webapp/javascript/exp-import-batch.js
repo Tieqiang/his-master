@@ -308,7 +308,7 @@ $(function () {
             title: '品名',
             field: 'expName',
             align: 'center',
-            width: '5%',
+            width: '20%',
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
@@ -408,7 +408,7 @@ $(function () {
             title: '批号',
             field: 'batchNo',
             align: 'center',
-            width: '5%',
+            width: '9%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: false}}
@@ -425,7 +425,7 @@ $(function () {
             title: '金额',
             field: 'amount',
             align: 'center',
-            width: '5%',
+            width: '8%',
             editor: {
                 type: 'numberbox', options: {
                     precision: '2',
@@ -437,7 +437,7 @@ $(function () {
             title: '产品类型',
             field: 'expForm',
             align: 'center',
-            width: '6%',
+            width: '10%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: false}}
@@ -446,7 +446,7 @@ $(function () {
             field: 'expireDate',
             align: 'center',
             formatter: formatterDate,
-            width:'7%',
+            width:'10%',
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -504,15 +504,17 @@ $(function () {
             title: '注册证号',
             field: 'expImportDetailRegistNo',
             align: 'center',
-            width: '6%',
+            //width: '6%',
+            hidden:true,
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: false}}
         }, {
             title: '许可证号',
             field: 'expImportDetailLicenceno',
-            align: 'center',
-            width: '6%',
+            //align: 'center',
+            //width: '6%',
+            hidden:true,
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: false}}
@@ -520,14 +522,16 @@ $(function () {
             title: '发票号',
             field: 'invoiceNo',
             align: 'center',
-            width: '5%',
+            hidden:true,
+            //width: '5%',
             editor: {type: 'textbox', options: {}}
         }, {
             title: '发票日期',
             field: 'invoiceDate',
             align: 'center',
+            hidden:true,
             formatter: formatterDate,
-            width:'7%',
+            //width:'7%',
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -555,12 +559,14 @@ $(function () {
             title: '备注',
             field: 'memo',
             align: 'center',
-            width: '4%',
+            hidden:true,
+            //width: '4%',
             editor: {type: 'textbox', options: {}}
         }, {
             title: '生产日期',
             field: 'producedate',
-            align: 'center',
+            hidden:true,
+            //align: 'center',
             formatter: formatterYMD,
             width:'7%',
             editor: {
@@ -591,7 +597,8 @@ $(function () {
             field: 'disinfectdate',
             align: 'center',
             formatter: formatterYMD,
-            width:'7%',
+            //width:'7%',
+            hidden:true,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -619,12 +626,14 @@ $(function () {
             title: '灭菌标志',
             field: 'killflag',
             align: 'center',
-            width: '6%',
+            //width: '6%',
+            hidden:true,
             editor: {type: 'checkbox', options: {}}
         }, {
             title: '折扣',
             field: 'discount',
             align: 'center',
+            hidden:true,
             width: '4%',
             editor: {type: 'textbox', options: {}}
         }, {
@@ -632,6 +641,7 @@ $(function () {
             title: '招标文号',
             field: 'orderBatch',
             align: 'center',
+            hidden:true,
             width: '6%',
             editor: {type: 'textbox', options: {}}
 
@@ -639,12 +649,14 @@ $(function () {
             title: '招标文号序号',
             field: 'tenderNo',
             align: 'center',
+            hidden:true,
             width: '8%',
             editor: {type: 'textbox', options: {}}
         }, {
             title: '现有数量',
             field: 'inventory',
             align: 'center',
+            hidden:true,
             width: '6%',
             editor: {type: 'numberbox', options: {
                 editable: false,

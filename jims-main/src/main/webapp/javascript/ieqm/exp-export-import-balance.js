@@ -526,25 +526,32 @@ $(function () {
             field: 'documentNo'
         }, {
             title: '子包装1',
-            field: 'subPackage1'
+            field: 'subPackage1',
+            hidden:true
         }, {
             title: '子单位1',
-            field: 'subPackageUnits1'
+            field: 'subPackageUnits1',
+            hidden:true
         }, {
             title: '子规格1',
-            field: 'subPackageSpec1'
+            field: 'subPackageSpec1',
+            hidden:true
         }, {
             title: '子包装2',
-            field: 'subPackage2'
+            field: 'subPackage2',
+            hidden:true
         }, {
             title: '子单位2',
-            field: 'subPackageUnits2'
+            field: 'subPackageUnits2',
+            hidden:true
         }, {
             title: '子规格2',
-            field: 'subPackageSpec2'
+            field: 'subPackageSpec2',
+            hidden:true
         }, {
             title: '生产日期',
             field: 'producedate',
+            hidden:true,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -571,6 +578,7 @@ $(function () {
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
+            hidden:true,
             editor: {
                 type: 'datetimebox',
                 options: {
@@ -596,7 +604,8 @@ $(function () {
             }
         }, {
             title: '灭菌标识',
-            field: 'killflag'
+            field: 'killflag',
+            hidden:true
         }, {
             title: '产品类别',
             field: 'expForm'
@@ -619,10 +628,12 @@ $(function () {
             }
         }, {
             title: '注册证号',
-            field: 'registerNo'
+            field: 'registerNo',
+            hidden:true
         }, {
             title: '许可证号',
-            field: 'permitNo'
+            field: 'permitNo',
+            hidden:true
         }]],
         onDblClickRow: function (index, row) {
             $("#dg").datagrid('endEdit', editIndex);
@@ -694,7 +705,7 @@ $(function () {
         }, {
             title: '品名',
             field: 'expName',
-            width:'7%',
+            width:'20%',
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
@@ -831,6 +842,7 @@ $(function () {
         }, {
             title: '结存量',
             field: 'disNum',
+            hidden:true,
             editor: {
                 type: 'numberbox',
                 options: {
@@ -856,7 +868,8 @@ $(function () {
         }, {
             title: '分摊方式',
             field: 'assignCode',
-            width: '7%',
+            hidden:true,
+            //width: '7%',
             editor: {
                 type: 'combobox',
                 options: {
@@ -874,42 +887,48 @@ $(function () {
         }, {
             title: '注册证号',
             field: 'expImportDetailRegistNo',
-            width: '7%',
+            //width: '7%',
+            hidden:true,
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '许可证号',
             field: 'expImportDetailLicenceno',
-            width: '7%',
+            hidden:true,
+            //width: '7%',
             editor: {type: 'textbox', options: {
                 editable: false,
                 disabled: true}}
         }, {
             title: '备注',
             field: 'memos',
-            width: '7%',
+            hidden:true,
+            //width: '7%',
             editor: {type: 'text'}
         }, {
             title: '批号',
             field: 'batchNo',
-            width: '7%'
+            width: '10%',
+            editor:{type:'textbox'}
         }, {
             title: '有效期',
             field: 'expireDate',
-            width: '7%',
+            width: '10%',
             editor: {
                 type: 'datebox'
             }
         }, {
             title: '发票号',
             field: 'invoiceNo',
-            width: '7%',
+            hidden:true,
+            //width: '7%',
             editor: {type: 'textbox', options: {}}
         }, {
             title: '发票日期',
             field: 'invoiceDate',
-            width: '10%',
+            //width: '10%',
+            hidden:true,
             editor: {
                 type: 'datebox'
                 //options: {
@@ -936,21 +955,24 @@ $(function () {
         }, {
             title: '生产日期',
             field: 'producedate',
-            width: '10%',
+            //width: '10%',
+            hidden:true,
             editor: {
                 type: 'datebox'
             }
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
-            width: '10%',
+            //width: '10%',
+            hidden:true,
             editor: {
                 type: 'datebox'
             }
         }, {
             title: '灭菌标识',
             field: 'killflag',
-            width: '7%',
+            //width: '7%',
+            hidden:true,
             align: 'center',
             editor: {type: 'combobox', options: {
                 valueField:'value',

@@ -178,7 +178,7 @@ $(function () {
                     })
                 }
             },
-            width: "7%"
+            width: "20%"
         }, {
             title: '包装规格',
             field: 'packageSpec'
@@ -336,6 +336,7 @@ $(function () {
         }, {
             title: '分摊方式',
             field: 'assignCode',
+            hidden:true,
             editor: {
                 type: 'combobox', options: {
                     url: '/api/exp-assign-dict/list',
@@ -347,17 +348,18 @@ $(function () {
                         $(this).combobox('select', "全部");
 //                        $(this).assignCode =data[0].assignCode;
                     }
-                },
-                width: "8%"
+                }
             }
         }, {
             title: '备注',
             field: 'memo',
             editor: {type: 'textbox', options: {}},
-            width: "8%"
+            //width: "8%"
+            hidden:true
         }, {
             title: '批号',
-            field: 'batchNo'
+            field: 'batchNo',
+            width:'10%'
         }, {
             title: '有效期',
             field: 'expireDate',
@@ -367,18 +369,21 @@ $(function () {
             title: '生产日期',
             field: 'producedate',
             formatter: formatterDate,
-            width: "12%"
+            hidden:true
+            //width: "12%"
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
             formatter: formatterDate,
-            width: "12%"
+            //width: "12%"
+            hidden:true
         }, {
             title: '单位',
             field: 'units'
         }, {
             title: '结存量',
             field: 'disNum',
+            hidden:true,
             editor: {
                 type: 'numberbox', options: {
                     //precision: '2',
@@ -389,7 +394,8 @@ $(function () {
         }, {
             title: '灭菌标志',
             field: 'killflag',
-            width: '8%',
+            //width: '8%',
+            hidden:true,
             align: 'center',
 //            formatter: function (value, row, index) {
 //                if (value == '1') {
