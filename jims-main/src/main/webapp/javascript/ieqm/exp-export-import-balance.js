@@ -279,28 +279,84 @@ $(function () {
         pageNumber: 1
     });
 
+    /**
+     * 加载出库类别数据
+     * exp_export_class_dict
+     */
+    function loadExportClass(){
+        $.ajax({
+            url:"/api/exp-export-class-dict/list",
+            type:"GET",
+            dataType:"JSON",
+            cache:false,
+            success:function(data){
+                console.info(data);
+                for(var i=0;i<data.length;i++){
+                    $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
+                }
+            }
+        });
+    }
+    loadExportClass();
 
-    //发往库房数据加载
-    $('#receiver').combogrid({
-        panelWidth: 500,
-        idField: 'storageCode',
-        textField: 'storageName',
-        loadMsg: '数据正在加载',
-        url: '/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId,
-        mode: 'remote',
-        method: 'GET',
-        columns: [[
-            {field: 'storageCode', title: '编码', width: 150, align: 'center'},
-            {field: 'storageName', title: '名称', width: 150, align: 'center'},
-            {field: 'disburseNoPrefix', title: '拼音', width: 100, align: 'center'}
-        ]],
-        pagination: false,
-        fitColumns: true,
-        rowNumber: true,
-        autoRowHeight: false,
-        pageSize: 50,
-        pageNumber: 1
+    $("#exportClass").change(function() {
+        var checkValue = $("#exportClass").val();
+//        alert(checkValue);
+        var depts = [];
+        var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
+            console.info(data);
+            depts = data;
+            return depts;
+        });
+        promise.done(function () {
+            $("#receiver").combogrid({
+                idField: 'supplierCode',
+                textField: 'supplierName',
+                data: depts,
+                panelWidth: 300,
+                columns: [
+                    [
+                        {
+                            title: '科室名称',
+                            field: 'supplierName',
+                            width: 200
+                        },
+                        {
+                            title: '科室代码',
+                            field: 'supplierCode',
+                            width: 50
+                        },
+                        {
+                            title: '输入码',
+                            field: 'inputCode',
+                            width: 50
+                        }
+                    ]
+                ]
+            })
+        })
     });
+    //发往库房数据加载
+//    $('#receiver').combogrid({
+//        panelWidth: 500,
+//        idField: 'storageCode',
+//        textField: 'storageName',
+//        loadMsg: '数据正在加载',
+//        url: '/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId,
+//        mode: 'remote',
+//        method: 'GET',
+//        columns: [[
+//            {field: 'storageCode', title: '编码', width: 150, align: 'center'},
+//            {field: 'storageName', title: '名称', width: 150, align: 'center'},
+//            {field: 'disburseNoPrefix', title: '拼音', width: 100, align: 'center'}
+//        ]],
+//        pagination: false,
+//        fitColumns: true,
+//        rowNumber: true,
+//        autoRowHeight: false,
+//        pageSize: 50,
+//        pageNumber: 1
+//    });
 
     //出库负责人数据加载
     $('#principal').combogrid({
@@ -1185,7 +1241,7 @@ $(function () {
         exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
-        exportMaster.exportClass = $("#exportClass").combobox('getValue');
+        exportMaster.exportClass = getSelectedText("exportClass");
         exportMaster.subStorage = $("#subStorageIn").combobox('getValue');
         exportMaster.accountIndicator = 1;
         exportMaster.memos = $('#memos').textbox('getValue');
@@ -1419,4 +1475,12 @@ $(function () {
     $("#clear").on('click', function () {
         parent.updateTab('对消入出库', '/his/ieqm/exp-export-import-balance');
     });
+    function getSelectedText(name){
+        var obj=document.getElementById(name);
+        for(i=0;i<obj.length;i++){
+            if(obj[i].selected==true){
+                return obj[i].innerText;//关键是通过option对象的innerText属性获取到选项文本
+            }
+        }
+    }
 });
