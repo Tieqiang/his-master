@@ -224,7 +224,25 @@ $(function () {
         }
     })
 //    });
-
+    /**
+     * 加载出库类别数据
+     * exp_export_class_dict
+     */
+    function loadExportClass(){
+        $.ajax({
+            url:"/api/exp-export-class-dict/list",
+            type:"GET",
+            dataType:"JSON",
+            cache:false,
+            success:function(data){
+                console.info(data);
+                for(var i=0;i<data.length;i++){
+                    $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
+                }
+            }
+        });
+    }
+    loadExportClass();
     //开支类别数据加载
     $('#fundItem').combobox({
         panelHeight: 'auto',
@@ -241,21 +259,21 @@ $(function () {
     });
 
     //出库类别数据加载
-    $('#exportClass').combobox({
-        panelHeight: 'auto',
-        url: '/api/exp-export-class-dict/list',
-        method: 'GET',
-        valueField: 'exportClass',
-        textField: 'exportClass',
-        onLoadSuccess: function () {
-            var data = $(this).combobox('getData');
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].exportClass == "发放出库") {
-                    $(this).combobox('select', data[i].exportClass);
-                }
-            }
-        }
-    });
+//    $('#exportClass').combobox({
+//        panelHeight: 'auto',
+//        url: '/api/exp-export-class-dict/list',
+//        method: 'GET',
+//        valueField: 'exportClass',
+//        textField: 'exportClass',
+//        onLoadSuccess: function () {
+//            var data = $(this).combobox('getData');
+//            for (var i = 0; i < data.length; i++) {
+//                if (data[i].exportClass == "发放出库") {
+//                    $(this).combobox('select', data[i].exportClass);
+//                }
+//            }
+//        }
+//    });
 
     //申请库房数据加载
     $('#storage').combogrid({
@@ -279,29 +297,11 @@ $(function () {
         pageNumber: 1
     });
 
-    /**
-     * 加载出库类别数据
-     * exp_export_class_dict
-     */
-    function loadExportClass(){
-        $.ajax({
-            url:"/api/exp-export-class-dict/list",
-            type:"GET",
-            dataType:"JSON",
-            cache:false,
-            success:function(data){
-                console.info(data);
-                for(var i=0;i<data.length;i++){
-                    $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
-                }
-            }
-        });
-    }
-    loadExportClass();
+
 
     $("#exportClass").change(function() {
         var checkValue = $("#exportClass").val();
-//        alert(checkValue);
+        alert(checkValue);
         var depts = [];
         var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
             console.info(data);
