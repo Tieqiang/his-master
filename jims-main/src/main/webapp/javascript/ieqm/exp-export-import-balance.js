@@ -523,7 +523,7 @@ $(function () {
             field: 'expireDate',
             editor: {
                 type: 'datebox'
-            }
+             }
         }, {
             title: '入库单号',
             field: 'documentNo'
@@ -919,7 +919,46 @@ $(function () {
             field: 'expireDate',
             width: '10%',
             editor: {
-                type: 'datebox'
+                type: 'datebox',
+                options: {
+                    onSelect: function (date) {
+//                        flag=0;
+                        $("#dg").datagrid('appendRow', {documNo:documentNo});
+                        var rows = $("#dg").datagrid('getRows');
+                        var appendRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+
+                        if (editIndex || editIndex == 0) {
+                            $("#dg").datagrid('endEdit', editIndex);
+                        }
+                        editIndex = appendRowIndex;
+                        $("#dg").datagrid('beginEdit', editIndex);
+                    },
+                    keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
+                        enter: function (e) {
+                            var dateEd = $("#dg").datagrid('getEditor', {
+                                index: editIndex,
+                                field: 'expireDate'
+                            });
+
+                            var date=$(dateEd.target).textbox('getValue');
+                            if(date.indexOf("-")==-1){
+                                $.messager.alert("系统提示","请输入正确格式的日期","error");
+                                return ;
+                            }
+                            $("#dg").datagrid('appendRow', {documNo:documentNo});
+
+                            var appendRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+
+                            if (editIndex || editIndex == 0) {
+                                $("#dg").datagrid('endEdit', editIndex);
+                            }
+                            editIndex = appendRowIndex;
+                            $("#dg").datagrid('beginEdit', editIndex);
+                            var editor = $('#dg').datagrid('getEditor', {index: editIndex, field: 'expName'});
+                            editor.target.focus();
+                        }
+                    })
+                }
             }
         }, {
             title: '发票号',
