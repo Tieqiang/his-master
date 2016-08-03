@@ -370,7 +370,8 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             expPrepareMaster.setPhone(p.getPhones());
             expPrepareMaster.setPreparePersonName(p.getOperators());
             expPrepareMaster.setSubStorageId(p.getSubStorage());
-            expPrepareMaster.setFirmId(expPriceList.getFirmId());
+            String id=this.expSupplierCatalogFacade.findBySuppierId(expPriceList.getFirmId());
+            expPrepareMaster.setFirmId(id);
             expPrepareMaster=entityManager.merge(expPrepareMaster);
             Integer amountInt=Integer.parseInt(p.getAmounts());
             for(int i=0;i<amountInt;i++){
