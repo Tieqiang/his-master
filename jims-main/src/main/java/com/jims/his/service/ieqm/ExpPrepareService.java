@@ -108,27 +108,24 @@ public class ExpPrepareService {
     @POST
     @Path("make-data")
 //    public List<ExpPrepareDetail> makeData(@QueryParam("supplierId") String supplierId, @QueryParam("expCodes") String expCodes, @QueryParam("operator") String operator, @QueryParam("amounts") String amounts, @QueryParam("prices") String priceStr,@QueryParam("packageSpecs") String packageSpecs,@QueryParam("subStorage") String subStorageId,@QueryParam("operators") String operators,@QueryParam("phones") String phones) {
-    public List<ExpPrepareDetail> makeData(PrepareVo prepareVo) {
-        List<ExpPrepareDetail> list = new ArrayList<ExpPrepareDetail>();
-        String expCodes=prepareVo.getExpCodes();
-        String phones=prepareVo.getPhones();
-        String operators=prepareVo.getOperators();
-        String amounts=prepareVo.getAmounts();
-        String priceStr=prepareVo.getPrices();
-        String packageSpecs=prepareVo.getPackageSpecs();
-        if (expCodes != null && !"".equals(expCodes)) {
-            String[] phoneArr=phones.split(",");
-            String[] operArr=operators.split(",");
-            String[] amountArr = amounts.split(",");
-            String[] expCodeArr = expCodes.split(",");
-            String[] priceArr = priceStr.split(",");
-            String[] packageSpecArr=packageSpecs.split(",");
-            for (int i = 0; i < expCodeArr.length; i++) {
-                ExpPriceListVo expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(expCodeArr[i],packageSpecArr[i]);
-                list = expPrepareMasterFacade.save(expPriceList.getId(), prepareVo.getSupplierId(), amountArr[i], prepareVo.getOperator(), Double.parseDouble(priceArr[i]), list,expPriceList.getFirmId(),prepareVo.getSubStorage(),phoneArr[i],operArr[i]);
-            }
-        }
-        return list;
+    public List<ExpPrepareDetail> makeData(List<PrepareVo> prepareVo) {
+//        List<ExpPrepareDetail> list = new ArrayList<ExpPrepareDetail>();
+//        String expCodes=prepareVo.getExpCodes();
+//        String phones=prepareVo.getPhones();
+//        String operators=prepareVo.getOperators();
+//        String amounts=prepareVo.getAmounts();
+//        String priceStr=prepareVo.getPrices();
+//        String packageSpecs=prepareVo.getPackageSpecs();
+//        if (expCodes != null && !"".equals(expCodes)) {
+//            String[] phoneArr=phones.split(",");
+//            String[] operArr=operators.split(",");
+//            String[] amountArr = amounts.split(",");
+//            String[] expCodeArr = expCodes.split(",");
+//            String[] priceArr = priceStr.split(",");
+//            String[] packageSpecArr=packageSpecs.split(",");
+//            list=expPrepareMasterFacade.makeData(expCodeArr,prepareVo,amountArr,packageSpecArr,priceArr,phoneArr,operArr);
+//         }
+        return expPrepareMasterFacade.makeDate(prepareVo);
     }
 
     /**
