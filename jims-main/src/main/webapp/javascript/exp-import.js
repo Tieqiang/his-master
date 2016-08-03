@@ -251,21 +251,25 @@ $(function () {
                             var date=$(dateEd.target).textbox('getText');
                             if(date==null || date=="" || date.indexOf("-")==-1 || date.length!=10){
                                 $.messager.alert("系统提示","请输入正确格式的日期","error");
+                                return ;
+                            }else{
+                                $(dateEd.target).datebox('setValue',date);
                             }
-                            flag=0;
+
                             $("#importDetail").datagrid('appendRow', {documNo:documentNo});
-
+                            var rows = $("#importDetail").datagrid('getRows') ;
                             var appendRowIndex = $("#importDetail").datagrid('getRowIndex', rows[rows.length - 1]);
-
                             if (editIndex || editIndex == 0) {
-                                $("#importDeatail").datagrid('endEdit', editIndex);
+                                $("#importDetail").datagrid('endEdit', editIndex);
                             }
                             editIndex = appendRowIndex;
                             $("#importDetail").datagrid('beginEdit', editIndex);
+                            $("#importDetail").datagrid('selectRow',editIndex);
                             var editor = $('#importDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-//                            console.info(editor);
-                            editor.target.focus();
-
+                            console.log(editor.target);
+                            console.log(editor.target[0]);
+                            var selector = "#datagrid-row-r8-2-"+appendRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input" ;
+                            $(selector).focus();
                         }
                     })
                 }
