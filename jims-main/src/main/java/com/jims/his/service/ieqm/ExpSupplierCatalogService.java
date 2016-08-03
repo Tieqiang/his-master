@@ -32,6 +32,26 @@ public class ExpSupplierCatalogService {
     //    return expSupplierCatalogFacade.listExpSupplierCatalog();
     //}
 
+    /**
+     * 根据输入的拼音码检索某类型的供应商或生产商
+     * @param supplierName 类型名称(生产商或供应商)
+     * @param inputCode 输入的拼音码
+     * @return
+     * @author fengyuguang
+     */
+    @Path("find-supplier-by-name")
+    @GET
+    public List<ExpSupplierCatalog> findSupplierByName(@QueryParam("supplierName") String supplierName, @QueryParam("q") String inputCode) {
+        List<ExpSupplierCatalog> expSupplierCatalogList = null;
+        if (supplierName != null && supplierName.trim().length() > 0) {
+            expSupplierCatalogList = expSupplierCatalogFacade.findSupplierBySupplierClass(supplierName, null);
+        }
+        if (inputCode != null && inputCode.trim().length() > 0) {
+            expSupplierCatalogList = expSupplierCatalogFacade.getByInputCode(inputCode);
+        }
+        return expSupplierCatalogList;
+    }
+
     @GET
     @Path("find-supplier")
     public List<ExpSupplierCatalog> findSupplier(@QueryParam("supplierName")String supplierName,@QueryParam("supplier")String inputCode){
@@ -86,7 +106,7 @@ public class ExpSupplierCatalogService {
         return expSupplierCatalogFacade.listExpSupplierWithDept(hospitalId,q) ;
     }
 
-   /***
+    /***
      * 查询所有供应商
      * @return
      */
@@ -102,7 +122,7 @@ public class ExpSupplierCatalogService {
     public ExpSupplierCatalog findBySupplierId(@QueryParam("supplierId") String supplierId){
         String id= expSupplierCatalogFacade.findBySuppierId(supplierId);
         if(id!=null)
-        return expSupplierCatalogFacade.findById(id);
+            return expSupplierCatalogFacade.findById(id);
         return null;
     }
 }

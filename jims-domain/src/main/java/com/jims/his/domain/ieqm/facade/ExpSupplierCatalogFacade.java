@@ -38,6 +38,7 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
     //    List resultList = query.getResultList();
     //    return resultList;
     //}
+
     //查询供应商
     public List<ExpSupplierCatalog> findSupplierBySupplierClass(String supplierClass,String q){
         String hql = "from ExpSupplierCatalog a where a.supplierClass = '"+supplierClass+"'";
@@ -47,6 +48,21 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         }
         return entityManager.createQuery(hql).getResultList();
     }
+
+    /**
+     * 根据输入的拼音码定位供应商
+     * @param inputCode
+     * @return
+     * @author fengyuguang
+     */
+    public List<ExpSupplierCatalog> getByInputCode(String inputCode) {
+        String hql = "from ExpSupplierCatalog a where 1 = 1";
+        if (inputCode != null && !"".equals(inputCode)) {
+            hql += " and upper(a.inputCode) like upper('%" + inputCode + "%')";
+        }
+        return entityManager.createQuery(hql).getResultList();
+    }
+
     //查询供应商
     public List<ExpSupplierCatalog> findSupplierByInputCode(String inputCode,String q){
         String hql = "from ExpSupplierCatalog a where a.supplier =  '"+inputCode+"'  ";
@@ -243,11 +259,11 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
      * @return
      */
     public String findBySuppierId(String firmId) {
-         List<String> obj=entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getResultList();
-         if(obj!=null&&!obj.isEmpty()){
-             return (String)obj.get(0);
-         }
-         return null;
+        List<String> obj=entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getResultList();
+        if(obj!=null&&!obj.isEmpty()){
+            return (String)obj.get(0);
+        }
+        return null;
     }
 
     /**
@@ -256,6 +272,6 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
      * @return
      */
     public ExpSupplierCatalog findById(String firmId) {
-       return (ExpSupplierCatalog)entityManager.createQuery("from ExpSupplierCatalog where id='"+firmId+"'").getSingleResult();
+        return (ExpSupplierCatalog)entityManager.createQuery("from ExpSupplierCatalog where id='"+firmId+"'").getSingleResult();
     }
 }

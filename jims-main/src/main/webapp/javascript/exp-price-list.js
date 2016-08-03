@@ -11,6 +11,32 @@ $(function () {
         }
     }
 
+    //会计科目
+    var subjCodeList = [];
+    $.get('/api/base-dict/list-by-type?baseType=TALLY_SUBJECT_DICT&length=3',function(data){
+        subjCodeList = data;
+    });
+    //住院收据费用分类
+    var classOnInpRcptList = [];
+    $.get('/api/base-dict/list-by-type?baseType=INP_RCPT_FEE_DICT',function(data){
+        classOnInpRcptList = data;
+    });
+    //核算项目分类
+    var classOnReckoningList = [];
+    $.get('/api/base-dict/list-by-type?baseType=RECK_ITEM_CLASS_DICT',function(data){
+        classOnReckoningList = data;
+    });
+    //门诊收据费用分类
+    var classOnOutpRcptList = [];
+    $.get('/api/base-dict/list-by-type?baseType=OUTP_RCPT_FEE_DICT',function(data){
+        classOnOutpRcptList = [];
+    });
+    //病案首页费用项目分类
+    var classOnMrList = [];
+    $.get('/api/base-dict/list-by-type?baseType=MR_FEE_CLASS_DICT',function(data){
+        classOnMrList = data;
+    });
+
     //零售价格=批发价格*价格比例
     var getRetailPrice = function () {
         var ed = $('#dg').datagrid('getEditors', editIndex);
@@ -132,15 +158,21 @@ $(function () {
             align: 'center',
             width: "7%",
             editor: {
-                type: 'combobox',
+                type: 'combogrid',
                 options: {
-                    panelHeight: 'auto',
-                    panelMaxHeight:'200',
-                    panelWidth:'100',
-                    valueField: 'supplierId',
+                    panelWidth: 260,
+                    idField: 'supplierId',
                     textField: 'supplier',
-                    method: 'get',
-                    url: "/api/exp-supplier-catalog/find-supplier?supplierName=" + '生产商'
+                    loadMsg: '数据正在加载',
+                    url: "/api/exp-supplier-catalog/find-supplier-by-name?supplierName=" + '生产商',
+                    mode: 'remote',
+                    method: 'GET',
+                    fitColumns: true,
+                    columns: [[
+                        {field: 'supplierId', title: '代码', width: 100, align: 'center'},
+                        {field: 'supplier', title: '名称', width: 100, align: 'center'},
+                        {field: 'inputCode', title: '拼音', width: 80, align: 'center'}
+                    ]]
                 }
             }
         }, {
@@ -228,7 +260,7 @@ $(function () {
                     editable: false
                 }
             }
-         }, {
+        }, {
             title: '最小单位',
             field: 'minUnits',
             align: 'center',
@@ -240,7 +272,7 @@ $(function () {
                     editable: false
                 }
             }
-         }, {
+        }, {
             title: '住院收据费用分类',
             field: 'classOnInpRcpt',
             align: 'center',
@@ -259,6 +291,14 @@ $(function () {
                         return row[opts.textField].indexOf(q) == 0;
                     }
                 }
+            }, formatter: function (value, row, index) {
+                var classOnInpRcpt = value;
+                $.each(classOnInpRcptList, function (index, item) {
+                    if (item.baseCode == value) {
+                        classOnInpRcpt = item.baseName;
+                    }
+                });
+                return classOnInpRcpt;
             }
         }, {
             title: '门诊收据费用分类',
@@ -279,6 +319,14 @@ $(function () {
                         return row[opts.textField].indexOf(q) == 0;
                     }
                 }
+            }, formatter: function (value, row, index) {
+                var classOnOutpRcpt = value;
+                $.each(classOnOutpRcptList, function (index, item) {
+                    if (item.baseCode == value) {
+                        classOnOutpRcpt = item.baseName;
+                    }
+                });
+                return classOnOutpRcpt;
             }
         }, {
             title: '核算项目分类',
@@ -299,6 +347,14 @@ $(function () {
                         return row[opts.textField].indexOf(q) == 0;
                     }
                 }
+            }, formatter: function (value, row, index) {
+                var classOnReckoning = value;
+                $.each(classOnReckoningList, function (index, item) {
+                    if (item.baseCode == value) {
+                        classOnReckoning = item.baseName;
+                    }
+                });
+                return classOnReckoning;
             }
         }, {
             title: '会计科目',
@@ -319,6 +375,14 @@ $(function () {
                         return row[opts.textField].indexOf(q) == 0;
                     }
                 }
+            },formatter: function(value,row,index){
+                var subjCode = value;
+                $.each(subjCodeList, function (index, item) {
+                    if (item.baseCode == value) {
+                        subjCode = item.baseName;
+                    }
+                });
+                return subjCode;
             }
         }, {
             title: '病案首页费用项目分类',
@@ -339,6 +403,14 @@ $(function () {
                         return row[opts.textField].indexOf(q) == 0;
                     }
                 }
+            }, formatter: function (value, row, index) {
+                var classOnMr = value;
+                $.each(classOnMrList, function (index, item) {
+                    if (item.baseCode == value) {
+                        classOnMr = item.baseName;
+                    }
+                });
+                return classOnMr;
             }
         }, {
             title: '许可证号',
@@ -383,7 +455,6 @@ $(function () {
         stopEdit();
 
         var rows = $('#dg').datagrid("getRows");
-        console.log(rows);
         var newRows = [];
 
         if (rows.length > 0) {
@@ -403,7 +474,6 @@ $(function () {
                 for(var i = 0 ;i<newRows.length ;i++){
                     var obj = $("#dg").datagrid('appendRow',newRows[i]) ;
                     var rowsTemp = $("#dg").datagrid('getRows') ;
-                    console.log(rowsTemp);
                     var addRowIndex = $("#dg").datagrid('getRowIndex',rowsTemp[rowsTemp.length -1 ]);
                     editIndex = addRowIndex;
                     $("#dg").datagrid('selectRow', editIndex);
@@ -414,7 +484,6 @@ $(function () {
         for(var i = 0 ;i<newRows.length ;i++){
             var obj = $("#dg").datagrid('appendRow',newRows[i]) ;
             var rowsTemp = $("#dg").datagrid('getRows') ;
-            console.log(rowsTemp);
             var addRowIndex = $("#dg").datagrid('getRowIndex',rowsTemp[rowsTemp.length -1 ]);
             editIndex = addRowIndex;
             $("#dg").datagrid('selectRow', editIndex);
@@ -504,7 +573,6 @@ $(function () {
         expDictChangeVo.inserted = insertData;
         expDictChangeVo.updated = updateData;
         expDictChangeVo.deleted = deleteData;
-        console.log(expDictChangeVo)
 
         if (expDictChangeVo) {
             $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
@@ -570,7 +638,7 @@ $(function () {
         var expCode = $('#expName').combogrid('getValue');
         prices.splice(0, prices.length);
         var pricePromise = $.get("/api/exp-price-list/list?expCode=" + expCode + "&hospitalId=" + parent.config.hospitalId, function (data) {
-           console.info(data);
+            console.info(data);
             $.each(data, function (index, item) {
                 var price = {};
                 price.id=item.id;
