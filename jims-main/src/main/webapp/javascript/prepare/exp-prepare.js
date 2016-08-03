@@ -221,6 +221,7 @@ $(function () {
             $.messager.alert("系统提示", "请选择子库房", 'error');
         }else {
             if(dataValid()){
+                var expPrepareVO={};
                 var expCodes = "";
                 var amounts = "";
                 var prices = "";
@@ -239,12 +240,19 @@ $(function () {
                     phones+=rows[i].phone+",";
                     operators+=rows[i].preparePersonName+",";
                 }
-                expCodes = expCodes.substring(0, expCodes.length - 1);
                 var supplierId = $("#supplier").combogrid("getValue");
-                $.postJSON("/api/exp-prepare/make-data?supplierId=" + supplierId + "&expCodes=" + expCodes + "&operator=" + parent.config.staffName + "&amounts=" + amounts + "&prices=" + prices + "&packageSpecs=" + packageSpecs+"&subStorage="+subStorageValue+"&phones="+phones+"&operators="+operators, function (data) {
-                    //List<ExpPrepareDetail>
-//                console.info(data);
-                    $("#right").datagrid("loadData", data);
+                expCodes = expCodes.substring(0, expCodes.length - 1);
+                expPrepareVO.expCodes=expCodes;
+                expPrepareVO.amounts=amounts;
+                expPrepareVO.prices=prices;
+                expPrepareVO.packageSpecs=packageSpecs;
+                expPrepareVO.operators=operators;
+                expPrepareVO.phones=phones;
+                expPrepareVO.supplierId=supplierId;
+                expPrepareVO.operator=parent.config.staffName;
+                expPrepareVO.subStorage=subStorageValue;
+                $.postJSON("/api/exp-prepare/make-data",expPrepareVO, function (data) {
+                 $("#right").datagrid("loadData", data);
                 }, function (data) {//List<ExpPrepareDetail>
 //                console.info(data);
                     $("#right").datagrid("loadData", data);
