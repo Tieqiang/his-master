@@ -248,17 +248,9 @@ $(function () {
                                 field: 'expireDate'
                             });
 
-                            var date=$(dateEd.target).textbox('getValue');
-//                            alert(date);
-//                            alert(date.length);
-//                            if(date.length!=10){
-//                                $.messager.alert("系统提示","请输入正确格式的日期！","error");
-//                                return;
-//                            }
-//                            alert(date.indexOf("-"))
-                            if(date.indexOf("-")==-1){
+                            var date=$(dateEd.target).textbox('getText');
+                            if(date==null || date=="" || date.indexOf("-")==-1 || date.length!=10){
                                 $.messager.alert("系统提示","请输入正确格式的日期","error");
-                                return ;
                             }
                             flag=0;
                             $("#importDetail").datagrid('appendRow', {documNo:documentNo});
