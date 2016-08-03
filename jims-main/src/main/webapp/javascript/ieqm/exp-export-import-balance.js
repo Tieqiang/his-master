@@ -200,29 +200,29 @@ $(function () {
 //    });
     //供货方数据加载
 //    promise.done(function () {
-        $("#supplier").combogrid({
-            mode:'remote',
-            url:'/api/exp-supplier-catalog/list-with-dept?hospitalId=' + parent.config.hospitalId,
-            idField: 'supplierCode',
-            textField: 'supplierName',
-            method:'GET',
+    $("#supplier").combogrid({
+        mode:'remote',
+        url:'/api/exp-supplier-catalog/list-with-dept?hospitalId=' + parent.config.hospitalId,
+        idField: 'supplierCode',
+        textField: 'supplierName',
+        method:'GET',
 //            data: suppliers,
-            panelWidth: 500,
-            fitColumns: true,
-            columns: [[{
-                title: '供应商名称',
-                field: 'supplierName', width: 200, align: 'center'
-            }, {
-                title: '供应商代码',
-                field: 'supplierCode', width: 150, align: 'center'
-            }, {
-                title: '输入码',
-                field: 'inputCode', width: 50, align: 'center'
-            }]],
-            filter: function (q, row) {
-                return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
-            }
-        })
+        panelWidth: 500,
+        fitColumns: true,
+        columns: [[{
+            title: '供应商名称',
+            field: 'supplierName', width: 200, align: 'center'
+        }, {
+            title: '供应商代码',
+            field: 'supplierCode', width: 150, align: 'center'
+        }, {
+            title: '输入码',
+            field: 'inputCode', width: 50, align: 'center'
+        }]],
+        filter: function (q, row) {
+            return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+        }
+    })
 //    });
 
     //开支类别数据加载
@@ -523,7 +523,7 @@ $(function () {
             field: 'expireDate',
             editor: {
                 type: 'datebox'
-             }
+            }
         }, {
             title: '入库单号',
             field: 'documentNo'
@@ -941,11 +941,14 @@ $(function () {
                             });
 
                             var date=$(dateEd.target).textbox('getText');
-                            if(date.indexOf("-")==-1 || date.length!=10){
+                            if(date==null || date=="" || date.indexOf("-")==-1 || date.length!=10){
                                 $.messager.alert("系统提示","请输入正确格式的日期","error");
-                                return ;
+                                return;
                             }
+                            $(dateEd.target).textbox('setValue',date);
                             $("#dg").datagrid('appendRow', {documNo:documentNo});
+
+                            var rows = $("#dg").datagrid('getRows');
 
                             var appendRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
 
@@ -954,10 +957,12 @@ $(function () {
                             }
                             editIndex = appendRowIndex;
                             $("#dg").datagrid('beginEdit', editIndex);
-                            var editor = $('#dg').datagrid('getEditor', {index: editIndex, field: 'expName'});
-                            editor.target.focus();
+                            var selector = "#datagrid-row-r23-2-"+appendRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
+                            $(selector).focus();
+
                         }
                     })
+
                 }
             }
         }, {
@@ -1349,7 +1354,7 @@ $(function () {
                     return;
                 }
             }
-         })
+        })
         if (dataValid()) {
 
             $.messager.confirm("提示信息", "确定要进行对消入出库操作？", function (r) {

@@ -329,21 +329,6 @@ $(function () {
                     value: 'dateTime',
                     showSeconds: true,
                     formatter: formatterDate
-//                    parser: w3,
-//                    onSelect: function (date) {
-//                        var dateEd = $("#importDetail").datagrid('getEditor', {
-//                            index: editIndex,
-//                            field: 'invoiceDate'
-//                        });
-//                        var y = date.getFullYear();
-//                        var m = date.getMonth() + 1;
-//                        var d = date.getDate();
-//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-//
-//                        $(dateEd.target).textbox('setValue', dateTime);
-//                        $(this).datetimebox('hidePanel');
-//                    }
                 }
             }
         }, {
@@ -365,21 +350,6 @@ $(function () {
                     value: 'dateTime',
                     showSeconds: true,
                     formatter: formatterDate
-//                    parser: w3,
-//                    onSelect: function (date) {
-//                        var dateEd = $("#importDetail").datagrid('getEditor', {
-//                            index: editIndex,
-//                            field: 'producedate'
-//                        });
-//                        var y = date.getFullYear();
-//                        var m = date.getMonth() + 1;
-//                        var d = date.getDate();
-//                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-//                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-//
-//                        $(dateEd.target).textbox('setValue', dateTime);
-//                        $(this).datetimebox('hidePanel');
-//                    }
                 }
             }
         }, {

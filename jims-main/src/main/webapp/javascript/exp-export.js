@@ -197,7 +197,7 @@ $(function () {
 
                     keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
                         enter: function (e) {
-                             flag=0;
+                            flag=0;
                             $("#exportDetail").datagrid('appendRow', {documNo:documentNo});
 
                             var appendRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
@@ -217,7 +217,7 @@ $(function () {
                     onChange: function (newValue, oldValue)
                     {
                         var value = $('#receiver').combobox('getValue');
-                         $.ajax({
+                        $.ajax({
                             url:'/api/exp-supplier-catalog/find-by-supplier-id?supplierId='+value,
                             TYPE:'POST',
                             dataType:"JSON",
@@ -727,7 +727,11 @@ $(function () {
                 $("#exportDetail").datagrid('selectRow', editIndex);
                 $("#exportDetail").datagrid('beginEdit', editIndex);
                 var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-                editor.target.focus();
+                console.info(editor);
+//                #datagrid-row-r6-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+                var selector = "#datagrid-row-r6-2-"+addRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
+                console.info(selector);
+                $(selector).focus();
             }
         }
     });
