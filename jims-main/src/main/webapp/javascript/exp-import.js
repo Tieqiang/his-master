@@ -223,32 +223,61 @@ $(function () {
             field: 'expireDate',
             align: 'center',
             width:'10%',
+
             editor: {
-                type: 'datebox'
+                type: 'datebox',
+//                formatter: formatterDate,
+//                parser: w3,
+                 options: {
+                     onSelect: function (date) {
+                         flag=0;
+                         $("#importDetail").datagrid('appendRow', {documNo:documentNo});
+                         var rows = $("#importDetail").datagrid('getRows');
+                         var appendRowIndex = $("#importDetail").datagrid('getRowIndex', rows[rows.length - 1]);
+
+                         if (editIndex || editIndex == 0) {
+                             $("#importDetail").datagrid('endEdit', editIndex);
+                         }
+                         editIndex = appendRowIndex;
+                         $("#importDetail").datagrid('beginEdit', editIndex);
+                     },
+                    keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
+                        enter: function (e) {
+                            var dateEd = $("#importDetail").datagrid('getEditor', {
+                                index: editIndex,
+                                field: 'expireDate'
+                            });
+
+                            var date=$(dateEd.target).textbox('getValue');
+//                            alert(date);
+//                            alert(date.length);
+//                            if(date.length!=10){
+//                                $.messager.alert("系统提示","请输入正确格式的日期！","error");
+//                                return;
+//                            }
+                            alert(date.indexOf("-"))
+                            if(date.indexOf("-")==-1){
+                                $.messager.alert("系统提示","请输入正确格式的日期","error");
+                                return ;
+                            }
+                            flag=0;
+                            $("#importDetail").datagrid('appendRow', {documNo:documentNo});
+
+                            var appendRowIndex = $("#importDetail").datagrid('getRowIndex', rows[rows.length - 1]);
+
+                            if (editIndex || editIndex == 0) {
+                                $("#importDeatail").datagrid('endEdit', editIndex);
+                            }
+                            editIndex = appendRowIndex;
+                            $("#importDetail").datagrid('beginEdit', editIndex);
+                            var editor = $('#importDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
+//                            console.info(editor);
+                            editor.target.focus();
+
+                        }
+                    })
+                }
             }
-//            editor: {
-//                type: 'datetimebox',
-//                options: {
-//                    value: 'dateTime',
-//                    showSeconds: true,
-//                    formatter: formatterDate
-////                    parser: w3,
-////                    onSelect: function (date) {
-////                        var dateEd = $("#importDetail").datagrid('getEditor', {
-////                            index: editIndex,
-////                            field: 'expireDate'
-////                        });
-////                        var y = date.getFullYear()+1;
-////                        var m = date.getMonth() + 1;
-////                        var d = date.getDate();
-////                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-////                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-////
-////                        $(dateEd.target).textbox('setValue', dateTime);
-////                        $(this).datetimebox('hidePanel');
-////                    }
-//                }
-//            }
 
         }, {
             title: '项目代码',
@@ -704,8 +733,9 @@ $(function () {
         }
         editIndex = appendRowIndex;
         $("#importDetail").datagrid('beginEdit', editIndex);
-
-    })
+//        var editor = $('#importDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
+//        editor.target.focus();
+     })
 
     $("#stockRecordDialog").dialog({
         title: '选择规格',
