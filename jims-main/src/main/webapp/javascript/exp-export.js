@@ -727,8 +727,12 @@ $(function () {
                 $("#exportDetail").datagrid('selectRow', editIndex);
                 $("#exportDetail").datagrid('beginEdit', editIndex);
                 var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-                editor.target.focus();
-            }
+                console.info(editor);
+//                #datagrid-row-r6-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+                var selector = "#datagrid-row-r6-2-"+addRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
+                console.info(selector);
+                $(selector).focus();
+             }
         }
     });
 
