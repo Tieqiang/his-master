@@ -456,4 +456,11 @@ $(function () {
         }
 
     })
+    /**
+     * 关闭
+     */
+    $("#printClose").on("click",function(){
+        $("#printDiv").dialog('close');
+
+    })
 })
