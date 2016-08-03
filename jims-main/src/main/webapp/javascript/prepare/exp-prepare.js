@@ -221,30 +221,46 @@ $(function () {
             $.messager.alert("系统提示", "请选择子库房", 'error');
         }else {
             if(dataValid()){
+                var expPrepareVOs=[];
                 var expCodes = "";
                 var amounts = "";
                 var prices = "";
                 var packageSpecs = "";
-                var operators="";
                 var phones="";
                 for (var i = 0; i < rows.length; i++) {
                     var phone=rows[i].phone;
                     if(phone.length>12){
                         $.messager.alert("系统提示", "手机号码不合法!", 'error');
+                        return ;
                     }
-                    expCodes += rows[i].expCode + ",";
-                    amounts += rows[i].amount + ",";
-                    prices += rows[i].purchasePrice + ",";
-                    packageSpecs += rows[i].packageSpec + ",";
-                    phones+=rows[i].phone+",";
-                    operators+=rows[i].preparePersonName+",";
+                    /**
+                     *
+                     private String expCodes;
+                     private String amounts;
+                     private String packageSpecs;
+                     private String prices;
+                     private String operators;
+                     private String phones;
+                     private String supplierId;
+                     private String operator;
+                     private String subStorage;
+                     * @type {{}}
+                     */
+                    var expPare = {} ;
+                    expPare.expCodes = rows[i].expCode;
+                    expPare.amounts = rows[i].amount;
+                    expPare.prices = rows[i].purchasePrice;
+                    expPare.packageSpecs = rows[i].packageSpec;
+                    expPare.phones=rows[i].phone;
+                    expPare.operators=rows[i].preparePersonName;
+                    expPare.supplierId=$("#supplier").combogrid("getValue");
+                    expPare.operator=parent.config.staffName;
+                    expPare.subStorage=$("#subStorage").combobox("getValue");
+                    expPrepareVOs.push(expPare);
                 }
-                expCodes = expCodes.substring(0, expCodes.length - 1);
                 var supplierId = $("#supplier").combogrid("getValue");
-                $.postJSON("/api/exp-prepare/make-data?supplierId=" + supplierId + "&expCodes=" + expCodes + "&operator=" + parent.config.staffName + "&amounts=" + amounts + "&prices=" + prices + "&packageSpecs=" + packageSpecs+"&subStorage="+subStorageValue+"&phones="+phones+"&operators="+operators, function (data) {
-                    //List<ExpPrepareDetail>
-//                console.info(data);
-                    $("#right").datagrid("loadData", data);
+                 $.postJSON("/api/exp-prepare/make-data",expPrepareVOs, function (data) {
+                 $("#right").datagrid("loadData", data);
                 }, function (data) {//List<ExpPrepareDetail>
 //                console.info(data);
                     $("#right").datagrid("loadData", data);

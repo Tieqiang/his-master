@@ -4,14 +4,13 @@ import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.ieqm.entity.*;
 import com.jims.his.domain.ieqm.vo.ExpPrepareVo;
+import com.jims.his.domain.ieqm.vo.ExpPriceListVo;
+import com.jims.his.domain.ieqm.vo.PrepareVo;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2016/6/2.
@@ -43,8 +42,7 @@ public class ExpPrepareMasterFacade extends BaseFacade {
      * @param amount      备货数量
      * @return
      */
-    @Transactional
-    public List<ExpPrepareDetail> save(String expId, String supplierId, String amount,String staffName,double price,List<ExpPrepareDetail> list,String firmId,String subStorageId,String phone,String oper) {
+     public List<ExpPrepareDetail> save(String expId, String supplierId, String amount,String staffName,double price,List<ExpPrepareDetail> list,String firmId,String subStorageId,String phone,String oper) {
         /**
          * 在 exp_prepare_master 表中写入数据
          */
@@ -345,5 +343,53 @@ public class ExpPrepareMasterFacade extends BaseFacade {
             map.put("info","参数不正确！");
         }
         return map;
+    }
+
+    @Transactional
+    public List<ExpPrepareDetail> makeData(String[] expCodeArr,PrepareVo prepareVo,String[] amountArr,String[] packageSpecArr,String[] priceArr,String[] phoneArr,String[] operArr) {
+        List<ExpPrepareDetail> list=new ArrayList<ExpPrepareDetail>();
+        for (int i = 0; i < expCodeArr.length; i++) {
+                ExpPriceListVo expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(expCodeArr[i],packageSpecArr[i]);
+                list = this.save(expPriceList.getId(), prepareVo.getSupplierId(), amountArr[i], prepareVo.getOperator(), Double.parseDouble(priceArr[i]), list, expPriceList.getFirmId(), prepareVo.getSubStorage(), phoneArr[i], operArr[i]);
+            }
+        return list;
+    }
+
+    @Transactional
+    public List<ExpPrepareDetail> makeDate(List<PrepareVo> prepareVos) {
+        List<ExpPrepareDetail> list=new ArrayList<>();
+        for(PrepareVo p:prepareVos){
+            ExpPriceListVo expPriceList=this.expPriceListFacade.findByCodeAndPackageSpec(p.getExpCodes(),p.getPackageSpecs());
+            ExpPrepareMaster expPrepareMaster=new ExpPrepareMaster();
+            expPrepareMaster.setExpId(expPriceList.getId());
+            expPrepareMaster.setSupplierId(p.getSupplierId());
+            expPrepareMaster.setPrepareCount(p.getAmounts());
+            expPrepareMaster.setPrepareDate(sdf.format(new Date()));
+            expPrepareMaster.setOperator(p.getOperator());
+            expPrepareMaster.setPrice(Double.valueOf(p.getPrices()));
+            expPrepareMaster.setPhone(p.getPhones());
+            expPrepareMaster.setPreparePersonName(p.getOperators());
+            expPrepareMaster.setSubStorageId(p.getSubStorage());
+            expPrepareMaster.setFirmId(expPriceList.getFirmId());
+            expPrepareMaster=entityManager.merge(expPrepareMaster);
+            Integer amountInt=Integer.parseInt(p.getAmounts());
+            for(int i=0;i<amountInt;i++){
+                String barCode=new Date().getTime()+i+"";
+                ExpPrepareDetail expPrepareDetail=new ExpPrepareDetail();
+                expPrepareDetail.setOperator(p.getOperator());
+                expPrepareDetail.setMasterId(expPrepareMaster.getId());
+                expPrepareDetail.setExpBarCode(barCode);
+                expPrepareDetail.setUseFlag("0");//0 未使用
+                expPrepareDetail.setPrintFlag("0");//0 未打印
+                expPrepareDetail=entityManager.merge(expPrepareDetail);
+                if(list!=null&&!list.isEmpty()&&!list.contains(expPrepareDetail)){
+                    list.add(expPrepareDetail);
+                }
+                if(list.isEmpty()){
+                    list.add(expPrepareDetail);
+                }
+            }
+        }
+        return list;
     }
 }
