@@ -255,7 +255,7 @@ $(function () {
 //                                $.messager.alert("系统提示","请输入正确格式的日期！","error");
 //                                return;
 //                            }
-                            alert(date.indexOf("-"))
+//                            alert(date.indexOf("-"))
                             if(date.indexOf("-")==-1){
                                 $.messager.alert("系统提示","请输入正确格式的日期","error");
                                 return ;

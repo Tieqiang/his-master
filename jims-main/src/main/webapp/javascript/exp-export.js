@@ -194,6 +194,26 @@ $(function () {
             value: 0,
             editor: {
                 type: 'numberbox', options: {
+
+                    keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
+                        enter: function (e) {
+                             flag=0;
+                            $("#exportDetail").datagrid('appendRow', {documNo:documentNo});
+
+                            var appendRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
+
+                            if (editIndex || editIndex == 0) {
+                                $("#exportDetail").datagrid('endEdit', editIndex);
+                            }
+                            editIndex = appendRowIndex;
+                            $("#exportDetail").datagrid('beginEdit', editIndex);
+                            var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'quantity'});
+//                            console.info(editor);
+                            editor.target.focus();
+
+                        }
+                    }),
+
                     onChange: function (newValue, oldValue)
                     {
                         var value = $('#receiver').combobox('getValue');
@@ -300,7 +320,7 @@ $(function () {
                 }
             }, formatter: function (value, row, index) {
                 if (value > row.disNum) {
-                    $.messager.alert('系统消息', '第' + (parseInt(index + 1)) + '行出库数量超过库存量，请重新填编辑。', 'info');
+                    $.messager.alert('系统消息', '第' + (parseInt(index + 1)) + '行出库数量超过库存量，请重新填编辑。', 'error');
                     value = 0;
                     exportFlag = false;
                 } else {
@@ -675,8 +695,50 @@ $(function () {
         editIndex = appendRowIndex;
         $("#exportDetail").datagrid('beginEdit', editIndex);
 
+        document.onkeydown = function (event) {
 
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if (e && e.keyCode == 13) {
+                var quantity = $("#exportDetail").datagrid('getEditor', {
+                    index: editIndex,
+                    field: 'quantity'
+                });
+//disNum
+                var disNum = $("#exportDetail").datagrid('getEditor', {
+                    index: editIndex,
+                    field: 'disNum'
+                });
+                var quantity1=$(quantity.target).textbox('getValue');
+                var disNum1=$(disNum.target).textbox('getValue');
+//                alert("结存量="+disNum1);
+                if(quantity1=="" || quantity1==null || quantity1=="underfined"){
+                    $.messager.alert("系统提示","清先填写出库数量","error");
+                    return ;
+                }
+                if(parseInt(quantity1)>parseInt(disNum1)){
+                    $.messager.alert("系统提示","出库数量大于结存量!","error");
+                    return ;
+                }
+                stopEdit();
+                $("#exportDetail").datagrid('appendRow', {});
+                var rows = $("#exportDetail").datagrid('getRows');
+                var addRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
+                editIndex = addRowIndex;
+                $("#exportDetail").datagrid('selectRow', editIndex);
+                $("#exportDetail").datagrid('beginEdit', editIndex);
+                var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
+                editor.target.focus();
+            }
+        }
     });
+
+    var stopEdit = function () {
+        if (editIndex || editIndex == 0) {
+            $("#exportDetail").datagrid('endEdit', editIndex);
+            editIndex = undefined;
+        }
+    }
+
     $("#stockRecordDatagrid").datagrid({
         singleSelect: true,
         fit: true,
@@ -790,7 +852,6 @@ $(function () {
         onLoadSuccess: function (data) {
             var data = {};
             data = $("#stockRecordDatagrid").datagrid('getData');
-            console.log(data);
             if (data.total == 0 && editIndex != undefined) {
                 $("#exportDetail").datagrid('endEdit', editIndex);
                 $("#stockRecordDialog").dialog('close');
