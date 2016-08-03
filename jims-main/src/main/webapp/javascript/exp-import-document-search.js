@@ -432,7 +432,7 @@ $(function () {
     });
     $("#printBtn").on('click', function () {
         var printData = $("#importMaster").datagrid('getSelections');
-        alert(printData.length);
+//        alert(printData.length);
         if (printData.length !=1) {
             $.messager.alert('系统提示', '只能先选择一条数据!', 'error');
             return;
