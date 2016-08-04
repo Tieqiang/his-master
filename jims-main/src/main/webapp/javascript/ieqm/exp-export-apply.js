@@ -580,7 +580,7 @@ $(function () {
                         value= '已灭菌';
                     }
                     if (value == 0) {
-                        value= '为灭菌';
+                        value= '未灭菌';
                     }
                     if (value == undefined) {
                         value = '未知';
