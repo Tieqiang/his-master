@@ -44,7 +44,7 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         String hql = "from ExpSupplierCatalog a where a.supplierClass = '"+supplierClass+"'";
         if(q!=null&&!"".equals(q)){
             //upper(a.input_code) like upper('" + q + "%')"
-            hql+=" and upper(a.inputCode) like upper('" + q + "%')";
+            hql+=" and upper(a.inputCode) like upper('%" + q + "%')";
         }
         return entityManager.createQuery(hql).getResultList();
     }
@@ -143,7 +143,7 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
                 "       a.supplier,\n" +
                 "       a.input_code\n" +
                 "  from Exp_Supplier_Catalog a\n" +
-                "  where upper(a.input_code) like upper('" + q + "%')";
+                "  where upper(a.input_code) like upper('%" + q + "%')";
         if (null != type && !type.trim().equals("")) {
             sql += " and a.supplier_class = '" + type + "'";
         }
