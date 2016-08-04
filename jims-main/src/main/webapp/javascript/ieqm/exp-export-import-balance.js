@@ -997,13 +997,14 @@ $(function () {
                             });
 
                             var date=$(dateEd.target).textbox('getText');
-                            if(date==null || date=="" || date.indexOf("-")==-1 || date.length!=10){
-                                $.messager.alert("系统提示","请输入正确格式的日期","error");
-                                return;
+                            if(date==null&& date==""){
+                                if(date.indexOf("-")==-1 || date.length!=10){
+                                    $.messager.alert("系统提示","请输入正确格式的日期","error");
+                                    return;
+                                }
                             }
                             $(dateEd.target).textbox('setValue',date);
                             $("#dg").datagrid('appendRow', {documNo:documentNo});
-
                             var rows = $("#dg").datagrid('getRows');
 
                             var appendRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
