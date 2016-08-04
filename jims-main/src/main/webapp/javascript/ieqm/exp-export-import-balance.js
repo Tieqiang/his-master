@@ -1013,7 +1013,10 @@ $(function () {
                             }
                             editIndex = appendRowIndex;
                             $("#dg").datagrid('beginEdit', editIndex);
-                            var selector = "#datagrid-row-r23-2-"+appendRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
+//                            #datagrid-row-r22-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+//                            #datagrid-row-r22-2-0 > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text
+//                            #datagrid-row-r22-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+                            var selector = "#datagrid-row-r22-2-"+appendRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
                             $(selector).focus();
 
                         }
