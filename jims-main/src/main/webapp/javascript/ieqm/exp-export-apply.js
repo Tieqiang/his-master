@@ -541,8 +541,8 @@ $(function () {
                         textField: 'assignName',
                         method: 'GET',
                         onLoadSuccess: function () {
-//                        var data = $(this).combobox('getData');
-                            $(this).combobox('select',"请选择");
+                            var data = $(this).combobox('getData');
+                            $(this).combobox('setValue',data[0].assignCode);
                         }
                     }
                 }
@@ -550,6 +550,7 @@ $(function () {
                 title: '备注',
                 field: 'memos',
                 width: "7%",
+                hidden:true,
                 editor: {type: 'text'}
             }, {
                 title: '批号',
@@ -575,20 +576,22 @@ $(function () {
                 field: 'killflag',
                 width: '7%',
                 formatter: function (value, row, index) {
-                    if (value == '1') {
-                        return '<input type="checkbox" name="DataGridCheckbox" checked="true" />';
+                    if (value == 1) {
+                        value= '已灭菌';
                     }
-                    if (value == '0') {
-                        return '<input type="checkbox" name="DataGridCheckbox" />';
+                    if (value == 0) {
+                        value= '为灭菌';
                     }
                     if (value == undefined) {
-                        return value = '<input type="checkbox" name="DataGridCheckbox" />';
+                        value = '未知';
                     }
+                    return value;
                 }
             }, {
                 title: '单位',
                 field: 'units',
-                width: "7%"
+                width: "7%",
+                hidden:true
             }, {
                 title: '结存量',
                 field: 'disNum',
@@ -645,7 +648,8 @@ $(function () {
                 storageCode: parent.config.storageCode,
                 applyStorage: deptId,
                 applyNo:applyNo,
-                hospitalId: parent.config.hospitalId
+                hospitalId: parent.config.hospitalId,
+                name:parent.config.staffName
             });
             $("#applyDatagrid").datagrid('selectRow', 0);
         }
@@ -698,31 +702,31 @@ $(function () {
         }, {
             title: '审核人',
             field: 'name',
-            width: "10%",
-            editor: {
-                type: 'combogrid',
-                options: {
-                    panelWidth: 500,
-                    idField: 'name',
-                    textField: 'name',
-                    loadMsg: '数据正在加载',
-                    url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
-                    mode: 'remote',
-                    method: 'GET',
-                    columns: [[
-                        //{field: 'empNo', title: '员工编号', width: 150, align: 'center'},
-                        {field: 'name', title: '姓名', width: 150, align: 'center'},
-                        {field: 'loginName', title: '登录名', width: 150, align: 'center'},
-                        {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
-                    ]],
-                    pagination: false,
-                    fitColumns: true,
-                    rowNumber: true,
-                    autoRowHeight: false,
-                    pageSize: 50,
-                    pageNumber: 1
-                }
-            }
+            width: "10%"
+//            editor: {
+//                type: 'combogrid',
+//                options: {
+//                    panelWidth: 500,
+//                    idField: 'name',
+//                    textField: 'name',
+//                    loadMsg: '数据正在加载',
+//                    url: '/api/staff-dict/list-by-hospital?hospitalId=' + parent.config.hospitalId,
+//                    mode: 'remote',
+//                    method: 'GET',
+//                    columns: [[
+//                        //{field: 'empNo', title: '员工编号', width: 150, align: 'center'},
+//                        {field: 'name', title: '姓名', width: 150, align: 'center'},
+//                        {field: 'loginName', title: '登录名', width: 150, align: 'center'},
+//                        {field: 'inputCode', title: '拼音码', width: 150, align: 'center'}
+//                    ]],
+//                    pagination: false,
+//                    fitColumns: true,
+//                    rowNumber: true,
+//                    autoRowHeight: false,
+//                    pageSize: 50,
+//                    pageNumber: 1
+//                }
+//            }
         }, {
             title: '审核数量',
             field: 'auditingQuantity',
@@ -741,6 +745,7 @@ $(function () {
             hidden:true
         }]],
         onLoadSuccess:function(data){
+            console.info("申请的数据为:"+data);
             if(data.total==0){
                 $.messager.alert("系统提示","未查询到数据！","info");
                 $("#applyDialog").dialog('close');
@@ -807,13 +812,14 @@ $(function () {
         } else {
             for(var i =0;i<rows.length;i++){
                 rows[i].quantity = rows[i].auditingQuantity;
-            }
-            $("#right").datagrid("loadData", rows);
 
+            }
+            console.info(rows);
+            $("#right").datagrid("loadData", rows);
             $("#applyDialog").dialog('close');
             //$("#expDetailDialog").dialog('open');
             //$("#expDetailDatagrid").datagrid('selectRow', 0);
-            $.messager.alert('系统提示','请双击数据选择对应的规格！','info');
+            $.messager.alert('系统提示','请双击数据选择对应的规格！','error');
         }
     });
     //取消功能
@@ -846,9 +852,6 @@ $(function () {
         singleSelect: true,
         fit: true,
         fitColumns: true,
-        ////
-        //
-//        ？？
         url: '/api/exp-stock/stock-export-record/',
         method: 'GET',
         columns: [[{
@@ -1008,7 +1011,7 @@ $(function () {
                 $.messager.alert("系统提示", "第" + (parseInt(i+1)) + "行出库数量为0 请重新填写", 'error');
                 return false;
             }
-            if(($.trim(rows[i].purchasePrice)==""|| rows[i].purchasePrice==0)|| ($.trim(rows[i].disNum)=="")|| rows[i].disNum==0){
+            if(($.trim(rows[i].disNum)=="")|| rows[i].disNum==0){
                 $.messager.alert("系统提示", "第" + (parseInt(i + 1)) + "行出库信息不完善，请双击该行完善出库信息。", 'error');
                 return false;
             }
@@ -1081,6 +1084,7 @@ $(function () {
             detail.inventory = rows[i].disNum-rows[i].quantity;
             detail.producedate = new Date(rows[i].producedate);
             detail.disinfectdate = new Date(rows[i].disinfectdate);
+//            alert(rows[i].killflag);
             detail.killflag = rows[i].killflag;
             detail.id = rows[i].applicationId;
             detail.recFlag=0;
