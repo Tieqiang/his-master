@@ -575,23 +575,34 @@ $(function () {
         expDictChangeVo.deleted = deleteData;
 
         if (expDictChangeVo) {
-            $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
-                $.messager.alert("系统提示", "保存成功", "info");
+            $.postJSON("/api/exp-price-list/checkIsExist", expDictChangeVo, function (data) {
+                var reval= data.success;
+//                alert(reval);
+                if(!reval){
+                    $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
+                        $.messager.alert("系统提示", "保存成功", "info");
 
-                var promise = loadDict();//有价格信息
+                        var promise = loadDict();//有价格信息
 
-                promise.done(function () {
-                    if (prices.length > 0) {
-                        $("#dg").datagrid('loadData', prices);
-                        return;
-                    }
-                });
+                        promise.done(function () {
+                            if (prices.length > 0) {
+                                $("#dg").datagrid('loadData', prices);
+                                return;
+                            }
+                        });
 
+                    }, function (data) {
+                        $.messager.alert('提示', "保存失败", "error");
+                    })
+                }else{
+                    $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
+                }
             }, function (data) {
-                $.messager.alert('提示', "保存失败", "error");
+                $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
             })
-        }
+          }
     });
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',

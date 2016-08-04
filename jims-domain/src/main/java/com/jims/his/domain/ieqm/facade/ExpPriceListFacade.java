@@ -10,10 +10,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by wangjing on 2015/10/10.
@@ -226,11 +223,11 @@ public class ExpPriceListFacade extends BaseFacade {
                 " and   d.package_spec=c.exp_spec " +
                 " and   d.storage(+) like '" + StorageCode + "'||'%'\n" +
                 //"AND   nvl(d.quantity,0) > 0" +
-                "and   upper(b.input_code) like upper('" + inputCode + "%')" +
+
+                "and   upper(b.input_code) like upper('%" + inputCode + "%')" +
                 " and   d.quantity>0";
         return super.createNativeQuery(sql,new ArrayList<Object>(), ExpPriceListVo.class);
     }
-
     /**
      * 根据expCode，expSpec，firmId，units查询产品价格
      * @param expCode
@@ -271,4 +268,44 @@ public class ExpPriceListFacade extends BaseFacade {
     public ExpPriceList findById(String expId) {
         return (ExpPriceList)entityManager.createQuery("from ExpPriceList where id='"+expId+"'").getSingleResult();
     }
+
+    /**
+     * 查找添加的价格信息是否已经存在
+     * If exist true
+     * else false
+     * @param beanChangeVo
+     * @return
+     */
+    public Map<String, Object> checkIsExist(BeanChangeVo<ExpPriceListVo> beanChangeVo) {
+        Map<String,Object> map=new HashMap<>();
+        List<ExpPriceListVo> list=beanChangeVo.getInserted();
+        for(ExpPriceListVo expPriceListVo:list){
+            boolean isExist=checkSingleIsExist(expPriceListVo);
+            if(isExist){
+                map.put("success",true);
+                break;
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 查找某个产品价格是否已经存在
+     * @param expPriceListVo
+     * @return
+     */
+    private boolean checkSingleIsExist(ExpPriceListVo expPriceListVo) {
+        String expCode=expPriceListVo.getExpCode();
+        String expSpec=expPriceListVo.getExpSpec();
+        String units=expPriceListVo.getUnits();
+        String firmId=expPriceListVo.getFirmId();
+        String  sql="from ExpPriceList where expCode='"+expCode+"' and expSpec='"+expSpec+"' and units='"+units+"' and firmId='"+firmId+"'";
+        List<ExpPriceList> list=entityManager.createQuery(sql).getResultList();
+        if(list!=null&&!list.isEmpty()){
+             return true;
+        }
+        return false;
+    }
+
+
 }
