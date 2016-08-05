@@ -115,6 +115,7 @@ $(function () {
         fitColumns: true,
         footer: '#ft',
         toolbar: '#expExportMaster',
+        singleSelect:true,
         title: '消耗品出库单',
         columns: [[{
             title: "产品代码",
@@ -129,6 +130,7 @@ $(function () {
                     url: '/api/exp-name-dict/list-exp-name-by-input',
                     singleSelect: true,
                     method: 'GET',
+                    delay:300,
                     panelWidth: 200,
                     idField: 'expName',
                     textField: 'expName',
@@ -195,24 +197,24 @@ $(function () {
             editor: {
                 type: 'numberbox', options: {
 
-                    keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
-                        enter: function (e) {
-                            flag=0;
-                            $("#exportDetail").datagrid('appendRow', {documNo:documentNo});
-
-                            var appendRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
-
-                            if (editIndex || editIndex == 0) {
-                                $("#exportDetail").datagrid('endEdit', editIndex);
-                            }
-                            editIndex = appendRowIndex;
-                            $("#exportDetail").datagrid('beginEdit', editIndex);
-                            var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'quantity'});
-//                            console.info(editor);
-                            editor.target.focus();
-
-                        }
-                    }),
+//                    keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
+//                        enter: function (e) {
+//                            flag=0;
+//                            $("#exportDetail").datagrid('appendRow', {documNo:documentNo});
+//
+//                            var appendRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
+//
+//                            if (editIndex || editIndex == 0) {
+//                                $("#exportDetail").datagrid('endEdit', editIndex);
+//                            }
+//                            editIndex = appendRowIndex;
+//                            $("#exportDetail").datagrid('beginEdit', editIndex);
+//                            var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'quantity'});
+////                            console.info(editor);
+//                            editor.target.focus();
+//
+//                        }
+//                    }),
 
                     onChange: function (newValue, oldValue)
                     {
@@ -243,12 +245,6 @@ $(function () {
                                     totalAmount += Number(rows[i].amount);
                                 }
 
-//                                if(data1!=null&&data1!=""){
-//
-//                                    $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
-//                                }else{
-//                                    $(amountEd.target).numberbox('setValue', newValue * retailPrice);
-//                                }
                                 if (totalAmount) {
                                     if(data!=null&&data!=""){
                                         totalAmount += newValue * purchasePrice;}else{
@@ -261,62 +257,11 @@ $(function () {
                                     }
                                 }
                                 $("#accountReceivable").numberbox('setValue', totalAmount);
+                                addRow();
                             }
                         });
 
                     }
-//                    onChange: function (newValue, oldValue) {
-//                        var row = $("#exportDetail").datagrid('getData').rows[editIndex];
-//                        var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
-//                        var value = $('#receiver').combobox('getValue');
-//                        if (value != null && value != "") {
-////                            var supplierId=$("#receiver").combogrid("getValue");
-////                            if(supplierId!=""){
-//                                $.ajax({
-//                                    url:'/api/exp-supplier-catalog/find-by-supplier-id?supplierId='+value,
-//                                    TYPE:'POST',
-//                                    dataType:"JSON",
-//                                    cache:false,
-//                                    success:function(data){
-//                                          data1=data;
-//                                          if(data!=null&&data!=""){//是供货商
-//                                              $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
-//                                          }else{
-//                                              $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
-//                                          }
-//                                    }
-//                                });
-//                            }else{
-//                                $.messager.alert("系统提示","请选择发往科室！","info");
-//                                return;
-//                            }
-//
-////                            if (exportToFlag == "toSupplier") {//进价
-////                                $(amountEd.target).numberbox('setValue', newValue * row.purchasePrice);
-////                            } else {//
-////                                $(amountEd.target).numberbox('setValue', newValue * row.retailPrice);
-////                            }
-////                        } else {
-////                            $.messager.alert("系统提示", "请选择出库单位", "error");
-////                        }
-//
-//                        var rows = $("#exportDetail").datagrid('getRows');
-//                        var totalAmount = 0;
-//                        for (var i = 0; i < rows.length; i++) {
-//                            var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
-//                            if (rowIndex == editIndex) {
-//                                continue;
-//                            }
-//                            totalAmount += Number(rows[i].amount);
-//                        }
-//                        if (totalAmount) {
-//                            totalAmount += newValue * purchasePrice;
-//                        } else {
-//                            totalAmount = newValue * purchasePrice;
-//                        }
-//                        $("#accountReceivable").numberbox('setValue', totalAmount);
-//                    }
-
                 }
             }, formatter: function (value, row, index) {
                 if (value > row.disNum) {
@@ -714,28 +659,33 @@ $(function () {
                 if(quantity1=="" || quantity1==null || quantity1=="underfined"){
                     $.messager.alert("系统提示","清先填写出库数量","error");
                     return ;
+                }else{
+
                 }
                 if(parseInt(quantity1)>parseInt(disNum1)){
                     $.messager.alert("系统提示","出库数量大于结存量!","error");
                     return ;
                 }
-                stopEdit();
-                $("#exportDetail").datagrid('appendRow', {});
-                var rows = $("#exportDetail").datagrid('getRows');
-                var addRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
-                editIndex = addRowIndex;
-                $("#exportDetail").datagrid('selectRow', editIndex);
-                $("#exportDetail").datagrid('beginEdit', editIndex);
-                var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-                console.info(editor);
-//                #datagrid-row-r6-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
-                var selector = "#datagrid-row-r6-2-"+addRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
-                console.info(selector);
-                $(selector).focus();
+                //$(quantity.target).onchange(quantity1,0);
             }
         }
     });
 
+    //新增一行
+    var addRow = function(){
+        stopEdit();
+        $("#exportDetail").datagrid('appendRow', {});
+        var rows = $("#exportDetail").datagrid('getRows');
+        var addRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
+        editIndex = addRowIndex;
+        $("#exportDetail").datagrid('selectRow', editIndex);
+        $("#exportDetail").datagrid('beginEdit', editIndex);
+        var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
+        console.info(editor);
+//                #datagrid-row-r6-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+        var selector = "#datagrid-row-r6-2-"+addRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
+        $(selector).focus();
+    }
     var stopEdit = function () {
         if (editIndex || editIndex == 0) {
             $("#exportDetail").datagrid('endEdit', editIndex);

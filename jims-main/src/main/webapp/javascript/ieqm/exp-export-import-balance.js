@@ -771,6 +771,7 @@ $(function () {
                     url: '/api/exp-name-dict/list-exp-name-by-input',
                     singleSelect: true,
                     method: 'GET',
+                    delay:300,
                     panelWidth: 300,
                     idField: 'expName',
                     textField: 'expName',

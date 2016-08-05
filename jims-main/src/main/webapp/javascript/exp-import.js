@@ -16,7 +16,7 @@ $(function () {
     var currentExpCode;
     var flag;
     var saveFlag;
-
+    var currentSelect=0 ;//当前选中的规格
     var setDefaultDate = function () {
         var date = new Date();
         var y = date.getFullYear();
@@ -87,6 +87,7 @@ $(function () {
                     mode: 'remote',
                     url: '/api/exp-name-dict/list-exp-name-by-input',
                     singleSelect: true,
+                    delay:300,
                     method: 'GET',
                     panelWidth: 300,
                     idField: 'expName',
@@ -109,10 +110,10 @@ $(function () {
                     }]],
                     onClickRow: function (index, row) {
                         var rowDetail = $("#importDetail").datagrid('getData').rows[editIndex];
-//                         var ed = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
-//                        $(ed.target).textbox('setValue', row.expCode);
                         rowDetail.expCode=row.expCode;
                         currentExpCode = row.expCode;
+                        var selector="#datagrid-row-r8-2-"+editIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text";
+                        $(selector).blur();
                         $("#stockRecordDialog").dialog('open');
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
@@ -124,6 +125,8 @@ $(function () {
                                 currentExpCode = row.expCode;
                                 $("#stockRecordDialog").dialog('open');
                             }
+                            var selector="#datagrid-row-r8-2-"+editIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text";
+                            $(selector).blur();
                             $(this).combogrid('hidePanel');
                         }
                     })
@@ -717,7 +720,6 @@ $(function () {
                 expCode: currentExpCode,
                 hospitalId: parent.config.hospitalId
             });
-            $("#stockRecordDatagrid").datagrid('selectRow', 0)
         }
     });
 
@@ -810,8 +812,10 @@ $(function () {
                     //$("#exportDetail").datagrid('endEdit', editIndex);
                     $.messager.alert('系统提示','无法获取产品的价格信息！','info');
                     $("#stockRecordDialog").dialog('close');
+
                     //$("#exportDetail").datagrid('beginEdit', editIndex);
                 }
+                $("#stockRecordDatagrid").datagrid('selectRow',0);
                 flag=0;
             }
         },
@@ -1135,4 +1139,43 @@ $(function () {
         }
 
     })
+
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        var options =$("#stockRecordDialog").dialog('options');
+        if(!options.closed){
+            e.preventDefault();
+            var rows = $("#stockRecordDatagrid").datagrid('getRows') ;
+            var maxIndex = $("#stockRecordDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
+
+            //if(selects!=null){
+            //    currentSelect = $("#stockRecordDatagrid").datagrid("getRowIndex",currentSelect);
+            //}
+
+            if(e.keyCode==38){
+                currentSelect = currentSelect -1 ;
+                if(currentSelect<0){
+                    currentSelect = 0 ;
+                }
+            }
+
+            if(e.keyCode==40){
+                //下
+                currentSelect = currentSelect +1 ;
+                if(currentSelect>maxIndex){
+                    currentSelect = maxIndex ;
+                }
+            }
+
+            $("#stockRecordDatagrid").datagrid('selectRow',currentSelect);
+            if(e.keyCode==13){
+                var temSelect = $("#stockRecordDatagrid").datagrid('getSelected');
+                var seIndex = $("#stockRecordDatagrid").datagrid('getRowIndex',temSelect);
+                var test = "#datagrid-row-r14-2-"+seIndex;
+                //alert(test);
+                $(test).trigger('click',currentSelect,rows[currentSelect]);
+            }
+
+        }
+    }
 })
