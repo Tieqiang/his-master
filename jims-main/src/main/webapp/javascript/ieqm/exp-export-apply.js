@@ -30,7 +30,36 @@ $(function () {
             return dateTime
         }
     }
-
+    function formatterDate3(val, row) {
+//        2016/5/26 9:29:19
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 00;
+            var mm = 00;
+            var s = 00;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+    function formatterDate4(val, row) {
+//        2016/5/26 9:29:19
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 23;
+            var mm=59;
+            var s = 59;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -50,13 +79,15 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-            var time = $('#startDate').datetimebox('spinner').spinner('getValue');
+//            16:16:34
+            var time =$('#startDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
+            alert(dateTime);
             $('#startDate').datetimebox('setText', dateTime);
             $('#startDate').datetimebox('hidePanel');
         }
@@ -66,11 +97,12 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate4,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
+//            var  time="23:59:59";
             var time = $('#endDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#endDate').datetimebox('setText', dateTime);

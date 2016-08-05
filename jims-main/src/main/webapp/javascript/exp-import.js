@@ -250,15 +250,16 @@ $(function () {
                                 index: editIndex,
                                 field: 'expireDate'
                             });
-
                             var date=$(dateEd.target).textbox('getText');
-                            if(date==null || date=="" || date.indexOf("-")==-1 || date.length!=10){
-                                $.messager.alert("系统提示","请输入正确格式的日期","error");
-                                return ;
-                            }else{
-                                $(dateEd.target).datebox('setValue',date);
+                            alert(date);
+                            if(date!=null&&date!=""){
+                                if(date.indexOf("-")==-1 || date.length!=10){
+                                    $.messager.alert("系统提示","请输入正确格式的日期","error");
+                                    return ;
+                                }else{
+                                    $(dateEd.target).datebox('setValue',date);
+                                }
                             }
-
                             $("#importDetail").datagrid('appendRow', {documNo:documentNo});
                             var rows = $("#importDetail").datagrid('getRows') ;
                             var appendRowIndex = $("#importDetail").datagrid('getRowIndex', rows[rows.length - 1]);

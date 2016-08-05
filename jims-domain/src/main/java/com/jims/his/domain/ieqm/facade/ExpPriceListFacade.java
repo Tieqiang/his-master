@@ -299,7 +299,8 @@ public class ExpPriceListFacade extends BaseFacade {
         String expSpec=expPriceListVo.getExpSpec();
         String units=expPriceListVo.getUnits();
         String firmId=expPriceListVo.getFirmId();
-        String  sql="from ExpPriceList where expCode='"+expCode+"' and expSpec='"+expSpec+"' and units='"+units+"' and firmId='"+firmId+"'";
+        Integer amountPerPackage=expPriceListVo.getAmountPerPackage();
+        String  sql="from ExpPriceList where expCode='"+expCode+"' and expSpec='"+expSpec+"' and units='"+units+"' and firmId='"+firmId+"' and amountPerPackage="+amountPerPackage+"";
         List<ExpPriceList> list=entityManager.createQuery(sql).getResultList();
         if(list!=null&&!list.isEmpty()){
              return true;
