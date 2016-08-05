@@ -6,7 +6,7 @@ $(function () {
     var documentNo;
     var currentExpCode;
     var saveFlag;
-
+    var currentSelect=0;
     var stopEdit = function () {
         if (editIndex || editIndex == 0) {
             $("#right").datagrid('endEdit', editIndex);
@@ -531,7 +531,7 @@ $(function () {
                 expCode: currentExpCode,
                 hospitalId: parent.config.hospitalId
             });
-            $("#expDetailDatagrid").datagrid('selectRow', 0);
+//            $("#expDetailDatagrid").datagrid('selectRow', 0);
         }
     });
 
@@ -694,6 +694,9 @@ $(function () {
             field: 'permitNo',
             hidden:true
         }]],
+        onLoadSuccess:function(data){
+            $(this).datagrid("selectRow",0);
+        },
         onDblClickRow: function (index, row) {
             $("#dg").datagrid('endEdit', editIndex);
             var rows = $("#dg").datagrid('getRows') ;
@@ -1488,4 +1491,42 @@ $(function () {
             }
         }
     }
+
+
+
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        var options =$("#expDetailDialog").dialog('options');
+        if(!options.closed){
+//            alert(1);
+            e.preventDefault();
+            var rows = $("#expDetailDatagrid").datagrid('getRows') ;
+            var maxIndex = $("#expDetailDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
+
+            if(e.keyCode==38){
+                currentSelect = currentSelect -1 ;
+                if(currentSelect<0){
+                    currentSelect = 0 ;
+                }
+            }
+
+            if(e.keyCode==40){
+                //下
+                currentSelect = currentSelect +1 ;
+                if(currentSelect>maxIndex){
+                    currentSelect = maxIndex ;
+                }
+            }
+            $("#expDetailDatagrid").datagrid('selectRow',currentSelect);
+            if(e.keyCode==13){
+                var temSelect = $("#expDetailDatagrid").datagrid('getSelected');
+                var seIndex = $("#expDetailDatagrid").datagrid('getRowIndex',temSelect);
+                var test = "#datagrid-row-r21-2-"+seIndex;
+                alert(test);
+                $(test).trigger('click',currentSelect,rows[currentSelect]);
+            }
+
+        }
+    }
+
 });

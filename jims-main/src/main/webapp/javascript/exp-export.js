@@ -6,7 +6,7 @@
 
 
 $(function () {
-
+    var currentSelect=0 ;//当前选中的规格
     var exportToFlag = undefined;//退库的时候，标志，用于区分是否退货给供应商。
 
     function formatterYMD(val, row) {
@@ -639,37 +639,7 @@ $(function () {
         }
         editIndex = appendRowIndex;
         $("#exportDetail").datagrid('beginEdit', editIndex);
-
-        document.onkeydown = function (event) {
-
-            var e = event || window.event || arguments.callee.caller.arguments[0];
-            if (e && e.keyCode == 13) {
-                var quantity = $("#exportDetail").datagrid('getEditor', {
-                    index: editIndex,
-                    field: 'quantity'
-                });
-//disNum
-                var disNum = $("#exportDetail").datagrid('getEditor', {
-                    index: editIndex,
-                    field: 'disNum'
-                });
-                var quantity1=$(quantity.target).textbox('getValue');
-                var disNum1=$(disNum.target).textbox('getValue');
-//                alert("结存量="+disNum1);
-                if(quantity1=="" || quantity1==null || quantity1=="underfined"){
-                    $.messager.alert("系统提示","清先填写出库数量","error");
-                    return ;
-                }else{
-
-                }
-                if(parseInt(quantity1)>parseInt(disNum1)){
-                    $.messager.alert("系统提示","出库数量大于结存量!","error");
-                    return ;
-                }
-                //$(quantity.target).onchange(quantity1,0);
-            }
-        }
-    });
+     });
 
     //新增一行
     var addRow = function(){
@@ -811,7 +781,8 @@ $(function () {
                 $("#stockRecordDialog").dialog('close');
                 $.messager.alert('系统提示', '该子库房暂无此产品,请重置产品名称或子库房！', 'info');
                 $("#exportDetail").datagrid('beginEdit', editIndex);
-            }
+            };
+            $("#stockRecordDatagrid").datagrid("selectRow",0);
         },
         onClickRow: function (index, row) {
             var rows = $("#exportDetail").datagrid('getRows');
@@ -1105,4 +1076,70 @@ $(function () {
             }
         }
     }
+    document.onkeydown = function (event) {
+
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+
+    }
+
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        var options =$("#stockRecordDialog").dialog('options');
+        if(options.closed) {
+            if (e && e.keyCode == 13) {
+                var quantity = $("#exportDetail").datagrid('getEditor', {
+                    index: editIndex,
+                    field: 'quantity'
+                });
+//disNum
+                var disNum = $("#exportDetail").datagrid('getEditor', {
+                    index: editIndex,
+                    field: 'disNum'
+                });
+                var quantity1 = $(quantity.target).textbox('getValue');
+                var disNum1 = $(disNum.target).textbox('getValue');
+//                alert("结存量="+disNum1);
+                if (quantity1 == "" || quantity1 == null || quantity1 == "underfined") {
+                    $.messager.alert("系统提示", "清先填写出库数量", "error");
+                    return;
+                } else {
+
+                }
+                if (parseInt(quantity1) > parseInt(disNum1)) {
+                    $.messager.alert("系统提示", "出库数量大于结存量!", "error");
+                    return;
+                }
+            }
+        };
+        if(!options.closed){
+            e.preventDefault();
+            var rows = $("#stockRecordDatagrid").datagrid('getRows') ;
+            var maxIndex = $("#stockRecordDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
+            if(e.keyCode==38){
+//                alert(1);
+                currentSelect = currentSelect -1 ;
+                if(currentSelect<0){
+                    currentSelect = 0 ;
+                }
+            }
+
+            if(e.keyCode==40){
+                //下
+                currentSelect = currentSelect +1 ;
+                if(currentSelect>maxIndex){
+                    currentSelect = maxIndex ;
+                }
+            }
+
+            $("#stockRecordDatagrid").datagrid('selectRow',currentSelect);
+            if(e.keyCode==13){
+                var temSelect = $("#stockRecordDatagrid").datagrid('getSelected');
+                var seIndex = $("#stockRecordDatagrid").datagrid('getRowIndex',temSelect);
+                var test = "#datagrid-row-r10-2-"+seIndex;
+                $(test).trigger('click',currentSelect,rows[currentSelect]);
+            }
+
+        }
+    }
+
 })
