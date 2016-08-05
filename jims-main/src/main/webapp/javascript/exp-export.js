@@ -463,7 +463,6 @@ $(function () {
 
     $("#exportClass").change(function() {
         var checkValue = $("#exportClass").val();
-//        alert(checkValue);
         var depts = [];
         var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
             console.info(data);
@@ -876,7 +875,6 @@ $(function () {
      * 进行数据校验
      */
     var dataValid = function () {
-//        alert("valid");
         var rows = $("#exportDetail").datagrid('getRows');
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].quantity == 0) {
@@ -919,7 +917,6 @@ $(function () {
         var exportMaster = {};
         exportMaster.documentNo = $("#documentNo").val();
         exportMaster.exportClass = getSelectedText("exportClass");
-//        alert( exportMaster.exportClass);
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');
@@ -1013,7 +1010,6 @@ $(function () {
         }
         if (dataValid()) {
             var importVo = getCommitData();
-//            alert(1);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
                 if (data.errorMessage) {
                     $.messager.alert("系统提示", data.errorMessage, 'error');
@@ -1098,7 +1094,6 @@ $(function () {
                 });
                 var quantity1 = $(quantity.target).textbox('getValue');
                 var disNum1 = $(disNum.target).textbox('getValue');
-//                alert("结存量="+disNum1);
                 if (quantity1 == "" || quantity1 == null || quantity1 == "underfined") {
                     $.messager.alert("系统提示", "清先填写出库数量", "error");
                     return;
@@ -1116,7 +1111,6 @@ $(function () {
             var rows = $("#stockRecordDatagrid").datagrid('getRows') ;
             var maxIndex = $("#stockRecordDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
             if(e.keyCode==38){
-//                alert(1);
                 currentSelect = currentSelect -1 ;
                 if(currentSelect<0){
                     currentSelect = 0 ;

@@ -251,7 +251,6 @@ $(function () {
                                 field: 'expireDate'
                             });
                             var date=$(dateEd.target).textbox('getText');
-                            alert(date);
                             if(date!=null&&date!=""){
                                 if(date.indexOf("-")==-1 || date.length!=10){
                                     $.messager.alert("系统提示","请输入正确格式的日期","error");
@@ -1173,7 +1172,6 @@ $(function () {
                 var temSelect = $("#stockRecordDatagrid").datagrid('getSelected');
                 var seIndex = $("#stockRecordDatagrid").datagrid('getRowIndex',temSelect);
                 var test = "#datagrid-row-r14-2-"+seIndex;
-                //alert(test);
                 $(test).trigger('click',currentSelect,rows[currentSelect]);
             }
 

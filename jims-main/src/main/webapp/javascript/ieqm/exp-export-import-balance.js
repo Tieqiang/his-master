@@ -301,7 +301,6 @@ $(function () {
 
     $("#exportClass").change(function() {
         var checkValue = $("#exportClass").val();
-        alert(checkValue);
         var depts = [];
         var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
             console.info(data);
@@ -1502,7 +1501,6 @@ $(function () {
         var e = event || window.event || arguments.callee.caller.arguments[0];
         var options =$("#expDetailDialog").dialog('options');
         if(!options.closed){
-//            alert(1);
             e.preventDefault();
             var rows = $("#expDetailDatagrid").datagrid('getRows') ;
             var maxIndex = $("#expDetailDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
@@ -1528,7 +1526,6 @@ $(function () {
                 var test = "#datagrid-row-r21-2-"+seIndex;
                 $(test).trigger('click',currentSelect,rows[currentSelect]);
             }
-
         }
     }
 

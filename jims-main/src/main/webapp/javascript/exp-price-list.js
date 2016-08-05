@@ -574,35 +574,45 @@ $(function () {
         expDictChangeVo.updated = updateData;
         expDictChangeVo.deleted = deleteData;
 
-        if (expDictChangeVo) {
-            $.postJSON("/api/exp-price-list/checkIsExist", expDictChangeVo, function (data) {
-                var reval= data.success;
-//                alert(reval);
-                if(!reval){
-                    $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
-                        $.messager.alert("系统提示", "保存成功", "info");
-
-                        var promise = loadDict();//有价格信息
-
-                        promise.done(function () {
-                            if (prices.length > 0) {
-                                $("#dg").datagrid('loadData', prices);
-                                return;
-                            }
-                        });
-
-                    }, function (data) {
-                        $.messager.alert('提示', "保存失败", "error");
-                    })
-                }else{
-                    $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
+        if(expDictChangeVo.inserted.length > 0){
+            for(var i=0; i< expDictChangeVo.inserted.length; i++){
+                if(expDictChangeVo.inserted[i].amountPerPackage == null || expDictChangeVo.inserted[i].amountPerPackage == '' || typeof(expDictChangeVo.inserted[i].amountPerPackage) == 'undefined'){
+                    $.messager.alert('系统提示', '请输入包装数量', 'info');
+                    return;
                 }
-            }, function (data) {
-                $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
-            })
-          }
-    });
+                if (expDictChangeVo.inserted[i].firmId == null || expDictChangeVo.inserted[i].firmId == '' || typeof(expDictChangeVo.inserted[i].firmId) == 'undefined') {
+                    $.messager.alert('系统提示', '请选择厂家', 'info');
+                    return;
+                }
+                if (expDictChangeVo.inserted[i].tradePrice == null || expDictChangeVo.inserted[0].tradePrice == '' || typeof(expDictChangeVo.inserted[i].tradePrice) == 'undefined') {
+                    $.messager.alert('系统提示', '批发价不能为空', 'info');
+                    return;
+                }
+                if (expDictChangeVo.inserted[i].retailPrice == null || expDictChangeVo.inserted[i].retailPrice == '' || typeof(expDictChangeVo.inserted[i].retailPrice) == 'undefined') {
+                    $.messager.alert('系统提示', '零售价不能为空', 'info');
+                    return;
+                }
+            }
+        }
 
+        if (expDictChangeVo) {
+            $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
+                $.messager.alert("系统提示", "保存成功", "info");
+
+                var promise = loadDict();//有价格信息
+
+                promise.done(function () {
+                    if (prices.length > 0) {
+                        $("#dg").datagrid('loadData', prices);
+                        return;
+                    }
+                });
+
+            }, function (data) {
+                $.messager.alert('提示', "保存失败", "error");
+            })
+        }
+    });
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
