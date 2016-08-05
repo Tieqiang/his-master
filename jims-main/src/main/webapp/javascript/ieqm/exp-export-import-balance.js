@@ -697,7 +697,7 @@ $(function () {
         onLoadSuccess:function(data){
             $(this).datagrid("selectRow",0);
         },
-        onDblClickRow: function (index, row) {
+        onClickRow: function (index, row) {
             $("#dg").datagrid('endEdit', editIndex);
             var rows = $("#dg").datagrid('getRows') ;
             for(var i = 0;i<rows.length;i++){
@@ -795,6 +795,8 @@ $(function () {
                     }]],
                     onClickRow: function (index, row) {
                         currentExpCode = row.expCode;
+                        var selector="#datagrid-row-r22-2-"+editIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text" ;
+                        $(selector).blur();
                         $("#expDetailDialog").dialog('open');
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
@@ -804,6 +806,8 @@ $(function () {
                                 currentExpCode = row.expCode;
                                 $("#expDetailDialog").dialog('open');
                             }
+                            var selector="#datagrid-row-r22-2-"+editIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text" ;
+                            $(selector).blur();
                             $(this).combogrid('hidePanel');
                         }
                     })
@@ -1522,7 +1526,6 @@ $(function () {
                 var temSelect = $("#expDetailDatagrid").datagrid('getSelected');
                 var seIndex = $("#expDetailDatagrid").datagrid('getRowIndex',temSelect);
                 var test = "#datagrid-row-r21-2-"+seIndex;
-                alert(test);
                 $(test).trigger('click',currentSelect,rows[currentSelect]);
             }
 
