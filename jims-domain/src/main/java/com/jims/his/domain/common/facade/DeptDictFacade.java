@@ -49,8 +49,11 @@ public class DeptDictFacade extends BaseFacade {
     }
 
     public List<DeptDict> findByHospitalIdAndQuer(String hospitalId, String q) {
-        String hql = "from DeptDict as dept where dept.hospitalDict.id='" + hospitalId + "' and " +
-                "dept.inputCode like '" + q + "%'";
+        String hql = "from DeptDict as dept where dept.hospitalDict.id='" + hospitalId + "' ";
+        if (q != null) {
+            hql += " and dept.inputCode like upper('%" + q + "%')";
+        }
+
         Query query = entityManager.createQuery(hql);
         List resultList = query.getResultList();
         return resultList;
@@ -76,13 +79,14 @@ public class DeptDictFacade extends BaseFacade {
      */
     public List<DeptDict> findByHospitalIdWithRecked(String hospitalId) {
         String hql = "from DeptDict as dept where dept.hospitalDict.id = '" + hospitalId + "' and dept.id not in (select distinct d.deptDictId from AcctDeptVsDeptDict as d )";
-        Query query = entityManager.createQuery(hql) ;
-        return query.getResultList() ;
+        Query query = entityManager.createQuery(hql);
+        return query.getResultList();
     }
 
 
     /**
      * 查询出某一个核算单元对照的科室
+     *
      * @param hospitalId
      * @param acctDeptId
      * @return
@@ -90,7 +94,7 @@ public class DeptDictFacade extends BaseFacade {
     public List<DeptDict> findByHospitalIdAndAcctDeptId(String hospitalId, String acctDeptId) {
 
         String hql = "select dept from DeptDict as dept ,AcctDeptVsDeptDict vs where dept.id=vs.deptDictId and " +
-                "vs.acctDeptId='"+acctDeptId+"' and dept.hospitalDict.id='"+hospitalId+"'"  ;
+                "vs.acctDeptId='" + acctDeptId + "' and dept.hospitalDict.id='" + hospitalId + "'";
 
         Query query = entityManager.createQuery(hql);
         return query.getResultList();
