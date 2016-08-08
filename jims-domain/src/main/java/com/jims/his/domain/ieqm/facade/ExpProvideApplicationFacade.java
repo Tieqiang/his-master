@@ -11,9 +11,7 @@ import com.jims.his.domain.ieqm.vo.ExpStockDefineVo;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by tangxinbo on 2015/10/14.
@@ -180,7 +178,7 @@ public class ExpProvideApplicationFacade extends BaseFacade {
      * @return
      */
     public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String hospitalId, String applyStorage, String appNo,String name){
-        String sql = "SELECT distinct  " +
+        String sql = "SELECT distinct             \n " +
                 "                s1.storage_name provide_name,\n" +
                 "                s2.storage_name applicant_name,\n" +
                 "                s3.document_no import_document_no,\n" +
@@ -243,6 +241,17 @@ public class ExpProvideApplicationFacade extends BaseFacade {
         }
         sql += " ORDER BY EXP_PROVIDE_APPLICATION.ITEM_NO ASC ";
         List<ExpProvideApplicationVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpProvideApplicationVo.class);
+        Map<String, ExpProvideApplicationVo> map = new HashMap<>();
+        if(result != null && !result.isEmpty()){
+            for (ExpProvideApplicationVo expProvideApplicationVo : result) {
+                map.put(expProvideApplicationVo.getApplicationId(), expProvideApplicationVo);
+            }
+        }
+        result.clear();
+        Set<String> sets = map.keySet();
+        for (String set : sets) {
+            result.add(map.get(set));
+        }
         if(result!=null&&!result.isEmpty()){
             for(ExpProvideApplicationVo expProvideApplicationVo:result){
                 expProvideApplicationVo.setName(name);

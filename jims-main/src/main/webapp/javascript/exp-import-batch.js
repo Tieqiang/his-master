@@ -745,8 +745,7 @@ $(function () {
             field: 'packageUnits'
         }, {
             title: "数量",
-            field: 'quantity',
-            hidden:true
+            field: 'quantity'
         }, {
             title: '批号',
             field: 'batchNo'
