@@ -413,7 +413,10 @@ $(function () {
             expNameDictChangeVo.inserted = insertNameData;
             expNameDictChangeVo.updated = updateNameData;
             expNameDictChangeVo.deleted = deleteNameData;
-
+            if(insertData.length>1){
+                $.messager.alert("系统提示","若维护多个规格，请到价格维护功能进行操作！","error");
+                return;
+            }
             var expDictChangeVo = {};
             expDictChangeVo.inserted = insertData;
             expDictChangeVo.updated = updateData;

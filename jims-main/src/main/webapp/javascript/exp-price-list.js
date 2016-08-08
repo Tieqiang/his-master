@@ -463,7 +463,7 @@ $(function () {
             //obj = tempRow ;
             $.extend(obj,tempRow)
             obj.packageUnits='' ;
-            obj.expSpec='' ;
+//            obj.expSpec='' ;
             obj.amountPerPackage = '' ;
             obj.columnProtect = '0';
             newRows.push(obj) ;
