@@ -41,11 +41,99 @@ public class ExpProvideApplicationVo implements java.io.Serializable {
 
     private String enterDate;
     private String deptName;
+    private String name;
+
 
 
     private String deptId;
     private String expForm;
     private String importDocumentNo;
+    private  String batchNo;
+    private  Integer retailPrice;
+    private  Integer disNum;
+    private  Date producedate;
+    private  Integer killflag;
+    private Date expireDate;
+    private Date disinfectdate;
+    private String firmId;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFirmId() {
+        return firmId;
+    }
+
+    public void setFirmId(String firmId) {
+        this.firmId = firmId;
+    }
+
+    public Integer getDisNum() {
+        return disNum;
+    }
+
+    public void setDisNum(Integer disNum) {
+        this.disNum = disNum;
+    }
+
+    public Date getProducedate() {
+        return producedate;
+    }
+
+    public void setProducedate(Date producedate) {
+        this.producedate = producedate;
+    }
+
+    public Integer getKillflag() {
+        return killflag;
+    }
+
+    public void setKillflag(Integer killflag) {
+        this.killflag = killflag;
+    }
+
+    public Date getDisinfectdate() {
+        return disinfectdate;
+    }
+
+    public void setDisinfectdate(Date disinfectdate) {
+        this.disinfectdate = disinfectdate;
+    }
+
+
+
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public Integer getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(Integer retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
+
+
 
     public ExpProvideApplicationVo(BeanChangeVo<ExpProvideApplication> changeVo, String applicationId, String expName, String applicantStorage, String applicantName, String provideStorage, String provideName, Short itemNo, String expCode, String expSpec, String packageSpec, Double quantity, String packageUnits, Date enterDateTime, String provideFlag, String exportDocumentNo, String applicantNo, String applicationMan, String patientId, Byte visitId, Boolean retflag, Date retdate, String retoperator, String auditingOperator, Double auditingQuantity, String enterDate, String deptName, String deptId, String expForm) {
         this.changeVo = changeVo;

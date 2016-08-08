@@ -6,7 +6,7 @@ $(function () {
     var documentNo;
     var currentExpCode;
     var saveFlag;
-
+    var currentSelect=0;
     var stopEdit = function () {
         if (editIndex || editIndex == 0) {
             $("#right").datagrid('endEdit', editIndex);
@@ -200,31 +200,49 @@ $(function () {
 //    });
     //供货方数据加载
 //    promise.done(function () {
-        $("#supplier").combogrid({
-            mode:'remote',
-            url:'/api/exp-supplier-catalog/list-with-dept?hospitalId=' + parent.config.hospitalId,
-            idField: 'supplierCode',
-            textField: 'supplierName',
-            method:'GET',
+    $("#supplier").combogrid({
+        mode:'remote',
+        url:'/api/exp-supplier-catalog/list-with-dept?hospitalId=' + parent.config.hospitalId,
+        idField: 'supplierCode',
+        textField: 'supplierName',
+        method:'GET',
 //            data: suppliers,
-            panelWidth: 500,
-            fitColumns: true,
-            columns: [[{
-                title: '供应商名称',
-                field: 'supplierName', width: 200, align: 'center'
-            }, {
-                title: '供应商代码',
-                field: 'supplierCode', width: 150, align: 'center'
-            }, {
-                title: '输入码',
-                field: 'inputCode', width: 50, align: 'center'
-            }]],
-            filter: function (q, row) {
-                return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
-            }
-        })
+        panelWidth: 500,
+        fitColumns: true,
+        columns: [[{
+            title: '供应商名称',
+            field: 'supplierName', width: 200, align: 'center'
+        }, {
+            title: '供应商代码',
+            field: 'supplierCode', width: 150, align: 'center'
+        }, {
+            title: '输入码',
+            field: 'inputCode', width: 50, align: 'center'
+        }]],
+        filter: function (q, row) {
+            return $.startWith(row.inputCode.toUpperCase(), q.toUpperCase());
+        }
+    })
 //    });
-
+    /**
+     * 加载出库类别数据
+     * exp_export_class_dict
+     */
+    function loadExportClass(){
+        $.ajax({
+            url:"/api/exp-export-class-dict/list",
+            type:"GET",
+            dataType:"JSON",
+            cache:false,
+            success:function(data){
+                console.info(data);
+                for(var i=0;i<data.length;i++){
+                    $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
+                }
+            }
+        });
+    }
+    loadExportClass();
     //开支类别数据加载
     $('#fundItem').combobox({
         panelHeight: 'auto',
@@ -241,21 +259,21 @@ $(function () {
     });
 
     //出库类别数据加载
-    $('#exportClass').combobox({
-        panelHeight: 'auto',
-        url: '/api/exp-export-class-dict/list',
-        method: 'GET',
-        valueField: 'exportClass',
-        textField: 'exportClass',
-        onLoadSuccess: function () {
-            var data = $(this).combobox('getData');
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].exportClass == "发放出库") {
-                    $(this).combobox('select', data[i].exportClass);
-                }
-            }
-        }
-    });
+//    $('#exportClass').combobox({
+//        panelHeight: 'auto',
+//        url: '/api/exp-export-class-dict/list',
+//        method: 'GET',
+//        valueField: 'exportClass',
+//        textField: 'exportClass',
+//        onLoadSuccess: function () {
+//            var data = $(this).combobox('getData');
+//            for (var i = 0; i < data.length; i++) {
+//                if (data[i].exportClass == "发放出库") {
+//                    $(this).combobox('select', data[i].exportClass);
+//                }
+//            }
+//        }
+//    });
 
     //申请库房数据加载
     $('#storage').combogrid({
@@ -280,27 +298,64 @@ $(function () {
     });
 
 
-    //发往库房数据加载
-    $('#receiver').combogrid({
-        panelWidth: 500,
-        idField: 'storageCode',
-        textField: 'storageName',
-        loadMsg: '数据正在加载',
-        url: '/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId,
-        mode: 'remote',
-        method: 'GET',
-        columns: [[
-            {field: 'storageCode', title: '编码', width: 150, align: 'center'},
-            {field: 'storageName', title: '名称', width: 150, align: 'center'},
-            {field: 'disburseNoPrefix', title: '拼音', width: 100, align: 'center'}
-        ]],
-        pagination: false,
-        fitColumns: true,
-        rowNumber: true,
-        autoRowHeight: false,
-        pageSize: 50,
-        pageNumber: 1
+
+    $("#exportClass").change(function() {
+        var checkValue = $("#exportClass").val();
+        var depts = [];
+        var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
+            console.info(data);
+            depts = data;
+            return depts;
+        });
+        promise.done(function () {
+            $("#receiver").combogrid({
+                idField: 'supplierCode',
+                textField: 'supplierName',
+                data: depts,
+                panelWidth: 300,
+                columns: [
+                    [
+                        {
+                            title: '科室名称',
+                            field: 'supplierName',
+                            width: 200
+                        },
+                        {
+                            title: '科室代码',
+                            field: 'supplierCode',
+                            width: 50
+                        },
+                        {
+                            title: '输入码',
+                            field: 'inputCode',
+                            width: 50
+                        }
+                    ]
+                ]
+            })
+        })
     });
+    //发往库房数据加载
+//    $('#receiver').combogrid({
+//        panelWidth: 500,
+//        idField: 'storageCode',
+//        textField: 'storageName',
+//        loadMsg: '数据正在加载',
+//        url: '/api/exp-storage-dept/list?hospitalId=' + parent.config.hospitalId,
+//        mode: 'remote',
+//        method: 'GET',
+//        columns: [[
+//            {field: 'storageCode', title: '编码', width: 150, align: 'center'},
+//            {field: 'storageName', title: '名称', width: 150, align: 'center'},
+//            {field: 'disburseNoPrefix', title: '拼音', width: 100, align: 'center'}
+//        ]],
+//        pagination: false,
+//        fitColumns: true,
+//        rowNumber: true,
+//        autoRowHeight: false,
+//        pageSize: 50,
+//        pageNumber: 1
+//    });
 
     //出库负责人数据加载
     $('#principal').combogrid({
@@ -475,7 +530,7 @@ $(function () {
                 expCode: currentExpCode,
                 hospitalId: parent.config.hospitalId
             });
-            $("#expDetailDatagrid").datagrid('selectRow', 0);
+//            $("#expDetailDatagrid").datagrid('selectRow', 0);
         }
     });
 
@@ -523,7 +578,7 @@ $(function () {
             field: 'expireDate',
             editor: {
                 type: 'datebox'
-             }
+            }
         }, {
             title: '入库单号',
             field: 'documentNo'
@@ -638,7 +693,10 @@ $(function () {
             field: 'permitNo',
             hidden:true
         }]],
-        onDblClickRow: function (index, row) {
+        onLoadSuccess:function(data){
+            $(this).datagrid("selectRow",0);
+        },
+        onClickRow: function (index, row) {
             $("#dg").datagrid('endEdit', editIndex);
             var rows = $("#dg").datagrid('getRows') ;
             for(var i = 0;i<rows.length;i++){
@@ -715,6 +773,7 @@ $(function () {
                     url: '/api/exp-name-dict/list-exp-name-by-input',
                     singleSelect: true,
                     method: 'GET',
+                    delay:300,
                     panelWidth: 300,
                     idField: 'expName',
                     textField: 'expName',
@@ -735,6 +794,8 @@ $(function () {
                     }]],
                     onClickRow: function (index, row) {
                         currentExpCode = row.expCode;
+                        var selector="#datagrid-row-r22-2-"+editIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text" ;
+                        $(selector).blur();
                         $("#expDetailDialog").dialog('open');
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
@@ -744,6 +805,8 @@ $(function () {
                                 currentExpCode = row.expCode;
                                 $("#expDetailDialog").dialog('open');
                             }
+                            var selector="#datagrid-row-r22-2-"+editIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text" ;
+                            $(selector).blur();
                             $(this).combogrid('hidePanel');
                         }
                     })
@@ -941,13 +1004,14 @@ $(function () {
                             });
 
                             var date=$(dateEd.target).textbox('getText');
-                            if(date==null || date=="" || date.indexOf("-")==-1 || date.length!=10){
-                                $.messager.alert("系统提示","请输入正确格式的日期","error");
-                                return;
+                            if(date==null&& date==""){
+                                if(date.indexOf("-")==-1 || date.length!=10){
+                                    $.messager.alert("系统提示","请输入正确格式的日期","error");
+                                    return;
+                                }
                             }
                             $(dateEd.target).textbox('setValue',date);
                             $("#dg").datagrid('appendRow', {documNo:documentNo});
-
                             var rows = $("#dg").datagrid('getRows');
 
                             var appendRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
@@ -957,7 +1021,10 @@ $(function () {
                             }
                             editIndex = appendRowIndex;
                             $("#dg").datagrid('beginEdit', editIndex);
-                            var selector = "#datagrid-row-r23-2-"+appendRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
+//                            #datagrid-row-r22-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+//                            #datagrid-row-r22-2-0 > td:nth-child(2) > div > table > tbody > tr > td > span > input.textbox-text.validatebox-text
+//                            #datagrid-row-r22-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+                            var selector = "#datagrid-row-r22-2-"+appendRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
                             $(selector).focus();
 
                         }
@@ -1185,7 +1252,7 @@ $(function () {
         exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
-        exportMaster.exportClass = $("#exportClass").combobox('getValue');
+        exportMaster.exportClass = getSelectedText("exportClass");
         exportMaster.subStorage = $("#subStorageIn").combobox('getValue');
         exportMaster.accountIndicator = 1;
         exportMaster.memos = $('#memos').textbox('getValue');
@@ -1354,7 +1421,7 @@ $(function () {
                     return;
                 }
             }
-         })
+        })
         if (dataValid()) {
 
             $.messager.confirm("提示信息", "确定要进行对消入出库操作？", function (r) {
@@ -1419,4 +1486,47 @@ $(function () {
     $("#clear").on('click', function () {
         parent.updateTab('对消入出库', '/his/ieqm/exp-export-import-balance');
     });
+    function getSelectedText(name){
+        var obj=document.getElementById(name);
+        for(i=0;i<obj.length;i++){
+            if(obj[i].selected==true){
+                return obj[i].innerText;//关键是通过option对象的innerText属性获取到选项文本
+            }
+        }
+    }
+
+
+
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        var options =$("#expDetailDialog").dialog('options');
+        if(!options.closed){
+            e.preventDefault();
+            var rows = $("#expDetailDatagrid").datagrid('getRows') ;
+            var maxIndex = $("#expDetailDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
+
+            if(e.keyCode==38){
+                currentSelect = currentSelect -1 ;
+                if(currentSelect<0){
+                    currentSelect = 0 ;
+                }
+            }
+
+            if(e.keyCode==40){
+                //下
+                currentSelect = currentSelect +1 ;
+                if(currentSelect>maxIndex){
+                    currentSelect = maxIndex ;
+                }
+            }
+            $("#expDetailDatagrid").datagrid('selectRow',currentSelect);
+            if(e.keyCode==13){
+                var temSelect = $("#expDetailDatagrid").datagrid('getSelected');
+                var seIndex = $("#expDetailDatagrid").datagrid('getRowIndex',temSelect);
+                var test = "#datagrid-row-r21-2-"+seIndex;
+                $(test).trigger('click',currentSelect,rows[currentSelect]);
+            }
+        }
+    }
+
 });

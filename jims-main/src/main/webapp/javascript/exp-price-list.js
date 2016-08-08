@@ -559,39 +559,101 @@ $(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
+        var rows = $('#dg').datagrid('getRows');
         var insertData = $("#dg").datagrid("getChanges", "inserted");
         var updateData = $("#dg").datagrid("getChanges", "updated");
         var deleteData = $("#dg").datagrid("getChanges", "deleted");
         var expDictChangeVo = {};
-        if(insertData.length>0){
+        if(rows.length == 0){
+            $.messager.alert('系统提示','没有需要保存的数据!','info');
+            return;
+        }
+        if(insertData.length>0 || updateData.length > 0){
             for(var i=0;i<insertData.length;i++){
                 insertData[i].minSpec=insertData[i].expSpec;
                 insertData[i].minUnits=insertData[i].units;
                 insertData[i].hospitalId=parent.config.hospitalId;
+
+                if(insertData[i].amountPerPackage == null || insertData[i].amountPerPackage == '' || typeof(insertData[i].amountPerPackage) == 'undefined'){
+                    $.messager.alert('系统提示','包装数量不能为空!','info');
+                    return;
+                }
+                if (insertData[i].firmId == null || insertData[i].firmId == '' || typeof(insertData[i].firmId) == 'undefined') {
+                    $.messager.alert('系统提示', '请选择或输入厂家!', 'info');
+                    return;
+                }
+                if (insertData[i].tradePrice == null || insertData[i].tradePrice == '' || typeof(insertData[i].tradePrice) == 'undefined') {
+                    $.messager.alert('系统提示', '批发价格不能为空，请输入!', 'info');
+                    return;
+                }
+                if (insertData[i].retailPrice == null || insertData[i].retailPrice == '' || typeof(insertData[i].retailPrice) == 'undefined') {
+                    $.messager.alert('系统提示', '零售价格不能为空!', 'info');
+                    return;
+                }
+            }
+            for (var i = 0; i < updateData.length; i++) {
+                updateData[i].minSpec = updateData[i].expSpec;
+                updateData[i].minUnits = updateData[i].units;
+                updateData[i].hospitalId = parent.config.hospitalId;
+
+                if (updateData[i].amountPerPackage == null || updateData[i].amountPerPackage == '' || typeof(updateData[i].amountPerPackage) == 'undefined') {
+                    $.messager.alert('系统提示', '包装数量不能为空!', 'info');
+                    return;
+                }
+                if (updateData[i].firmId == null || updateData[i].firmId == '' || typeof(updateData[i].firmId) == 'undefined') {
+                    $.messager.alert('系统提示', '请选择或输入厂家!', 'info');
+                    return;
+                }
+                if (updateData[i].tradePrice == null || updateData[i].tradePrice == '' || typeof(updateData[i].tradePrice) == 'undefined') {
+                    $.messager.alert('系统提示', '批发价格不能为空，请输入!', 'info');
+                    return;
+                }
+                if (updateData[i].retailPrice == null || updateData[i].retailPrice == '' || typeof(updateData[i].retailPrice) == 'undefined') {
+                    $.messager.alert('系统提示', '零售价格不能为空!', 'info');
+                    return;
+                }
             }
         }
         expDictChangeVo.inserted = insertData;
         expDictChangeVo.updated = updateData;
         expDictChangeVo.deleted = deleteData;
+        console.log(expDictChangeVo.inserted.length);
+        if(expDictChangeVo.inserted.length == 0){
+            if(expDictChangeVo.updated.length == 0){
+                $.messager.alert('系统提示','请维护完整价格信息!','info');
+                return;
+            }
+        }
 
         if (expDictChangeVo) {
-            $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
-                $.messager.alert("系统提示", "保存成功", "info");
+            $.postJSON("/api/exp-price-list/checkIsExist", expDictChangeVo, function (data) {
+                var reval= data.success;
+                //alert(reval);
+                if(!reval){
+                    $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
+                        $.messager.alert("系统提示", "保存成功", "info");
 
-                var promise = loadDict();//有价格信息
+                        var promise = loadDict();//有价格信息
 
-                promise.done(function () {
-                    if (prices.length > 0) {
-                        $("#dg").datagrid('loadData', prices);
-                        return;
-                    }
-                });
+                        promise.done(function () {
+                            if (prices.length > 0) {
+                                $("#dg").datagrid('loadData', prices);
+                                return;
+                            }
+                        });
 
+                    }, function (data) {
+                        $.messager.alert('提示', "保存失败", "error");
+                    })
+                }else{
+                    $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
+                }
             }, function (data) {
-                $.messager.alert('提示', "保存失败", "error");
+                $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
             })
-        }
+          }
     });
+
     //打印
     $("#printDiv").dialog({
         title: '打印预览',
@@ -638,7 +700,6 @@ $(function () {
         var expCode = $('#expName').combogrid('getValue');
         prices.splice(0, prices.length);
         var pricePromise = $.get("/api/exp-price-list/list?expCode=" + expCode + "&hospitalId=" + parent.config.hospitalId, function (data) {
-            console.info(data);
             $.each(data, function (index, item) {
                 var price = {};
                 price.id=item.id;

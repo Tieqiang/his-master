@@ -179,41 +179,59 @@ public class ExpProvideApplicationFacade extends BaseFacade {
      * @param appNo
      * @return
      */
-    public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String hospitalId, String applyStorage, String appNo){
-        String sql = "SELECT distinct " +
-                "         s1.storage_name provide_name," +
-                "         s2.storage_name applicant_name," +
-                "         s3.document_no import_document_no," +
-                "         EXP_PROVIDE_APPLICATION.ITEM_NO," +
-                "         EXP_PROVIDE_APPLICATION.EXP_CODE," +
-                "         EXP_PROVIDE_APPLICATION.ID APPLICATION_ID," +
-                "         EXP_DICT.EXP_NAME," +
-                "         EXP_PROVIDE_APPLICATION.EXP_SPEC," +
-                "         EXP_PROVIDE_APPLICATION.PACKAGE_SPEC," +
-                "         nvl(EXP_PROVIDE_APPLICATION.QUANTITY,0) QUANTITY," +
-                "         EXP_PROVIDE_APPLICATION.PACKAGE_UNITS," +
-                "         EXP_PROVIDE_APPLICATION.ENTER_DATE_TIME," +
-                "         EXP_PROVIDE_APPLICATION.APPLICANT_NO," +
-                "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG," +
-                "         EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE," +
-                "         EXP_PROVIDE_APPLICATION.APPLICATION_MAN," +
-                "         EXP_DICT.EXP_FORM," +
-                "         EXP_PROVIDE_APPLICATION.AUDITING_OPERATOR," +
-                "         nvl(EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY,0) AUDITING_QUANTITY" +
-                "    FROM exp_storage_dept s1,exp_storage_dept s2,EXP_PROVIDE_APPLICATION,EXP_DICT,exp_stock s3 " +
-                "         WHERE s1.storage_code=EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE" +
-                "         and s2.storage_code=EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE" +
-                "         AND EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE  " +
-                "         AND EXP_PROVIDE_APPLICATION.EXP_CODE = s3.EXP_CODE  and" +
-                "         EXP_PROVIDE_APPLICATION.EXP_SPEC = EXP_DICT.EXP_SPEC and " +
-                "         EXP_PROVIDE_APPLICATION.EXP_SPEC = s3.EXP_SPEC and " +
-                "         EXP_PROVIDE_APPLICATION.QUANTITY <= s3.quantity and " +
-                "         EXP_PROVIDE_APPLICATION.PROVIDE_FLAG <> '1'";
-        if (null != storageCode && !storageCode.trim().equals("")) {
+    public List<ExpProvideApplicationVo> findExportApplyDict(String storageCode, String hospitalId, String applyStorage, String appNo,String name){
+        String sql = "SELECT distinct  " +
+                "                s1.storage_name provide_name,\n" +
+                "                s2.storage_name applicant_name,\n" +
+                "                s3.document_no import_document_no,\n" +
+                "                EXP_PROVIDE_APPLICATION.ITEM_NO,\n" +
+                "                EXP_PROVIDE_APPLICATION.EXP_CODE,\n" +
+                "                EXP_PROVIDE_APPLICATION.ID APPLICATION_ID,\n" +
+                "                EXP_DICT.EXP_NAME,\n" +
+                "                EXP_PROVIDE_APPLICATION.EXP_SPEC,\n" +
+                "                EXP_PROVIDE_APPLICATION.PACKAGE_SPEC,\n" +
+                "                nvl(EXP_PROVIDE_APPLICATION.QUANTITY, 0) QUANTITY,\n" +
+                "                EXP_PROVIDE_APPLICATION.PACKAGE_UNITS,\n" +
+                "                EXP_PROVIDE_APPLICATION.ENTER_DATE_TIME,\n" +
+                "                EXP_PROVIDE_APPLICATION.APPLICANT_NO,\n" +
+                "                EXP_PROVIDE_APPLICATION.PROVIDE_FLAG,\n" +
+                "                EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE,\n" +
+                "                EXP_PROVIDE_APPLICATION.APPLICATION_MAN,\n" +
+                "                EXP_DICT.EXP_FORM,\n" +
+                "                s3.BATCH_NO,\n" +
+                "                E.TRADE_PRICE retail_price,\n" +
+                "                nvl(s3.QUANTITY, 0) as dis_num,\n" +
+                "                e.firm_id,\n" +
+                "                s3.producedate,\n" +
+                "                s3.killflag,\n" +
+                "                s3.expire_date,\n" +
+                "                s3.disinfectdate,\n" +
+                "                EXP_PROVIDE_APPLICATION.AUDITING_OPERATOR,\n" +
+                "                nvl(EXP_PROVIDE_APPLICATION.AUDITING_QUANTITY, 0) AUDITING_QUANTITY\n" +
+                "  FROM exp_storage_dept        s1,\n" +
+                "       exp_storage_dept        s2,\n" +
+                "       EXP_PROVIDE_APPLICATION,\n" +
+                "       EXP_DICT,\n" +
+                "       exp_stock s3,              \n" +
+                "       exp_price_list e\n" +
+                "\n" +
+                " WHERE s1.storage_code = EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE\n" +
+                "   and s2.storage_code = EXP_PROVIDE_APPLICATION.APPLICANT_STORAGE\n" +
+                "   AND EXP_PROVIDE_APPLICATION.EXP_CODE = EXP_DICT.EXP_CODE\n" +
+                "   AND EXP_PROVIDE_APPLICATION.EXP_CODE = s3.EXP_CODE\n" +
+                "   and EXP_PROVIDE_APPLICATION.EXP_SPEC = EXP_DICT.EXP_SPEC\n" +
+                "   and EXP_PROVIDE_APPLICATION.EXP_SPEC = s3.EXP_SPEC\n" +
+                "   and EXP_PROVIDE_APPLICATION.QUANTITY <= s3.quantity\n" +
+                "   and EXP_PROVIDE_APPLICATION.PROVIDE_FLAG <> '1'\n" +
+                "   and exp_dict.exp_code = e.exp_code\n" +
+                "   and exp_dict.exp_spec = e.exp_spec\n" +
+                "   and s3.exp_code = e.exp_code\n" +
+                "   and s3.units = e.units\n" +
+                "   and s3.exp_spec = e.exp_spec";
+         if (null != storageCode && !storageCode.trim().equals("")) {
             sql += " and  EXP_PROVIDE_APPLICATION.PROVIDE_STORAGE = '" + storageCode + "'    and s3.storage='"+ storageCode+"'" ;
-        }
-
-        if (null != hospitalId && !hospitalId.trim().equals("")) {
+         }
+         if (null != hospitalId && !hospitalId.trim().equals("")) {
             sql += " and  s1.HOSPITAL_ID = '" + hospitalId + "' \n";
             sql += " and  s2.HOSPITAL_ID = '" + hospitalId + "' \n";
         }
@@ -225,6 +243,11 @@ public class ExpProvideApplicationFacade extends BaseFacade {
         }
         sql += " ORDER BY EXP_PROVIDE_APPLICATION.ITEM_NO ASC ";
         List<ExpProvideApplicationVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpProvideApplicationVo.class);
+        if(result!=null&&!result.isEmpty()){
+            for(ExpProvideApplicationVo expProvideApplicationVo:result){
+                expProvideApplicationVo.setName(name);
+            }
+        }
         return result;
     }
 }

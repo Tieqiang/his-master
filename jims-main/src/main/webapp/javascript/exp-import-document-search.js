@@ -71,13 +71,27 @@ $(function () {
         var y = date.getFullYear();
         var m = date.getMonth() + 1;
         var d = date.getDate();
-        var h = date.getHours();
-        var mm = date.getMinutes();
-        var s = date.getSeconds();
+        var h = 00;
+        var mm = 00;
+        var s = 00;
         var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
             + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
         return dateTime
     }
+    }
+    function formatterDate3(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h =23;
+            var mm =59;
+            var s =59;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
     }
     function w3(s) {
         if (!s) return new Date();
@@ -201,7 +215,6 @@ $(function () {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
             var d = date.getDate();
-
             var time = $('#startDate').datetimebox('spinner').spinner('getValue');
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
             $('#startDate').datetimebox('setText', dateTime);
@@ -212,7 +225,7 @@ $(function () {
         value: 'dateTime',
         required: true,
         showSeconds: true,
-        formatter: formatterDate2,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -454,6 +467,13 @@ $(function () {
             }
             $("#printDiv").dialog('open');
         }
+
+    })
+    /**
+     * 关闭
+     */
+    $("#printClose").on("click",function(){
+        $("#printDiv").dialog('close');
 
     })
 })

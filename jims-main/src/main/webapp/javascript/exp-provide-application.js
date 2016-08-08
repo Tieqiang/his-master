@@ -38,6 +38,7 @@ $(document).ready(function () {
         footer:"#tb",
         singleSelect:true,
         rownumbers:true,
+        fitColumns:true,
         columns:[[{
             title:"applicationId",
             field:"applicationId",
@@ -71,9 +72,9 @@ $(document).ready(function () {
             title:"名称",
             field:"expName",
             align: 'center',
-            width:"10%",
+            width:"30%",
             editor:{type:"combogrid",options:{
-                panelWidth:515,
+                panelWidth:700,
                 idField:"expName",
                 textField:"expName",
                 url: "/api/exp-price-list/find-exp-list",
@@ -83,13 +84,13 @@ $(document).ready(function () {
                 },
                 method: 'GET',
                 columns: [[
-                    {field: 'expCode', title: '编码', width: 60, align: 'center'},
-                    {field: 'expName', title: '名称', width: 60, align: 'center'},
-                    {field: 'amountPerPackage', title: '可申请数量', width: 90, align: 'center'},
+                    {field: 'expCode', title: '编码', width: 100, align: 'center'},
+                    {field: 'expName', title: '名称', width: 200, align: 'center'},
+                    {field: 'amountPerPackage', title: '可申请数量', width: 80, align: 'center'},
                     {field: 'expSpec', title: '包装规格', width: 60, align: 'center'},
                     {field: 'minSpec', title: '最小规格', width: 60, align: 'center'},
                     {field: 'units', title: '单位', width: 50, align: 'center'},
-                    {field: 'firmId', title: '厂家', width: 80, align: 'center'},
+                    {field: 'firmId', title: '厂家', width: 100, align: 'center'},
                     {field: 'inputCode', title: '拼音码', width: 50, align: 'center'},
                 ]],
                 onClickRow: function (rowIndex,rowData) {

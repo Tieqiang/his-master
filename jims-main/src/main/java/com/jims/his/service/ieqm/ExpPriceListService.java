@@ -11,10 +11,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by wangjing on 2015/10/10.
@@ -31,6 +28,7 @@ public class ExpPriceListService {
 
     /**
      * 根据expCode查询产品价格结果集
+     *
      * @param expCode
      * @return
      */
@@ -43,22 +41,23 @@ public class ExpPriceListService {
 
     /**
      * 对EXP_PRICE_LIST和EXP_DICT联合查询，取出产品价格自定义对象ExpPriceListVo结果集
+     *
      * @param expCode
      * @return
      */
     @GET
     @Path("list")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<ExpPriceList> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId,@QueryParam("flag") String flag) {
-        List<ExpPriceList> result = expPriceListFacade.findExpPriceList(expCode, hospitalId,flag);
-        if(result != null && result.size() > 0){
+    public List<ExpPriceList> findExpPriceList(@QueryParam("expCode") String expCode, @QueryParam("hospitalId") String hospitalId, @QueryParam("flag") String flag) {
+        List<ExpPriceList> result = expPriceListFacade.findExpPriceList(expCode, hospitalId, flag);
+        if (result != null && result.size() > 0) {
             Iterator ite = result.iterator();
-            while(ite.hasNext()){
-                ExpPriceList vo = (ExpPriceList)ite.next();
+            while (ite.hasNext()) {
+                ExpPriceList vo = (ExpPriceList) ite.next();
                 vo.setPriceRatio(String.valueOf(vo.getRetailPrice() / vo.getTradePrice()));
-                if(vo.getStopDate()!=null && vo.getStopDate().compareTo(new Date())<0){
+                if (vo.getStopDate() != null && vo.getStopDate().compareTo(new Date()) < 0) {
                     vo.setStopPrice("on");
-                }else{
+                } else {
                     vo.setStopPrice("off");
                 }
             }
@@ -68,12 +67,13 @@ public class ExpPriceListService {
 
     /**
      * 保存产品价格
+     *
      * @param beanChangeVo
      * @return
      */
     @POST
     @Path("save")
-    public Response saveExpPriceList(BeanChangeVo<ExpPriceListVo> beanChangeVo){
+    public Response saveExpPriceList(BeanChangeVo<ExpPriceListVo> beanChangeVo) {
 
         try {
             List<ExpPriceList> dicts = expPriceListFacade.saveExpPriceList(beanChangeVo);
@@ -81,9 +81,9 @@ public class ExpPriceListService {
         } catch (Exception e) {
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
                 errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
                 errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
                 errorException.setErrorMessage("保存失败！");
@@ -94,32 +94,34 @@ public class ExpPriceListService {
 
     /**
      * 对exp_dict , exp_price_list ,exp_stock联合查询，取出产品价格自定义对象ExpPriceListVo结果集
+     *
      * @param q
      * @param storageCode
      * @return
      */
     @GET
     @Path("find-exp-list")
-    public Response finExpListByInput(@QueryParam("q") String q,@QueryParam("storageCode") String storageCode){
+    public Response finExpListByInput(@QueryParam("q") String q, @QueryParam("storageCode") String storageCode) {
         try {
             List<ExpPriceListVo> expPriceListVos = expPriceListFacade.findExpList(q, storageCode);
             return Response.status(Response.Status.OK).entity(expPriceListVos).build();
-        }catch (Exception e){
+        } catch (Exception e) {
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
-            if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
+            if (errorException.getErrorMessage().toString().indexOf("最大值") != -1) {
                 errorException.setErrorMessage("输入数据超过长度！");
-            }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){
+            } else if (errorException.getErrorMessage().toString().indexOf("唯一") != -1) {
                 errorException.setErrorMessage("数据已存在，保存失败！");
             } else {
                 errorException.setErrorMessage("保存失败！");
             }
-            return  Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
     }
 
     /**
      * 停价
+     *
      * @param price
      * @return
      */
@@ -141,5 +143,13 @@ public class ExpPriceListService {
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException).build();
         }
+    }
+
+    @POST
+    @Path("checkIsExist")
+    public Map<String, Object> checkIsExist(BeanChangeVo<ExpPriceListVo> beanChangeVo) {
+        Map<String, Object> map = new HashMap<>();
+        map = this.expPriceListFacade.checkIsExist(beanChangeVo);
+        return map;
     }
 }
