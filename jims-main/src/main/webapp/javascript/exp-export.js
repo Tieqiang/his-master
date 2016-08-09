@@ -218,6 +218,14 @@ $(function () {
 //                    }),
 
                     onChange: function (newValue, oldValue) {
+                        if (oldValue != null && oldValue != '' && typeof(oldValue) != 'undefined') {
+                            if(newValue != null && newValue != '' && typeof(newValue) != 'undefined'){
+                                addRow();
+                            }else{
+                                $.messager.alert('系统提示','数量不能为空','info');
+                                return;
+                            }
+                        }
                         var value = $('#receiver').combobox('getValue');
                         $.ajax({
                             url: '/api/exp-supplier-catalog/find-by-supplier-id?supplierId=' + value,
@@ -259,7 +267,7 @@ $(function () {
                                     }
                                 }
                                 $("#accountReceivable").numberbox('setValue', totalAmount);
-                                addRow();
+                                //addRow();
                             }
                         });
 
@@ -1106,11 +1114,11 @@ $(function () {
                 });
                 var quantity1 = $(quantity.target).textbox('getValue');
                 var disNum1 = $(disNum.target).textbox('getValue');
-                if (quantity1 == "" || quantity1 == null || quantity1 == "underfined") {
-                    $.messager.alert("系统提示", "清先填写出库数量", "error");
+                if (quantity1 == "" || quantity1 == null || typeof(quantity1) == "underfined") {
+                    $.messager.alert("系统提示", "请先填写出库数量", "error");
                     return;
                 } else {
-
+                    addRow();
                 }
                 if (parseInt(quantity1) > parseInt(disNum1)) {
                     $.messager.alert("系统提示", "出库数量大于结存量!", "error");
