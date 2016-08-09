@@ -6,7 +6,7 @@
 
 
 $(function () {
-    var currentSelect=0 ;//当前选中的规格
+    var currentSelect = 0;//当前选中的规格
     var exportToFlag = undefined;//退库的时候，标志，用于区分是否退货给供应商。
 
     function formatterYMD(val, row) {
@@ -85,6 +85,7 @@ $(function () {
             return dateTime
         }
     }
+
     $('#exportDate').datetimebox({
         required: true,
         showSeconds: true,
@@ -109,13 +110,13 @@ $(function () {
     /**
      * 设置明细信息
      */
-    var data1='';
+    var data1 = '';
     $("#exportDetail").datagrid({
         fit: true,
         fitColumns: true,
         footer: '#ft',
         toolbar: '#expExportMaster',
-        singleSelect:true,
+        singleSelect: true,
         title: '消耗品出库单',
         columns: [[{
             title: "产品代码",
@@ -130,7 +131,7 @@ $(function () {
                     url: '/api/exp-name-dict/list-exp-name-by-input',
                     singleSelect: true,
                     method: 'GET',
-                    delay:300,
+                    delay: 300,
                     panelWidth: 200,
                     idField: 'expName',
                     textField: 'expName',
@@ -216,23 +217,22 @@ $(function () {
 //                        }
 //                    }),
 
-                    onChange: function (newValue, oldValue)
-                    {
+                    onChange: function (newValue, oldValue) {
                         var value = $('#receiver').combobox('getValue');
                         $.ajax({
-                            url:'/api/exp-supplier-catalog/find-by-supplier-id?supplierId='+value,
-                            TYPE:'POST',
-                            dataType:"JSON",
-                            cache:false,
-                            success:function(data){
+                            url: '/api/exp-supplier-catalog/find-by-supplier-id?supplierId=' + value,
+                            TYPE: 'POST',
+                            dataType: "JSON",
+                            cache: false,
+                            success: function (data) {
                                 var selectRows = $("#exportDetail").datagrid('getData').rows;
-                                var purchasePrice =selectRows[editIndex].purchasePrice;
-                                var retailPrice =selectRows[editIndex].retailPrice;
+                                var purchasePrice = selectRows[editIndex].purchasePrice;
+                                var retailPrice = selectRows[editIndex].retailPrice;
 
                                 var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
-                                if(data!=null&&data!=""){
+                                if (data != null && data != "") {
                                     $(amountEd.target).numberbox('setValue', newValue * purchasePrice);
-                                }else{
+                                } else {
                                     $(amountEd.target).numberbox('setValue', newValue * retailPrice);
                                 }
                                 var rows = $("#exportDetail").datagrid('getRows');
@@ -246,13 +246,15 @@ $(function () {
                                 }
 
                                 if (totalAmount) {
-                                    if(data!=null&&data!=""){
-                                        totalAmount += newValue * purchasePrice;}else{
+                                    if (data != null && data != "") {
+                                        totalAmount += newValue * purchasePrice;
+                                    } else {
                                         totalAmount += newValue * retailPrice;
                                     }
                                 } else {
-                                    if(data!=null&&data!=""){
-                                        totalAmount = newValue * purchasePrice;}else{
+                                    if (data != null && data != "") {
+                                        totalAmount = newValue * purchasePrice;
+                                    } else {
                                         totalAmount = newValue * retailPrice;
                                     }
                                 }
@@ -301,7 +303,7 @@ $(function () {
         }, {
             title: '分摊方式',
             field: 'assignCode',
-            hidden:true,
+            hidden: true,
             editor: {
                 type: 'combobox', options: {
                     url: '/api/exp-assign-dict/list',
@@ -320,11 +322,11 @@ $(function () {
             field: 'memo',
             editor: {type: 'textbox', options: {}},
             //width: "8%"
-            hidden:true
+            hidden: true
         }, {
             title: '批号',
             field: 'batchNo',
-            width:'10%'
+            width: '10%'
         }, {
             title: '有效期',
             field: 'expireDate',
@@ -334,21 +336,21 @@ $(function () {
             title: '生产日期',
             field: 'producedate',
             formatter: formatterDate,
-            hidden:true
+            hidden: true
             //width: "12%"
         }, {
             title: '消毒日期',
             field: 'disinfectdate',
             formatter: formatterDate,
             //width: "12%"
-            hidden:true
+            hidden: true
         }, {
             title: '单位',
             field: 'units'
         }, {
             title: '结存量',
             field: 'disNum',
-            hidden:true,
+            hidden: true,
             editor: {
                 type: 'numberbox', options: {
                     //precision: '2',
@@ -360,7 +362,7 @@ $(function () {
             title: '灭菌标志',
             field: 'killflag',
             //width: '8%',
-            hidden:true,
+            hidden: true,
             align: 'center',
 //            formatter: function (value, row, index) {
 //                if (value == '1') {
@@ -372,23 +374,25 @@ $(function () {
 //                    return '<input type="checkbox" name="DGC" style="width: 15px"/>';
 //                }
 //            },
-            editor: {type: 'combobox', options: {
-                valueField:'value',
-                textField:'title',
-                data:[{
-                    value:'1',
-                    title:'已灭菌'
-                },{
-                    title:'未灭菌',
-                    value:'0'
-                }]
-                , onLoadSuccess: function () {
+            editor: {
+                type: 'combobox', options: {
+                    valueField: 'value',
+                    textField: 'title',
+                    data: [{
+                        value: '1',
+                        title: '已灭菌'
+                    }, {
+                        title: '未灭菌',
+                        value: '0'
+                    }]
+                    , onLoadSuccess: function () {
 //                        var data = $(this).combobox('getData');
-                    $(this).combobox('select', "全部");
+                        $(this).combobox('select', "全部");
 //                        $(this).assignCode =datas[0].assisgnCode;
-                }
+                    }
 
-            }}
+                }
+            }
 
         }, {
             title: '子包装1',
@@ -443,25 +447,26 @@ $(function () {
      * 加载出库类别数据
      * exp_export_class_dict
      */
-    function loadExportClass(){
+    function loadExportClass() {
         $.ajax({
 
 
-            url:"/api/exp-export-class-dict/list",
-            type:"GET",
-            dataType:"JSON",
-            cache:false,
-            success:function(data){
+            url: "/api/exp-export-class-dict/list",
+            type: "GET",
+            dataType: "JSON",
+            cache: false,
+            success: function (data) {
                 console.info(data);
-                for(var i=0;i<data.length;i++){
-                    $("#exportClass").append("<option value="+data[i].direction+">"+data[i].exportClass+"</option>");
+                for (var i = 0; i < data.length; i++) {
+                    $("#exportClass").append("<option value=" + data[i].direction + ">" + data[i].exportClass + "</option>");
                 }
             }
         });
     }
+
     loadExportClass();
 
-    $("#exportClass").change(function() {
+    $("#exportClass").change(function () {
         var checkValue = $("#exportClass").val();
         var depts = [];
         var promise = $.get("/api/exp-storage-dept/listLevelByThis?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue, function (data) {
@@ -474,7 +479,10 @@ $(function () {
             $("#receiver").combogrid({
                 idField: 'supplierCode',
                 textField: 'supplierName',
-                data: depts,
+                //data: depts,
+                url: "/api/exp-storage-dept/list-level-by-this?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode + "&exportClass=" + checkValue,
+                method: 'get',
+                mode: 'remote',
                 panelWidth: 300,
                 columns: [
                     [
@@ -552,7 +560,7 @@ $(function () {
         onLoadSuccess: function () {
             var data = $(this).combobox('getData');
             if (data.length > 0) {
-                $(this).combobox('setValue',data[0].serialNo);
+                $(this).combobox('setValue', data[0].serialNo);
             }
         }
     });
@@ -638,10 +646,10 @@ $(function () {
         }
         editIndex = appendRowIndex;
         $("#exportDetail").datagrid('beginEdit', editIndex);
-     });
+    });
 
     //新增一行
-    var addRow = function(){
+    var addRow = function () {
         stopEdit();
         $("#exportDetail").datagrid('appendRow', {});
         var rows = $("#exportDetail").datagrid('getRows');
@@ -652,7 +660,7 @@ $(function () {
         var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
         console.info(editor);
 //                #datagrid-row-r6-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
-        var selector = "#datagrid-row-r6-2-"+addRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input";
+        var selector = "#datagrid-row-r6-2-" + addRowIndex + " > td:nth-child(2) > div > table > tbody > tr > td > span > input";
         $(selector).focus();
     }
     var stopEdit = function () {
@@ -760,17 +768,19 @@ $(function () {
         }, {
             title: '灭菌标识',
             field: 'killflag',
-            editor: {type: 'combobox', options: {
-                valueField:'value',
-                textField:'title',
-                data:[{
-                    value:'1',
-                    title:'已灭菌'
-                },{
-                    title:'未灭菌',
-                    value:'0'
-                }]
-            }}
+            editor: {
+                type: 'combobox', options: {
+                    valueField: 'value',
+                    textField: 'title',
+                    data: [{
+                        value: '1',
+                        title: '已灭菌'
+                    }, {
+                        title: '未灭菌',
+                        value: '0'
+                    }]
+                }
+            }
         }]],
         onLoadSuccess: function (data) {
             var data = {};
@@ -780,8 +790,9 @@ $(function () {
                 $("#stockRecordDialog").dialog('close');
                 $.messager.alert('系统提示', '该子库房暂无此产品,请重置产品名称或子库房！', 'info');
                 $("#exportDetail").datagrid('beginEdit', editIndex);
-            };
-            $("#stockRecordDatagrid").datagrid("selectRow",0);
+            }
+            ;
+            $("#stockRecordDatagrid").datagrid("selectRow", 0);
         },
         onClickRow: function (index, row) {
             var rows = $("#exportDetail").datagrid('getRows');
@@ -980,7 +991,7 @@ $(function () {
 //            } else {
 //                detail.killflag = 0;
 //            }
-            detail.killflag=rows[i].killflag;
+            detail.killflag = rows[i].killflag;
             detail.expSgtp = 1;
             detail.assignCode = rows[i].assignCode;
             detail.bigCode = rows[i].expCode;
@@ -1044,8 +1055,8 @@ $(function () {
         buttons: '#printft',
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue');
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo;
-            $("#report").prop("src",cjkEncode(https));
+            var https = "http://" + parent.config.reportDict.ip + ":" + parent.config.reportDict.port + "/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo;
+            $("#report").prop("src", cjkEncode(https));
             //$("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
         }
     })
@@ -1064,24 +1075,25 @@ $(function () {
             $("#printDiv").dialog('open');
         }
     })
-    function getSelectedText(name){
-        var obj=document.getElementById(name);
-        for(i=0;i<obj.length;i++){
-            if(obj[i].selected==true){
+    function getSelectedText(name) {
+        var obj = document.getElementById(name);
+        for (i = 0; i < obj.length; i++) {
+            if (obj[i].selected == true) {
                 return obj[i].innerText;//关键是通过option对象的innerText属性获取到选项文本
             }
         }
     }
+
     document.onkeydown = function (event) {
 
         var e = event || window.event || arguments.callee.caller.arguments[0];
 
     }
 
-    document.onkeydown=function(event){
+    document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
-        var options =$("#stockRecordDialog").dialog('options');
-        if(options.closed) {
+        var options = $("#stockRecordDialog").dialog('options');
+        if (options.closed) {
             if (e && e.keyCode == 13) {
                 var quantity = $("#exportDetail").datagrid('getEditor', {
                     index: editIndex,
@@ -1105,32 +1117,33 @@ $(function () {
                     return;
                 }
             }
-        };
-        if(!options.closed){
+        }
+        ;
+        if (!options.closed) {
             e.preventDefault();
-            var rows = $("#stockRecordDatagrid").datagrid('getRows') ;
-            var maxIndex = $("#stockRecordDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
-            if(e.keyCode==38){
-                currentSelect = currentSelect -1 ;
-                if(currentSelect<0){
-                    currentSelect = 0 ;
+            var rows = $("#stockRecordDatagrid").datagrid('getRows');
+            var maxIndex = $("#stockRecordDatagrid").datagrid("getRowIndex", rows[rows.length - 1]);
+            if (e.keyCode == 38) {
+                currentSelect = currentSelect - 1;
+                if (currentSelect < 0) {
+                    currentSelect = 0;
                 }
             }
 
-            if(e.keyCode==40){
+            if (e.keyCode == 40) {
                 //下
-                currentSelect = currentSelect +1 ;
-                if(currentSelect>maxIndex){
-                    currentSelect = maxIndex ;
+                currentSelect = currentSelect + 1;
+                if (currentSelect > maxIndex) {
+                    currentSelect = maxIndex;
                 }
             }
 
-            $("#stockRecordDatagrid").datagrid('selectRow',currentSelect);
-            if(e.keyCode==13){
+            $("#stockRecordDatagrid").datagrid('selectRow', currentSelect);
+            if (e.keyCode == 13) {
                 var temSelect = $("#stockRecordDatagrid").datagrid('getSelected');
-                var seIndex = $("#stockRecordDatagrid").datagrid('getRowIndex',temSelect);
-                var test = "#datagrid-row-r10-2-"+seIndex;
-                $(test).trigger('click',currentSelect,rows[currentSelect]);
+                var seIndex = $("#stockRecordDatagrid").datagrid('getRowIndex', temSelect);
+                var test = "#datagrid-row-r10-2-" + seIndex;
+                $(test).trigger('click', currentSelect, rows[currentSelect]);
             }
 
         }

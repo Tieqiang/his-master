@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class ExpSupplierCatalogFacade extends BaseFacade {
     private EntityManager entityManager;
-    private DeptDictFacade deptDictFacade ;
-    private ExpStorageDeptFacade expStorageDeptFacade ;
+    private DeptDictFacade deptDictFacade;
+    private ExpStorageDeptFacade expStorageDeptFacade;
 
     @Inject
     public ExpSupplierCatalogFacade(EntityManager entityManager, DeptDictFacade deptDictFacade, ExpStorageDeptFacade expStorageDeptFacade) {
@@ -40,17 +40,18 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
     //}
 
     //查询供应商
-    public List<ExpSupplierCatalog> findSupplierBySupplierClass(String supplierClass,String q){
-        String hql = "from ExpSupplierCatalog a where a.supplierClass = '"+supplierClass+"'";
-        if(q!=null&&!"".equals(q)){
+    public List<ExpSupplierCatalog> findSupplierBySupplierClass(String supplierClass, String q) {
+        String hql = "from ExpSupplierCatalog a where a.supplierClass = '" + supplierClass + "'";
+        if (q != null && !"".equals(q)) {
             //upper(a.input_code) like upper('" + q + "%')"
-            hql+=" and upper(a.inputCode) like upper('%" + q + "%')";
+            hql += " and upper(a.inputCode) like upper('%" + q + "%')";
         }
         return entityManager.createQuery(hql).getResultList();
     }
 
     /**
      * 根据输入的拼音码定位供应商
+     *
      * @param inputCode
      * @return
      * @author fengyuguang
@@ -64,10 +65,10 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
     }
 
     //查询供应商
-    public List<ExpSupplierCatalog> findSupplierByInputCode(String inputCode,String q){
-        String hql = "from ExpSupplierCatalog a where a.supplier =  '"+inputCode+"'  ";
-        if(q!=null&&!"".equals(q)){
-            hql+=" and upper(a.inputCode) like upper('" + q + "%')";
+    public List<ExpSupplierCatalog> findSupplierByInputCode(String inputCode, String q) {
+        String hql = "from ExpSupplierCatalog a where a.supplier =  '" + inputCode + "'  ";
+        if (q != null && !"".equals(q)) {
+            hql += " and upper(a.inputCode) like upper('" + q + "%')";
         }
         return entityManager.createQuery(hql).getResultList();
     }
@@ -107,32 +108,33 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
 
     /**
      * 根据科室提供出供应商外的其他
+     *
      * @param hospitalId
      * @return
      */
-    public List<ExpSupplierVo> listExpSupplierWithDept(String hospitalId,String q) {
-        List<ExpSupplierCatalog> supplierCatalogs = this.findSupplierBySupplierClass("供应商",q);
-        List<ExpSupplierCatalog> supplierCatalogs1 = this.findSupplierBySupplierClass("生产商",q);
-        List<ExpSupplierVo> expSupplierVos = new ArrayList<>() ;
+    public List<ExpSupplierVo> listExpSupplierWithDept(String hospitalId, String q) {
+        List<ExpSupplierCatalog> supplierCatalogs = this.findSupplierBySupplierClass("供应商", q);
+        List<ExpSupplierCatalog> supplierCatalogs1 = this.findSupplierBySupplierClass("生产商", q);
+        List<ExpSupplierVo> expSupplierVos = new ArrayList<>();
         //List<DeptDict> deptDicts = deptDictFacade.findByHospitalId(hospitalId);
-        List<ExpStorageDept> expStorageDepts = expStorageDeptFacade.getByHospitalId(hospitalId,q,null) ;
+        List<ExpStorageDept> expStorageDepts = expStorageDeptFacade.getByHospitalId(hospitalId, q, null);
 
-        for (ExpSupplierCatalog catalog:supplierCatalogs){
-            ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(),catalog.getSupplierId(),catalog.getInputCode()) ;
-            expSupplierVos.add(vo) ;
+        for (ExpSupplierCatalog catalog : supplierCatalogs) {
+            ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(), catalog.getSupplierId(), catalog.getInputCode());
+            expSupplierVos.add(vo);
         }
-        for (ExpSupplierCatalog catalog: supplierCatalogs1){
-            ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(),catalog.getSupplierId(),catalog.getInputCode()) ;
-            expSupplierVos.add(vo) ;
+        for (ExpSupplierCatalog catalog : supplierCatalogs1) {
+            ExpSupplierVo vo = new ExpSupplierVo(catalog.getSupplier(), catalog.getSupplierId(), catalog.getInputCode());
+            expSupplierVos.add(vo);
         }
 
         //for(DeptDict deptDict :deptDicts){
         //    ExpSupplierVo vo = new ExpSupplierVo(deptDict.getDeptName(),deptDict.getDeptCode(),deptDict.getInputCode()) ;
         //    expSupplierVos.add(vo) ;
         //}
-        for(ExpStorageDept dept:expStorageDepts){
-            ExpSupplierVo vo = new ExpSupplierVo(dept.getStorageName(),dept.getStorageCode(),dept.getDisburseNoPrefix()) ;
-            expSupplierVos.add(vo) ;
+        for (ExpStorageDept dept : expStorageDepts) {
+            ExpSupplierVo vo = new ExpSupplierVo(dept.getStorageName(), dept.getStorageCode(), dept.getDisburseNoPrefix());
+            expSupplierVos.add(vo);
         }
 
         return expSupplierVos;
@@ -150,37 +152,73 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
         List<ExpSupplierCatalog> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpSupplierCatalog.class);
         return nativeQuery;
     }
+
     /**
      * 根据当前库房以及出库类别查询可以发放的科室等
-     * @author chenxy
+     *
      * @param hospitalId
      * @param storageCode
      * @param exportClass
      * @return
+     * @author chenxy
      */
     public List<ExpSupplierVo> listLevelByThis(String hospitalId, String storageCode, String exportClass) {
-        List<ExpSupplierVo> list=new ArrayList<ExpSupplierVo>();
+        List<ExpSupplierVo> list = new ArrayList<ExpSupplierVo>();
 
         /**
          * 先查询当前库房的level
          */
-        Integer currentLevel=this.findLevelByStorageCode(storageCode);
-        if(exportClass.equals("全部")){//
-            list=findByStorageLevel(currentLevel,2,list);
-            list=findAll(list);
-        }else if(exportClass.equals("上级库房或者供货商")){
-            if(1==currentLevel){//一级库房---
-                list=findAll(list);
-            }else{
-                list=findByStorageLevel(currentLevel,1,list);
+        Integer currentLevel = this.findLevelByStorageCode(storageCode);
+        if (exportClass.equals("全部")) {//
+            list = findByStorageLevel(currentLevel, 2, list);
+            list = findAll(list);
+        } else if (exportClass.equals("上级库房或者供货商")) {
+            if (1 == currentLevel) {//一级库房---
+                list = findAll(list);
+            } else {
+                list = findByStorageLevel(currentLevel, 1, list);
             }
-        }else if(exportClass.equals("同级库房")){
-            list=findByStorageLevel(currentLevel,0,list);
-        }else if(exportClass.equals("下级库房")){
-            list=findByStorageLevel(currentLevel,-1,list);
+        } else if (exportClass.equals("同级库房")) {
+            list = findByStorageLevel(currentLevel, 0, list);
+        } else if (exportClass.equals("下级库房")) {
+            list = findByStorageLevel(currentLevel, -1, list);
         }
         return list;
     }
+
+    /**
+     * 根据当前库房以及出库类别查询可以发放的科室等
+     *
+     * @param hospitalId
+     * @param storageCode
+     * @param exportClass
+     * @return
+     * @author chenxy
+     */
+    public List<ExpSupplierVo> listLevelByThis(String hospitalId, String storageCode, String exportClass, String q) {
+        List<ExpSupplierVo> list = new ArrayList<ExpSupplierVo>();
+
+        /**
+         * 先查询当前库房的level
+         */
+        Integer currentLevel = this.findLevelByStorageCode(storageCode);
+        if (exportClass.equals("全部")) {//
+            list = findByStorageLevel(currentLevel, 2, list, q);
+            list = findAll(list);
+        } else if (exportClass.equals("上级库房或者供货商")) {
+            if (1 == currentLevel) {//一级库房---
+                list = findAll(list);
+            } else {
+                list = findByStorageLevel(currentLevel, 1, list, q);
+            }
+        } else if (exportClass.equals("同级库房")) {
+            list = findByStorageLevel(currentLevel, 0, list, q);
+        } else if (exportClass.equals("下级库房")) {
+            list = findByStorageLevel(currentLevel, -1, list, q);
+        }
+        return list;
+    }
+
     //
 //    /**
 //     * 通过库房代码查询库房等级
@@ -189,33 +227,59 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
 //     */
     private Integer findLevelByStorageCode(String storageCode) {
 
-        String sql="select storageLevel from ExpStorageDept where storageCode='"+storageCode+"'";
-        Object o=entityManager.createQuery(sql).getSingleResult();
-        if(o!=null&&!"".equals(o)){
-            return (Integer)o;
+        String sql = "select storageLevel from ExpStorageDept where storageCode='" + storageCode + "'";
+        Object o = entityManager.createQuery(sql).getSingleResult();
+        if (o != null && !"".equals(o)) {
+            return (Integer) o;
         }
         return null;
     }
 
 
     /**
-     *flag==0 同级 flag=-1 下级  flag==1 上级
+     * flag==0 同级 flag=-1 下级  flag==1 上级
+     *
      * @param storageLevel
      * @return
      */
-    private List<ExpSupplierVo> findByStorageLevel(Integer storageLevel,Integer flag, List<ExpSupplierVo> expSupplierVos){
+    private List<ExpSupplierVo> findByStorageLevel(Integer storageLevel, Integer flag, List<ExpSupplierVo> expSupplierVos) {
 //        List<ExpSupplierVo> expSupplierVos=new ArrayList<ExpSupplierVo>();
-        String sql="from ExpStorageDept where 1=1";
-        if(0==flag){
-            sql+=" and storageLevel="+storageLevel;
-        }else if(-1==flag){
-            sql+=" and storageLevel="+(storageLevel+1);
-        }else if(1==flag){
-            sql+=" and storageLevel="+(storageLevel-1);
+        String sql = "from ExpStorageDept where 1=1";
+        if (0 == flag) {
+            sql += " and storageLevel=" + storageLevel;
+        } else if (-1 == flag) {
+            sql += " and storageLevel=" + (storageLevel + 1);
+        } else if (1 == flag) {
+            sql += " and storageLevel=" + (storageLevel - 1);
         }
-        List<ExpStorageDept>  list=entityManager.createQuery(sql).getResultList();
-        for(ExpStorageDept e:list){
-            ExpSupplierVo v=new ExpSupplierVo();
+        List<ExpStorageDept> list = entityManager.createQuery(sql).getResultList();
+        for (ExpStorageDept e : list) {
+            ExpSupplierVo v = new ExpSupplierVo();
+            v.setSupplierName(e.getStorageName());
+            v.setSupplierCode(e.getStorageCode());
+            v.setInputCode(e.getDisburseNoPrefix());
+            expSupplierVos.add(v);
+        }
+
+        return expSupplierVos;
+    }
+
+    private List<ExpSupplierVo> findByStorageLevel(Integer storageLevel, Integer flag, List<ExpSupplierVo> expSupplierVos, String q) {
+//        List<ExpSupplierVo> expSupplierVos=new ArrayList<ExpSupplierVo>();
+        String sql = "from ExpStorageDept where 1=1";
+        if (0 == flag) {
+            sql += " and storageLevel=" + storageLevel;
+        } else if (-1 == flag) {
+            sql += " and storageLevel=" + (storageLevel + 1);
+        } else if (1 == flag) {
+            sql += " and storageLevel=" + (storageLevel - 1);
+        }
+        if (null != q && !q.trim().equals("")) {
+            sql += " and disburseNoPrefix like upper('%" + q + "%')";
+        }
+        List<ExpStorageDept> list = entityManager.createQuery(sql).getResultList();
+        for (ExpStorageDept e : list) {
+            ExpSupplierVo v = new ExpSupplierVo();
             v.setSupplierName(e.getStorageName());
             v.setSupplierCode(e.getStorageCode());
             v.setInputCode(e.getDisburseNoPrefix());
@@ -227,13 +291,14 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
 
     /**
      * 查找所有供货商和生产商
+     *
      * @return
      */
-    public List<ExpSupplierVo> findAll(List<ExpSupplierVo> expSupplierVos){
+    public List<ExpSupplierVo> findAll(List<ExpSupplierVo> expSupplierVos) {
 //        List<ExpSupplierVo> expSupplierVos=new ArrayList<ExpSupplierVo>();
-        List<ExpSupplierCatalog> list=this.findAll(ExpSupplierCatalog.class);
-        for(ExpSupplierCatalog expSupplierCatalog:list){
-            ExpSupplierVo e=new ExpSupplierVo();
+        List<ExpSupplierCatalog> list = this.findAll(ExpSupplierCatalog.class);
+        for (ExpSupplierCatalog expSupplierCatalog : list) {
+            ExpSupplierVo e = new ExpSupplierVo();
             e.setInputCode(expSupplierCatalog.getInputCode());
             e.setSupplierCode(expSupplierCatalog.getSupplierId());
             e.setSupplierName(expSupplierCatalog.getSupplier());
@@ -244,34 +309,33 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
     }
 
     /**
-     *
      * @param supplierId
      * @return
      */
     public String findNameById(String supplierId) {
-        String sql="select supplier from ExpSupplierCatalog where id='"+supplierId+"'";
-        return (String)entityManager.createQuery(sql).getSingleResult();
+        String sql = "select supplier from ExpSupplierCatalog where id='" + supplierId + "'";
+        return (String) entityManager.createQuery(sql).getSingleResult();
     }
 
     /**
      * chenxy
+     *
      * @param firmId
      * @return
      */
     public String findBySuppierId(String firmId) {
-        List<String> obj=entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='"+firmId+"'").getResultList();
-        if(obj!=null&&!obj.isEmpty()){
-            return (String)obj.get(0);
+        List<String> obj = entityManager.createQuery("select id from ExpSupplierCatalog where supplierId='" + firmId + "'").getResultList();
+        if (obj != null && !obj.isEmpty()) {
+            return (String) obj.get(0);
         }
         return null;
     }
 
     /**
-     *
      * @param firmId
      * @return
      */
     public ExpSupplierCatalog findById(String firmId) {
-        return (ExpSupplierCatalog)entityManager.createQuery("from ExpSupplierCatalog where id='"+firmId+"'").getSingleResult();
+        return (ExpSupplierCatalog) entityManager.createQuery("from ExpSupplierCatalog where id='" + firmId + "'").getSingleResult();
     }
 }
