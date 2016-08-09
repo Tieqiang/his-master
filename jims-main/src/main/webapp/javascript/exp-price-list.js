@@ -137,20 +137,34 @@ $(function () {
             field: 'expSpec',
             align: 'center',
             width: "6%",
+            editor: 'textbox'/*,
             formatter:function(value,row,index){
-                if(/*$.trim(row.amountPerPackage)!=''&& */$.trim(row.minSpec)!=''){
-                    row.expSpec = /*row.amountPerPackage+"*"+*/ row.minSpec;
+                if(*//*$.trim(row.amountPerPackage)!=''&& *//*$.trim(row.minSpec)!=''){
+                    row.expSpec = *//*row.amountPerPackage+"*"+*//* row.minSpec;
                     return row.expSpec;
                 }
                 return value;
-            }
+            }*/
         }, {
             title: '包装单位',
             field: 'units',
             align: 'center',
             width: "6%",
-            editable:false
-
+            editor: {
+                type: 'combobox',
+                options: {
+                    panelHeight: 200,
+                    valueField: 'measuresName',
+                    textField: 'measuresName',
+                    method: 'get',
+                    url: '/api/measures-dict/list'/*,
+                    filter: function (q, row) {
+                        var opts = $(this).combobox('options');
+                        var r = $("#expDict").datagrid("getData").rows[editIndex];
+                        r.doseUnits = row[opts.textField];
+                    }*/
+                }
+            }
 
         }, {
             title: '厂家',
@@ -624,7 +638,7 @@ $(function () {
                 return;
             }
         }
-
+        console.log(expDictChangeVo);
         if (expDictChangeVo) {
             $.postJSON("/api/exp-price-list/checkIsExist", expDictChangeVo, function (data) {
                 var reval= data.success;
