@@ -197,6 +197,10 @@ $(function () {
             value: 0,
             editor: {
                 type: 'numberbox', options: {
+                    max: 99999999.99,
+                    size: 11,
+                    maxlength: 11,
+                    precision: 2,
 
 //                    keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
 //                        enter: function (e) {
