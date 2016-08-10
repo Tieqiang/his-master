@@ -203,10 +203,10 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
-                    max: 99999.99,
-                    size: 8,
-                    maxlength: 8,
-                    precision: 2,
+                    max: 99999.999,
+                    size: 9,
+                    maxlength: 9,
+                    precision: 3,
                     onChange: getRetailPrice
                 }
             }
@@ -234,10 +234,10 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
-                    max: 99999.99,
-                    size: 8,
-                    maxlength: 8,
-                    precision: 2
+                    max: 99999.999,
+                    size: 9,
+                    maxlength: 9,
+                    precision: 3
                 }
             }
         }, {
