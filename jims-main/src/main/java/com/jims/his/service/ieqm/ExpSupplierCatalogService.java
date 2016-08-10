@@ -116,6 +116,17 @@ public class ExpSupplierCatalogService {
         return expSupplierCatalogFacade.findAll(new ArrayList<ExpSupplierVo>()) ;
     }
 
+    /**
+     * 查询所有供应商
+     * @return
+     * @author fengyuguang
+     */
+    @Path("list-by-q")
+    @GET
+    public List<ExpSupplierVo> listByQ(@QueryParam("q")String q) {
+        return expSupplierCatalogFacade.listByQ(new ArrayList<ExpSupplierVo>(),q);
+    }
+
 
     @GET
     @Path("find-by-supplier-id")

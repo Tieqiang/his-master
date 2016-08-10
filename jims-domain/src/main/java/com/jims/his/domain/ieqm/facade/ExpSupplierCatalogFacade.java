@@ -309,6 +309,28 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
     }
 
     /**
+     * 查找所有供货商和生产商
+     * @return
+     * @author fengyuguang
+     */
+    public List<ExpSupplierVo> listByQ(List<ExpSupplierVo> expSupplierVos,String q) {
+        String sql = "from ExpSupplierCatalog where 1=1";
+        if(null != q && !q.trim().equals("")){
+            sql += " and input_code like upper('%" + q + "%')";
+        }
+        List<ExpSupplierCatalog> list = entityManager.createQuery(sql).getResultList();
+        for (ExpSupplierCatalog expSupplierCatalog : list) {
+            ExpSupplierVo e = new ExpSupplierVo();
+            e.setInputCode(expSupplierCatalog.getInputCode());
+            e.setSupplierCode(expSupplierCatalog.getSupplierId());
+            e.setSupplierName(expSupplierCatalog.getSupplier());
+            e.setId(expSupplierCatalog.getId());
+            expSupplierVos.add(e);
+        }
+        return expSupplierVos;
+    }
+
+    /**
      * @param supplierId
      * @return
      */
