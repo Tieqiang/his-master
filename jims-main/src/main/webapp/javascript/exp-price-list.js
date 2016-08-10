@@ -1,7 +1,7 @@
 $(function () {
     var expCode = '';
     var prices = [];
-    var simplePrice=[];
+    var simplePrice = [];
     var editIndex;
 
     var stopEdit = function () {
@@ -13,27 +13,27 @@ $(function () {
 
     //会计科目
     var subjCodeList = [];
-    $.get('/api/base-dict/list-by-type?baseType=TALLY_SUBJECT_DICT&length=3',function(data){
+    $.get('/api/base-dict/list-by-type?baseType=TALLY_SUBJECT_DICT&length=3', function (data) {
         subjCodeList = data;
     });
     //住院收据费用分类
     var classOnInpRcptList = [];
-    $.get('/api/base-dict/list-by-type?baseType=INP_RCPT_FEE_DICT',function(data){
+    $.get('/api/base-dict/list-by-type?baseType=INP_RCPT_FEE_DICT', function (data) {
         classOnInpRcptList = data;
     });
     //核算项目分类
     var classOnReckoningList = [];
-    $.get('/api/base-dict/list-by-type?baseType=RECK_ITEM_CLASS_DICT',function(data){
+    $.get('/api/base-dict/list-by-type?baseType=RECK_ITEM_CLASS_DICT', function (data) {
         classOnReckoningList = data;
     });
     //门诊收据费用分类
     var classOnOutpRcptList = [];
-    $.get('/api/base-dict/list-by-type?baseType=OUTP_RCPT_FEE_DICT',function(data){
+    $.get('/api/base-dict/list-by-type?baseType=OUTP_RCPT_FEE_DICT', function (data) {
         classOnOutpRcptList = [];
     });
     //病案首页费用项目分类
     var classOnMrList = [];
-    $.get('/api/base-dict/list-by-type?baseType=MR_FEE_CLASS_DICT',function(data){
+    $.get('/api/base-dict/list-by-type?baseType=MR_FEE_CLASS_DICT', function (data) {
         classOnMrList = data;
     });
 
@@ -51,7 +51,7 @@ $(function () {
             if (ed[i].field == 'priceRatio') {
                 priceRatio = $(e.target).numberbox('getValue');
             }
-            if(priceRatio&& tradePrice&& tradePrice * priceRatio){
+            if (priceRatio && tradePrice && tradePrice * priceRatio) {
                 if (ed[i].field == 'retailPrice') {
                     $(e.target).numberbox('setValue', tradePrice * priceRatio);
                 }
@@ -59,7 +59,7 @@ $(function () {
         }
     };
     //比较零售价最高零售价
-    var comparePrice = function(){
+    var comparePrice = function () {
         var ed = $('#dg').datagrid('getEditors', editIndex);
 
         for (var i = 0; i < ed.length; i++) {
@@ -67,12 +67,12 @@ $(function () {
             var maxRetailPrice;
             var retailPrice;
             if (ed[i].field == 'retailPrice') {
-                retailPrice = $(e.target).numberbox('getValue')*1;
+                retailPrice = $(e.target).numberbox('getValue') * 1;
             }
             if (ed[i].field == 'maxRetailPrice') {
-                maxRetailPrice = $(e.target).numberbox('getValue')*1;
+                maxRetailPrice = $(e.target).numberbox('getValue') * 1;
             }
-            if (maxRetailPrice< retailPrice) {
+            if (maxRetailPrice < retailPrice) {
                 if (ed[i].field == 'maxRetailPrice') {
                     $(e.target).numberbox('setValue', retailPrice);
                     $.messager.alert("提示", "最高零售价不能低于零售价格！", "info");
@@ -114,7 +114,7 @@ $(function () {
             title: 'id',
             field: 'id',
             hidden: true
-        },{
+        }, {
             title: '代码',
             field: 'expCode',
             align: 'center',
@@ -138,13 +138,13 @@ $(function () {
             align: 'center',
             width: "6%",
             editor: 'textbox'/*,
-            formatter:function(value,row,index){
-                if(*//*$.trim(row.amountPerPackage)!=''&& *//*$.trim(row.minSpec)!=''){
-                    row.expSpec = *//*row.amountPerPackage+"*"+*//* row.minSpec;
-                    return row.expSpec;
-                }
-                return value;
-            }*/
+             formatter:function(value,row,index){
+             if(*//*$.trim(row.amountPerPackage)!=''&& *//*$.trim(row.minSpec)!=''){
+             row.expSpec = *//*row.amountPerPackage+"*"+*//* row.minSpec;
+             return row.expSpec;
+             }
+             return value;
+             }*/
         }, {
             title: '包装单位',
             field: 'units',
@@ -158,11 +158,11 @@ $(function () {
                     textField: 'measuresName',
                     method: 'get',
                     url: '/api/measures-dict/list'/*,
-                    filter: function (q, row) {
-                        var opts = $(this).combobox('options');
-                        var r = $("#expDict").datagrid("getData").rows[editIndex];
-                        r.doseUnits = row[opts.textField];
-                    }*/
+                     filter: function (q, row) {
+                     var opts = $(this).combobox('options');
+                     var r = $("#expDict").datagrid("getData").rows[editIndex];
+                     r.doseUnits = row[opts.textField];
+                     }*/
                 }
             }
 
@@ -195,7 +195,7 @@ $(function () {
             align: 'center',
             width: "6%",
             editor: 'text'
-        },{
+        }, {
             title: '批发价格',
             field: 'tradePrice',
             align: 'center',
@@ -203,10 +203,10 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
-                    max: 99999.99,
-                    size: 8,
-                    maxlength: 8,
-                    precision: 2,
+                    max: 99999.999,
+                    size: 9,
+                    maxlength: 9,
+                    precision: 3,
                     onChange: getRetailPrice
                 }
             }
@@ -234,10 +234,10 @@ $(function () {
             editor: {
                 type: 'numberbox',
                 options: {
-                    max: 99999.99,
-                    size: 8,
-                    maxlength: 8,
-                    precision: 2
+                    max: 99999.999,
+                    size: 9,
+                    maxlength: 9,
+                    precision: 3
                 }
             }
         }, {
@@ -245,15 +245,15 @@ $(function () {
             field: 'maxRetailPrice',
             align: 'center',
             width: "7%",
-            hidden:true,
+            hidden: true,
             editor: {
-                type:'numberbox',
+                type: 'numberbox',
                 options: {
                     max: 99999.99,
-                    size:8,
-                    maxlength:8,
-                    precision:2,
-                    onChange:comparePrice
+                    size: 8,
+                    maxlength: 8,
+                    precision: 2,
+                    onChange: comparePrice
                 }
             }
         }, {
@@ -266,7 +266,7 @@ $(function () {
             title: '最小规格',
             field: 'minSpec',
             align: 'center',
-            hidden:true,
+            hidden: true,
             width: "6%",
             editor: {
                 type: 'textbox',
@@ -279,7 +279,7 @@ $(function () {
             field: 'minUnits',
             align: 'center',
             width: "6%",
-            hidden:true,
+            hidden: true,
             editor: {
                 type: 'textbox',
                 options: {
@@ -379,7 +379,7 @@ $(function () {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    panelMaxHeight:200,
+                    panelMaxHeight: 200,
                     valueField: 'baseCode',
                     textField: 'baseName',
                     method: 'get',
@@ -389,7 +389,7 @@ $(function () {
                         return row[opts.textField].indexOf(q) == 0;
                     }
                 }
-            },formatter: function(value,row,index){
+            }, formatter: function (value, row, index) {
                 var subjCode = value;
                 $.each(subjCodeList, function (index, item) {
                     if (item.baseCode == value) {
@@ -447,58 +447,58 @@ $(function () {
         }, {
             title: '医院id',
             field: 'hospitalId',
-            hidden:true
+            hidden: true
         }
         ]],
         onClickRow: function (index, row) {
             stopEdit();
-            if(row.columnProtect!=1){
+            if (row.columnProtect != 1) {
                 $(this).datagrid('beginEdit', index);
                 editIndex = index;
             }
         }
     });
-    if(getCookie("exp_code")){
+    if (getCookie("exp_code")) {
         $('#expName').combo('setText', getCookie("exp_name"));
         $('#expName').combo('setValue', getCookie("exp_code"));
         $("#filter").click();
     }
 
     //新增按钮功能
-    $("#add").on('click', function(){
+    $("#add").on('click', function () {
         stopEdit();
 
         var rows = $('#dg').datagrid("getRows");
         var newRows = [];
 
         if (rows.length > 0) {
-            var tempRow = $('#dg').datagrid('getData').rows[rows.length - 1] ;
-            var obj = {} ;
+            var tempRow = $('#dg').datagrid('getData').rows[rows.length - 1];
+            var obj = {};
             //obj = tempRow ;
-            $.extend(obj,tempRow)
-            obj.packageUnits='' ;
+            $.extend(obj, tempRow)
+            obj.packageUnits = '';
 //            obj.expSpec='' ;
-            obj.amountPerPackage = '' ;
+            obj.amountPerPackage = '';
             obj.columnProtect = '0';
-            newRows.push(obj) ;
+            newRows.push(obj);
         } else {
             var code = $('#expName').combogrid('getValue');
-            $.get("/api/exp-dict/list-query?expCode="+code,function(data){
-                $.extend(newRows,data) ;
-                for(var i = 0 ;i<newRows.length ;i++){
-                    var obj = $("#dg").datagrid('appendRow',newRows[i]) ;
-                    var rowsTemp = $("#dg").datagrid('getRows') ;
-                    var addRowIndex = $("#dg").datagrid('getRowIndex',rowsTemp[rowsTemp.length -1 ]);
+            $.get("/api/exp-dict/list-query?expCode=" + code, function (data) {
+                $.extend(newRows, data);
+                for (var i = 0; i < newRows.length; i++) {
+                    var obj = $("#dg").datagrid('appendRow', newRows[i]);
+                    var rowsTemp = $("#dg").datagrid('getRows');
+                    var addRowIndex = $("#dg").datagrid('getRowIndex', rowsTemp[rowsTemp.length - 1]);
                     editIndex = addRowIndex;
                     $("#dg").datagrid('selectRow', editIndex);
                     $("#dg").datagrid('beginEdit', editIndex);
                 }
             })
         }
-        for(var i = 0 ;i<newRows.length ;i++){
-            var obj = $("#dg").datagrid('appendRow',newRows[i]) ;
-            var rowsTemp = $("#dg").datagrid('getRows') ;
-            var addRowIndex = $("#dg").datagrid('getRowIndex',rowsTemp[rowsTemp.length -1 ]);
+        for (var i = 0; i < newRows.length; i++) {
+            var obj = $("#dg").datagrid('appendRow', newRows[i]);
+            var rowsTemp = $("#dg").datagrid('getRows');
+            var addRowIndex = $("#dg").datagrid('getRowIndex', rowsTemp[rowsTemp.length - 1]);
             editIndex = addRowIndex;
             $("#dg").datagrid('selectRow', editIndex);
             $("#dg").datagrid('beginEdit', editIndex);
@@ -506,7 +506,7 @@ $(function () {
     });
 
     //删除按钮功能
-    $("#delete").on('click', function(){
+    $("#delete").on('click', function () {
         var row = $('#dg').datagrid('getSelected');
         var index = $('#dg').datagrid('getRowIndex', row);
         if (index == -1) {
@@ -528,11 +528,11 @@ $(function () {
             $.messager.alert("提示", "请选择停价的行", "info");
         } else {
             if (row.columnProtect == 1) {
-                $.get("/api/exp-stock/get-quantity?expCode="+row.expCode+"&expSpec="+row.expSpec+"&firmId="+row.firmId, function (data) {
-                    if(data>0){
+                $.get("/api/exp-stock/get-quantity?expCode=" + row.expCode + "&expSpec=" + row.expSpec + "&firmId=" + row.firmId, function (data) {
+                    if (data > 0) {
                         $.messager.alert("提示", "全院库存不为0，不能停价！", "error");
-                    }else{
-                        $.postJSON("/api/exp-price-list/stop-price",row, function (data) {
+                    } else {
+                        $.postJSON("/api/exp-price-list/stop-price", row, function (data) {
                             $.messager.alert("提示", "停价成功", "info");
                             $("#dg").datagrid('deleteRow', index);
                         }, function (data) {
@@ -558,7 +558,7 @@ $(function () {
                 if (prices.length > 0) {
                     $("#dg").datagrid('loadData', prices);
                     return;
-                }else{
+                } else {
                     simple.done(function () {
                         $("#dg").datagrid('loadData', simplePrice);
                         return;
@@ -569,7 +569,7 @@ $(function () {
             $.messager.alert("提示", "请先选择产品名称！", "info");
         }
     });
-    $("#save").on('click', function(){
+    $("#save").on('click', function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
@@ -578,18 +578,18 @@ $(function () {
         var updateData = $("#dg").datagrid("getChanges", "updated");
         var deleteData = $("#dg").datagrid("getChanges", "deleted");
         var expDictChangeVo = {};
-        if(rows.length == 0){
-            $.messager.alert('系统提示','没有需要保存的数据!','info');
+        if (rows.length == 0) {
+            $.messager.alert('系统提示', '没有需要保存的数据!', 'info');
             return;
         }
-        if(insertData.length>0 || updateData.length > 0){
-            for(var i=0;i<insertData.length;i++){
-                insertData[i].minSpec=insertData[i].expSpec;
-                insertData[i].minUnits=insertData[i].units;
-                insertData[i].hospitalId=parent.config.hospitalId;
+        if (insertData.length > 0 || updateData.length > 0) {
+            for (var i = 0; i < insertData.length; i++) {
+                insertData[i].minSpec = insertData[i].expSpec;
+                insertData[i].minUnits = insertData[i].units;
+                insertData[i].hospitalId = parent.config.hospitalId;
 
-                if(insertData[i].amountPerPackage == null || insertData[i].amountPerPackage == '' || typeof(insertData[i].amountPerPackage) == 'undefined'){
-                    $.messager.alert('系统提示','包装数量不能为空!','info');
+                if (insertData[i].amountPerPackage == null || insertData[i].amountPerPackage == '' || typeof(insertData[i].amountPerPackage) == 'undefined') {
+                    $.messager.alert('系统提示', '包装数量不能为空!', 'info');
                     return;
                 }
                 if (insertData[i].firmId == null || insertData[i].firmId == '' || typeof(insertData[i].firmId) == 'undefined') {
@@ -632,18 +632,18 @@ $(function () {
         expDictChangeVo.updated = updateData;
         expDictChangeVo.deleted = deleteData;
         console.log(expDictChangeVo.inserted.length);
-        if(expDictChangeVo.inserted.length == 0){
-            if(expDictChangeVo.updated.length == 0){
-                $.messager.alert('系统提示','请维护完整价格信息!','info');
+        if (expDictChangeVo.inserted.length == 0) {
+            if (expDictChangeVo.updated.length == 0) {
+                $.messager.alert('系统提示', '请维护完整价格信息!', 'info');
                 return;
             }
         }
         console.log(expDictChangeVo);
         if (expDictChangeVo) {
             $.postJSON("/api/exp-price-list/checkIsExist", expDictChangeVo, function (data) {
-                var reval= data.success;
+                var reval = data.success;
                 //alert(reval);
-                if(!reval){
+                if (!reval) {
                     $.postJSON("/api/exp-price-list/save", expDictChangeVo, function (data) {
                         $.messager.alert("系统提示", "保存成功", "info");
 
@@ -659,13 +659,13 @@ $(function () {
                     }, function (data) {
                         $.messager.alert('提示', "保存失败", "error");
                     })
-                }else{
-                    $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
+                } else {
+                    $.messager.alert("系统提示", "此产品价格信息已经存在,如果需要调整价格，请进行调价操作！", "error");
                 }
             }, function (data) {
-                $.messager.alert("系统提示","此产品价格信息已经存在,如果需要调整价格，请进行调价操作！","error");
+                $.messager.alert("系统提示", "此产品价格信息已经存在,如果需要调整价格，请进行调价操作！", "error");
             })
-          }
+        }
     });
 
     //打印
@@ -678,8 +678,8 @@ $(function () {
         closed: true,
         onOpen: function () {
             expCode = $('#expName').combogrid('getValue');
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-price-list.cpt&expCode=" + expCode+"&hospitalId="+parent.config.hospitalId;
-            $("#report").prop("src",cjkEncode(https));
+            var https = "http://" + parent.config.reportDict.ip + ":" + parent.config.reportDict.port + "/report/ReportServer?reportlet=exp/exp-list/exp-price-list.cpt&expCode=" + expCode + "&hospitalId=" + parent.config.hospitalId;
+            $("#report").prop("src", cjkEncode(https));
         }
     })
     $("#print").on('click', function () {
@@ -691,7 +691,7 @@ $(function () {
         $("#printDiv").dialog('open');
     });
 
-    var loadSimple = function(){
+    var loadSimple = function () {
         var expCode = $('#expName').combogrid('getValue');
         simplePrice.splice(0, simplePrice.length);
         var pricePromise = $.get("/api/exp-dict/list-query?expCode=" + expCode, function (data) {
@@ -716,7 +716,7 @@ $(function () {
         var pricePromise = $.get("/api/exp-price-list/list?expCode=" + expCode + "&hospitalId=" + parent.config.hospitalId, function (data) {
             $.each(data, function (index, item) {
                 var price = {};
-                price.id=item.id;
+                price.id = item.id;
                 price.expCode = item.expCode;
                 price.expName = item.expName;
                 price.amountPerPackage = item.amountPerPackage;

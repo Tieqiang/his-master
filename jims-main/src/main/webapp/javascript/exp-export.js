@@ -197,6 +197,10 @@ $(function () {
             value: 0,
             editor: {
                 type: 'numberbox', options: {
+                    max: 99999999.99,
+                    size: 11,
+                    maxlength: 11,
+                    precision: 2,
 
 //                    keyHandler: $.extend({}, $.fn.combo.defaults.keyHandler, {
 //                        enter: function (e) {
@@ -219,10 +223,10 @@ $(function () {
 
                     onChange: function (newValue, oldValue) {
                         if (oldValue != null && oldValue != '' && typeof(oldValue) != 'undefined') {
-                            if(newValue != null && newValue != '' && typeof(newValue) != 'undefined'){
+                            if (newValue != null && newValue != '' && typeof(newValue) != 'undefined') {
                                 addRow();
-                            }else{
-                                $.messager.alert('系统提示','数量不能为空','info');
+                            } else {
+                                $.messager.alert('系统提示', '数量不能为空', 'info');
                                 return;
                             }
                         }
