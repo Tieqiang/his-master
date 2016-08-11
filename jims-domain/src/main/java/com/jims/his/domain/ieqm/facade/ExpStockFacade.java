@@ -703,6 +703,7 @@ public class ExpStockFacade extends BaseFacade {
                 "and   exp_stock.firm_id(+)  = exp_price_list.firm_id\n" +
                 "AND   exp_price_list.start_date <= sysdate\n" +
                 "AND   (exp_price_list.stop_date IS NULL OR exp_price_list.stop_date > sysdate)\n" +
+                " and exp_stock.quantity > 0 \n" +
                 "AND   exp_stock.SUPPLY_INDICATOR(+) = 1\n" +
                 "and   exp_stock.storage = '" + storageCode + "'\n" +
                 "and   exp_stock.hospital_id = '" + hospitalId + "'\n" +
