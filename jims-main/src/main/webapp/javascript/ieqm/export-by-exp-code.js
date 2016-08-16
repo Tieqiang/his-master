@@ -180,7 +180,8 @@ $(function () {
                 $('#dg').datagrid('appendRow', {
                     firmId: "合计：",
                     quantity: Math.round(sumQuantity*100)/100,
-                    amount: Math.round(sumAmount*100)/100
+                    amount: Math.round(sumAmount*100)/100,
+                    receiver: ''
                 });
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！")

@@ -82,7 +82,7 @@ $(function () {
         textField: 'supplierName',
         loadMsg: '数据正在加载',
         url: '/api/exp-supplier-catalog/list-with-dept?hospitalId=' + parent.config.hospitalId,
-        //mode: 'remote',
+        mode: 'remote',
         method: 'GET',
         columns: [[
             {field: 'supplierCode', title: '编码', width: 100, align: 'center'},
@@ -92,7 +92,7 @@ $(function () {
         pagination: false,
         fitColumns: true,
         rowNumber: true,
-        autoRowHeight: false,
+        autoRowHeight: false/*,
         pageSize: 50,
         pageNumber: 1,
         filter: function (q, row) {
@@ -102,7 +102,7 @@ $(function () {
         var opts = $(this).combogrid('options');
         return row[opts.textField].indexOf(q) == 0;
 
-    }
+    }*/
     });
 
     $("#dg").datagrid({
@@ -190,6 +190,7 @@ $(function () {
                 });
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
+                    receiver: '',
                     firmId: "合计：",
                     quantity: sumQuantity,
                     amount: sumAmount
