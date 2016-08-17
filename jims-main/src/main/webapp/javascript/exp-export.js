@@ -128,7 +128,7 @@ $(function () {
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
-                    url: '/api/exp-name-dict/list-exp-name-by-input',
+                    url: '/api/exp-name-dict/list-by-input?storageCode=' + parent.config.storageCode,
                     singleSelect: true,
                     method: 'GET',
                     delay: 300,

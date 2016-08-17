@@ -99,6 +99,20 @@ public class ExpNameDictService {
     }
 
     /**
+     * 根据输入的拼音码查询物品(条件:该物品在指定库房库存不为0)
+     * @param q
+     * @param storageCode 库房代码
+     * @return
+     * @fengyuguang
+     */
+    @Path("list-by-input")
+    @GET
+    public List<ExpNameCaVo> listByInput(@QueryParam("q") String q,@QueryParam("storageCode")String storageCode) {
+        List<ExpNameCaVo> expNameCaVos = expNameDictFacade.listByInput(q,storageCode);
+        return expNameCaVos;
+    }
+
+    /**
      * 自动生成产品代码时，查询当前前缀所匹配的最大序号
      * @param len
      * @param header
