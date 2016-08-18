@@ -311,9 +311,13 @@ $(function () {
         var payAmount = 0.00;
         var promise =$.get("/api/exp-export/storage-exp-go-count",masterDataVo,function(data){
             masters =data ;
+            for(var i = 0; i < data.length; i++){
+                data[i].retailAmount = fmoney(data[i].retailAmount,2);
+                data[i].payAmount = fmoney(data[i].payAmount,2);
+            }
             for(var i = 0 ;i<data.length;i++){
-                retailAmount+=data[i].retailAmount;
-                payAmount+=data[i].payAmount;
+                retailAmount += parseFloat(data[i].retailAmount);
+                payAmount+=parseFloat(data[i].payAmount);
             }
         },'json');
         promise.done(function(){
@@ -330,14 +334,27 @@ $(function () {
 
             $("#importMaster").datagrid('loadData',masters);
             $('#importMaster').datagrid('appendRow', {
+                receiver: '',
                 expName: "合计：",
-                retailAmount: retailAmount,
-                payAmount: payAmount
+                retailAmount: fmoney(retailAmount,2),
+                payAmount: fmoney(payAmount,2)
             });
             $("#importMaster").datagrid("autoMergeCells", ['expCode']);
         })
         masters.splice(0,masters.length);
         return promise;
 
+    }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
     }
 })
