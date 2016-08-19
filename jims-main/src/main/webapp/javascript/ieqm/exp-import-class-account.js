@@ -210,7 +210,6 @@ $(function () {
             stopDates=myFormatter2(stopDates);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-class-account.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&importClass=" + printImportClass;
             $("#report").prop("src",cjkEncode(https));
-            console.log(https);
         }
     });
     $("#printBtn").on('click', function () {
@@ -233,12 +232,15 @@ $(function () {
         var importPrice = 0.00;
         var promise =$.get("/api/exp-import/exp-import-class-account",importDetailDataVO,function(data){
             detailsData=data;
-
+            console.log(data);
             //为报表准备字段
             printImportClass=importDetailDataVO.importClass;
             startDates=importDetailDataVO.startDate;
             stopDates=importDetailDataVO.stopDate;
-//
+
+            for(var i = 0; i < data.length; i++){
+                data[i].importPrice = fmoney(data[i].importPrice,2);
+            }
 //            for(var i = 0 ;i<data.length;i++){
 //                importPrice+=Number(data[i].importPrice);
 //            }
@@ -258,4 +260,16 @@ $(function () {
         })
 //        detailsData.splice(0,detailsData.length);
      }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })
