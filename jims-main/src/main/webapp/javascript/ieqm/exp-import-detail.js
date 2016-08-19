@@ -169,11 +169,6 @@ $(function () {
         rownumbers: true,
         nowrap: false,
         columns: [[{
-            title: '金额',
-            field: 'sum',
-            align: 'center',
-            width: "7%"
-        }, {
             title: '子库房',
             field: 'subStorage',
             align: 'center',
@@ -210,15 +205,20 @@ $(function () {
             align: 'center',
             width: "6%"
         }, {
-            title: '扣率',
-            field: 'discount',
-            align: 'center',
-            width: "7%"
-        }, {
             title: '数量',
             field: 'quantity',
             align: 'center',
             width: "6%"
+        }, {
+            title: '金额',
+            field: 'sum',
+            align: 'center',
+            width: "7%"
+        }, {
+            title: '扣率',
+            field: 'discount',
+            align: 'center',
+            width: "7%"
         }, {
             title: '发票号',
             field: 'invoiceNo',
@@ -275,25 +275,39 @@ $(function () {
          //
         $.get("/api/exp-import/exp-import-detail?storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&stopDate=" + endDate, function (data) {
             if (data.length>0) {
-
+                console.log(data);
                 //为报表准备字段
                 startDates=startDate;
                 stopDates=endDate;
 
-                var sumQuantity = 0.00;
-                var sumSum = 0.00;
+                var purchasePrice = 0.00;   //价格
+                var sumSum = 0.00;  //金额
+                sumSum = parseFloat(sumSum);
+                purchasePrice = parseFloat(purchasePrice);
                 $.each(data, function (index, item) {
-                    item.sum = item.purchasePrice * item.quantity;
+                    item.purchasePrice = parseFloat(item.purchasePrice);
+                    item.sum = parseFloat(item.sum);
+                    item.quantity = parseFloat(item.quantity);
+
+                    item.sum = item.purchasePrice * item.quantity; //金额= 价格 * 数量
+
                     sumSum += item.sum;
-                    sumQuantity += item.quantity;
+                    purchasePrice += item.purchasePrice;
+
+                    item.purchasePrice = fmoney(item.purchasePrice, 2);
+                    item.sum = fmoney(item.sum, 2);
                 });
+                purchasePrice = fmoney(purchasePrice,2);
+                sumSum = fmoney(sumSum,2);
+
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
-                    sum: sumSum,
-                    subStorage: "合计：",
-                    quantity: sumQuantity
+                    packageSpec: "合计：",
+                    purchasePrice: fmoney(purchasePrice,2),
+                    sum: fmoney(sumSum, 2),
+                    supplier: ''
                 });
-                $("#dg").datagrid("autoMergeCells", ['subStorage', 'packageSpec', 'packageUnits', 'batchNo', 'expireDate']);
+                //$("#dg").datagrid("autoMergeCells", ['subStorage', 'packageSpec', 'packageUnits', 'batchNo', 'expireDate']);
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！")
             }
@@ -330,6 +344,17 @@ $(function () {
             return;
         }
         $("#printDiv").dialog('open');
-
     });
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 });
