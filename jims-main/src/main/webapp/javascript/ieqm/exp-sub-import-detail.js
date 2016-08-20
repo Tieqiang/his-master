@@ -210,35 +210,42 @@ $(function () {
         }, {
             title: '规格',
             field: 'packageSpec',
+            align: 'center',
             width: "10%"
         }, {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
             width: "10%"
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: "10%"
         }, {
             title: '数量',
             field: 'quantity',
+            align: 'center',
             width: "10%"
         }, {
             title: '批发价',
             field: 'tradePrice',
+            align: 'center',
             width: "10%"
         }, {
-            title: '零售价金额',
+            title: '零售价',
             field: 'payAmount',
             align: 'center',
             width: "10%"
         }, {
-            title: '进价金额',
+            title: '进价',
             field: 'purchaseAmount',
+            align: 'center',
             width: "10%"
         }, {
             title: '类别',
             field: 'expForm',
+            align: 'center',
             width: "10%"
         }]]
     });
@@ -254,22 +261,39 @@ $(function () {
         $.get("/api/exp-import/exp-sub-import-detail?storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&stopDate=" + endDate+"&subStorage="+ subStorage+"&expForm="+ expForm, function (data) {
             if (data.length > 0) {
 
-
                 //为报表准备字段
                 startDates=startDate;
                 stopDates=endDate;
                 subStor=subStorage;
                 expForms=expForm;
 
-                var sumPayAmount = 0.00;
-                var sumPurchaseAmount = 0.00;
-                $.each(data, function (index, item) {
-                    sumPayAmount += item.payAmount;
-                    sumPurchaseAmount += item.purchaseAmount;
-                });
+                var sumTradePrice = 0.00;   //批发价合计
+                var sumPayAmount = 0.00;    //零售价合计
+                var sumPurchaseAmount = 0.00; //进价合计
+                sumTradePrice = parseFloat(sumTradePrice);
+                sumPayAmount = parseFloat(sumPayAmount);
+                sumPurchaseAmount = parseFloat(sumPurchaseAmount);
+                for (var i = 0; i < data.length; i++) {
+                    data[i].tradePrice = parseFloat(data[i].tradePrice);
+                    data[i].payAmount = parseFloat(data[i].payAmount);
+                    data[i].purchaseAmount = parseFloat(data[i].purchaseAmount);
+
+                    sumTradePrice += data[i].tradePrice;
+                    sumPayAmount += data[i].payAmount;
+                    sumPurchaseAmount += data[i].purchaseAmount;
+
+                    data[i].tradePrice = fmoney(data[i].tradePrice, 2);
+                    data[i].payAmount = fmoney(data[i].payAmount, 2);
+                    data[i].purchaseAmount = fmoney(data[i].purchaseAmount, 2);
+                }
+                sumTradePrice = fmoney(sumTradePrice,2);
+                sumPayAmount = fmoney(sumPayAmount,2);
+                sumPurchaseAmount = fmoney(sumPurchaseAmount,2);
+
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     quantity: "合计：",
+                    tradePrice: sumTradePrice,
                     payAmount: sumPayAmount,
                     purchaseAmount: sumPurchaseAmount
                 });
@@ -319,4 +343,16 @@ $(function () {
         $("#printDiv").dialog('open');
 
     });
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 });
