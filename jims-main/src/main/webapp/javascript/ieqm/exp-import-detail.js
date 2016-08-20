@@ -202,7 +202,7 @@ $(function () {
         }, {
             title: '价格',
             field: 'purchasePrice',
-            align: 'center',
+            align: 'right',
             width: "6%"
         }, {
             title: '数量',
@@ -212,7 +212,7 @@ $(function () {
         }, {
             title: '金额',
             field: 'sum',
-            align: 'center',
+            align: 'right',
             width: "7%"
         }, {
             title: '扣率',

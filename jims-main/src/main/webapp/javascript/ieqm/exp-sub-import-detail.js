@@ -230,17 +230,17 @@ $(function () {
         }, {
             title: '批发价',
             field: 'tradePrice',
-            align: 'center',
+            align: 'right',
             width: "10%"
         }, {
             title: '零售价',
             field: 'payAmount',
-            align: 'center',
+            align: 'right',
             width: "10%"
         }, {
             title: '进价',
             field: 'purchaseAmount',
-            align: 'center',
+            align: 'right',
             width: "10%"
         }, {
             title: '类别',

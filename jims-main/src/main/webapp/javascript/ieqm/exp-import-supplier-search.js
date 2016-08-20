@@ -144,13 +144,13 @@ $(function () {
         }, {
             title: '金额',
             field: 'payAmount',
-            align: 'center',
+            align: 'right',
             width: '10%',
             type:'numberbox'
         }, {
             title: '实际金额',
             field: 'purchaseAmount',
-            align: 'center',
+            align: 'right',
             width: '10%',
             type:'numberbox'
         }]]

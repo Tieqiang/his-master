@@ -123,7 +123,7 @@ $(function () {
         }, {
             title: '金额',
             field: 'importAmount',
-            align: 'center',
+            align: 'right',
             width: "20%"
         }]]
     });
