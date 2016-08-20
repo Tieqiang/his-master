@@ -257,10 +257,9 @@ $(function () {
         var expForm = $("#expForm").combobox("getText");
         var storageCode = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
-        //
+
         $.get("/api/exp-import/exp-sub-import-detail?storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&stopDate=" + endDate+"&subStorage="+ subStorage+"&expForm="+ expForm, function (data) {
             if (data.length > 0) {
-
                 //为报表准备字段
                 startDates=startDate;
                 stopDates=endDate;
@@ -273,6 +272,7 @@ $(function () {
                 sumTradePrice = parseFloat(sumTradePrice);
                 sumPayAmount = parseFloat(sumPayAmount);
                 sumPurchaseAmount = parseFloat(sumPurchaseAmount);
+
                 for (var i = 0; i < data.length; i++) {
                     data[i].tradePrice = parseFloat(data[i].tradePrice);
                     data[i].payAmount = parseFloat(data[i].payAmount);
@@ -307,7 +307,6 @@ $(function () {
         $.messager.alert("系统提示", "另存为", "info");
     });
 
-
     //为报表准备字段
     var startDates='';
     var stopDates='';
@@ -322,16 +321,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            if(subStor=='全部'){
-                subStor='';
-            }
-            if(expForms=='全部'){
-                expForms='';
-            }
-            console.log(expForms);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-sub-import-detail.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&subStorage="+subStor+"&expForm="+expForms;
             $("#report").prop("src",cjkEncode(https));
-            console.log(https);
         }
     });
     $("#print").on('click', function () {
