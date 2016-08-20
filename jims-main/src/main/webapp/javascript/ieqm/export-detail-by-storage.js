@@ -119,12 +119,12 @@ $(function () {
         }, {
             title: '全部（金额）',
             field: 'importAmount',
-            align: 'center',
+            align: 'right',
             width: "20%"
         }, {
             title: '小计（金额）',
             field: 'importAmount',
-            align: 'center',
+            align: 'right',
             width: "20%"
         }]]
     });
@@ -148,20 +148,26 @@ $(function () {
         }else{
             subStor=subStorage;
         }
-        console.log(subStor);
 
         $.get("/api/exp-export/export-detail-by-exp-class?type=storage&storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate + "&value=" + subStorage, function (data) {
             if (data.length > 0) {
-//                var sum = 0.00;
-//
-//                $.each(data, function (index, item) {
-//                    sum += item.importAmount;
-//                });
-//                $("#dg").datagrid('loadData', data);
-//                $('#dg').datagrid('appendRow', {
-//                    receiver: "合计：",
-//                    importAmount: sum
-//                });
+                var sum = 0.00;
+                sum = parseFloat(sum);
+                $.each(data, function (index, item) {
+                    if(item.importAmount == null || item.importAmount == '' || typeof(item.importAmount) == 'undefined'){
+                        item.importAmount = 0.00;
+                    }
+                    item.importAmount = parseFloat(item.importAmount);
+                    sum += item.importAmount;
+                    item.importAmount = fmoney(item.importAmount,2);
+                });
+                sum = fmoney(sum,2);
+                $("#dg").datagrid('loadData', data);
+                $('#dg').datagrid('appendRow', {
+                    receiver: '',
+                    expForm: "合计：",
+                    importAmount: sum
+                });
                 $("#dg").datagrid('loadData', data);
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！");
@@ -202,5 +208,15 @@ $(function () {
 
     });
 
-
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 });

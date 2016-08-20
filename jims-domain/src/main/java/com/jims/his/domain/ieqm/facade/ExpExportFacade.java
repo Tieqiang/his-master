@@ -261,7 +261,11 @@ public class ExpExportFacade extends BaseFacade {
         ExpExportVo v=new ExpExportVo();
         BigDecimal bigDecimal=new BigDecimal(0.0);
         for(ExpExportVo e:result){
-            bigDecimal=bigDecimal.add(new BigDecimal(e.getImportAmount()));
+            if(null != e.getImportAmount()){
+                bigDecimal = bigDecimal.add(new BigDecimal(e.getImportAmount()));
+            }else{
+                bigDecimal = bigDecimal.add(new BigDecimal(0.0));
+            }
         }
         v.setReceiver("合计");
         v.setImportAmount(bigDecimal.doubleValue());
