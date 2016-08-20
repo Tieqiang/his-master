@@ -141,7 +141,7 @@ $(function () {
         }, {
             title: '金额',
             field: 'importPrice',
-            align: 'center',
+            align: 'right',
             width: '15%',
             type:'numberbox'
         }]]
