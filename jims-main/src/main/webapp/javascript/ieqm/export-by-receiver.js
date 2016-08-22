@@ -163,7 +163,7 @@ $(function () {
         }, {
             title: '金额',
             field: 'amount',
-            align: 'center',
+            align: 'right',
             width: "10%"
         }]]
     });
@@ -176,23 +176,27 @@ $(function () {
         var hospitalId = parent.config.hospitalId;
         $.get('/api/exp-export/export-detail-by-exp-class?type=receiver&storage=' + storageCode  + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate+"&value="+receiver, function (data) {
             if (data.length > 0) {
-                var sumQuantity = 0.00;
                 var sumAmount = 0.00;
-
+                sumAmount = parseFloat(sumAmount);
                 //为报表准备字段
                 startDates=startDate;
                 stopDates=endDate;
                 receivers=receiver;
 
                 $.each(data, function (index, item) {
-                    sumQuantity += item.quantity;
-                    sumAmount += item.amount;
+                    if(item.amount == '' || item.amount == null || typeof(item.amount) == 'undefined'){
+                        item.amount = 0.00;
+                    }else{
+                        item.amount = parseFloat(item.amount);
+                        sumAmount += item.amount;
+                        item.amount = fmoney(item.amount, 2);
+                    }
                 });
+                sumAmount = fmoney(sumAmount,2);
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     receiver: '',
                     firmId: "合计：",
-                    quantity: sumQuantity,
                     amount: sumAmount
                 });
             } else {
@@ -250,5 +254,17 @@ $(function () {
             + " " + date.getHours() + seperator2 + date.getMinutes()
             + seperator2 + date.getSeconds();
         return currentdate;
+    }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
     }
 });
