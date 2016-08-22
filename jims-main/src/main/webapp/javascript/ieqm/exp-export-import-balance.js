@@ -1,4 +1,6 @@
 $(function () {
+    var fieldNo = 0;    //从左往右，光标停留在第几个单元格
+
     var deptId = '';
     var editIndex;
     var applyNo;
@@ -746,8 +748,10 @@ $(function () {
             $("#dg").datagrid('refreshRow', editIndex);
             $("#expDetailDialog").dialog('close');
             $("#dg").datagrid('beginEdit', editIndex);
-
-
+            //光标定位到数量单元格
+            fieldNo = 6;
+            var selector = "#datagrid-row-r22-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+            $(selector).focus();
         }
 
     });
@@ -833,7 +837,6 @@ $(function () {
                 options: {
                     onChange: function (newValue, oldValue) {
                         var row = $("#dg").datagrid('getData').rows[editIndex];
-                        console.log(row);
                         var amountEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'planNumber'});
                         $(amountEd.target).numberbox('setValue',newValue * row.purchasePrice)
                         var rows = $("#dg").datagrid('getRows');
@@ -1180,6 +1183,9 @@ $(function () {
         }
         editIndex = appendRowIndex;
         $("#dg").datagrid('beginEdit', editIndex);
+        //光标定位到品名
+        $('#datagrid-row-r22-2-' + editIndex + ' .textbox-text')[0].focus();
+        fieldNo = 2;
     });
 
     /**
@@ -1204,7 +1210,6 @@ $(function () {
     var dataValid = function () {
 
         var rows = $("#dg").datagrid('getRows');
-        console.log(rows);
         if (rows.length == 0) {
             $.messager.alert("系统提示", "明细记录为空，不允许保存", 'error');
             return false;
@@ -1431,7 +1436,6 @@ $(function () {
                     var exportImportVo = {};
                     exportImportVo.exportVo= exportVo;
                     exportImportVo.importVo= importVo;
-                    console.log(exportImportVo);
                     $.postJSON("/api/exp-stock/exp-export-import", exportImportVo, function (data) {
                         if (data.errorMessage) {
                             $.messager.alert("系统提示", data.errorMessage, 'error');
@@ -1525,6 +1529,51 @@ $(function () {
                 var seIndex = $("#expDetailDatagrid").datagrid('getRowIndex',temSelect);
                 var test = "#datagrid-row-r21-2-"+seIndex;
                 $(test).trigger('click',currentSelect,rows[currentSelect]);
+                fieldNo = 6;
+            }
+        }else{
+            if (e.keyCode == 39 || e.keyCode == 13) {
+                //光标定位
+                if (fieldNo == 6) {     //2,6,18,19
+                    fieldNo = 18;
+                    var selector = "#datagrid-row-r22-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                    //判断用户有没有输入数量，如果没有，自动默认赋值1
+                    var quantityEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'quantity'});
+                    var value = $(quantityEd.target).textbox('getValue');
+                    if (value == null || value == '' || typeof(value) == 'undefined') {
+                        $(quantityEd.target).textbox('setValue', 1);
+                    }
+                } else if (fieldNo == 18) {
+                    fieldNo = 19;
+                    var selector = "#datagrid-row-r22-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                    //判断用户有没有输入批号，如果没有，自动默认赋值X
+                    var batchNoEd = $("#dg").datagrid('getEditor', {index: editIndex, field: 'batchNo'});
+                    var value = $(batchNoEd.target).textbox('getValue');
+                    if (value == null || value == '' || typeof(value) == 'undefined') {
+                        $(quantityEd.target).textbox('setValue', 'X');
+                    }
+                } else if (fieldNo == 2) {
+                    fieldNo = 6;
+                    var selector = "#datagrid-row-r22-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                }
+            }
+            if (e.keyCode == 37) {
+                if (fieldNo == 19) {
+                    fieldNo = 18;
+                    var selector = "#datagrid-row-r22-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                } else if (fieldNo == 18) {
+                    fieldNo = 6;
+                    var selector = "#datagrid-row-r22-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                } else if (fieldNo == 6) {
+                    fieldNo = 2;
+                    var selector = "#datagrid-row-r22-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                }
             }
         }
     }

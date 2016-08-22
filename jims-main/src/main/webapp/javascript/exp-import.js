@@ -4,6 +4,7 @@
  */
 
 $(function () {
+    var fieldNo = 0;    //从左往右，光标停留在第几个单元格
 
     /**
      * 供货方
@@ -259,6 +260,19 @@ $(function () {
                                     $(dateEd.target).datebox('setValue',date);
                                 }
                             }
+
+                            var expNameEd = $("#importDetail").datagrid('getEditor',{index: editIndex, field: 'expName'});
+                            var name = $(expNameEd.target).combogrid('getValue');
+                            var quantityEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'quantity'});
+                            var quantity = $(quantityEd.target).textbox('getValue');
+                            if(name == null || name == '' || typeof(name) == 'undefined'){
+                                $.messager.alert('系统提示','品名不能为空,请重新编辑!','info');
+                                return ;
+                            }
+                            if(quantity == '0' || quantity == null || quantity == '' || typeof(quantity) == 'undefined'){
+                                $.messager.alert('系统提示','入库数量不能为0,请重新输入!','info');
+                                return;
+                            }
                             $("#importDetail").datagrid('appendRow', {documNo:documentNo});
                             var rows = $("#importDetail").datagrid('getRows') ;
                             var appendRowIndex = $("#importDetail").datagrid('getRowIndex', rows[rows.length - 1]);
@@ -269,10 +283,9 @@ $(function () {
                             $("#importDetail").datagrid('beginEdit', editIndex);
                             $("#importDetail").datagrid('selectRow',editIndex);
                             var editor = $('#importDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-                            console.log(editor.target);
-                            console.log(editor.target[0]);
                             var selector = "#datagrid-row-r8-2-"+appendRowIndex+" > td:nth-child(2) > div > table > tbody > tr > td > span > input" ;
                             $(selector).focus();
+                            fieldNo = 0;
                         }
                     })
                 }
@@ -662,35 +675,28 @@ $(function () {
         pageSize: 50,
         pageNumber: 1
     });
-//    var suppliers = [];
-//    var promise = $.get("/api/exp-supplier-catalog/list-with-dept?hospitalId=" + parent.config.hospitalId, function (data) {
-//        suppliers = data;
-//    });
 
-//    promise.done(function () {
-        $("#supplier").combogrid({
-            mode: 'remote',
-            idField: 'supplierCode',
-            textField: 'supplierName',
-            url:'/api/exp-supplier-catalog/list-with-dept?hospitalId='+ parent.config.hospitalId,
-            panelWidth: 450,
-            method:"GET",
-            fitColumns: true,
-            columns: [[{
-                title: '供应商名称',
-                field: 'supplierName', width: 180, align: 'center'
-            }, {
-                title: '供应商代码',
-                field: 'supplierCode', width: 130, align: 'center'
-            }, {
-                title: '输入码',
-                field: 'inputCode', width: 50, align: 'center'
-            }]]
-        })
-//    });
+    $("#supplier").combogrid({
+        mode: 'remote',
+        idField: 'supplierCode',
+        textField: 'supplierName',
+        url:'/api/exp-supplier-catalog/list-with-dept?hospitalId='+ parent.config.hospitalId,
+        panelWidth: 450,
+        method:"GET",
+        fitColumns: true,
+        columns: [[{
+            title: '供应商名称',
+            field: 'supplierName', width: 180, align: 'center'
+        }, {
+            title: '供应商代码',
+            field: 'supplierCode', width: 130, align: 'center'
+        }, {
+            title: '输入码',
+            field: 'inputCode', width: 50, align: 'center'
+        }]]
+    })
 
     //追加
-
     $("#addRow").on('click', function () {
         flag=0;
         $("#importDetail").datagrid('appendRow', {documNo:documentNo});
@@ -702,8 +708,9 @@ $(function () {
         }
         editIndex = appendRowIndex;
         $("#importDetail").datagrid('beginEdit', editIndex);
-//        var editor = $('#importDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-//        editor.target.focus();
+        //光标定位
+        $('#datagrid-row-r8-2-' + editIndex + ' .textbox-text')[0].focus();
+        fieldNo = 2;
      })
 
     $("#stockRecordDialog").dialog({
@@ -820,9 +827,6 @@ $(function () {
             }
         },
         onClickRow: function (index, row) {
-
-//            var rowDetail = $("#importDetail").datagrid('getData').rows[editIndex];
-
             var expCodeEdit = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'expCode'});
             $(expCodeEdit.target).textbox('setValue', row.expCode);
 
@@ -845,11 +849,8 @@ $(function () {
             $(kill.target).textbox('setValue', row.killflag);
 
             var quantityEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'quantity'});
-            $(quantityEd.target).textbox('setValue', 0);
-            $(quantityEd.target).focus();
 
             var batchNoEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'batchNo'});
-            $(batchNoEd.target).textbox('setValue', 'X');
 
             var purchasePriceEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'purchasePrice'});
             $(purchasePriceEd.target).textbox('setValue', row.tradePrice);
@@ -899,6 +900,10 @@ $(function () {
             $("#importDetail").datagrid('beginEdit',editIndex);
 
             $("#stockRecordDialog").dialog('close');
+            //光标定位到数量单元格
+            fieldNo = 5;
+            var selector = "#datagrid-row-r8-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+            $(selector).focus();
         }
 
     });
@@ -1143,14 +1148,11 @@ $(function () {
     document.onkeydown=function(event){
         var e = event || window.event || arguments.callee.caller.arguments[0];
         var options =$("#stockRecordDialog").dialog('options');
+
         if(!options.closed){
             e.preventDefault();
             var rows = $("#stockRecordDatagrid").datagrid('getRows') ;
             var maxIndex = $("#stockRecordDatagrid").datagrid("getRowIndex",rows[rows.length-1]);
-
-            //if(selects!=null){
-            //    currentSelect = $("#stockRecordDatagrid").datagrid("getRowIndex",currentSelect);
-            //}
 
             if(e.keyCode==38){
                 currentSelect = currentSelect -1 ;
@@ -1158,7 +1160,6 @@ $(function () {
                     currentSelect = 0 ;
                 }
             }
-
             if(e.keyCode==40){
                 //下
                 currentSelect = currentSelect +1 ;
@@ -1174,7 +1175,50 @@ $(function () {
                 var test = "#datagrid-row-r14-2-"+seIndex;
                 $(test).trigger('click',currentSelect,rows[currentSelect]);
             }
-
+        }else{
+            if (e.keyCode == 39 || e.keyCode == 13) {
+                //光标定位
+                if(fieldNo == 5){
+                    fieldNo = 6;
+                    var selector = "#datagrid-row-r8-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                    //判断数量有没有输入，如果没有输入，自动赋值1
+                    var quantityEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'quantity'});
+                    var value = $(quantityEd.target).textbox('getValue');
+                    if(value == null || value == '' || typeof(value) == 'undefined'){
+                        $(quantityEd.target).textbox('setValue',1);
+                    }
+                }else if(fieldNo == 6){
+                    fieldNo = 10;
+                    var selector = "#datagrid-row-r8-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                    //判断用户有没有输入批号，如果没有，自动默认赋值x
+                    var batchNoEd = $("#importDetail").datagrid('getEditor', {index: editIndex, field: 'batchNo'});
+                    var value = $(batchNoEd.target).textbox('getValue');
+                    if (value == null || value == '' || typeof(value) == 'undefined') {
+                        $(batchNoEd.target).textbox('setValue', 'X');
+                    }
+                }else if(fieldNo == 2){
+                    fieldNo = 5;
+                    var selector = "#datagrid-row-r8-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                }
+            }
+            if(e.keyCode == 37){
+                if (fieldNo == 6) {
+                    fieldNo = 5;
+                    var selector = "#datagrid-row-r8-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                }else if(fieldNo == 10){
+                    fieldNo = 6;
+                    var selector = "#datagrid-row-r8-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                }else if(fieldNo == 5){
+                    fieldNo = 2;
+                    var selector = "#datagrid-row-r8-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+                    $(selector).focus();
+                }
+            }
         }
     }
 })

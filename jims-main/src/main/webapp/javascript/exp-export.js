@@ -2,10 +2,8 @@
  * Created by heren on 2015/10/23.
  */
 
-
-
-
 $(function () {
+    var fieldNo = 0;    //从左往右，光标停留在第几个单元格
     var currentSelect = 0;//当前选中的规格
     var exportToFlag = undefined;//退库的时候，标志，用于区分是否退货给供应商。
 
@@ -416,7 +414,7 @@ $(function () {
             hidden: 'true'
         }, {
             title: '子规格1',
-            field: 'subPackageSpec1',
+            field: 'subPackageSpec2',
             hidden: 'true'
         }, {
             title: '子包装2',
@@ -434,11 +432,11 @@ $(function () {
             title: '入库单据号',
             field: 'importDocumentNo',
             hidden: 'true'
-        }, {
+        }/*, {
             title: '零售价',
             field: 'retailPrice',
             hidden: 'true'
-        }, {
+        }*/, {
             title: '批发价',
             field: 'tradePrice',
             hidden: 'true'
@@ -658,6 +656,10 @@ $(function () {
         }
         editIndex = appendRowIndex;
         $("#exportDetail").datagrid('beginEdit', editIndex);
+
+        fieldNo = 2;
+        var selector = "#datagrid-row-r6-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+        $(selector).focus();
     });
 
     //新增一行
@@ -669,9 +671,7 @@ $(function () {
         editIndex = addRowIndex;
         $("#exportDetail").datagrid('selectRow', editIndex);
         $("#exportDetail").datagrid('beginEdit', editIndex);
-        var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-        console.info(editor);
-//                #datagrid-row-r6-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+        //光标定位到产品名称单元格
         var selector = "#datagrid-row-r6-2-" + addRowIndex + " > td:nth-child(2) > div > table > tbody > tr > td > span > input";
         $(selector).focus();
     }
@@ -802,8 +802,7 @@ $(function () {
                 $("#stockRecordDialog").dialog('close');
                 $.messager.alert('系统提示', '该子库房暂无此产品,请重置产品名称或子库房！', 'info');
                 $("#exportDetail").datagrid('beginEdit', editIndex);
-            }
-            ;
+            };
             $("#stockRecordDatagrid").datagrid("selectRow", 0);
         },
         onClickRow: function (index, row) {
@@ -840,11 +839,16 @@ $(function () {
             rowDetail.subPackageUnits2 = row.subPackageUnits2;
             rowDetail.subPackageSpec2 = row.subPackageSpec2;
             rowDetail.importDocumentNo = row.documentNo;
-            rowDetail.retailPrice = row.retailPrice;
+            //rowDetail.retailPrice = row.retailPrice;
             rowDetail.tradePrice = row.tradePrice;
             $("#exportDetail").datagrid('refreshRow', editIndex);
             $("#stockRecordDialog").dialog('close');
             $("#exportDetail").datagrid('beginEdit', editIndex);
+
+            //光标定位到数量单元格
+            fieldNo = 6;
+            var selector = "#datagrid-row-r6-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+            $(selector).focus();
         }
     });
     $("#stockRecordDialog").dialog({
@@ -1097,12 +1101,6 @@ $(function () {
     }
 
     document.onkeydown = function (event) {
-
-        var e = event || window.event || arguments.callee.caller.arguments[0];
-
-    }
-
-    document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
         var options = $("#stockRecordDialog").dialog('options');
         if (options.closed) {
@@ -1111,7 +1109,6 @@ $(function () {
                     index: editIndex,
                     field: 'quantity'
                 });
-//disNum
                 var disNum = $("#exportDetail").datagrid('getEditor', {
                     index: editIndex,
                     field: 'disNum'
@@ -1129,8 +1126,7 @@ $(function () {
                     return;
                 }
             }
-        }
-        ;
+        };
         if (!options.closed) {
             e.preventDefault();
             var rows = $("#stockRecordDatagrid").datagrid('getRows');
@@ -1157,8 +1153,6 @@ $(function () {
                 var test = "#datagrid-row-r10-2-" + seIndex;
                 $(test).trigger('click', currentSelect, rows[currentSelect]);
             }
-
         }
     }
-
 })
