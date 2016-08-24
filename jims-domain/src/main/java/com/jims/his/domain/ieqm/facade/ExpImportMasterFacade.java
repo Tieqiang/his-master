@@ -40,7 +40,7 @@ public class ExpImportMasterFacade extends BaseFacade {
      * @return
      */
     public List<ExpImportMaster> searchImportMasterDict(String imClass, String startBill, String stopBill, String searchInput, String startDate, String stopDate, String storage, String supplier, String classRadio, Integer billRadio, String hospitalId){
-        String hql = "select distinct dict from ExpImportMaster as dict,ExpImportDetail as dc where 1=1 ";
+        String hql = "select distinct dict from ExpImportMaster as dict,ExpImportDetail as dc where 1=1 and dict.documentNo = dc.documentNo";
         if (billRadio != null) {
             hql += " and dict.docStatus='" + billRadio + "'";
         }
