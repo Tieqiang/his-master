@@ -207,7 +207,7 @@ public class ExpSupplierCatalogFacade extends BaseFacade {
             list = findAll(list);
         } else if (exportClass.equals("上级库房或者供货商")) {
             if (1 == currentLevel) {//一级库房---
-                list = findAll(list);
+                list = listByQ(list,q);
             } else {
                 list = findByStorageLevel(currentLevel, 1, list, q);
             }
