@@ -77,6 +77,7 @@ public class ExpImportMasterFacade extends BaseFacade {
         if (storage != null && storage.trim().length() > 0) {
             hql += " and dict.storage='" + storage + "'";
         }
+        hql += " order by dict.documentNo asc";
         Query query = entityManager.createQuery(hql);
         List resultList = query.getResultList();
         return resultList;

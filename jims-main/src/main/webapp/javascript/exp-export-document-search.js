@@ -456,7 +456,7 @@ $(function () {
         onOpen: function () {
             var printData = $("#exportMaster").datagrid('getSelections');
             var  printDocumentNo=printData[0].documentNo;
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo + '&hospitalId=' + parent.config.hospitalId;
             $("#report").prop("src",cjkEncode(https));
         }
     })
