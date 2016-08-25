@@ -3,11 +3,6 @@
  */
 $(function(){
 
-
-//    $.get("/api/login/get-login-info",function(data){
-//        console.log("登陆信息：")
-//        console.log(data) ;
-//    })
     function getUrlParameter(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
         var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -125,7 +120,7 @@ $(function(){
         //if(validateSelect()){
         $.postJSON("/api/login/add-login-info", config, function (data) {
             //登录成功跳转至index.html
-            location.href = "/index.html"
+            location.href = "/index.html?staffId=" + staffId;
         }, function (data) {
 
         })

@@ -50,7 +50,6 @@
                 if(e.keyCode==13){
                     $("#loginBtn").trigger('click');
                 }
-                console.log(e) ;
             })
             //失去焦点
             $("#password").blur(function () {
@@ -76,7 +75,6 @@
                 userName = leftZeroPad(userName,6) ;
                 password = leftZeroPad(password,6) ;
                 $.post("/api/login/check-login?loginName="+userName+"&password="+password,function(data){
-                    console.log(data) ;
                     if(data.errorMessage){
                         alert(data.errorMessage) ;
                     }else{

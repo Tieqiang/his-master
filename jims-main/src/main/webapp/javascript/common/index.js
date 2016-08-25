@@ -129,8 +129,20 @@ $(function () {
         })
 
     })
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(window.parent.location.href);
+        if (results == null)    return ""; else {
+            return results[1];
+        }
+    }
+
+    var staffId = getUrlParameter("staffId");
     $("#changeLogin").on('click', function () {
-        location.href = "/views/his/common/module-select.html"
+        location.href = "/views/his/common/module-select.html?sId=" + staffId;
     })
     $("#dlgNew").dialog({
         title: '修改密码',
