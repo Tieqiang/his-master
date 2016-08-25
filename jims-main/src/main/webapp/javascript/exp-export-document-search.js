@@ -222,9 +222,12 @@ $(function () {
             field: 'docStatus'
         }]],
         onClickRow: function (index, row) {
-            var row = $("#exportMaster").datagrid('getSelected');
-            currentDocumentNo = row.documentNo;
-            $("#retailDialog").dialog('open');
+            var printData = $("#exportMaster").datagrid('getSelections');
+            if (printData.length != 1) {
+                $.messager.alert('系统提示', '只能选择一条数据!', 'error');
+                return;
+            }
+            $("#printDiv").dialog('open');
         },
         keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
             enter: function (e) {
@@ -236,6 +239,12 @@ $(function () {
                 $(this).combogrid('hidePanel');
             }
         })
+    });
+    //查看明细
+    $('#lookDetail').on('click',function(){
+        var row = $("#exportMaster").datagrid('getSelected');
+        currentDocumentNo = row.documentNo;
+        $("#retailDialog").dialog('open');
     });
 
     //出库分类字典
@@ -357,6 +366,7 @@ $(function () {
         height: 300,
         left:100,
         top:100,
+        resizable: true,
         closed: false,
         inline: true,
         catch: false,
@@ -446,7 +456,6 @@ $(function () {
         onOpen: function () {
             var printData = $("#exportMaster").datagrid('getSelections');
             var  printDocumentNo=printData[0].documentNo;
-//            alert(printDocumentNo);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo;
             $("#report").prop("src",cjkEncode(https));
         }

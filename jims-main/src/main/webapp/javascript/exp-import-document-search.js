@@ -189,10 +189,13 @@ $(function () {
             width: '10%',
             field: 'docStatus'
         }]],
-        onClickRow: function (index, row) {
-            var row = $("#importMaster").datagrid('getSelected') ;
-            currentDocumentNo = row.documentNo;
-            $("#retailDialog").dialog('open');
+        onClickRow: function(index,row){
+            var printData = $("#importMaster").datagrid('getSelections');
+            if (printData.length != 1) {
+                $.messager.alert('系统提示', '只能先选择一条数据!', 'error');
+                return;
+            }
+            $("#printDiv").dialog('open');
         },
         keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
             enter: function (e) {
@@ -205,6 +208,13 @@ $(function () {
             }
         })
     });
+    //查看明细
+    $('#lookDetail').on('click',function(){
+        var row = $("#importMaster").datagrid('getSelected');
+        currentDocumentNo = row.documentNo;
+        $("#retailDialog").dialog('open');
+    });
+
     //设置时间
     $('#startDate').datetimebox({
         required: true,
@@ -339,8 +349,11 @@ $(function () {
     }
     $("#retailDialog").dialog({
         title: '消耗品入库明细',
-        width: "60%",
+        width: "80%",
         height: 300,
+        left: 100,
+        top: 100,
+        resizable: true,
         closed: false,
         inline:true,
         catch: false,
@@ -445,7 +458,6 @@ $(function () {
     });
     $("#printBtn").on('click', function () {
         var printData = $("#importMaster").datagrid('getSelections');
-//        alert(printData.length);
         if (printData.length !=1) {
             $.messager.alert('系统提示', '只能先选择一条数据!', 'error');
             return;
