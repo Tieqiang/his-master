@@ -53,9 +53,11 @@ public class ExpInventoryCheckFacade extends BaseFacade {
      * @param hospitalId
      * @param subStorage
      * @param checkMonth
+     * @param hiddenFlag  隐藏账面数为0的标志
      * @return
      */
-    public List<ExpInventoryCheck> getInventory(String type, String storageCode, String hospitalId, String subStorage, String checkMonth) {
+    public List<ExpInventoryCheck> getInventory(String type, String storageCode, String hospitalId,
+                                                String subStorage, String checkMonth,String hiddenFlag) {
         String sql = "";
         if(type.equals("get")){
             sql = "SELECT EXP_STOCK.STORAGE STORAGE,   \n" +
@@ -92,6 +94,9 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     "\t\t\t(EXP_STOCK.SUB_STORAGE = '" + subStorage + "' OR '" + subStorage + "' = '全部') and\n" +
                     "\t\t\t(EXP_STOCK.EXP_CODE = '全部' OR '全部' = '全部') and\n" +
                     "\t\t\t(EXP_DICT.EXP_FORM = '全部' OR '全部' = '全部')";
+            if(hiddenFlag.trim().equals("1")){
+                sql += " and exp_stock.quantity > 0";
+            }
         }
         if(type.equals("search")){
             sql = "SELECT EXP_INVENTORY_CHECK.*,   \n" +
