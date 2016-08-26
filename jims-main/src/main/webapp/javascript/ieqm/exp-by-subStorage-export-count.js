@@ -144,12 +144,12 @@ $(function () {
         }, {
             title: '进价金额',
             field: 'payAmount',
-            align: 'cneter',
+            align: 'right',
             width: '7%'
         }, {
             title: '零售金额',
             field: 'retailAmount',
-            align: 'center',
+            align: 'right',
             width: '7%'
         }, {
             title: '产品类别',
@@ -190,6 +190,7 @@ $(function () {
         subStorages.unshift(all);
 
         $('#subStorage').combobox({
+            width: '100px',
             panelHeight: 'auto',
             data: subStorages,
             valueField: 'subStorage',
@@ -212,6 +213,7 @@ $(function () {
         forms.unshift(all);
 
         $('#formClass').combobox({
+            width: '100px',
             panelHeight: 'auto',
             data: forms,
             valueField: 'formCode',
@@ -254,6 +256,7 @@ $(function () {
         }
     });
     $('#expName').combobox({
+        width: '200px',
         panelWidth: 200,
         valueField: 'expCode',
         textField: 'expName',
@@ -335,8 +338,9 @@ $(function () {
         masterDataVo.storage = parent.config.storageCode;
         var payAmount = 0.00;
         var retailAmount = 0.00;
+        payAmount = parseFloat(payAmount);
+        retailAmount = parseFloat(retailAmount);
         var promise =$.get("/api/exp-export/exp-by-subStorage-export-count",masterDataVo,function(data){
-            console.log(data);
 
             //为报表准备数据
             startDates=masterDataVo.startDate;
@@ -346,8 +350,12 @@ $(function () {
 
             masters =data ;
             for(var i = 0 ;i<data.length;i++){
-                retailAmount+=data[i].retailAmount;
-                payAmount+=data[i].payAmount;
+                data[i].payAmount = parseFloat(data[i].payAmount);
+                data[i].retailAmount = parseFloat(data[i].retailAmount);
+                retailAmount += data[i].retailAmount;
+                payAmount += data[i].payAmount;
+                data[i].payAmount = fmoney(data[i].payAmount,2);
+                data[i].retailAmount = fmoney(data[i].retailAmount,2);
             }
         },'json');
         promise.done(function(){
@@ -359,8 +367,8 @@ $(function () {
             $("#importMaster").datagrid('loadData',masters);
             $('#importMaster').datagrid('appendRow', {
                 expName: "合计：",
-                payAmount: payAmount,
-                retailAmount: retailAmount
+                payAmount: fmoney(payAmount,2),
+                retailAmount: fmoney(retailAmount,2)
             });
             $("#importMaster").datagrid("autoMergeCells", ['expCode']);
 
@@ -410,7 +418,6 @@ $(function () {
             loadDict();
             return;
         }
-        console.log(importVo);
         $.postJSON("/api/exp-import/exp-do-account-save",importVo,function(data){
             loadDict();
             $.messager.alert('系统提示','保存成功','info');
@@ -421,4 +428,16 @@ $(function () {
 
         })
     })
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })

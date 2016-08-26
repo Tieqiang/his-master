@@ -184,7 +184,7 @@ $(document).ready(function () {
             title: "类型",
             field: "expForm",
             align: 'center',
-            width: "10%"
+            width: "9%"
         },{
             title:"规格",
             field:"expSpec",
@@ -199,13 +199,13 @@ $(document).ready(function () {
             title:"常规包装数量",
             field:"amountPerPackage",
             align: 'center',
-            width:"14%"
+            width:"10%"
 //            editor:{type:"validatebox"}
         },{
             title:"常规包装单位",
             field:"packageUnits",
             align: 'center',
-            width:"14%"
+            width:"10%"
 //            editor:{type:"combobox",options:{
 //                data:packageUnits,
 //                valueField:"measuresCode",
@@ -215,13 +215,13 @@ $(document).ready(function () {
             title:"高位水平",
             field:"upperLevel",
             align: 'center',
-            width:"10%",
+            width:"7%",
             editor:{type:"validatebox"}
         },{
             title:"低位水平",
             field:"lowLevel",
             align: 'center',
-            width:"10%",
+            width:"7%",
             editor:{type:"validatebox"}
         },{
             title:"位置",
@@ -229,7 +229,9 @@ $(document).ready(function () {
             hidden:true
         },{
             title:"厂商",
-            field:"supplier"
+            field:"supplier",
+            align: 'center',
+            width: '12%'
 //            hidden:true
         }]],
 //        onClickRow: function (index, row) {

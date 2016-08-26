@@ -138,7 +138,7 @@ $(function () {
         }, {
             title: '金额',
             field: 'amount',
-            align: 'center',
+            align: 'right',
             width: "10%"
         }, {
             title: '去向库房',
@@ -166,21 +166,25 @@ $(function () {
             if (data.length > 0) {
                 var sumQuantity = 0.00;
                 var sumAmount = 0.00;
-
+                sumAmount = parseFloat(sumAmount);
                 //为报表准备字段
                 startDates=startDate;
                 stopDates=endDate;
                 expCodes=expCode;
 
                 $.each(data, function (index, item) {
+                    item.amount = parseFloat(item.amount);
                     sumQuantity += item.quantity;
                     sumAmount += item.amount;
+                    item.amount = fmoney(item.amount,2);
                 });
+                //sumAmount = fmoney(sumAmount,2);
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     firmId: "合计：",
                     quantity: Math.round(sumQuantity*100)/100,
-                    amount: Math.round(sumAmount*100)/100,
+                    //amount: Math.round(sumAmount*100)/100,
+                    amount: sumAmount = fmoney(sumAmount, 2),
                     receiver: ''
                 });
             } else {
@@ -219,6 +223,17 @@ $(function () {
             return;
         }
         $("#printDiv").dialog('open');
-
     });
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 });

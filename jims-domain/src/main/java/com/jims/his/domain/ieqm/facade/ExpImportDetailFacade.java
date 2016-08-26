@@ -428,7 +428,7 @@ public class ExpImportDetailFacade extends BaseFacade {
      * @param packageSpec  消耗品规格
      * @return
      */
-    public List<ExpImportDetailVo>  getSingleAccount(String hospitalId, Date startDate, Date stopDate, String storage, String expCode, String packageSpec) {
+    public List<ExpImportDetailVo> getSingleAccount(String hospitalId, Date startDate, Date stopDate, String storage, String expCode, String packageSpec) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String s1 = formatter.format(startDate.getTime());
         String s2 = formatter.format(stopDate.getTime());
@@ -436,69 +436,37 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "      PACKAGE_UNITS,PURCHASE_PRICE,  quantity import_num,quantity*PURCHASE_PRICE  import_price,0 export_num,  0 export_price,   inventory,batch_no,EXPIRE_DATE ,exp_import_detail.exp_code,'入库' way\n" +
                 "FROM exp_import_detail,exp_import_master,EXP_DICT  \n" +
                 "WHERE " +
-                "storage = '"+storage+"' AND \n" +
-                " exp_import_master.hospital_id = '"+hospitalId+"' AND \n" +
+                "storage = '" + storage + "' AND \n" +
+                " exp_import_master.hospital_id = '" + hospitalId + "' AND \n" +
                 "    exp_import_detail.document_no = exp_import_master.document_no AND \n" +
-                "    import_date >= to_date('"+s1+"','yyyy-mm-dd hh24:mi:ss') AND " +
-                "    import_date <= to_date('"+s2+"','yyyy-mm-dd hh24:mi:ss') AND " +
+                "    import_date >= to_date('" + s1 + "','yyyy-mm-dd hh24:mi:ss') AND " +
+                "    import_date <= to_date('" + s2 + "','yyyy-mm-dd hh24:mi:ss') AND " +
                 "    exp_import_detail.EXP_code = exp_dict.EXP_code and " +
-                "    exp_import_detail.exp_spec = exp_dict.exp_spec " ;
+                "    exp_import_detail.exp_spec = exp_dict.exp_spec ";
         if (null != expCode && !expCode.trim().equals("")) {
-            sql += "     AND    exp_import_detail.exp_code = '"+expCode+"'\n";
+            sql += "     AND    exp_import_detail.exp_code = '" + expCode + "'\n";
         }
         if (null != packageSpec && !packageSpec.trim().equals("")) {
-            sql += "      AND PACKAGE_SPEC = '"+packageSpec+"'\n";
+            sql += "      AND PACKAGE_SPEC = '" + packageSpec + "'\n";
         }
-        sql+=   "UNION  \n" +
+        sql += "UNION  \n" +
                 "SELECT exp_dict.EXP_NAME,EXPORT_CLASS io_class,package_spec,firm_id,(export_date) action_date,RECEIVER our_name, \n" +
                 "      PACKAGE_UNITS,PURCHASE_PRICE,  0 import_num,0  import_price,quantity export_num, quantity*PURCHASE_PRICE  export_price,      inventory,batch_no,EXPIRE_DATE ,exp_export_detail.exp_code,'出库'way\n" +
                 "FROM exp_export_detail,exp_export_master,exp_dict \n" +
-                "WHERE storage = '"+storage+"' AND \n" +
-                "    exp_export_master.hospital_id = '"+hospitalId+"' AND \n" +
+                "WHERE storage = '" + storage + "' AND \n" +
+                "    exp_export_master.hospital_id = '" + hospitalId + "' AND \n" +
                 "    exp_export_detail.document_no = exp_export_master.document_no AND \n" +
-                "    export_date >= to_date('"+s1+"','yyyy-mm-dd hh24:mi:ss') AND export_date <= to_date('"+s2+"','yyyy-mm-dd hh24:mi:ss') AND " +
+                "    export_date >= to_date('" + s1 + "','yyyy-mm-dd hh24:mi:ss') AND export_date <= to_date('" + s2 + "','yyyy-mm-dd hh24:mi:ss') AND " +
                 "    exp_export_detail.EXP_code = exp_dict.EXP_code  and " +
-                "    exp_export_detail.exp_spec = exp_dict.exp_spec" ;
+                "    exp_export_detail.exp_spec = exp_dict.exp_spec";
         if (null != expCode && !expCode.trim().equals("")) {
-            sql += "     AND    exp_export_detail.exp_code = '"+expCode+"'\n";
+            sql += "     AND    exp_export_detail.exp_code = '" + expCode + "'\n";
         }
         if (null != packageSpec && !packageSpec.trim().equals("")) {
-            sql += "      AND PACKAGE_SPEC = '"+packageSpec+"'\n";
+            sql += "      AND PACKAGE_SPEC = '" + packageSpec + "'\n";
         }
-
-
-         List<ExpImportDetailVo> list = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
-         List<PropertyVo> propertyVos=new ArrayList<PropertyVo>();
-        for(ExpImportDetailVo e:list){
-            PropertyVo p=new PropertyVo(e.getExpCode(),e.getPackageSpec(),e.getFirmId());
-            if(!propertyVos.contains(p)){
-                propertyVos.add(p);
-            }
-        }
-        List<ExpImportDetailVo> l=new ArrayList<ExpImportDetailVo>();
-        for(int i=0;i<propertyVos.size();i++){
-            List<ExpImportDetailVo> list1=new ArrayList<ExpImportDetailVo>();
-            list1=findData(list,propertyVos.get(i)) ;
-            ExpImportDetailVo e=new ExpImportDetailVo();
-            e.setIoClass("单品总合计");
-            double importPrice=0.00;
-            double exportPrice=0.00;
-            for(ExpImportDetailVo v:list1){
-                importPrice+=v.getImportPrice();
-                exportPrice+=v.getExportPrice();
-            }
-            java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
-            importPrice=Double.valueOf(df.format(importPrice));
-            exportPrice=Double.valueOf(df.format(exportPrice));
-            e.setImportPrice(importPrice);
-            e.setExportPrice(exportPrice);
-            list1.add(e);
-            for(ExpImportDetailVo v1:list1){
-                l.add(v1);
-            }
-            list1.clear();
-          }
-         return l;
+        List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
+        return nativeQuery;
     }
 
 

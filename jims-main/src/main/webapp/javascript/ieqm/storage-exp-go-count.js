@@ -166,12 +166,12 @@ $(function () {
         },{
             title: '零售金额',
             field: 'retailAmount',
-            align: 'center',
+            align: 'right',
             width: '10%'
         },{
             title: '批发总价',
             field: 'payAmount',
-            align: 'center',
+            align: 'right',
             width: '10%'
         }]]
     });
@@ -309,16 +309,17 @@ $(function () {
         masterDataVo.storage = parent.config.storageCode;
         var retailAmount = 0.00;
         var payAmount = 0.00;
+        payAmount = parseFloat(payAmount);
+        retailAmount = parseFloat(retailAmount);
         var promise =$.get("/api/exp-export/storage-exp-go-count",masterDataVo,function(data){
-            masters =data ;
-            for(var i = 0; i < data.length; i++){
-                data[i].retailAmount = fmoney(data[i].retailAmount,2);
-                data[i].payAmount = fmoney(data[i].payAmount,2);
-            }
             for(var i = 0 ;i<data.length;i++){
                 retailAmount += parseFloat(data[i].retailAmount);
                 payAmount+=parseFloat(data[i].payAmount);
+
+                data[i].retailAmount = fmoney(data[i].retailAmount, 2);
+                data[i].payAmount = fmoney(data[i].payAmount, 2);
             }
+            masters = data;
         },'json');
         promise.done(function(){
             if(masters.length<=0){

@@ -14,40 +14,49 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: "16%"
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: "17%"
         },  {
             title: '产品规格',
             field: 'packageSpec',
+            align: 'center',
             width: "17%"
         }, {
             title: '包装单位',
             field: 'packageUnits',
+            align: 'center',
             width: "10%"
         }, {
             title: '参考批价',
             field: 'tradePrice',
+            align: 'right',
             width: "8%",
             editor: 'numberbox'
         }, {
             title: '参考零价',
             field: 'retailPrice',
+            align: 'right',
             width: "8%",
             editor: 'numberbox'
         }, {
             title: '库存上限',
             field: 'upperLevel',
+            align: 'center',
             width: "8%"
         }, {
             title: '库存下限',
             field: 'lowLevel',
+            align: 'center',
             width: "8%"
         },{
             title: '当前库存',
             field: 'stockQuantity',
+            align: 'center',
             width: "10%",
             styler: function(value,row,index){
                 if (row.upperLevel<row.stockQuantity){
@@ -83,6 +92,10 @@ $(function () {
         expNames=expName;
 
         var countPromise =   $.get("/api/exp-stock/upper-low-warning?storage=" + parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&expName="+expName, function(data){
+            $.each(data,function(index,item){
+                item.tradePrice = fmoney(item.tradePrice,2);
+                item.retailPrice = fmoney(item.retailPrice,2);
+            });
            counts = data;
         });
         return countPromise ;
@@ -112,8 +125,17 @@ $(function () {
             return;
         }
         $("#printDiv").dialog('open');
-
     });
 
-
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })

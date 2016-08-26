@@ -114,12 +114,12 @@ $(function () {
             title: '入库类别',
             field: 'importClass',
             align: 'center',
-            width: '15%'
+            width: '12%'
         }, {
             title: '供应商',
             field: 'supplier',
             align: 'center',
-            width: '15%',
+            width: '22%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {

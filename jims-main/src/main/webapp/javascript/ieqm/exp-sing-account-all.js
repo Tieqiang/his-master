@@ -52,22 +52,27 @@ $(function () {
         columns: [[{
             title: '方式',
             field: 'way',
+            align: 'center',
             width: '6%'
         }, {
             title: '代码',
             field: 'expCode',
+            align: 'center',
             width: '10%'
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: '10%'
         }, {
             title: '类型',
             field: 'ioClass',
+            align: 'center',
             width: '7%'
         }, {
             title: "科室",
             width: '7%',
+            align: 'center',
             field: 'ourName',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
@@ -80,52 +85,63 @@ $(function () {
         }, {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
             width: '7%'
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: '10%'
         }, {
             title: '批号',
             width: '5%',
+            align: 'center',
             field: 'batchNo'
         } , {
             title: '入(出)库日期',
             width: '11%',
+            align: 'center',
             field: 'actionDate',
             formatter: myFormatter2
         }, {
             title: '失效日期',
             width: '11%',
+            align: 'center',
             field: 'expireDate',
             formatter: myFormatter2
         }, {
             title: "结存",
             width: '7%',
+            align: 'center',
             field: 'inventory'
         }, {
             title: '单价',
             width: '7%',
+            align: 'right',
             field: 'purchasePrice',
             type:'numberbox'
         }, {
             title: '入库数量',
             width: '7%',
+            align: 'center',
             field: 'importNum',
             type:'numberbox'
         }, {
             title: '入库金额',
             width: '7%',
+            align: 'right',
             field: 'importPrice',
             type:'numberbox'
         }, {
             title: '出库数量',
             width: '7%',
+            align: 'center',
             field: 'exportNum',
             type:'numberbox'
         }, {
             title: '出库金额',
             width: '7%',
+            align: 'right',
             field: 'exportPrice',
             type:'numberbox'
         }]]
@@ -199,6 +215,10 @@ $(function () {
     var importDetailDataVO = {};//传递vo
     var detailsData = [];//信息
     var specCodeAll =[];
+    var importPrice = 0.00;
+    var exportPrice = 0.00;
+    importPrice = parseFloat(importPrice);
+    exportPrice = parseFloat(exportPrice);
     var loadDict = function(){
         importDetailDataVO.stopDate = new Date($("#stopDate").datetimebox("getText"));
         importDetailDataVO.startDate = new Date($("#startDate").datetimebox("getText"));
@@ -207,6 +227,27 @@ $(function () {
         var promise =$.get("/api/exp-import/exp-single-account",importDetailDataVO,function(data) {
             startDates=importDetailDataVO.startDate;
             stopDates=importDetailDataVO.stopDate;
+            $.each(data,function(index,item){
+                if(item.purchasePrice == null || item.purchasePrice == '' || typeof(item.purchasePrice) == 'undefined'){
+                    item.purchasePrice = 0.00;
+                }
+                if (item.importPrice == null || item.importPrice == '' || typeof(item.importPrice) == 'undefined') {
+                    item.importPrice = 0.00;
+                }
+                if (item.exportPrice == null || item.exportPrice == '' || typeof(item.exportPrice) == 'undefined') {
+                    item.exportPrice = 0.00;
+                }
+                item.purchasePrice = parseFloat(item.purchasePrice);
+                item.importPrice = parseFloat(item.importPrice);
+                item.exportPrice = parseFloat(item.exportPrice);
+
+                importPrice += item.importPrice;
+                exportPrice += item.exportPrice;
+
+                item.purchasePrice = fmoney(item.purchasePrice,2);
+                item.importPrice = fmoney(item.importPrice,2);
+                item.exportPrice = fmoney(item.exportPrice,2);
+            });
             if (data.length <= 0) {//map {"size",value}
                 $.messager.alert('系统提示', '数据库暂无数据', 'info');
                 $("#importDetail").datagrid('loadData', []);
@@ -214,10 +255,28 @@ $(function () {
             }else{
                 detailsData=data;
                 $("#importDetail").datagrid('loadData',data);
+                $('#importDetail').datagrid('appendRow',{
+                    ourName: '',
+                    purchasePrice: '合计：',
+                    importPrice: fmoney(importPrice,2),
+                    exportPrice: fmoney(exportPrice,2)
+                });
             }
            },'json');
         promise.done(function(){
-             $("#importDetail").datagrid('loadData',data);
+             $("#importDetail").datagrid('loadData', detailsData);
         })
      }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })

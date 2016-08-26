@@ -118,7 +118,7 @@ $(function () {
             title: '产品名称',
             field: 'expName',
             align: 'center',
-            width: '10%'
+            width: '15%'
         }, {
             title: '规格',
             field: 'packageSpec',
