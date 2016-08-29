@@ -482,8 +482,8 @@ $.base64.utf8encode = true;
 
 $.ajaxSetup({
     beforeSend: function (xhr) {
-        console.log(config) ;
-        console.log(xhr);
+        //console.log(config) ;
+        //console.log(xhr);
         xhr.setRequestHeader("aaa",'bbb')
     }
 });
@@ -549,7 +549,7 @@ Queue.prototype = {
                     thread.idle(function () {
                         if (self.taskList.length > 0) {
                             try {
-                                console.log('Thread-' + (id + 1) + ' accept the task!')
+                                //console.log('Thread-' + (id + 1) + ' accept the task!')
                             } catch (e) {
                             }
 
