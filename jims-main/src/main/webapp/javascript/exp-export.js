@@ -1037,7 +1037,6 @@ $(function () {
         }
         if (dataValid()) {
             var importVo = getCommitData();
-            console.log(importVo);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
                 if (data.errorMessage) {
                     $.messager.alert("系统提示", data.errorMessage, 'error');
