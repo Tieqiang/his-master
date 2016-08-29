@@ -15,7 +15,12 @@
     <SCRIPT type="text/javascript">
         $(function () {
             var MANY_ZEROS = "000000000000000000";
-
+            document.getElementById('userName').focus();
+            $('#userName').on('keydown',function(e){
+                if(e.keyCode == 13){
+                    document.getElementById('password').focus();
+                }
+            });
             function leftZeroPad(val, minLength) {
                 if (typeof(val) != "string")
                     val = String(val);
