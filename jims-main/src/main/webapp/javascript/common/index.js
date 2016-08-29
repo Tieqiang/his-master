@@ -73,8 +73,7 @@ window.addTab = function (title, href) {
             window.open(href);
         } else if(href.indexOf("LOCAL")>0){
             $.post(href, {}, function (data,status) {
-                console.log(data);
-                console.log(status)
+                
             })
         }else {
             $("#mainContent").tabs('add', {
@@ -312,7 +311,6 @@ $(function () {
         });
         //判断是否有本地应用
         var localProgramPromise = $.get("/api/login/list-app?loginId=" + config.loginId + "&date=" + new Date(), function (data) {
-            console.log(data);
             var localProgram = {
                 text: '我的应用',
                 state: 'open',
