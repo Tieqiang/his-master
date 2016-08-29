@@ -68,7 +68,6 @@ $(function(){
                             onLoadSuccess: function () {
                                 var data = $(this).combobox('getData');
                                 if (data.length > 0) {
-                                    console.info(data[0]);
                                     $(this).combobox('select', data[0].id);
                                     $("#stockDiv").show();
                                 } else {
