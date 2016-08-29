@@ -466,7 +466,6 @@ $(function () {
             dataType: "JSON",
             cache: false,
             success: function (data) {
-                console.info(data);
                 for (var i = 0; i < data.length; i++) {
                     $("#exportClass").append("<option value=" + data[i].direction + ">" + data[i].exportClass + "</option>");
                 }
