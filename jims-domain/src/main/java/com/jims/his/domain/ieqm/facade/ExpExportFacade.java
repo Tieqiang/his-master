@@ -79,7 +79,9 @@ public class ExpExportFacade extends BaseFacade {
         List<ExpExportDetialVo> nativeQuery = createNativeQuery(sql, new ArrayList<Object>(), ExpExportDetialVo.class);
         if(nativeQuery!=null&&!nativeQuery.isEmpty()){
             for(ExpExportDetialVo e:nativeQuery){
-                e.setAmount(e.getRetailPrice()*e.getQuantity());
+                if(null != e.getRetailPrice() && null != e.getQuantity()){
+                    e.setAmount(e.getRetailPrice() * e.getQuantity());
+                }
             }
         }
         return nativeQuery;

@@ -839,7 +839,7 @@ $(function () {
             rowDetail.subPackageUnits2 = row.subPackageUnits2;
             rowDetail.subPackageSpec2 = row.subPackageSpec2;
             rowDetail.importDocumentNo = row.documentNo;
-            //rowDetail.retailPrice = row.retailPrice;
+            rowDetail.retailPrice = row.retailPrice;
             rowDetail.tradePrice = row.tradePrice;
             $("#exportDetail").datagrid('refreshRow', editIndex);
             $("#stockRecordDialog").dialog('close');
@@ -1037,6 +1037,7 @@ $(function () {
         }
         if (dataValid()) {
             var importVo = getCommitData();
+            console.log(importVo);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
                 if (data.errorMessage) {
                     $.messager.alert("系统提示", data.errorMessage, 'error');
