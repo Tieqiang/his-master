@@ -465,8 +465,40 @@ public class ExpImportDetailFacade extends BaseFacade {
         if (null != packageSpec && !packageSpec.trim().equals("")) {
             sql += "      AND PACKAGE_SPEC = '" + packageSpec + "'\n";
         }
-        List<ExpImportDetailVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
-        return nativeQuery;
+
+
+        List<ExpImportDetailVo> list = super.createNativeQuery(sql, new ArrayList<Object>(), ExpImportDetailVo.class);
+        List<PropertyVo> propertyVos = new ArrayList<PropertyVo>();
+        for (ExpImportDetailVo e : list) {
+            PropertyVo p = new PropertyVo(e.getExpCode(), e.getPackageSpec(), e.getFirmId());
+            if (!propertyVos.contains(p)) {
+                propertyVos.add(p);
+            }
+        }
+        List<ExpImportDetailVo> l = new ArrayList<ExpImportDetailVo>();
+        for (int i = 0; i < propertyVos.size(); i++) {
+            List<ExpImportDetailVo> list1 = new ArrayList<ExpImportDetailVo>();
+            list1 = findData(list, propertyVos.get(i));
+            ExpImportDetailVo e = new ExpImportDetailVo();
+            e.setIoClass("单品总合计");
+            double importPrice = 0.00;
+            double exportPrice = 0.00;
+            for (ExpImportDetailVo v : list1) {
+                importPrice += v.getImportPrice();
+                exportPrice += v.getExportPrice();
+            }
+            java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
+            importPrice = Double.valueOf(df.format(importPrice));
+            exportPrice = Double.valueOf(df.format(exportPrice));
+            e.setImportPrice(importPrice);
+            e.setExportPrice(exportPrice);
+            list1.add(e);
+            for (ExpImportDetailVo v1 : list1) {
+                l.add(v1);
+            }
+            list1.clear();
+        }
+        return l;
     }
 
 
