@@ -781,8 +781,10 @@ public class ExpStockFacade extends BaseFacade {
         expExportMaster.setAcctdate(new Date());
         merge(expExportMaster);
         List<ExpExportDetail> details = exportVo.getExpExportDetailBeanChangeVo().getInserted();
-        for (ExpExportDetail detail : details) {
-             merge(detail);
+        for (int i = 1; i <= details.size(); i++) {
+            Integer itemNo= details.get(i-1).getItemNo();
+            details.get(i-1).setItemNo(itemNo==null?i: itemNo+i);
+            merge(details.get(i-1));
         }
     }
 
