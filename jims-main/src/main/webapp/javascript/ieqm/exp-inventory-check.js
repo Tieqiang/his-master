@@ -410,9 +410,18 @@ $(function () {
         }
     });
 
-    $('#check').change(function(){
+    /*$('#check').change(function(){
         if ($('#check').prop('checked')) {
             $.messager.alert('系统提示', '账面数为0的数据请在零库存管理页面维护', 'info');
+        }
+    });*/
+
+    $('#check').tooltip({
+        position: 'right',
+        content: '<span style="color:	#FF3030">账面数为0的数据请在零库存管理页面维护</span>',
+        hideDelay:1000,
+        onShow: function () {
+            $(this).tooltip('tip').css({backgroundColor: '#00ffcc', borderColor: '#FFEFD5'});
         }
     });
 
