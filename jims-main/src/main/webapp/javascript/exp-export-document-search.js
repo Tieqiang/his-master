@@ -326,8 +326,8 @@ $(function () {
         masterDataVo.classRadio = $("#detailForm input[name='radioOne']:checked").val();
         masterDataVo.billRadio = $("#detailForm input[name='radioTwo']:checked").val();
         if ($("#dateTime:checked").val()) {
-            masterDataVo.startDate = $("#startDate").datetimebox('getText');;
-            masterDataVo.stopDate = $("#stopDate").datetimebox('getText');;
+            masterDataVo.startDate = $("#startDate").datetimebox('getText');
+            masterDataVo.stopDate = $("#stopDate").datetimebox('getText');
         } else {
             $("#startDate").datebox("clear");
             $("#stopDate").datebox("clear");
@@ -456,7 +456,8 @@ $(function () {
         onOpen: function () {
             var printData = $("#exportMaster").datagrid('getSelections');
             var  printDocumentNo=printData[0].documentNo;
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo + '&hospitalId=' + parent.config.hospitalId;
+            var row = $('#exportMaster').datagrid('getSelected');
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo + '&hospitalId=' + parent.config.hospitalId + '&storageCode=' + parent.config.storageCode + '&exportClass=' + row.exportClass;
             $("#report").prop("src",cjkEncode(https));
         }
     })
