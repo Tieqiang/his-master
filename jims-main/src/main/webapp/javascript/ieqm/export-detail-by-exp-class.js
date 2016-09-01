@@ -174,6 +174,7 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
+            expClasss = $('#expClass').combobox('getValue');
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/export-detail-by-exp-class.cpt"+"&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expClass=" + expClasss;
 
             $("#report").prop("src",cjkEncode(https));
