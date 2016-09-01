@@ -689,7 +689,8 @@ $(function () {
         buttons: '#printft',
         closed: true,
         onOpen: function () {
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-inventory-check.cpt&checkYearMonth="+printDate;
+            var subStorage = $('#subStorage').combobox('getValue');
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-inventory-check.cpt&checkYearMonth="+printDate + "&hospitalId=" + parent.config.hospitalId + "&storage=" + parent.config.storageCode + "&subStorage=" + subStorage;
             $("#report").prop("src",cjkEncode(https));
         }
     })
