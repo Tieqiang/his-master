@@ -484,7 +484,7 @@ $(function () {
         onOpen: function () {
             var printData = $("#importMaster").datagrid('getSelections');
             var  printDocumentNo=printData[0].documentNo;
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import.cpt&documentNo=" + printDocumentNo;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import.cpt&documentNo=" + printDocumentNo + "&hospitalId=" + parent.config.hospitalId;
             $("#report").prop("src",cjkEncode(https));
         }
 
