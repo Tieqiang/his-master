@@ -631,14 +631,12 @@ $(function () {
         expDictChangeVo.inserted = insertData;
         expDictChangeVo.updated = updateData;
         expDictChangeVo.deleted = deleteData;
-        console.log(expDictChangeVo.inserted.length);
         if (expDictChangeVo.inserted.length == 0) {
             if (expDictChangeVo.updated.length == 0) {
                 $.messager.alert('系统提示', '请维护完整价格信息!', 'info');
                 return;
             }
         }
-        console.log(expDictChangeVo);
         if (expDictChangeVo) {
             $.postJSON("/api/exp-price-list/checkIsExist", expDictChangeVo, function (data) {
                 var reval = data.success;
@@ -660,10 +658,10 @@ $(function () {
                         $.messager.alert('提示', "保存失败", "error");
                     })
                 } else {
-                    $.messager.alert("系统提示", "此产品价格信息已经存在,如果需要调整价格，请进行调价操作！", "error");
+                    $.messager.alert("系统提示", "此产品价格信息已经存在,如果需要调整价格，请在调价记录维护页面进行调价操作！", "error");
                 }
             }, function (data) {
-                $.messager.alert("系统提示", "此产品价格信息已经存在,如果需要调整价格，请进行调价操作！", "error");
+                $.messager.alert("系统提示", "此产品价格信息已经存在,如果需要调整价格，请在调价记录维护页面进行调价操作！", "error");
             })
         }
     });

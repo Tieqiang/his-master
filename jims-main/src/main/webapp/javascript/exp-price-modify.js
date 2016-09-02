@@ -303,7 +303,7 @@ $(function () {
             field: 'firmId',
             width: "7%"
         }, {
-            title: '市场价',
+            title: '批发价',
             field: 'tradePrice',
             width: "5%"
         }, {
