@@ -142,15 +142,18 @@ $(function () {
         }, {
             title: '入库单号',
             field: 'documentNo',
+            align: 'center',
             width: '10%'
         }, {
             title: '入库日期',
             field: 'importDate',
+            align: 'center',
             width: '10%',
             formatter: formatterDate
         }, {
             title: '供货商',
             field: 'supplier',
+            align: 'center',
             width: '10%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
@@ -163,30 +166,37 @@ $(function () {
         }, {
             title: "应付金额",
             width: '10%',
+            align: 'right',
             field: 'accountReceivable'
         }, {
             title: '已付金额',
             field: 'accountPayed',
+            align: 'right',
             width: '10%'
         }, {
             title: '附加费用',
             field: 'additionalFee',
+            align: 'right',
             width: '10%'
         }, {
             title: '入库类别',
             width: '10%',
+            align: 'center',
             field: 'importClass'
         }, {
             title: '记账',
             width: '10%',
+            align: 'center',
             field: 'accountIndicator'
         }, {
             title: '操作员',
             width: '10%',
+            align: 'center',
             field: 'operator'
         }, {
             title: '作废',
             width: '10%',
+            align: 'center',
             field: 'docStatus'
         }]],
         onClickRow: function(index,row){
@@ -328,6 +338,11 @@ $(function () {
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-import/exp-import-document-search",masterDataVo,function(data){
+            $.each(data,function(index,item){
+                item.accountReceivable = fmoney(item.accountReceivable,2);
+                item.accountPayed = fmoney(item.accountPayed,2);
+                item.additionalFee = fmoney(item.additionalFee,2);
+            });
             for(var i = 0 ;i<data.length;i++){
                 if(data[i].accountIndicator=='1'){
                     data[i].accountIndicator='已记账';
@@ -372,60 +387,78 @@ $(function () {
         method: 'GET',
         columns: [[ {
             title: '产品名称',
-            field: 'expName'
+            field: 'expName',
+            align: 'center'
         }, {
             title: '数量',
-            field: 'quantity'
+            field: 'quantity',
+            align: 'center'
         }, {
             title: '应付款',
-            field: 'accountReceivable'
+            field: 'accountReceivable',
+            align: 'center'
         }, {
             title: '规格',
-            field: 'expSpec'
+            field: 'expSpec',
+            align: 'center'
         }, {
             title: '批号',
-            field: 'batchNo'
+            field: 'batchNo',
+            align: 'center'
         }, {
             title: '单位',
-            field: 'units'
+            field: 'units',
+            align: 'center'
         }, {
             title: '有效期',
             field: 'expireDate',
+            align: 'center',
             formatter:formatterDate
         }, {
             title: '厂家',
-            field: 'firmId'
+            field: 'firmId',
+            align: 'center'
         }, {
             title: '批发价',
-            field: 'purchasePrice'
+            field: 'purchasePrice',
+            align: 'center'
         }, {
             title: '零售价',
-            field: 'retailPrice'
+            field: 'retailPrice',
+            align: 'center'
         }, {
             title: '进价',
-            field: 'purchasePrice'
+            field: 'purchasePrice',
+            align: 'center'
         }, {
             title: '折扣',
-            field: 'discount'
+            field: 'discount',
+            align: 'center'
         }, {
             title: '发票号',
-            field: 'invoiceNo'
+            field: 'invoiceNo',
+            align: 'center'
         }, {
             title: '发票日期',
             field: 'invoiceDate',
+            align: 'center',
             formatter:formatterDate
         }, {
             title: '结存',
-            field: 'inventory'
+            field: 'inventory',
+            align: 'center'
         }, {
             title: '许可证号',
-            field: 'licenceno'
+            field: 'licenceno',
+            align: 'center'
         }, {
             title: '注册证号',
-            field: 'registno'
+            field: 'registno',
+            align: 'center'
         }, {
             title: '备注',
-            field: 'memo'
+            field: 'memo',
+            align: 'center'
         }]],
         onLoadSuccess:function(data){
             flag = flag+1;
@@ -486,6 +519,17 @@ $(function () {
      */
     $("#printClose").on("click",function(){
         $("#printDiv").dialog('close');
-
     })
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })

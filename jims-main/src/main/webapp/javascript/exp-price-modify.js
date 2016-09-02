@@ -136,14 +136,20 @@ $(function () {
 
     var setDefaultDate = function () {
         var date = new Date();
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        var d = date.getDate();
-        var h = date.getHours();
-        var mm = date.getMinutes();
-        var s = date.getSeconds();
-        var time = (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-        return m + '/' + d + '/' + y + " " + time;
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+        return currentdate;
     }
 
 
@@ -486,6 +492,7 @@ $(function () {
             title: '通知生效日期',
             field: 'noticeEfficientDate',
             width: "15%",
+            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {

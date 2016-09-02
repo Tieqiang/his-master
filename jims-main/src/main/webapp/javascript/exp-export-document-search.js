@@ -170,16 +170,19 @@ $(function () {
         }, {
             title: '出库单号',
             field: 'documentNo',
+            align: 'center',
             width: '9%',
             editor: {type: 'textbox'}
         }, {
             title: '出库日期',
             field: 'exportDate',
+            align: 'center',
             width: '11%',
             formatter: formatterDate
         }, {
             title: '收货方',
             field: 'receiver',
+            align: 'center',
             width: '15%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
@@ -192,33 +195,40 @@ $(function () {
         }, {
             title: "应付金额",
             width: '9%',
+            align: 'right',
             field: 'accountReceivable'
         }, {
             title: '已付金额',
             field: 'accountPayed',
+            align: 'right',
             width: '9%',
             editor: {type: 'textbox'}
         }, {
             title: '附加费用',
             field: 'additionalFee',
+            align: 'right',
             width: '9%',
             editor: {type: 'numberbox'}
         }, {
             title: '出库类别',
             width: '9%',
+            align: 'center',
             field: 'exportClass'
 
         }, {
             title: '记账',
             width: '9%',
+            align: 'center',
             field: 'accountIndicator'
         }, {
             title: '操作员',
             width: '9%',
+            align: 'center',
             field: 'operator'
         }, {
             title: '作废',
             width: '9%',
+            align: 'center',
             field: 'docStatus'
         }]],
         onClickRow: function (index, row) {
@@ -243,6 +253,10 @@ $(function () {
     //查看明细
     $('#lookDetail').on('click',function(){
         var row = $("#exportMaster").datagrid('getSelected');
+        if(null == row || row == {} || typeof(row) == 'undefined'){
+            $.messager.alert('系统提示','请选择一条记录查看明细!','info');
+            return ;
+        }
         currentDocumentNo = row.documentNo;
         $("#retailDialog").dialog('open');
     });
@@ -341,6 +355,11 @@ $(function () {
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
         var promise = $.get("/api/exp-export/exp-export-document-search", masterDataVo, function (data) {
+            $.each(data,function(index,item){
+                item.accountReceivable = fmoney(item.accountReceivable,2);  //应付金额
+                item.accountPayed = fmoney(item.accountPayed,2);        //已付金额
+                item.additionalFee = fmoney(item.additionalFee,2);      //附加费用
+            });
             for(var i = 0 ;i<data.length;i++){
                 if(data[i].accountIndicator=='1'){
                     data[i].accountIndicator='已记账';
@@ -386,51 +405,63 @@ $(function () {
         columns: [[{
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: '11%'
         }, {
             title: '数量',
             field: 'quantity',
+            align: 'center',
             width: '7%'
         }, {
             title: '规格',
             field: 'expSpec',
+            align: 'center',
             width: '11%'
         }, {
             title: '批号',
             field: 'batchNo',
+            align: 'center',
             width: '11%'
         }, {
             title: '单位',
             field: 'units',
+            align: 'center',
             width: '7%'
         }, {
             title: '有效期',
             field: 'expireDate',
+            align: 'center',
             width:'11%',
             formatter: formatterDate
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: '11%'
         }, {
             title: '批发价',
             field: 'tradePrice',
+            align: 'center',
             width: '7%'
         }, {
             title: '零售价',
             field: 'retailPrice',
+            align: 'center',
             width: '7%'
         }, {
             title: '进价',
             field: 'purchasePrice',
+            align: 'center',
             width: '7%'
         }, {
             title: '结存',
             field: 'inventory',
+            align: 'center',
             width: '7%'
         }, {
             title: '零价合计',
             field: 'zeroAccount',
+            align: 'center',
             width: '7%'
         }]],
         onLoadSuccess:function(data){
@@ -469,6 +500,17 @@ $(function () {
             return;
         }
         $("#printDiv").dialog('open');
-
     })
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })
