@@ -202,10 +202,10 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByExportClass(String storage, String hospitalId, String expClass, String startDate, String endDate) {
-        String sql = "SELECT distinct RECEIVER," +
+        String sql = "SELECT RECEIVER," +
                 "          count(exp_export_detail.document_no) import_no,  \n" +
                 "          count(distinct exp_export_detail.exp_code) import_code,  \n" +
-                "          sum(quantity*purchase_price) import_amount  \t\t  \n" +
+                "          sum(quantity*RETAIL_PRICE) import_amount  \t\t  \n" +
                 "FROM exp_export_detail,exp_export_master  \t\t\n" +
                 "WHERE exp_export_detail.document_no = exp_export_master.document_no \t\n";
         if (null != storage && !storage.trim().equals("")) {
@@ -285,7 +285,7 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByTo(String storage, String hospitalId, String receiver, String startDate, String endDate) {
-        String sql = "SELECT distinct EXP_EXPORT_MASTER.SUB_STORAGE , \n" +
+        String sql = "SELECT EXP_EXPORT_MASTER.SUB_STORAGE , \n" +
                 "         EXP_EXPORT_DETAIL.EXP_CODE,   \n" +
                 "         EXP_DICT.EXP_NAME,   \n" +
                 "         EXP_EXPORT_DETAIL.PACKAGE_SPEC,   \n" +
@@ -293,15 +293,16 @@ public class ExpExportFacade extends BaseFacade {
                 "         EXP_EXPORT_DETAIL.FIRM_ID, \n" +
                 "         EXP_EXPORT_MASTER.RECEIVER,\n"+
                 "         sum(EXP_EXPORT_DETAIL.QUANTITY) quantity,   \n" +
-                "         sum(EXP_EXPORT_DETAIL.PURCHASE_PRICE * EXP_EXPORT_DETAIL.QUANTITY) amount    \n" +
+                "         sum(EXP_EXPORT_DETAIL.RETAIL_PRICE * EXP_EXPORT_DETAIL.QUANTITY) amount    \n" +
                 "    FROM EXP_EXPORT_DETAIL,   \n" +
                 "         EXP_DICT,   \n" +
                 "         EXP_EXPORT_MASTER  \n" +
                 "   WHERE EXP_EXPORT_MASTER.DOCUMENT_NO = EXP_EXPORT_DETAIL.DOCUMENT_NO AND\n" +
-                "         EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE(+) AND \n" +
-                "         EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC(+) and\n" +
+                "         EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE AND \n" +
+                "         EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC and\n" +
                 "         ('B' = 'L' and exp_sgtp in ('2','3') or\n" +
-                "         'B' = 'B' and exp_sgtp in ('1','3'))\n";
+                "         'B' = 'B' and exp_sgtp in ('1','3'))\n" +
+                " and EXP_DICT.EXP_INDICATOR = '1'";
         if (null != storage && !storage.trim().equals("")) {
             sql += " AND EXP_EXPORT_MASTER.STORAGE = '" + storage + "' \t\n";
         }
