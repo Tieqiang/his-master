@@ -473,7 +473,7 @@ public class ExpExportFacade extends BaseFacade {
                 "       EXP_EXPORT_MASTER.STORAGE = '"+storage+"' AND \n" +
                 "       EXP_EXPORT_MASTER.hospital_id = '"+hospitalId+"' AND \n" +
                 "       EXP_EXPORT_MASTER.ACCOUNT_INDICATOR = 1 AND  \n" +
-                " exp_dict.exp_indicator = 1 and" +
+                "       EXP_DICT.EXP_INDICATOR = 1  AND" +
                 "       EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO AND \n" +
                 "       EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE and\n" +
                 "       EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC and  \n" +
@@ -516,8 +516,9 @@ public class ExpExportFacade extends BaseFacade {
                 "         EXP_DICT,   \n" +
                 "         EXP_EXPORT_MASTER  \n" +
                 "   WHERE EXP_EXPORT_MASTER.DOCUMENT_NO = EXP_EXPORT_DETAIL.DOCUMENT_NO AND \n" +
-                "\t\t\tEXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE(+) AND \n" +
-                "\t\t\tEXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC(+)  and\n" +
+                "\t\t\tEXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE AND \n" +
+                "\t\t\tEXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC  and\n" +
+                "  EXP_DICT.EXP_INDICATOR = 1  AND" +
                 "         EXP_EXPORT_MASTER.STORAGE = '"+storage+"' AND \n" +
                 "         EXP_EXPORT_MASTER.hospital_id = '"+hospitalId+"' AND \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE >= TO_DATE('"+s1+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
