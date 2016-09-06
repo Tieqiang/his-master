@@ -1289,6 +1289,9 @@ $(function () {
             detail.expSpec = rows[i].expSpec;
             detail.units = rows[i].units;
             detail.batchNo = rows[i].batchNo;
+            if(!detail.batchNo||detail.batchNo==undefined||detail.batchNo==""){
+                detail.batchNo = 'X' ;
+            }
             detail.expireDate = new Date(rows[i].expireDate);
             detail.firmId = rows[i].firmId;
             detail.expForm = rows[i].expForm;
@@ -1376,6 +1379,9 @@ $(function () {
             detail.packageUnits = rows[i].packageUnits;
             detail.quantity = rows[i].quantity;
             detail.batchNo = rows[i].batchNo;
+            if(!detail.batchNo||detail.batchNo==undefined||detail.batchNo==""){
+                detail.batchNo = 'X' ;
+            }
             detail.purchasePrice = rows[i].purchasePrice;
 
             detail.expireDate = new Date(rows[i].expireDate);
