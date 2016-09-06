@@ -239,7 +239,7 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByStorage(String storage, String hospitalId, String subStorage, String startDate, String endDate) {
-        String sql = "SELECT  distinct sum(EXP_EXPORT_DETAIL.PURCHASE_PRICE*EXP_EXPORT_DETAIL.QUANTITY) import_amount,           \n" +
+        String sql = "SELECT  sum(EXP_EXPORT_DETAIL.RETAIL_PRICE*EXP_EXPORT_DETAIL.QUANTITY) import_amount,           \n" +
                 "  EXP_EXPORT_MASTER.RECEIVER ,           \n" +
                 "  EXP_EXPORT_DETAIL.EXP_FORM     \n" +
                 "  FROM EXP_EXPORT_DETAIL,EXP_EXPORT_MASTER     \n" +
@@ -347,7 +347,7 @@ public class ExpExportFacade extends BaseFacade {
                 "package_units,\n" +
                 "firm_id,\n" +
                 "sum(quantity) quantity,\n" +
-                "sum(purchase_price*quantity) amount ,\n" +
+                "sum(RETAIL_PRICE*quantity) amount ,\n" +
                 "exp_export_detail.exp_code \n" +
                 "FROM exp_export_detail,exp_export_master \n" +
                 "WHERE exp_export_detail.document_no = exp_export_master.document_no \n" +
