@@ -81,6 +81,37 @@ $(function () {
         }
 
     }
+
+    function formatterDate2(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 00;
+            var mm = 00;
+            var s = 00;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
+    function formatterDate3(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 23;
+            var mm = 59;
+            var s = 59;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -157,13 +188,13 @@ $(function () {
     });
     //设置时间
     var curr_time = new Date();
-    $("#startDate").datetimebox("setValue", myFormatter2(curr_time));
-    $("#stopDate").datetimebox("setValue", myFormatter2(curr_time));
+    $("#startDate").datetimebox("setValue", formatterDate2(curr_time));
+    $("#stopDate").datetimebox("setValue", formatterDate3(curr_time));
     $('#startDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -179,7 +210,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -256,8 +287,8 @@ $(function () {
 
 
     var loadDict = function(){
-        importDetailDataVO.stopDate = new Date($("#stopDate").datebox("getText"));
-        importDetailDataVO.startDate = new Date($("#startDate").datebox("getText"));
+        importDetailDataVO.stopDate = new Date($("#stopDate").datetimebox("getText"));
+        importDetailDataVO.startDate = new Date($("#startDate").datetimebox("getText"));
         importDetailDataVO.supplier = $("#supplier").combogrid("getValue");
         importDetailDataVO.hospitalId = parent.config.hospitalId;
         importDetailDataVO.storage = parent.config.storageCode;
