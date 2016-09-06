@@ -1070,7 +1070,8 @@ $(function () {
         buttons: '#printft',
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue');
-            var https = "http://" + parent.config.reportDict.ip + ":" + parent.config.reportDict.port + "/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo;
+            var exportClass = getSelectedText("exportClass");
+            var https = "http://" + parent.config.reportDict.ip + ":" + parent.config.reportDict.port + "/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo + '&hospitalId=' + parent.config.hospitalId + '&storageCode=' + parent.config.storageCode + '&exportClass=' + exportClass;
             $("#report").prop("src", cjkEncode(https));
             //$("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
         }

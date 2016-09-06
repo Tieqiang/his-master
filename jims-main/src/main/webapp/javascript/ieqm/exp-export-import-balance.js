@@ -1466,7 +1466,7 @@ $(function () {
         onOpen: function () {
             var importDocumentNo = $("#documentNoIn").textbox('getValue');
             var exportDocumentNo = $("#documentNo").textbox('getValue');
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-import-balance.cpt&importDocumentNo=" + importDocumentNo + "&documentNo=" + exportDocumentNo;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-export-import-balance.cpt&importDocumentNo=" + importDocumentNo + "&documentNo=" + exportDocumentNo + "&hospitalId=" + parent.config.hospitalId;
             $("#report").prop("src",cjkEncode(https));
             //$("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export-import-balance.cpt&__bypagesize__=false&importDocumentNo="+importDocumentNo+"&exportDocumentNo="+exportDocumentNo);
         }
