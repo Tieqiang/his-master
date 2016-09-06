@@ -253,7 +253,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            var stopDate = getNowFormatDate();
+            var stopDate = $("#endDate").datetimebox('getText');
+            console.log(receivers);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/"+"export-by-receiver.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&receiver=" + receivers + "&stopDate=" + stopDate;
             $("#report").prop("src", cjkEncode(https));
         }
