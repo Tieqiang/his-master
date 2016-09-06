@@ -90,6 +90,36 @@ function myFormatter(val,row) {
         return str;
     }
 }
+
+function formatterDate2(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = 00;
+        var mm = 00;
+        var s = 00;
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+}
+function formatterDate3(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = 23;
+        var mm = 59;
+        var s = 59;
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+}
+
 function w3(s) {
     if (!s) return new Date();
     var y = s.substring(0, 4);
@@ -111,7 +141,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -126,7 +156,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -313,8 +343,8 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            startDates=myFormatter2(startDates);
-            stopDates=myFormatter2(stopDates);
+            startDates= $("#startDate").datetimebox("getText");
+            stopDates= $("#stopDate").datetimebox("getText");
             if(expForms=='全部'){
                 expForms='';
             }
@@ -335,8 +365,8 @@ $(function () {
     var loadDict = function(){
         masterDataVo.formClass = $("#formClass").combobox("getText");
         masterDataVo.deptAttr = $("#exportDeptAttr").textbox("getValue");
-        masterDataVo.startDate = new Date($("#startDate").datebox("getText"));
-        masterDataVo.stopDate = new Date($("#stopDate").datebox("getText"));
+        masterDataVo.startDate = new Date($("#startDate").datetimebox("getText"));
+        masterDataVo.stopDate = new Date($("#stopDate").datetimebox("getText"));
         masterDataVo.expCode = $("#searchInput").combogrid("getValue");
         masterDataVo.hospitalId = parent.config.hospitalId;
         masterDataVo.storage = parent.config.storageCode;
