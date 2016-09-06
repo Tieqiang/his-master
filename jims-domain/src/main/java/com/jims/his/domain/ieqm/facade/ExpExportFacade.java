@@ -474,8 +474,8 @@ public class ExpExportFacade extends BaseFacade {
                 "       EXP_EXPORT_MASTER.hospital_id = '"+hospitalId+"' AND \n" +
                 "       EXP_EXPORT_MASTER.ACCOUNT_INDICATOR = 1 AND  \n" +
                 "       EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO AND \n" +
-                "       EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE(+) and\n" +
-                "       EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC(+) and  \n" +
+                "       EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE and\n" +
+                "       EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC and  \n" +
 //                "       ('B' = 'L' and exp_sgtp in ('2','3') or\n" +
 //                "        'B' = 'B' and exp_sgtp in ('1','3')) and\n" +
 //                "      EXP_EXPORT_MASTER.SUB_STORAGE like '"+subStorage+"' AND\t\t \n" +
