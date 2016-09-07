@@ -301,8 +301,7 @@ public class ExpExportFacade extends BaseFacade {
                 "         EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE AND \n" +
                 "         EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC and\n" +
                 "         ('B' = 'L' and exp_sgtp in ('2','3') or\n" +
-                "         'B' = 'B' and exp_sgtp in ('1','3'))\n" +
-                " and EXP_DICT.EXP_INDICATOR = '1'";
+                "         'B' = 'B' and exp_sgtp in ('1','3'))";
         if (null != storage && !storage.trim().equals("")) {
             sql += " AND EXP_EXPORT_MASTER.STORAGE = '" + storage + "' \t\n";
         }
@@ -350,8 +349,7 @@ public class ExpExportFacade extends BaseFacade {
                 "sum(RETAIL_PRICE*quantity) amount ,\n" +
                 "exp_export_detail.exp_code \n" +
                 "FROM exp_export_detail,exp_export_master \n" +
-                "WHERE exp_export_detail.document_no = exp_export_master.document_no \n" +
-                "AND account_indicator = 1 \n";
+                "WHERE exp_export_detail.document_no = exp_export_master.document_no ";
         if (null != storage && !storage.trim().equals("")) {
             sql += " AND EXP_EXPORT_MASTER.STORAGE = '" + storage + "' \t\n";
         }
@@ -473,7 +471,6 @@ public class ExpExportFacade extends BaseFacade {
                 "       EXP_EXPORT_MASTER.STORAGE = '"+storage+"' AND \n" +
                 "       EXP_EXPORT_MASTER.hospital_id = '"+hospitalId+"' AND \n" +
                 "       EXP_EXPORT_MASTER.ACCOUNT_INDICATOR = 1 AND  \n" +
-                "       EXP_DICT.EXP_INDICATOR = 1  AND" +
                 "       EXP_EXPORT_DETAIL.DOCUMENT_NO = EXP_EXPORT_MASTER.DOCUMENT_NO AND \n" +
                 "       EXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE and\n" +
                 "       EXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC and  \n" +
@@ -518,7 +515,6 @@ public class ExpExportFacade extends BaseFacade {
                 "   WHERE EXP_EXPORT_MASTER.DOCUMENT_NO = EXP_EXPORT_DETAIL.DOCUMENT_NO AND \n" +
                 "\t\t\tEXP_EXPORT_DETAIL.EXP_CODE = EXP_DICT.EXP_CODE AND \n" +
                 "\t\t\tEXP_EXPORT_DETAIL.EXP_SPEC = EXP_DICT.EXP_SPEC  and\n" +
-                "  EXP_DICT.EXP_INDICATOR = 1  AND" +
                 "         EXP_EXPORT_MASTER.STORAGE = '"+storage+"' AND \n" +
                 "         EXP_EXPORT_MASTER.hospital_id = '"+hospitalId+"' AND \n" +
                 "         ( EXP_EXPORT_MASTER.EXPORT_DATE >= TO_DATE('"+s1+"','yyyy-MM-dd HH24:MI:SS') ) AND  \n" +
