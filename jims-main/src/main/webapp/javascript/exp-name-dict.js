@@ -378,6 +378,23 @@ $(function () {
             $("#expNameDict").datagrid('endEdit', editIndex);
             $("#expDict").datagrid('endEdit', editIndex);
         }
+
+        var expDictRows =$("#expDict").datagrid('getRows');
+
+        for(var i = 0 ;i<expDictRows.length;i++){
+
+            for(var j=0 ;j<expDictRows.length;j++){
+                if(j==i){
+                    continue ;
+                }else{
+                    if(expDictRows[i].expSpec==expDictRows[j].expSpec){
+                        $.messager.alert("系统提示","存在相同规格小的数据，请处理后在保存");
+                        return ;
+                    }
+                }
+            }
+        }
+
         var insertNameData = $("#expNameDict").datagrid("getChanges", "inserted");
         var updateNameData = $("#expNameDict").datagrid('getChanges', "updated");
         var deleteNameData = $("#expNameDict").datagrid('getChanges', "deleted");

@@ -967,6 +967,13 @@ $(function () {
                 $.messager.alert("系统提示", "第" + i + "行入库数量为0 请重新填写", 'error');
                 return false;
             }
+
+            if(rows[i].expCode==null||(!rows[i].expCode) || rows[i].expSpec==null||(!rows[i].expSpec) ||rows[i].firmId==null||(
+                    !rows[i].firmId)){
+                console.log(rows[i])
+                $.messager.alert("系统提示", "第" + i + "行入库记录信息不完善 请重新填写", 'error');
+                return false;
+            }
         }
 
         if (rows.length == 0) {
@@ -986,6 +993,8 @@ $(function () {
             $.messager.alert("系统提示", "产品入库，入库时间不能为空", 'error');
             return false;
         }
+
+
         return true;
     }
 
@@ -1044,7 +1053,6 @@ $(function () {
             var expireDate = rows[i].expireDate ;
             detail.expireDate = new Date(expireDate);
 
-
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
@@ -1066,6 +1074,7 @@ $(function () {
         var importVo = {};
         importVo.expImportMasterBeanChangeVo = expImportMasterBeanChangeVo;
         importVo.expImportDetailBeanChangeVo = expImportDetailBeanChangeVo;
+        console.log(importVo);
         return importVo ;
     }
 

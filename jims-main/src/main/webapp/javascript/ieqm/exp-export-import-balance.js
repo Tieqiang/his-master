@@ -1241,8 +1241,12 @@ $(function () {
                 $.messager.alert("系统提示", "第" + i + "行数量为0 请重新填写", 'error');
                 return false;
             }
+            if(rows[i].expCode==null||(!rows[i].expCode) || rows[i].expSpec==null||(!rows[i].expSpec) ||rows[i].firmId==null||(
+                    !rows[i].firmId)){
+                $.messager.alert("系统提示", "第" + i + "行入库记录信息不完善 请重新填写", 'error');
+                return false;
+            }
         }
-
         return true;
     }
     //封装出库数据
