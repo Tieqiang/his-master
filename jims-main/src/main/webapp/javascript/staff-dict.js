@@ -166,7 +166,6 @@ $(function(){
                 }
             }
              staff.loginName=suffer+(staff.loginName.toUpperCase());
-            alert(staff.loginName);
              var pwd = staff.password = psdEdit($("#password").textbox('getValue')) ;
             var confirm_pwd= psdEdit($("#confirm_password").textbox('getValue'));
             staff.title= $("#title").textbox('getValue') ;

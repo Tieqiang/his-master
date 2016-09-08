@@ -88,6 +88,36 @@ $(function () {
         }
     }
 
+    function formatterDate2(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 00;
+            var mm = 00;
+            var s = 00;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
+    function formatterDate3(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 23;
+            var mm = 59;
+            var s = 59;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -106,7 +136,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -121,7 +151,7 @@ $(function () {
         value: 'dateTime',
         required: true,
         showSeconds: true,
-        formatter: formatterDate,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -136,14 +166,20 @@ $(function () {
 
     var setDefaultDate = function () {
         var date = new Date();
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        var d = date.getDate();
-        var h = date.getHours();
-        var mm = date.getMinutes();
-        var s = date.getSeconds();
-        var time = (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
-        return m + '/' + d + '/' + y + " " + time;
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+        return currentdate;
     }
 
 
@@ -209,6 +245,62 @@ $(function () {
             field: 'permitNo'
         }]],
         onClickRow: function (index, row) {
+            console.log(row);
+            var startDate = $('#startDate').datetimebox('getText');
+            var stopDate = $('#stopDate').datetimebox('getText');
+            $.get("/api/exp-price-modify/list?startDate=" + startDate + "&stopDate=" + stopDate, function (data) {
+                if (data.length > 0) {
+                    $.each(data,function(index,item){
+                        if(item.expCode == row.expCode && item.expName == row.expName && item.expSpec == row.expSpec
+                        && item.units == row.units && item.minSpec == row.minSpec && item.minUnits == row.minUnits
+                        && item.firmId == row.firmId){
+                            $.messager.alert('系统提示','已经存在相同名称规格的调价记录未确认,请先确认上次调价','info');
+                            $('#dg').datagrid('deleteRow',editIndex);
+                            var rows = $('#dg').datagrid("getRows");
+                            $('#dg').datagrid('appendRow', {});
+                            var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+                            editIndex = addRowIndex;
+                            $("#dg").datagrid('selectRow', editIndex);
+                            $("#dg").datagrid('beginEdit', editIndex);
+                            return ;
+                        }else{
+                            var rows = $('#dg').datagrid('getRows');
+                            $.each(rows, function (index, item) {
+                                if (item.expCode == row.expCode && item.expName == row.expName && item.expSpec == row.expSpec
+                                    && item.units == row.units && item.minSpec == row.minSpec && item.minUnits == row.minUnits
+                                    && item.firmId == row.firmId) {
+                                    $.messager.alert('系统提示', '已经存在相同名称规格的调价记录未确认,请先保存并确认上次调价', 'info');
+                                    $('#dg').datagrid('deleteRow', editIndex);
+                                    var rows = $('#dg').datagrid("getRows");
+                                    $('#dg').datagrid('appendRow', {});
+                                    var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+                                    editIndex = addRowIndex;
+                                    $("#dg").datagrid('selectRow', editIndex);
+                                    $("#dg").datagrid('beginEdit', editIndex);
+                                    return;
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    var rows = $('#dg').datagrid('getRows');
+                    $.each(rows,function(index,item){
+                        if (item.expCode == row.expCode && item.expName == row.expName && item.expSpec == row.expSpec
+                            && item.units == row.units && item.minSpec == row.minSpec && item.minUnits == row.minUnits
+                            && item.firmId == row.firmId) {
+                            $.messager.alert('系统提示', '已经存在相同名称规格的调价记录未确认,请先保存并确认上次调价', 'info');
+                            $('#dg').datagrid('deleteRow', editIndex);
+                            var rows = $('#dg').datagrid("getRows");
+                            $('#dg').datagrid('appendRow', {});
+                            var addRowIndex = $("#dg").datagrid('getRowIndex', rows[rows.length - 1]);
+                            editIndex = addRowIndex;
+                            $("#dg").datagrid('selectRow', editIndex);
+                            $("#dg").datagrid('beginEdit', editIndex);
+                            return;
+                        }
+                    });
+                }
+            });
             var expCodeEdit = $("#dg").datagrid('getEditor', {index: editIndex, field: 'expCode'});
             $(expCodeEdit.target).textbox('setValue', row.expCode);
 
@@ -303,7 +395,7 @@ $(function () {
             field: 'firmId',
             width: "7%"
         }, {
-            title: '市场价',
+            title: '批发价',
             field: 'tradePrice',
             width: "5%"
         }, {
@@ -486,6 +578,7 @@ $(function () {
             title: '通知生效日期',
             field: 'noticeEfficientDate',
             width: "15%",
+            formatter: formatterDate,
             editor: {
                 type: 'datetimebox',
                 options: {

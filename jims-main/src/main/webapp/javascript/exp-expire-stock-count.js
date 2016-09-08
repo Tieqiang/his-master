@@ -43,41 +43,50 @@ $(function () {
         columns: [[{
             title: '代码',
             field: 'expCode',
-            width: "11%"
+            align: 'center',
+            width: "9%"
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: "11%"
         },  {
             title: '产品规格',
             field: 'packageSpec',
+            align: 'center',
             width: "11%"
         }, {
             title: '单位',
             field: 'packageUnits',
+            align: 'center',
             width: "11%"
         }, {
             title: '厂家',
             field: 'firmId',
+            align: 'center',
             width: "11%"
         }, {
             title: '批号',
             field: 'batchNo',
+            align: 'center',
             width: "11%"
         }, {
             title: '有效期',
             field: 'expireDate',
+            align: 'center',
             width: "11%",
             formatter : formatterDate
         },{
             title: '库存量',
             field: 'quantity',
+            align: 'center',
             width: "11%",
             editor: 'numberbox'
         },{
             title: '金额',
             field: 'stockQuantity',
-            width: "15%",
+            align: 'right',
+            width: "10%",
             editor: 'numberbox'
         }
         ]]
@@ -149,8 +158,23 @@ $(function () {
         expires.slice(0,expires.length);
         overDates=overDate;
         var expirePromise =   $.get("/api/exp-stock/expire-count?storage=" + parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&overDate="+overDate, function(data){
+            $.each(data,function(index,item){
+                item.stockQuantity = fmoney(item.stockQuantity,2);
+            });
            expires = data;
         });
         return expirePromise ;
+    }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
     }
 })

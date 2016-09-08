@@ -109,6 +109,7 @@ $(function () {
             return new Date();
         }
     }
+
     var count = $("#dg").datagrid("getRows").length;
     $("#count").textbox("setText", count);
     var subStorages = [];
@@ -242,6 +243,7 @@ $(function () {
                 options: {
                     max: 99999.99,
                     size: 8,
+                    min: 0,
                     maxlength: 8,
                     precision: 2
                 }
@@ -407,16 +409,36 @@ $(function () {
 
         }
     });
+
+    /*$('#check').change(function(){
+        if ($('#check').prop('checked')) {
+            $.messager.alert('系统提示', '账面数为0的数据请在零库存管理页面维护', 'info');
+        }
+    });*/
+
+    $('#check').tooltip({
+        position: 'right',
+        content: '<span style="color:	#FF3030">账面数为0的数据请在零库存管理页面维护</span>',
+        hideDelay:1000,
+        onShow: function () {
+            $(this).tooltip('tip').css({backgroundColor: '#00ffcc', borderColor: '#FFEFD5'});
+        }
+    });
+
     //生成
     $("#get").on('click', function () {
         var date = $("#startDate").datetimebox('getText');
         var storageCode = parent.config.storageCode;
         var subStorage = $("#subStorage").combobox("getText");
         var hospitalId = parent.config.hospitalId;
+        var hiddenFlag = '0';   //复选框选中状态：未选中
+        if($('#check').is(':checked')){
+            hiddenFlag = '1';
+        }
 
         $.get("/api/exp-inventory-check/get-inventory-num?storageCode=" + storageCode + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hospitalId=" + hospitalId, function (data) {
             if(data<=0){
-                $.get("/api/exp-inventory-check/get-inventory?type=get&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&subStorage=" + subStorage + "&checkMonth=" + date, function (data) {
+                $.get("/api/exp-inventory-check/get-inventory?type=get&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hiddenFlag=" + hiddenFlag, function (data) {
                     //账面额=账面数*单价
                     var sumAccountQuantity = 0.00;
                     var sumActualQuantity = 0.00;
@@ -667,7 +689,8 @@ $(function () {
         buttons: '#printft',
         closed: true,
         onOpen: function () {
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-inventory-check.cpt&checkYearMonth="+printDate;
+            var subStorage = $('#subStorage').combobox('getValue');
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-inventory-check.cpt&checkYearMonth="+printDate + "&hospitalId=" + parent.config.hospitalId + "&storage=" + parent.config.storageCode + "&subStorage=" + subStorage;
             $("#report").prop("src",cjkEncode(https));
         }
     })

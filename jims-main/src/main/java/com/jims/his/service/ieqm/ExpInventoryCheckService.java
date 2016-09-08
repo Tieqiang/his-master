@@ -43,12 +43,15 @@ public class ExpInventoryCheckService {
      * @param hospitalId
      * @param subStorage
      * @param checkMonth
+     * @param hiddenFlag  隐藏账面数为0的标志
      * @return
      */
     @GET
     @Path("get-inventory")
-    public List<ExpInventoryCheck> getInventory(@QueryParam("type") String type, @QueryParam("storageCode") String storageCode, @QueryParam("hospitalId") String hospitalId, @QueryParam("subStorage") String subStorage, @QueryParam("checkMonth") String checkMonth){
-        return expInventoryCheckFacade.getInventory(type,storageCode, hospitalId, subStorage, checkMonth);
+    public List<ExpInventoryCheck> getInventory(@QueryParam("type") String type, @QueryParam("storageCode") String storageCode,
+                                                @QueryParam("hospitalId") String hospitalId, @QueryParam("subStorage") String subStorage,
+                                                @QueryParam("checkMonth") String checkMonth,@QueryParam("hiddenFlag")String hiddenFlag){
+        return expInventoryCheckFacade.getInventory(type,storageCode, hospitalId, subStorage, checkMonth,hiddenFlag);
     }
 
     @GET

@@ -212,6 +212,40 @@ public class ExpNameDictFacade extends BaseFacade {
     }
 
     /**
+     * 根据输入的拼音码查询物品(条件:该物品在指定库房库存不为0)
+     * @param inputCode
+     * @param storageCode 库房代码
+     * @return
+     * @fengyuguang
+     */
+    public List<ExpNameCaVo> listByInput(String inputCode,String storageCode){
+        String sql = "select\n" +
+                "        distinct a.exp_code,\n" +
+                "        a.exp_name,\n" +
+                "        a.input_code\n" +
+                "    from\n" +
+                "        jims.EXP_NAME_DICT a,\n" +
+                "        jims.exp_price_list b, \n" +
+                "        jims.exp_stock  c \n" +
+                "    where\n" +
+                "        (\n" +
+                "            upper(a.input_code) like upper('%" + inputCode + "%')   \n" +
+                "            or a.exp_code like '%" + inputCode + "%'\n" +
+                "        )  \n" +
+                "        and a.exp_code = b.exp_code \n" +
+                "        and c.exp_code=a.exp_code\n" +
+                "        and b.start_date <= sysdate    \n" +
+                "        AND (\n" +
+                "            b.stop_date IS NULL \n" +
+                "            OR        b.stop_date > sysdate\n" +
+                "        )\n" +
+                "        and c.quantity >0\n" +
+                "        and c.storage = '" + storageCode + "'";
+        List<ExpNameCaVo> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpNameCaVo.class);
+        return nativeQuery;
+    }
+
+    /**
      * 查询当前前缀所匹配的最大序号
      * @param length
      * @param header

@@ -78,6 +78,36 @@ function myFormatter2(val,row) {
     }
 
 }
+
+function formatterDate2(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = 00;
+        var mm = 00;
+        var s = 00;
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+}
+function formatterDate3(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = 23;
+        var mm = 59;
+        var s = 59;
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+}
+
 function w3(s) {
     if (!s) return new Date();
     var y = s.substring(0, 4);
@@ -166,12 +196,12 @@ $(function () {
         },{
             title: '零售金额',
             field: 'retailAmount',
-            align: 'center',
+            align: 'right',
             width: '10%'
         },{
             title: '批发总价',
             field: 'payAmount',
-            align: 'center',
+            align: 'right',
             width: '10%'
         }]]
     });
@@ -227,7 +257,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -243,7 +273,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -279,8 +309,8 @@ $(function () {
             if(expForms=='全部'){
                 expForms='';
             }
-            startDates=myFormatter2(startDates);
-            stopDates=myFormatter2(stopDates);
+            startDates= $("#startDate").datebox("getText");
+            stopDates= $("#stopDate").datebox("getText");
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/storage-exp-go-count.cpt"+"&storage="+parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&subStorage="+subStor+"&expForm="+expForms;
 
             $("#report").prop("src",cjkEncode(https));
@@ -309,12 +339,17 @@ $(function () {
         masterDataVo.storage = parent.config.storageCode;
         var retailAmount = 0.00;
         var payAmount = 0.00;
+        payAmount = parseFloat(payAmount);
+        retailAmount = parseFloat(retailAmount);
         var promise =$.get("/api/exp-export/storage-exp-go-count",masterDataVo,function(data){
-            masters =data ;
             for(var i = 0 ;i<data.length;i++){
-                retailAmount+=data[i].retailAmount;
-                payAmount+=data[i].payAmount;
+                retailAmount += parseFloat(data[i].retailAmount);
+                payAmount+=parseFloat(data[i].payAmount);
+
+                data[i].retailAmount = fmoney(data[i].retailAmount, 2);
+                data[i].payAmount = fmoney(data[i].payAmount, 2);
             }
+            masters = data;
         },'json');
         promise.done(function(){
             if(masters.length<=0){
@@ -330,14 +365,27 @@ $(function () {
 
             $("#importMaster").datagrid('loadData',masters);
             $('#importMaster').datagrid('appendRow', {
+                receiver: '',
                 expName: "合计：",
-                retailAmount: retailAmount,
-                payAmount: payAmount
+                retailAmount: fmoney(retailAmount,2),
+                payAmount: fmoney(payAmount,2)
             });
             $("#importMaster").datagrid("autoMergeCells", ['expCode']);
         })
         masters.splice(0,masters.length);
         return promise;
 
+    }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
     }
 })

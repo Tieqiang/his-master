@@ -5,19 +5,40 @@
  * 零库存管理
  */
 $(function () {
-//    $("#expName").searchbox({
-//        searcher: function (value, name) {
-//            alert(value,+","+name);
-//            var rows = $("#dg").datagrid("getRows");
-//            for (var i = 0; i < rows.length; i++) {
-//                if (rows[i].expName == value) {
-//                    $("#dg").datagrid('selectRow', i);
-//                }
-//            }
-//        }
-//    });
+    //产品名称
+    $("#expName").combogrid({
+        idField: 'expName',
+        textField: 'expName',
+        method: 'get',
+        url: '/api/exp-dict/exp-dict-list-by-input',
+        mode: 'remote',
+        columns: [[{
+            title: 'ID',
+            field: 'id',
+            hidden: true
+        },{
+            title: '名称',
+            field: 'expName',
+            align: 'center',
+            width: '50%'
+        },{
+            title: '输入码',
+            field: 'inputCode',
+            align: 'center',
+            width: '30%'
+        }]],
+        onClickRow: function(index,row){
+            loadDict();
+        },
+        keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+            enter: function (e) {
+                var expName = $('#expName').combogrid('getValue');
+                $(this).combogrid('hidePanel');
+                loadDict();
+            }
+        })
+    });
     $("#dg").datagrid({
-//        title: '零库存管理',
         fit: true,//让#dg数据创铺满父类容器
         toolbar:'#ft',
         footer: '#tb',
@@ -31,36 +52,44 @@ $(function () {
         },{
             title: '产品所在库房',
             field: 'subStorage',
+            align: 'center',
             width: "8%"
         }, {
             title: '产品名称',
             field: 'expName',
+            align: 'center',
             width: "11%"
         }, {
             title: '产品包装规格',
             field: 'packageSpec',
+            align: 'center',
             width: "8%"
         }, {
             title: '产品单位',
             field: 'packageUnits',
+            align: 'center',
             width: "8%"
         }, {
             title: '生产厂家',
             field: 'firmId',
+            align: 'center',
             width: "11%"
         },{
             title: '产品批号',
             field: 'batchNo',
+            align: 'center',
             width: "11%"
         },{
             title: '产品有效期',
             field: 'expireDate',
+            align: 'center',
             width: "11%",
             formatter:formatterDate
 
         },{
             title: '产品单价',
             field: 'purchasePrice',
+            align: 'right',
             width: "8%",
             editor: {
                 type: 'validatebox', options: {
@@ -70,6 +99,7 @@ $(function () {
         },{
             title: '产品库存数量',
             field: 'quantity',
+            align: 'center',
             width: "8%",
             editor: {
                 type: 'validatebox', options: {
@@ -79,6 +109,7 @@ $(function () {
         },{
             title: '产品复价',
             field: 'subPackage1',
+            align: 'right',
             width: "8%",
             editor: {
                 type: 'validatebox', options: {
@@ -88,6 +119,7 @@ $(function () {
         },{
             title: '产品折扣',
             field: 'discount',
+            align: 'center',
             width: "8%",
             editor: {
                 type: 'validatebox', options: {
@@ -113,15 +145,24 @@ $(function () {
         }
     }
     var loadDict = function () {
-        var expName=$("#expName").val();
+        var expName=$("#expName").combogrid('getValue');
         //为报表准备字段
         expNames=expName;
 
 //        alert(expName+"expName");
         var dicts = {};
         var promise = $.get("/api/exp-storage-zero-manage/list?storageCode=" +parent.config.storageCode+"&hospitalId="+parent.config.hospitalId+"&expName="+expName, function(data){
+            $.each(data,function(index,item){
+                if(item.purchasePrice == null || item.purchasePrice == '' || typeof(item.purchasePrice) == 'undefined'){
+                    item.purchasePrice = 0.00;
+                }
+                if (item.subPackage1 == null || item.subPackage1 == '' || typeof(item.subPackage1) == 'undefined') {
+                    item.subPackage1 = 0.00;
+                }
+                item.purchasePrice = fmoney(item.purchasePrice,2);
+                item.subPackage1 = fmoney(item.subPackage1,2);
+            });
             dicts=data;
-//            console.log(data);
 //            ?
             if(data.length<=0){
                 $.messager.alert("系统提示", "数据库暂无数据","info");
@@ -206,5 +247,17 @@ $(function () {
             }) ;
         }
     });
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })
 

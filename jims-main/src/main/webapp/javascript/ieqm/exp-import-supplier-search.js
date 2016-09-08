@@ -81,6 +81,37 @@ $(function () {
         }
 
     }
+
+    function formatterDate2(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 00;
+            var mm = 00;
+            var s = 00;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
+    function formatterDate3(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 23;
+            var mm = 59;
+            var s = 59;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -118,7 +149,7 @@ $(function () {
             title: '产品名称',
             field: 'expName',
             align: 'center',
-            width: '10%'
+            width: '15%'
         }, {
             title: '规格',
             field: 'packageSpec',
@@ -144,26 +175,26 @@ $(function () {
         }, {
             title: '金额',
             field: 'payAmount',
-            align: 'center',
+            align: 'right',
             width: '10%',
             type:'numberbox'
         }, {
             title: '实际金额',
             field: 'purchaseAmount',
-            align: 'center',
+            align: 'right',
             width: '10%',
             type:'numberbox'
         }]]
     });
     //设置时间
     var curr_time = new Date();
-    $("#startDate").datetimebox("setValue", myFormatter2(curr_time));
-    $("#stopDate").datetimebox("setValue", myFormatter2(curr_time));
+    $("#startDate").datetimebox("setValue", formatterDate2(curr_time));
+    $("#stopDate").datetimebox("setValue", formatterDate3(curr_time));
     $('#startDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -179,7 +210,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -238,7 +269,6 @@ $(function () {
         onOpen: function () {
             startDates=myFormatter2(startDates);
             stopDates=myFormatter2(stopDates);
-            console.log(startDates+"+"+stopDates+suppliers);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-supplier-search.cpt"+"&hospitalId="+parent.config.hospitalId+"&startDate=" + startDates + "&stopDate=" + stopDates+"&supplier=" + suppliers+"&storage="+parent.config.storageCode;
             $("#report").prop("src",cjkEncode(https));
         }
@@ -257,13 +287,15 @@ $(function () {
 
 
     var loadDict = function(){
-        importDetailDataVO.stopDate = new Date($("#stopDate").datebox("getText"));
-        importDetailDataVO.startDate = new Date($("#startDate").datebox("getText"));
+        importDetailDataVO.stopDate = new Date($("#stopDate").datetimebox("getText"));
+        importDetailDataVO.startDate = new Date($("#startDate").datetimebox("getText"));
         importDetailDataVO.supplier = $("#supplier").combogrid("getValue");
         importDetailDataVO.hospitalId = parent.config.hospitalId;
         importDetailDataVO.storage = parent.config.storageCode;
         var payAmount = 0.00;
         var purchaseAmount = 0.00;
+        purchaseAmount = parseFloat(purchaseAmount);
+        payAmount = parseFloat(payAmount);
         var promise =$.get("/api/exp-import/exp-import-supplier-search",importDetailDataVO,function(data){
             detailsData=data;
 
@@ -272,10 +304,16 @@ $(function () {
             stopDates=importDetailDataVO.stopDate ;
             suppliers=importDetailDataVO.supplier;
 
-            for(var i = 0 ;i<data.length;i++){
-                purchaseAmount+=data[i].purchaseAmount;
-                payAmount+=data[i].payAmount;
+            for (var i = 0; i < detailsData.length; i++) {
+                detailsData[i].purchaseAmount = parseFloat(detailsData[i].purchaseAmount);
+                detailsData[i].payAmount = parseFloat(detailsData[i].payAmount);
+                purchaseAmount += detailsData[i].purchaseAmount;
+                payAmount += detailsData[i].payAmount;
+                detailsData[i].purchaseAmount = fmoney(detailsData[i].purchaseAmount,2);
+                detailsData[i].payAmount = fmoney(detailsData[i].payAmount,2);
             }
+            purchaseAmount = fmoney(purchaseAmount,2);
+            payAmount = fmoney(payAmount,2);
         },'json');
         promise.done(function(){
             if(detailsData.length<=0){
@@ -286,12 +324,23 @@ $(function () {
             $("#importDetail").datagrid('loadData',detailsData);
             $('#importDetail').datagrid('appendRow', {
                 expName: "合计：",
-                payAmount: payAmount,
-                purchaseAmount: purchaseAmount
+                payAmount: fmoney(payAmount,2),
+                purchaseAmount: fmoney(purchaseAmount,2)
             });
             $("#importDetail").datagrid("autoMergeCells", ['expCode']);
         })
         detailsData.splice(0,detailsData.length);
+    }
 
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
     }
 })

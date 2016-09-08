@@ -2,10 +2,8 @@
  * Created by heren on 2015/10/23.
  */
 
-
-
-
 $(function () {
+    var fieldNo = 0;    //从左往右，光标停留在第几个单元格
     var currentSelect = 0;//当前选中的规格
     var exportToFlag = undefined;//退库的时候，标志，用于区分是否退货给供应商。
 
@@ -128,7 +126,7 @@ $(function () {
             editor: {
                 type: 'combogrid', options: {
                     mode: 'remote',
-                    url: '/api/exp-name-dict/list-exp-name-by-input',
+                    url: '/api/exp-name-dict/list-by-input?storageCode=' + parent.config.storageCode,
                     singleSelect: true,
                     method: 'GET',
                     delay: 300,
@@ -223,10 +221,10 @@ $(function () {
 
                     onChange: function (newValue, oldValue) {
                         if (oldValue != null && oldValue != '' && typeof(oldValue) != 'undefined') {
-                            if(newValue != null && newValue != '' && typeof(newValue) != 'undefined'){
+                            if (newValue != null && newValue != '' && typeof(newValue) != 'undefined') {
                                 addRow();
-                            }else{
-                                $.messager.alert('系统提示','数量不能为空','info');
+                            } else {
+                                $.messager.alert('系统提示', '数量不能为空', 'info');
                                 return;
                             }
                         }
@@ -291,18 +289,32 @@ $(function () {
             title: '进价',
             field: 'purchasePrice',
             width: "5%",
-            precision: '2'
+            editable: false,
+            editor: {
+                type: 'numberbox',
+                options: {
+                    editable: false,
+                    precision: 2
+                }
+            }
         }, {
             title: '售价',
             field: 'retailPrice',
             width: '5%',
-            precision: '2'
+            editable: false,
+            editor: {
+                type: 'numberbox',
+                options: {
+                    editable: false,
+                    precision: 2
+                }
+            }
         }, {
             title: '金额',
             field: 'amount',
             editor: {
                 type: 'numberbox', options: {
-                    precision: '2',
+                    precision: 2,
                     editable: false,
                     disabled: true
                 }
@@ -416,7 +428,7 @@ $(function () {
             hidden: 'true'
         }, {
             title: '子规格1',
-            field: 'subPackageSpec1',
+            field: 'subPackageSpec2',
             hidden: 'true'
         }, {
             title: '子包装2',
@@ -434,11 +446,11 @@ $(function () {
             title: '入库单据号',
             field: 'importDocumentNo',
             hidden: 'true'
-        }, {
-            title: '零售价',
-            field: 'retailPrice',
-            hidden: 'true'
-        }, {
+        }/*, {
+         title: '零售价',
+         field: 'retailPrice',
+         hidden: 'true'
+         }*/, {
             title: '批发价',
             field: 'tradePrice',
             hidden: 'true'
@@ -468,7 +480,6 @@ $(function () {
             dataType: "JSON",
             cache: false,
             success: function (data) {
-                console.info(data);
                 for (var i = 0; i < data.length; i++) {
                     $("#exportClass").append("<option value=" + data[i].direction + ">" + data[i].exportClass + "</option>");
                 }
@@ -658,6 +669,10 @@ $(function () {
         }
         editIndex = appendRowIndex;
         $("#exportDetail").datagrid('beginEdit', editIndex);
+
+        fieldNo = 2;
+        var selector = "#datagrid-row-r6-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+        $(selector).focus();
     });
 
     //新增一行
@@ -669,9 +684,7 @@ $(function () {
         editIndex = addRowIndex;
         $("#exportDetail").datagrid('selectRow', editIndex);
         $("#exportDetail").datagrid('beginEdit', editIndex);
-        var editor = $('#exportDetail').datagrid('getEditor', {index: editIndex, field: 'expName'});
-        console.info(editor);
-//                #datagrid-row-r6-2-1 > td:nth-child(2) > div > table > tbody > tr > td > span > input
+        //光标定位到产品名称单元格
         var selector = "#datagrid-row-r6-2-" + addRowIndex + " > td:nth-child(2) > div > table > tbody > tr > td > span > input";
         $(selector).focus();
     }
@@ -845,6 +858,11 @@ $(function () {
             $("#exportDetail").datagrid('refreshRow', editIndex);
             $("#stockRecordDialog").dialog('close');
             $("#exportDetail").datagrid('beginEdit', editIndex);
+
+            //光标定位到数量单元格
+            fieldNo = 6;
+            var selector = "#datagrid-row-r6-2-" + editIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
+            $(selector).focus();
         }
     });
     $("#stockRecordDialog").dialog({
@@ -935,6 +953,12 @@ $(function () {
         return true;
     }
     var getCommitData = function () {
+        var rows = $('#exportDetail').datagrid('getRows');
+        var accountReceivable = 0;
+        $.each(rows, function (index, item) {
+            accountReceivable = parseFloat(accountReceivable);
+            accountReceivable += parseFloat(item.amount);
+        });
         var expExportMasterBeanChangeVo = {};
         expExportMasterBeanChangeVo.inserted = [];
         var exportMaster = {};
@@ -943,7 +967,8 @@ $(function () {
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');
-        exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
+        //exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
+        exportMaster.accountReceivable = accountReceivable;
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
@@ -1067,7 +1092,8 @@ $(function () {
         buttons: '#printft',
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue');
-            var https = "http://" + parent.config.reportDict.ip + ":" + parent.config.reportDict.port + "/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo;
+            var exportClass = getSelectedText("exportClass");
+            var https = "http://" + parent.config.reportDict.ip + ":" + parent.config.reportDict.port + "/report/ReportServer?reportlet=exp/exp-list/exp-export.cpt&documentNo=" + printDocumentNo + '&hospitalId=' + parent.config.hospitalId + '&storageCode=' + parent.config.storageCode + '&exportClass=' + exportClass;
             $("#report").prop("src", cjkEncode(https));
             //$("#report").prop("src", "http://localhost:8075/WebReport/ReportServer?reportlet=exp%2Fexp%2Fexp-export.cpt&__bypagesize__=false&documentNo="+printDocumentNo);
         }
@@ -1097,12 +1123,6 @@ $(function () {
     }
 
     document.onkeydown = function (event) {
-
-        var e = event || window.event || arguments.callee.caller.arguments[0];
-
-    }
-
-    document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
         var options = $("#stockRecordDialog").dialog('options');
         if (options.closed) {
@@ -1111,17 +1131,32 @@ $(function () {
                     index: editIndex,
                     field: 'quantity'
                 });
-//disNum
                 var disNum = $("#exportDetail").datagrid('getEditor', {
                     index: editIndex,
                     field: 'disNum'
                 });
+                var retailPrice = $("#exportDetail").datagrid('getEditor', {
+                    index: editIndex,
+                    field: 'retailPrice'
+                });
+
+                var amount = $("#exportDetail").datagrid('getEditor', {
+                    index: editIndex,
+                    field: 'amount'
+                });
                 var quantity1 = $(quantity.target).textbox('getValue');
                 var disNum1 = $(disNum.target).textbox('getValue');
+                var retailPrice = $(retailPrice.target).textbox('getValue');
                 if (quantity1 == "" || quantity1 == null || typeof(quantity1) == "underfined") {
                     $.messager.alert("系统提示", "请先填写出库数量", "error");
                     return;
                 } else {
+                    var number = $(amount.target).textbox('setValue', retailPrice * quantity1);
+                    var oldNum = $('#accountReceivable').numberbox('getValue');
+                    oldNum = parseFloat(oldNum);
+                    oldNum += parseFloat(retailPrice * quantity1);
+                    oldNum = fmoney(oldNum, 2);
+                    $('#accountReceivable').numberbox('setValue', oldNum);
                     addRow();
                 }
                 if (parseInt(quantity1) > parseInt(disNum1)) {
@@ -1157,8 +1192,18 @@ $(function () {
                 var test = "#datagrid-row-r10-2-" + seIndex;
                 $(test).trigger('click', currentSelect, rows[currentSelect]);
             }
-
         }
     }
 
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })

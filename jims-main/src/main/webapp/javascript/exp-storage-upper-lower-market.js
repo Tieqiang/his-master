@@ -72,6 +72,49 @@ $(function () {
             }
         }
     });
+//产品名称
+    $("#expName").combogrid({
+        idField: 'expName',
+        textField: 'expName',
+        method: 'get',
+        url: '/api/exp-dict/exp-dict-list-by-input',
+        mode: 'remote',
+        columns: [[{
+            title: 'ID',
+            field: 'id',
+            hidden: true
+        }, {
+            title: '名称',
+            field: 'expName',
+            align: 'center',
+            width: '50%'
+        }, {
+            title: '输入码',
+            field: 'inputCode',
+            align: 'center',
+            width: '30%'
+        }]],
+        onClickRow: function (index, row) {
+            var rows = $("#dg").datagrid("getRows");
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].expName == row.expName) {
+                    $("#dg").datagrid('selectRow', i);
+                }
+            }
+        },
+        keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
+            enter: function (e) {
+                var expName = $('#expName').combogrid('getValue');
+                var rows = $("#dg").datagrid("getRows");
+                for (var i = 0; i < rows.length; i++) {
+                    if (rows[i].expName == expName) {
+                        $("#dg").datagrid('selectRow', i);
+                    }
+                }
+                $(this).combogrid('hidePanel');
+            }
+        })
+    });
     //开始日期
     $('#startDate').datetimebox({
         required: true,

@@ -1201,7 +1201,7 @@ $(function () {
         closed: true,
         onOpen: function () {
             var printDocumentNo = $("#documentNo").textbox('getValue');
-            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import.cpt&documentNo=" + printDocumentNo;
+            var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import.cpt&documentNo=" + printDocumentNo + "&hospitalId=" + parent.config.hospitalId;
             $("#report").prop("src",cjkEncode(https));
         }
     })

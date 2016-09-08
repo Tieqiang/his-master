@@ -22,6 +22,36 @@ $(function () {
         }
     }
 
+    function formatterDate2(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 00;
+            var mm = 00;
+            var s = 00;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
+    function formatterDate3(val, row) {
+        if (val != null) {
+            var date = new Date(val);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            var h = 23;
+            var mm = 59;
+            var s = 59;
+            var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+                + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+            return dateTime
+        }
+    }
+
     function w3(s) {
         if (!s) return new Date();
         var y = s.substring(0, 4);
@@ -42,7 +72,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -58,7 +88,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: formatterDate,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -138,7 +168,7 @@ $(function () {
         }, {
             title: '金额',
             field: 'amount',
-            align: 'center',
+            align: 'right',
             width: "10%"
         }, {
             title: '去向库房',
@@ -166,21 +196,26 @@ $(function () {
             if (data.length > 0) {
                 var sumQuantity = 0.00;
                 var sumAmount = 0.00;
-
+                sumAmount = parseFloat(sumAmount);
                 //为报表准备字段
                 startDates=startDate;
                 stopDates=endDate;
                 expCodes=expCode;
 
                 $.each(data, function (index, item) {
+                    item.amount = parseFloat(item.amount);
                     sumQuantity += item.quantity;
                     sumAmount += item.amount;
+                    item.amount = fmoney(item.amount,2);
                 });
+                //sumAmount = fmoney(sumAmount,2);
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     firmId: "合计：",
                     quantity: Math.round(sumQuantity*100)/100,
-                    amount: Math.round(sumAmount*100)/100
+                    //amount: Math.round(sumAmount*100)/100,
+                    amount: sumAmount = fmoney(sumAmount, 2),
+                    receiver: ''
                 });
             } else {
                 $.messager.alert("提示", "起始时间段内无数据！")
@@ -218,6 +253,17 @@ $(function () {
             return;
         }
         $("#printDiv").dialog('open');
-
     });
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 });

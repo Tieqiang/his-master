@@ -53,9 +53,12 @@ $(function () {
         $("#supplier").combogrid({
             idField: 'id',
             textField: 'supplierName',
-            data: suppliers,
+            //data: suppliers,
             panelWidth: 450,
             fitColumns: true,
+            method: 'GET',
+            mode: 'remote',
+            url: '/api/exp-supplier-catalog/list-by-q',
             columns: [
                 [
                     {

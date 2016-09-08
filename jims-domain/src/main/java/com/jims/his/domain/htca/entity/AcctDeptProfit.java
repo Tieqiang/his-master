@@ -28,9 +28,12 @@ public class AcctDeptProfit implements java.io.Serializable {
     private Double managerStaffCost ;
     private Double incomeChangeItem;
     private Double costChangeItem ;
+    private Double otherRewardsOrPunishments ;//其他奖惩
     //ALL_ROUND_INCOME
     private Double allRoundIncome ;//全项奖
     private String position ;//辅助排序想
+
+
 
 	// Constructors
 
@@ -41,7 +44,7 @@ public class AcctDeptProfit implements java.io.Serializable {
 	/** full constructor */
 	public AcctDeptProfit(String yearMonth, String hospitalId,
                           Double deptIncome, Double deptCost, Double pleasedNum,
-                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate, Double acctBalance, Double managerProfitCost, Double managerStaffCost, Double incomeChangeItem, Double costChangeItem, Double allRoundIncome, String position) {
+                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate, Double acctBalance, Double managerProfitCost, Double managerStaffCost, Double incomeChangeItem, Double costChangeItem, Double otherRewardsOrPunishments, Double allRoundIncome, String position) {
 		this.yearMonth = yearMonth;
 		this.hospitalId = hospitalId;
 		this.deptIncome = deptIncome;
@@ -56,6 +59,7 @@ public class AcctDeptProfit implements java.io.Serializable {
         this.managerStaffCost = managerStaffCost;
         this.incomeChangeItem = incomeChangeItem;
         this.costChangeItem = costChangeItem;
+        this.otherRewardsOrPunishments = otherRewardsOrPunishments;
         this.allRoundIncome = allRoundIncome;
         this.position = position;
     }
@@ -217,5 +221,14 @@ public class AcctDeptProfit implements java.io.Serializable {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    @Column(name="other_rewards_or_punishments")
+    public Double getOtherRewardsOrPunishments() {
+        return otherRewardsOrPunishments;
+    }
+
+    public void setOtherRewardsOrPunishments(Double otherRewardsOrPunishments) {
+        this.otherRewardsOrPunishments = otherRewardsOrPunishments;
     }
 }

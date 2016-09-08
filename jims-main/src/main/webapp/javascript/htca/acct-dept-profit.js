@@ -245,6 +245,15 @@ $(function () {
                     validType: 'number'
                 }
             }
+        },{
+            title:'其他奖惩',
+            field:'otherRewardsOrPunishments',
+            editor:{
+                type:'validatebox',
+                options:{
+                    validType:'number'
+                }
+            }
         }, {
             title: '奖金额度',
             field: 'deptLastIncome',
@@ -259,13 +268,15 @@ $(function () {
             beginEdit();
         },
         onAfterEdit: function (index, rowData, changes) {
-            rowData.deptLastIncome = rowData.specialIncome * 1 + ((rowData.deptIncome - rowData.deptCost) * rowData.pleasedNum / 100 * rowData.convertRate / 100 );
+            rowData.deptLastIncome = rowData.specialIncome * 1 + rowData.otherRewardsOrPunishments *1  +((rowData.deptIncome - rowData.deptCost) * rowData.pleasedNum / 100 * rowData.convertRate / 100 );
+            console.log(rowData);
             rowData.deptLastIncome = rowData.deptLastIncome.toFixed(2);
             $(this).datagrid('updateRow', {
                 index: index,
                 row: rowData
             });
-        }, onRowContextMenu: onRowContextMenu
+        },
+        onRowContextMenu: onRowContextMenu
     });
     $("#acctDeptFormWindow").window({
         width: '330',

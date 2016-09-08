@@ -121,6 +121,11 @@ $(function () {
             field: 'expCode',
             align: 'center',
             width: '10%'
+        },{
+            title: '名称',
+            field: 'expName',
+            align: 'center',
+            width: '10%'
         }, {
             title: '类型',
             field: 'ioClass',
@@ -174,7 +179,7 @@ $(function () {
         }, {
             title: '单价',
             field: 'purchasePrice',
-            align: 'center',
+            align: 'right',
             width: '7%',
             type:'numberbox'
         }, {
@@ -186,7 +191,7 @@ $(function () {
         }, {
             title: '入库金额',
             field: 'importPrice',
-            align: 'center',
+            align: 'right',
             width: '7%',
             type:'numberbox'
         }, {
@@ -198,7 +203,7 @@ $(function () {
         }, {
             title: '出库金额',
             field: 'exportPrice',
-            align: 'center',
+            align: 'right',
             width: '7%',
             type:'numberbox'
         }]]
@@ -286,7 +291,6 @@ $(function () {
         onOpen: function () {
             startDates=myFormatter2(startDates);
             stopDates=myFormatter2(stopDates);
-            console.log(expCodes+packageSpecs);
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-single-account.cpt"+"&hospitalId="+parent.config.hospitalId+"&storageCode="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&expCode=" + expCodes + "&packageSpec=" + packageSpecs;
             $("#report").prop("src",cjkEncode(https));
         }
@@ -317,6 +321,8 @@ $(function () {
         var importPrice = 0.00;
         var exportNum = 0.00;
         var exportPrice = 0.00;
+        importPrice = parseFloat(importPrice);
+        exportPrice = parseFloat(exportPrice);
         var promise =$.get("/api/exp-import/exp-single-account",importDetailDataVO,function(data){
             if(data.length<=0){
                 $.messager.alert('系统提示','数据库暂无数据','info');
@@ -333,27 +339,48 @@ $(function () {
 
             detailsData=data;
             for(var i = 0 ;i<data.length;i++){
+                data[i].purchasePrice = parseFloat(data[i].purchasePrice);
+                data[i].importPrice = parseFloat(data[i].importPrice);
+                data[i].exportPrice = parseFloat(data[i].exportPrice);
                 importNum+=data[i].importNum;
                 importPrice+=data[i].importPrice;
                 exportNum+=data[i].exportNum;
                 exportPrice+=data[i].exportPrice;
+
+                data[i].purchasePrice = fmoney(data[i].purchasePrice,2);
+                data[i].importPrice = fmoney(data[i].importPrice,2);
+                data[i].exportPrice = fmoney(data[i].exportPrice,2);
             }
         },'json');
         promise.done(function(){
 
-            $("#importDetail").datagrid('loadData',detailsData);
+            $("#importDetail").datagrid('loadData', detailsData);
             $('#importDetail').datagrid('appendRow', {
                 ioClass: "合计：",
-                importNum: importNum,
-                importPrice: Math.round(importPrice*100/2)/100,
+                ourName: '',
+                //importNum: importNum,
+                importPrice: fmoney(importPrice,2),
+                //importPrice: Math.round(importPrice*100/2)/100,
                 exportNum: exportNum,
-                exportPrice:Math.round(exportPrice*100/2)/100
+                exportPrice: fmoney(exportPrice,2)
+                //exportPrice:Math.round(exportPrice*100/2)/100
             });
             $("#importDetail").datagrid("autoMergeCells", ['way', 'expCode']);
             $("#singleSpec").combobox("clear");
             $("#searchInput").combogrid("clear");
         })
         detailsData.splice(0,detailsData.length);
+    }
 
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
     }
 })

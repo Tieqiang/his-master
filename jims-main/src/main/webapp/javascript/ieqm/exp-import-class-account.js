@@ -15,6 +15,36 @@ function myFormatter2(val, row) {
         return str;
     }
 }
+
+function formatterDate2(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = 00;
+        var mm = 00;
+        var s = 00;
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+}
+function formatterDate3(val, row) {
+    if (val != null) {
+        var date = new Date(val);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = 23;
+        var mm = 59;
+        var s = 59;
+        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
+            + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
+        return dateTime
+    }
+}
+
 function w3(s) {
     if (!s) return new Date();
     var y = s.substring(0, 4);
@@ -114,12 +144,12 @@ $(function () {
             title: '入库类别',
             field: 'importClass',
             align: 'center',
-            width: '15%'
+            width: '12%'
         }, {
             title: '供应商',
             field: 'supplier',
             align: 'center',
-            width: '15%',
+            width: '22%',
             formatter: function (value, row, index) {
                 for (var i = 0; i < suppliers.length; i++) {
                     if (value == suppliers[i].supplierCode) {
@@ -141,20 +171,20 @@ $(function () {
         }, {
             title: '金额',
             field: 'importPrice',
-            align: 'center',
+            align: 'right',
             width: '15%',
             type:'numberbox'
         }]]
     });
     //设置时间
     var curr_time = new Date();
-    $("#startDate").datetimebox("setValue", myFormatter2(curr_time));
-    $("#stopDate").datetimebox("setValue", myFormatter2(curr_time));
+    $("#startDate").datetimebox("setValue", formatterDate2(curr_time));
+    $("#stopDate").datetimebox("setValue", formatterDate3(curr_time));
     $('#startDate').datetimebox({
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate2,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -170,7 +200,7 @@ $(function () {
         required: true,
         showSeconds: true,
         value: 'dateTime',
-        formatter: myFormatter2,
+        formatter: formatterDate3,
         onSelect: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -206,11 +236,10 @@ $(function () {
         modal: true,
         closed: true,
         onOpen: function () {
-            startDates=myFormatter2(startDates);
-            stopDates=myFormatter2(stopDates);
+            startDates= $("#startDate").datetimebox("getText");
+            stopDates= $("#stopDate").datetimebox("getText");
             var https="http://"+parent.config.reportDict.ip+":"+parent.config.reportDict.port+"/report/ReportServer?reportlet=exp/exp-list/exp-import-class-account.cpt"+"&hospitalId="+parent.config.hospitalId+"&storage="+parent.config.storageCode+"&startDate=" + startDates + "&stopDate=" + stopDates+"&importClass=" + printImportClass;
             $("#report").prop("src",cjkEncode(https));
-            console.log(https);
         }
     });
     $("#printBtn").on('click', function () {
@@ -233,12 +262,15 @@ $(function () {
         var importPrice = 0.00;
         var promise =$.get("/api/exp-import/exp-import-class-account",importDetailDataVO,function(data){
             detailsData=data;
-
+            console.log(data);
             //为报表准备字段
             printImportClass=importDetailDataVO.importClass;
             startDates=importDetailDataVO.startDate;
             stopDates=importDetailDataVO.stopDate;
-//
+
+            for(var i = 0; i < data.length; i++){
+                data[i].importPrice = fmoney(data[i].importPrice,2);
+            }
 //            for(var i = 0 ;i<data.length;i++){
 //                importPrice+=Number(data[i].importPrice);
 //            }
@@ -258,4 +290,16 @@ $(function () {
         })
 //        detailsData.splice(0,detailsData.length);
      }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
 })

@@ -48,39 +48,47 @@ $(function () {
         columns: [[{
             title: '库房名称',
             field: 'subStorage',
+            align: 'center',
             width: '7%',
             editor: {type: 'textbox'}
         }, {
             title: '产品类别',
             field: 'expForm',
+            align: 'center',
             width: '7%'
 
         }, {
             title: '产品代码',
             field: 'expCode',
-            width: '11%',
+            align: 'center',
+            width: '10%',
             editor: {type: 'textbox'}
         }, {
             title: '产品名称',
             field: 'expName',
-            width: '11%',
+            align: 'center',
+            width: '18%',
             editor: {type: 'textbox'}
         }, {
             title: "产品规格",
-            width: '11%',
-            field: 'packageSpec'
+            width: '10%',
+            field: 'packageSpec',
+            align: 'center'
         }, {
             title: '生产厂家',
             field: 'firmId',
+            align: 'center',
             width: '11%',
             editor: {type: 'textbox'}
         }, {
             title: '产品单位',
             field: 'units',
+            align: 'center',
             width: '7%'
         }, {
             title: '库存数量',
             width: '7%',
+            align: 'center',
             field: 'quantity',
             editor: {type: 'numberbox'}
 
@@ -88,26 +96,31 @@ $(function () {
             title: '批号',
             width: '7%',
             field: 'batchNo',
+            align: 'center',
             editor: {type: 'numberbox'}
 
         }, {
             title: '进货单价',
             width: '7%',
+            align: 'right',
             field: 'purchasePrice',
             editor: {type: 'numberbox'}
         }, {
             title: '零售单价',
             width: '7%',
+            align: 'right',
             field: 'retailPrice',
             editor: {type: 'numberbox'}
         }, {
             title: '进货金额',
             width: '7%',
+            align: 'right',
             field: 'tradeAllPrice',
             editor: {type: 'numberbox'}
         }, {
             title: '零售金额',
             width: '7%',
+            align: 'right',
             field: 'retailAllPrice',
             editor: {type: 'numberbox'}
         }]]
@@ -257,6 +270,12 @@ $(function () {
         stockDataVo.hospitalId = parent.config.hospitalId;
         stockDataVo.storage = parent.config.storageCode;
         var promise =$.get("/api/exp-stock/exp-stock-number-search",stockDataVo,function(data){
+            $.each(data,function(index,item){
+                item.purchasePrice = fmoney(item.purchasePrice,2);
+                item.retailPrice = fmoney(item.retailPrice,2);
+                item.tradeAllPrice = fmoney(item.tradeAllPrice,2);
+                item.retailAllPrice = fmoney(item.retailAllPrice,2);
+            });
             var radios=$("#numberForm input[name='radioOne']:checked").val();
             if(radios=='0'){
                 stocksData=data;
@@ -272,5 +291,17 @@ $(function () {
             }
         },'json');
         return promise;
+    }
+
+    //格式化金额
+    function fmoney(s, n) {
+        n = n > 0 && n <= 20 ? n : 2;
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(), r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
     }
 })

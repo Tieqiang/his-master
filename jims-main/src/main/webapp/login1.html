@@ -15,7 +15,12 @@
     <SCRIPT type="text/javascript">
         $(function () {
             var MANY_ZEROS = "000000000000000000";
-
+            document.getElementById('userName').focus();
+            $('#userName').on('keydown',function(e){
+                if(e.keyCode == 13){
+                    document.getElementById('password').focus();
+                }
+            });
             function leftZeroPad(val, minLength) {
                 if (typeof(val) != "string")
                     val = String(val);
@@ -50,7 +55,6 @@
                 if(e.keyCode==13){
                     $("#loginBtn").trigger('click');
                 }
-                console.log(e) ;
             })
             //失去焦点
             $("#password").blur(function () {
@@ -76,7 +80,6 @@
                 userName = leftZeroPad(userName,6) ;
                 password = leftZeroPad(password,6) ;
                 $.post("/api/login/check-login?loginName="+userName+"&password="+password,function(data){
-                    console.log(data) ;
                     if(data.errorMessage){
                         alert(data.errorMessage) ;
                     }else{

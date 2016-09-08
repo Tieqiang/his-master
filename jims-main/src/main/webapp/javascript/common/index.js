@@ -73,8 +73,7 @@ window.addTab = function (title, href) {
             window.open(href);
         } else if(href.indexOf("LOCAL")>0){
             $.post(href, {}, function (data,status) {
-                console.log(data);
-                console.log(status)
+                
             })
         }else {
             $("#mainContent").tabs('add', {
@@ -129,8 +128,20 @@ $(function () {
         })
 
     })
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(window.parent.location.href);
+        if (results == null)    return ""; else {
+            return results[1];
+        }
+    }
+
+    var staffId = getUrlParameter("staffId");
     $("#changeLogin").on('click', function () {
-        location.href = "/views/his/common/module-select.html"
+        location.href = "/views/his/common/module-select.html?sId=" + staffId;
     })
     $("#dlgNew").dialog({
         title: '修改密码',
@@ -300,7 +311,6 @@ $(function () {
         });
         //判断是否有本地应用
         var localProgramPromise = $.get("/api/login/list-app?loginId=" + config.loginId + "&date=" + new Date(), function (data) {
-            console.log(data);
             var localProgram = {
                 text: '我的应用',
                 state: 'open',
