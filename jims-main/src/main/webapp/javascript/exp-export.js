@@ -289,26 +289,12 @@ $(function () {
             title: '进价',
             field: 'purchasePrice',
             width: "5%",
-            editable: false,
-            editor: {
-                type: 'numberbox',
-                options: {
-                    editable: false,
-                    precision: 2
-                }
-            }
+            precision: 2
         }, {
             title: '售价',
             field: 'retailPrice',
             width: '5%',
-            editable: false,
-            editor: {
-                type: 'numberbox',
-                options: {
-                    editable: false,
-                    precision: 2
-                }
-            }
+            precision: 2
         }, {
             title: '金额',
             field: 'amount',
@@ -961,12 +947,6 @@ $(function () {
         return true;
     }
     var getCommitData = function () {
-        var rows = $('#exportDetail').datagrid('getRows');
-        var accountReceivable = 0;
-        $.each(rows, function (index, item) {
-            accountReceivable = parseFloat(accountReceivable);
-            accountReceivable += parseFloat(item.amount);
-        });
         var expExportMasterBeanChangeVo = {};
         expExportMasterBeanChangeVo.inserted = [];
         var exportMaster = {};
@@ -975,8 +955,7 @@ $(function () {
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');
-        //exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
-        exportMaster.accountReceivable = accountReceivable;
+        exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
@@ -1066,6 +1045,7 @@ $(function () {
         }
         if (dataValid()) {
             var importVo = getCommitData();
+            console.log(importVo);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
                 if (data.errorMessage) {
                     $.messager.alert("系统提示", data.errorMessage, 'error');
@@ -1143,28 +1123,12 @@ $(function () {
                     index: editIndex,
                     field: 'disNum'
                 });
-                var retailPrice = $("#exportDetail").datagrid('getEditor', {
-                    index: editIndex,
-                    field: 'retailPrice'
-                });
-
-                var amount = $("#exportDetail").datagrid('getEditor', {
-                    index: editIndex,
-                    field: 'amount'
-                });
                 var quantity1 = $(quantity.target).textbox('getValue');
                 var disNum1 = $(disNum.target).textbox('getValue');
-                var retailPrice = $(retailPrice.target).textbox('getValue');
                 if (quantity1 == "" || quantity1 == null || typeof(quantity1) == "underfined") {
                     $.messager.alert("系统提示", "请先填写出库数量", "error");
                     return;
                 } else {
-                    var number = $(amount.target).textbox('setValue', retailPrice * quantity1);
-                    var oldNum = $('#accountReceivable').numberbox('getValue');
-                    oldNum = parseFloat(oldNum);
-                    oldNum += parseFloat(retailPrice * quantity1);
-                    oldNum = fmoney(oldNum, 2);
-                    $('#accountReceivable').numberbox('setValue', oldNum);
                     addRow();
                 }
                 if (parseInt(quantity1) > parseInt(disNum1)) {
