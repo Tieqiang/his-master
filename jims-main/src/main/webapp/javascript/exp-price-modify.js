@@ -674,6 +674,13 @@ $(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
+        var rows = $('#dg').datagrid('getRows');
+        $.each(rows,function(index,item){
+            if(item.expCode == '' || item.expCode == null || typeof(item.expCode) == 'undefined' ||
+                item.expName == '' || item.expName == null || typeof(item.expName) == 'undefined'){
+                $('#dg').datagrid('deleteRow', index);
+            }
+        });
         var flag=true;
         var inserted = $("#dg").datagrid("getChanges", "inserted");
         var deleted = $("#dg").datagrid('getChanges', 'deleted');
