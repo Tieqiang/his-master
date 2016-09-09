@@ -67,9 +67,8 @@ $(function () {
     var storage = [];
     var editIndex;
 
-    var rowStyler=function(index,row)
-    {
-        if (row.expName =='小计') {
+    var rowStyler = function (index, row) {
+        if (row.expName == '小计') {
             return 'background-color:#EAF2FF;color:black;font-weight:bolder;';
         }
         if (row.expName == '合计') {
@@ -96,8 +95,10 @@ $(function () {
                 + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
             return dateTime
         }
+        return null;
     }
 
+    //格式化日期函数：2016-09-09 00:00:00
     function formatterDate2(val, row) {
         if (val != null) {
             var date = new Date(val);
@@ -113,6 +114,7 @@ $(function () {
         }
     }
 
+    //格式化日期函数：2016-09-09 23:59:59
     function formatterDate3(val, row) {
         if (val != null) {
             var date = new Date(val);
@@ -125,21 +127,6 @@ $(function () {
             var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' '
                 + (h < 10 ? ("0" + h) : h) + ":" + (mm < 10 ? ("0" + mm) : mm) + ":" + (s < 10 ? ("0" + s) : s);
             return dateTime
-        }
-    }
-
-    function w3(s) {
-        if (!s) return new Date();
-        var y = s.substring(0, 4);
-        var m = s.substring(5, 7);
-        var d = s.substring(8, 10);
-        var h = s.substring(11, 14);
-        var min = s.substring(15, 17);
-        var sec = s.substring(18, 20);
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(sec)) {
-            return new Date(y, m - 1, d, h, min, sec);
-        } else {
-            return new Date();
         }
     }
 
@@ -179,13 +166,13 @@ $(function () {
         toolbar: '#ft',
         footer: '#tb'
     });
-    $("#tt").tabs('add',{
-        title:'调价记录',
-        content:$("#tab1")
+    $("#tt").tabs('add', {
+        title: '调价记录',
+        content: $("#tab1")
     });
-    $("#tt").tabs('add',{
-        title:'调价盈亏',
-        content:$("#tab2")
+    $("#tt").tabs('add', {
+        title: '调价盈亏',
+        content: $("#tab2")
     });
     $("#tt").tabs('select', '调价记录');
     $("#tab1").datagrid({
@@ -258,34 +245,13 @@ $(function () {
             title: '实际生效日期',
             field: 'actualEfficientDate',
             width: "15%",
-            formatter: formatterDate,
             editor: {
-                type: 'datetimebox',
-                options: {
-                    value: 'dateTime',
-                    showSeconds: true,
-                    formatter: formatterDate,
-                    parser: w3,
-                    onSelect: function (date) {
-                        var dateEd = $("#tab1").datagrid('getEditor', {
-                            index: editIndex,
-                            field: 'actualEfficientDate'
-                        });
-                        var y = date.getFullYear();
-                        var m = date.getMonth() + 1;
-                        var d = date.getDate();
-                        var time = $(dateEd.target).datetimebox('spinner').spinner('getValue');
-                        var dateTime = y + "-" + (m < 10 ? ("0" + m) : m) + "-" + (d < 10 ? ("0" + d) : d) + ' ' + time;
-
-                        $(dateEd.target).textbox('setValue', dateTime);
-                        $(this).datetimebox('hidePanel');
-                    }
-                }
+                type: 'datetimebox'
             }
         }, {
             title: '通知生效日期',
             field: 'noticeEfficientDate',
-            formatter:formatterDate,
+            formatter: formatterDate,
             width: "15%"
         }, {
             title: '调价依据',
@@ -295,20 +261,19 @@ $(function () {
             title: '医院编码',
             field: 'hospitalId',
             width: "7%",
-            hidden:true
+            hidden: true
         }
         ]],
-        onClickRow: function (index, row) {  console.log(index+"-"+editIndex);
+        onClickRow: function (index, row) {
             stopEdit();
-
             $(this).datagrid('beginEdit', index);
             editIndex = index;
         },
-        onLoadSuccess:function(){
-            if($(this).datagrid('getRows').length >0){
+        onLoadSuccess: function () {
+            if ($(this).datagrid('getRows').length > 0) {
                 $("#delete").linkbutton('enable');
                 $("#add").linkbutton('enable');
-            }else{
+            } else {
                 $("#delete").linkbutton('disable');
                 $("#add").linkbutton('disable');
             }
@@ -325,11 +290,11 @@ $(function () {
             title: '库存单位',
             field: 'storageName',
             width: "7%"
-        },{
+        }, {
             title: '代码',
             field: 'expCode',
             width: "7%"
-        },  {
+        }, {
             title: '产品名称',
             field: 'expName',
             width: "10%"
@@ -349,7 +314,7 @@ $(function () {
             title: '数量',
             field: 'quantity',
             width: "5%"
-        },{
+        }, {
             title: '原批发价',
             field: 'originalTradePrice',
             width: "5%"
@@ -409,8 +374,8 @@ $(function () {
                     precision: 2
                 }
             },
-            formatter: function(value,row,index){
-                if (row.retailPriceProfit){
+            formatter: function (value, row, index) {
+                if (row.retailPriceProfit) {
                     return row.retailPriceProfit.toFixed(2);
                 } else {
                     return value;
@@ -427,7 +392,7 @@ $(function () {
         onLoadSuccess: function () {
             if ($(this).datagrid('getRows').length > 0) {
                 $("#save").linkbutton('enable');
-            }else{
+            } else {
                 $("#save").linkbutton('disable');
             }
         }
@@ -438,15 +403,7 @@ $(function () {
         stopEdit();
         var rows = $("#tab1").datagrid('getRows');
         for (var i = 0; i < rows.length; i++) {
-            var line = i+1;
-            //if (rows[i].currentTradePrice == 0) {
-            //    $.messager.alert("系统提示", "第" + line + "行新批发价为0 请重新填写", 'error');
-            //    return false;
-            //}
-            //if (rows[i].currentRetailPrice == 0) {
-            //    $.messager.alert("系统提示", "第" + line + "行新零售价为0 请重新填写", 'error');
-            //    return false;
-            //}
+            var line = i + 1;
 
             if (rows[i].noticeEfficientDate == '') {
                 $.messager.alert("系统提示", "第" + line + "行实际生效时间为空 请重新填写", 'error');
@@ -458,7 +415,7 @@ $(function () {
             $.messager.alert("系统提示", "调价记录为空，不允许计算", 'error');
             return false;
         }
-        $("#tt").tabs('select','调价盈亏');
+        $("#tt").tabs('select', '调价盈亏');
         loadProfit();
     });
 
@@ -473,8 +430,8 @@ $(function () {
             $('#tab1').datagrid('deleteRow', index);
             editIndex = undefined;
             var clear = [];
-            $('#tab2').datagrid('loadData',clear);
-            $('#tab2').datagrid('loadData',{total:0,rows:[]});
+            $('#tab2').datagrid('loadData', clear);
+            $('#tab2').datagrid('loadData', {total: 0, rows: []});
         }
     });
 
@@ -497,22 +454,7 @@ $(function () {
 
         var inserted = $("#tab2").datagrid("getRows");
         var deleted = $("#tab1").datagrid('getChanges', 'deleted');
-        //var updated = $("#tab1").datagrid('getChanges', 'updated');
         var updated = $("#tab1").datagrid("getRows");
-        $.each(inserted, function (index, item) {
-            //格式化日期
-            item.actualEfficientDate = new Date(item.actualEfficientDate);
-        });
-        $.each(updated, function (index, item) {
-            //格式化日期
-            item.noticeEfficientDate = new Date(item.noticeEfficientDate);
-            item.actualEfficientDate = new Date(item.actualEfficientDate);
-        });
-        $.each(deleted, function (index, item) {
-            //格式化日期
-            item.noticeEfficientDate = new Date(item.noticeEfficientDate);
-            item.actualEfficientDate = new Date(item.actualEfficientDate);
-        });
 
         var expPriceModifyChange = {};
         expPriceModifyChange.deleted = deleted;
@@ -526,11 +468,27 @@ $(function () {
         expPriceModifyProfitVo.expPriceModifyProfitChange = expPriceModifyProfitChange;
 
         if (expPriceModifyProfitVo) {
+            for (var i = 0; i < expPriceModifyProfitVo.expPriceModifyChange.updated.length; i++) {
+                if (expPriceModifyProfitVo.expPriceModifyChange.updated[i].actualEfficientDate == null || expPriceModifyProfitVo.expPriceModifyChange.updated[i].actualEfficientDate == '') {
+                    $.messager.alert('系统提示', '请设置实际生效日期,并保证实际生效日期不小于通知生效日期', 'info');
+                    return;
+                } else if ((new Date(expPriceModifyProfitVo.expPriceModifyChange.updated[i].actualEfficientDate)).getTime() < expPriceModifyProfitVo.expPriceModifyChange.updated[i].noticeEfficientDate) {
+                    $.messager.alert('系统提示', '实际生效日期不能小于通知生效日期,请重新设置', 'info');
+                    $('#tab1').datagrid('selectRow', i);
+                    return;
+                } else {
+                    if (expPriceModifyProfitVo.expPriceModifyProfitChange.inserted.length == 0) {
+                        $.messager.alert('系统信息', '请点击计算按钮计算了调价盈亏后再保存', 'info');
+                        return;
+                    }
+                }
+            }
+            console.log(expPriceModifyProfitVo);
             $.postJSON("/api/exp-price-modify/save-modify-confirm", expPriceModifyProfitVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
                 //loadDict();
-                $("#tab1").datagrid('loadData',{total:0,rows:[]})
-                $("#tab2").datagrid('loadData',{total:0,rows:[]})
+                $("#tab1").datagrid('loadData', {total: 0, rows: []})
+                $("#tab2").datagrid('loadData', {total: 0, rows: []})
             }, function (data) {
                 $.messager.alert('提示', "保存失败", "error");
             })
@@ -541,7 +499,7 @@ $(function () {
         var startDate = $('#startDate').datetimebox('getText');
         var stopDate = $('#stopDate').datetimebox('getText');
         $.get("/api/exp-price-modify/list?startDate=" + startDate + "&stopDate=" + stopDate, function (data) {
-            if (data.length>0) {
+            if (data.length > 0) {
                 $("#tab1").datagrid('loadData', data);
             } else {
                 $.messager.alert("系统提示", "数据库暂无数据", "info");
@@ -551,23 +509,28 @@ $(function () {
         });
     }
 
+    //加载调价盈亏页面
     var loadProfit = function (expCode) {
         var rows = $("#tab1").datagrid('getRows');
-        $.each(rows, function (index, item) {
-            //格式化日期
-            item.noticeEfficientDate = new Date(item.noticeEfficientDate);
-            item.actualEfficientDate = new Date(item.actualEfficientDate);
-        });
-
-        $.postJSON("/api/exp-price-modify-profit/calc-profit",rows, function (data) {
+        for (var i = 0; i < rows.length; i++) {
+            var line = i + 1;
+            if (rows[i].actualEfficientDate == null || $.trim(rows[i].actualEfficientDate) == '') {
+                $.messager.alert('系统提示', '第' + line + '行实际生效日期为空,请设置实际生效日期,并确保实际生效日期不小于通知生效日期', 'info');
+                return;
+            } else if ((new Date(rows[i].actualEfficientDate)).getTime() < rows[i].noticeEfficientDate) {
+                $.messager.alert('系统提示', '实际生效日期不能小于通知生效日期,请重新设置', 'info');
+                $('#tab1').datagrid('selectRow', i);
+                return;
+            } else {
+                //格式化日期
+                rows[i].noticeEfficientDate = new Date(rows[i].noticeEfficientDate);
+                rows[i].actualEfficientDate = new Date(rows[i].actualEfficientDate);
+            }
+        }
+        $.postJSON("/api/exp-price-modify-profit/calc-profit", rows, function (data) {
             if (data) {
                 $("#tab2").datagrid('loadData', data);
-                //$("#tab2").datagrid("autoMergeCells", ['storageName', 'expCode','expName', 'expSpec','units','firmId']);
             }
         });
     }
-
 });
-
-
-
