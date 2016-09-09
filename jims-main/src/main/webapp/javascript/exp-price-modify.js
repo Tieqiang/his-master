@@ -711,7 +711,8 @@ $(function () {
         if (expPriceModifyChangeVo && flag) {
             $.postJSON("/api/exp-price-modify/save", expPriceModifyChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
-                parent.updateTab('调价记录维护', '/his/ieqm/exp-price-modify');
+                $('#dg').datagrid('loadData',[]);
+                loadDict();
             }, function (data) {
                 $.messager.alert('提示', "保存失败", "error");
             })
