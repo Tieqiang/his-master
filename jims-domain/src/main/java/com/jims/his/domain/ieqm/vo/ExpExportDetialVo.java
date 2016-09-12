@@ -67,8 +67,9 @@ public class ExpExportDetialVo {
     private String expImportDetailRegistNo;
     private String expImportDetailLicenceno;
     private String invoiceNo;
+    private String exportDocumentNo ;
 
-    public ExpExportDetialVo(String documentNo, Short itemNo, String orderBatch, String tenderNo, String expName, String expCode, String expSpec, String units, String batchNo, Date invoiceDate, Date expireDate, String firmId, String expForm, String importDocumentNo, Double purchasePrice, Double tradePrice, Double retailPrice, String packageSpec, Double quantity, String packageUnits, Double subPackage1, String subPackageUnits1, String subPackageSpec1, Double subPackage2, String subPackageUnits2, String subPackageSpec2, Double inventory, Double discount, Date produceDate, Date producedate, Date disinfectdate, Date disinfectDate, Integer killflag, Short recFlag, String recOperator, Date recDate, String assignCode, String bigCode, String bigSpec, String bigFirmId, String expSgtp, String memo, String registNo, String licenceNo, String hospitalId, Integer expIndicator, Double amount, String deptAttr, String receiver, String subStorage, Double payAmount, Double retailAmount, String fundItem, String assignName, String expImportDetailRegistNo, String expImportDetailLicenceno, String invoiceNo) {
+    public ExpExportDetialVo(String documentNo, Short itemNo, String orderBatch, String tenderNo, String expName, String expCode, String expSpec, String units, String batchNo, Date invoiceDate, Date expireDate, String firmId, String expForm, String importDocumentNo, Double purchasePrice, Double tradePrice, Double retailPrice, String packageSpec, Double quantity, String packageUnits, Double subPackage1, String subPackageUnits1, String subPackageSpec1, Double subPackage2, String subPackageUnits2, String subPackageSpec2, Double inventory, Double discount, Date produceDate, Date producedate, Date disinfectdate, Date disinfectDate, Integer killflag, Short recFlag, String recOperator, Date recDate, String assignCode, String bigCode, String bigSpec, String bigFirmId, String expSgtp, String memo, String registNo, String licenceNo, String hospitalId, Integer expIndicator, Double amount, String deptAttr, String receiver, String subStorage, Double payAmount, Double retailAmount, String fundItem, String assignName, String expImportDetailRegistNo, String expImportDetailLicenceno, String invoiceNo, String exportDocumentNo) {
         this.documentNo = documentNo;
         this.itemNo = itemNo;
         this.orderBatch = orderBatch;
@@ -126,6 +127,7 @@ public class ExpExportDetialVo {
         this.expImportDetailRegistNo = expImportDetailRegistNo;
         this.expImportDetailLicenceno = expImportDetailLicenceno;
         this.invoiceNo = invoiceNo;
+        this.exportDocumentNo = exportDocumentNo;
     }
 
     public ExpExportDetialVo() {
@@ -587,5 +589,13 @@ public class ExpExportDetialVo {
 
     public void setTenderNo(String tenderNo) {
         this.tenderNo = tenderNo;
+    }
+
+    public String getExportDocumentNo() {
+        return exportDocumentNo;
+    }
+
+    public void setExportDocumentNo(String exportDocumentNo) {
+        this.exportDocumentNo = exportDocumentNo;
     }
 }

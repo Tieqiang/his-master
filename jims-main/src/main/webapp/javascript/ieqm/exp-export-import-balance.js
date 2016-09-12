@@ -1298,7 +1298,9 @@ $(function () {
             if(!detail.batchNo||detail.batchNo==undefined||detail.batchNo==""){
                 detail.batchNo = 'X' ;
             }
-            detail.expireDate = new Date(rows[i].expireDate);
+            if(!rows[i].expireDate){
+                detail.expireDate = new Date(rows[i].expireDate);
+            }
             detail.firmId = rows[i].firmId;
             detail.expForm = rows[i].expForm;
             detail.importDocumentNo = $("#documentNoIn").textbox('getValue');

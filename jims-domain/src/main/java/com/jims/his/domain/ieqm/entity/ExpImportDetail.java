@@ -61,6 +61,7 @@ public class ExpImportDetail implements java.io.Serializable {
 	private String orderBatch;
 	private Short tenderNo;
     private String hospitalId ;
+    private String exportDocumentNo ;
 	// Constructors
 
 	/** default constructor */
@@ -80,7 +81,7 @@ public class ExpImportDetail implements java.io.Serializable {
                            Double inventory, String memo, String registno, String licenceno,
                            Date producedate, Date disinfectdate, Integer killflag,
                            Integer tallyFlag, Date tallyDate, String tallyOpertor,
-                           String orderBatch, Short tenderNo, String hospitalId) {
+                           String orderBatch, Short tenderNo, String hospitalId, String exportDocumentNo) {
 		this.documentNo = documentNo;
 		this.itemNo = itemNo;
 		this.expCode = expCode;
@@ -120,6 +121,7 @@ public class ExpImportDetail implements java.io.Serializable {
 		this.orderBatch = orderBatch;
 		this.tenderNo = tenderNo;
         this.hospitalId = hospitalId;
+        this.exportDocumentNo = exportDocumentNo;
     }
 
 	// Property accessors
@@ -489,5 +491,14 @@ public class ExpImportDetail implements java.io.Serializable {
 
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    @Column(name="export_document_no")
+    public String getExportDocumentNo() {
+        return exportDocumentNo;
+    }
+
+    public void setExportDocumentNo(String exportDocumentNo) {
+        this.exportDocumentNo = exportDocumentNo;
     }
 }

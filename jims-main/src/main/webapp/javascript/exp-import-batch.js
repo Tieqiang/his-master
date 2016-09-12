@@ -669,6 +669,11 @@ $(function () {
             title: '进货价',
             field: 'tradePrice',
             hidden: true
+        },{
+            title:'出库单号',
+            field:"exportDocumentNo",
+            editor:{type:'textbox',options:{editable:false}},
+            hidden:false
         }
         ]],
         onClickCell: function (index, field, row) {
@@ -766,9 +771,7 @@ $(function () {
         }, {
             title: '厂家',
             field: 'firmId'
-        }
-
-            , {
+        }, {
             title: '备注',
             field: 'memo'
         }, {
@@ -783,6 +786,9 @@ $(function () {
         }, {
             title: '灭菌标志',
             field: 'killflag'
+        },{
+            title:'出库单号',
+            field:'exportDocumentNo'
         }
         ,{
             title:'零售价',
@@ -1104,7 +1110,10 @@ $(function () {
             detail.batchNo = rows[i].batchNo;
             detail.purchasePrice = rows[i].purchasePrice;
 
-            detail.expireDate = new Date(rows[i].expireDate);
+            if(!rows[i].expireDate){
+
+                detail.expireDate = new Date(rows[i].expireDate);
+            }
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
             detail.retailPrice = rows[i].retailPrice;
@@ -1119,6 +1128,7 @@ $(function () {
             detail.disinfectdate = new Date(rows[i].disinfectdate);
             detail.invoiceNo = rows[i].invoiceNo;
             detail.hospitalId = parent.config.hospitalId;
+            detail.exportDocumentNo = rows[i].exportDocumentNo ;
 
             expImportDetailBeanChangeVo.inserted.push(detail);
         }

@@ -1024,7 +1024,9 @@ $(function () {
             detail.subPackageUnits2 = rows[i].subPackageUnits2;
             detail.subPackageSpec2 = rows[i].subPackageSpec2;
             detail.purchasePrice = rows[i].purchasePrice;
-            detail.expireDate = new Date(rows[i].expireDate);
+            if(!rows[i].expireDate){
+                detail.expireDate = new Date(rows[i].expireDate);
+            }
             detail.expForm = rows[i].expForm;
             detail.recFlag = 0;
             detail.firmId = rows[i].firmId;

@@ -56,6 +56,7 @@ public class ExpExportFacade extends BaseFacade {
                 "         EXP_EXPORT_DETAIL.KILLFLAG,\n" +
                 "         EXP_DICT.EXP_INDICATOR,\n" +
                 "         EXP_DICT.EXP_NAME,\n" +
+                "         EXP_EXPORT_MASTER.DOCUMENT_NO as export_document_no,\n" +
                 "EXP_EXPORT_DETAIL.SUB_PACKAGE_1, \n" +
                 "EXP_EXPORT_DETAIL.SUB_PACKAGE_UNITS_1, \n" +
                 "EXP_EXPORT_DETAIL.SUB_PACKAGE_SPEC_1  \n" +

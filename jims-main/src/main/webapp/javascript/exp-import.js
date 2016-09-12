@@ -1052,7 +1052,9 @@ $(function () {
             detail.batchNo=batchNo;
             detail.purchasePrice = rows[i].purchasePrice;
             var expireDate = rows[i].expireDate ;
-            detail.expireDate = new Date(expireDate);
+            if(!expireDate){
+                detail.expireDate = new Date(expireDate);
+            }
 
             detail.expForm = rows[i].expForm;
             detail.firmId = rows[i].firmId;
