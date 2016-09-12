@@ -674,6 +674,13 @@ $(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
+        var rows = $('#dg').datagrid('getRows');
+        $.each(rows,function(index,item){
+            if(item.expCode == '' || item.expCode == null || typeof(item.expCode) == 'undefined' ||
+                item.expName == '' || item.expName == null || typeof(item.expName) == 'undefined'){
+                $('#dg').datagrid('deleteRow', index);
+            }
+        });
         var flag=true;
         var inserted = $("#dg").datagrid("getChanges", "inserted");
         var deleted = $("#dg").datagrid('getChanges', 'deleted');
@@ -711,7 +718,8 @@ $(function () {
         if (expPriceModifyChangeVo && flag) {
             $.postJSON("/api/exp-price-modify/save", expPriceModifyChangeVo, function (data) {
                 $.messager.alert("系统提示", "保存成功", "info");
-                parent.updateTab('调价记录维护', '/his/ieqm/exp-price-modify');
+                $('#dg').datagrid('loadData',[]);
+                loadDict();
             }, function (data) {
                 $.messager.alert('提示', "保存失败", "error");
             })
