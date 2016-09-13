@@ -64,7 +64,8 @@ $(function () {
     var flag;
     var editIndex;
     var currentExpCode;
-    var exportFlag;
+    var exportFlag=true;
+
     var upStorageFlag;
     var panelHeight = $(window).height - 300;
     //库房字典
@@ -200,14 +201,6 @@ $(function () {
                     maxlength: 11,
                     precision: 2,
                     onChange: function (newValue, oldValue) {
-                        if (oldValue != null && oldValue != '' && typeof(oldValue) != 'undefined') {
-                            if (newValue != null && newValue != '' && typeof(newValue) != 'undefined') {
-                                addRow();
-                            } else {
-                                $.messager.alert('系统提示', '数量不能为空', 'info');
-                                return;
-                            }
-                        }
                         var value = $('#receiver').combobox('getValue');
                         $.ajax({
                             url: '/api/exp-supplier-catalog/find-by-supplier-id?supplierId=' + value,
@@ -218,6 +211,11 @@ $(function () {
                                 var selectRows = $("#exportDetail").datagrid('getData').rows;
                                 var purchasePrice = selectRows[editIndex].purchasePrice;
                                 var retailPrice = selectRows[editIndex].retailPrice;
+                                var disNum = selectRows[editIndex].disNum ;
+                                if(newValue>disNum){
+                                    $.messager.alert("系统提示","输入的数量大于当前库存量，请重新输入");
+                                    return ;
+                                }
 
                                 var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
                                 if (data != null && data != "") {
@@ -226,43 +224,49 @@ $(function () {
                                     $(amountEd.target).numberbox('setValue', newValue * retailPrice);
                                 }
                                 var rows = $("#exportDetail").datagrid('getRows');
-                                var totalAmount = 0.00;
-                                totalAmount = parseFloat(totalAmount);
+                                var totalAmount = 0;
                                 for (var i = 0; i < rows.length; i++) {
-                                    totalAmount = parseFloat(totalAmount);
-                                    if($.trim(rows[i].quantity) != '' && rows[i].quantity != null){
-                                        totalAmount += parseFloat(rows[i].quantity) * rows[i].retailPrice;
-                                        totalAmount = fmoney(totalAmount,2);
+                                    var rowIndex = $("#exportDetail").datagrid('getRowIndex', rows[i]);
+                                    if (rowIndex == editIndex) {
+                                        continue;
                                     }
+                                    totalAmount += Number(rows[i].amount);
                                 }
 
-                                $("#accountReceivable").numberbox('setValue', parseFloat(totalAmount));
-                                //addRow();
+                                if (totalAmount) {
+                                    if (data != null && data != "") {
+                                        totalAmount += newValue * purchasePrice;
+                                    } else {
+                                        totalAmount += newValue * retailPrice;
+                                    }
+                                } else {
+                                    if (data != null && data != "") {
+                                        totalAmount = newValue * purchasePrice;
+                                    } else {
+                                        totalAmount = newValue * retailPrice;
+                                    }
+                                }
+                                $("#accountReceivable").numberbox('setValue', totalAmount);
+
+                                var maxIdex = $("#exportDetail").datagrid('getRowIndex',selectRows[selectRows.length-1]);
+                                if(maxIdex>editIndex){
+                                }else{
+                                    addRow() ;
+                                }
                             }
                         });
 
                     }
                 }
-            }, formatter: function (value, row, index) {
-                if (value > row.disNum) {
-                    $.messager.alert('系统消息', '第' + (parseInt(index + 1)) + '行出库数量超过库存量，请重新填编辑。', 'error');
-                    value = 0;
-                    exportFlag = false;
-                } else {
-                    exportFlag = true;
-                }
-                return value;
             }
         }, {
             title: '进价',
             field: 'purchasePrice',
-            width: "5%",
-            precision: 2
+            width: "5%"
         }, {
             title: '售价',
             field: 'retailPrice',
-            width: '5%',
-            precision: 2
+            width: '5%'
         }, {
             title: '金额',
             field: 'amount',
@@ -272,9 +276,6 @@ $(function () {
                     editable: false,
                     disabled: true
                 }
-            },
-            formatter: function(value,row){
-                return parseFloat(row.quantity) * parseFloat(row.retailPrice)
             },
             width: "5%"
         }, {
@@ -884,7 +885,7 @@ $(function () {
             if(rows[i].expCode==null||(!rows[i].expCode) || rows[i].expSpec==null||(!rows[i].expSpec) ||rows[i].firmId==null||(
                     !rows[i].firmId) || rows[i].purchasePrice==null || (!rows[i].purchasePrice) || rows[i].tradePrice==null ||(
                     !rows[i].tradePrice) || rows[i].retailPrice==null || (!rows[i].retailPrice)){
-                //console.log(rows[i])
+                console.log(rows[i])
                 $.messager.alert("系统提示", "第" + i + "行入库记录信息不完善 请重新填写", 'error');
                 return false;
             }
@@ -1014,6 +1015,7 @@ $(function () {
             $("#exportDetail").datagrid('endEdit', editIndex);
         }
         if (!exportFlag) {
+            console.log(exportFlag)
             return;
         }
         if (dataValid()) {
@@ -1073,6 +1075,7 @@ $(function () {
             }
             $("#printDiv").dialog('open');
         }
+
     })
     function getSelectedText(name) {
         var obj = document.getElementById(name);
@@ -1096,22 +1099,21 @@ $(function () {
                     index: editIndex,
                     field: 'disNum'
                 });
+
                 var quantity1 = $(quantity.target).textbox('getValue');
                 var disNum1 = $(disNum.target).textbox('getValue');
                 if (quantity1 == "" || quantity1 == null || typeof(quantity1) == "underfined") {
                     $.messager.alert("系统提示", "请先填写出库数量", "error");
+                    e.preventDefault() ;
                     return;
                 } else {
 
-                    addRow();
                 }
-                if (parseInt(quantity1) > parseInt(disNum1)) {
-                    $.messager.alert("系统提示", "出库数量大于结存量!", "error");
-                    return;
-                }
+
+
             }
-        }
-        ;
+        };
+
         if (!options.closed) {
             e.preventDefault();
             var rows = $("#stockRecordDatagrid").datagrid('getRows');
@@ -1152,4 +1154,5 @@ $(function () {
         }
         return t.split("").reverse().join("") + "." + r;
     }
+
 })
