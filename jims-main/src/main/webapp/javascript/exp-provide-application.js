@@ -100,6 +100,29 @@ $(document).ready(function () {
                     onClickRow: function (rowIndex, rowData) {
                         $("#dg").datagrid('endEdit', editRowIndex);
                         if (rowData.amountPerPackage > 0 && rowData.supplyIndicator == 1) {
+                            var rows = $('#dg').datagrid('getRows');
+                            for(var i = 0; i < rows.length; i++){
+                                 var rowIndex = $('#dg').datagrid('getRowIndex',rows[i]);
+                                 if(rowIndex == editRowIndex){ continue;}
+                                 if (rows[i].expCode == rowData.expCode && rows[i].expName == rowData.expName && rows[i].packageSpec == rowData.expSpec
+                                 && rows[i].packageUnits == rowData.units && rows[i].expSpec == rowData.minSpec) {
+                                     $.messager.alert('系统提示', '相同名称、规格、包装规格、包装单位的物品已经存在,请不要重复添加', 'info');
+                                     $('#dg').datagrid('deleteRow', editRowIndex);
+                                     var newRows = $('#dg').datagrid("getRows");
+                                     var applicationStorage = $("#storage").combobox("getValue");
+                                     $('#dg').datagrid('appendRow', {
+                                         provideStorage: applicationStorage,
+                                         applicationMan: parent.config.staffName,
+                                         applicantStorage: parent.config.storageCode
+                                     });
+                                     var addRowIndex = $("#dg").datagrid('getRowIndex', newRows[newRows.length - 1]);
+                                     editRowIndex = addRowIndex;
+                                     $("#dg").datagrid('selectRow', editRowIndex);
+                                     $("#dg").datagrid('beginEdit', editRowIndex);
+                                     return;
+                                 }
+                            }
+
                             var rowDetail = $("#dg").datagrid('getData').rows[editRowIndex];
                             rowDetail.packageSpec = rowData.expSpec;
                             rowDetail.expCode = rowData.expCode;
@@ -120,6 +143,31 @@ $(document).ready(function () {
                             var row = $(this).combogrid('grid').datagrid('getSelected');
                             $(this).combogrid('hidePanel');
                             if (row && row.amountPerPackage > 0 && row.supplyIndicator == 1) {
+                                var rows = $('#dg').datagrid('getRows');
+                                for (var i = 0; i < rows.length; i++) {
+                                    var rowIndex = $('#dg').datagrid('getRowIndex', rows[i]);
+                                    if (rowIndex == editRowIndex) {
+                                        continue;
+                                    }
+                                    if (rows[i].expCode == row.expCode && rows[i].expName == row.expName && rows[i].packageSpec == row.expSpec
+                                        && rows[i].packageUnits == row.units && rows[i].expSpec == row.minSpec) {
+                                        $.messager.alert('系统提示', '相同名称、规格、包装规格、包装单位的物品已经存在,请不要重复添加', 'info');
+                                        $('#dg').datagrid('deleteRow', editRowIndex);
+                                        var newRows = $('#dg').datagrid("getRows");
+                                        var applicationStorage = $("#storage").combobox("getValue");
+                                        $('#dg').datagrid('appendRow', {
+                                            provideStorage: applicationStorage,
+                                            applicationMan: parent.config.staffName,
+                                            applicantStorage: parent.config.storageCode
+                                        });
+                                        var addRowIndex = $("#dg").datagrid('getRowIndex', newRows[newRows.length - 1]);
+                                        editRowIndex = addRowIndex;
+                                        $("#dg").datagrid('selectRow', editRowIndex);
+                                        $("#dg").datagrid('beginEdit', editRowIndex);
+                                        return;
+                                    }
+                                }
+
                                 $("#dg").datagrid('endEdit', editRowIndex);
                                 var rowDetail = $("#dg").datagrid('getData').rows[editRowIndex];
                                 rowDetail.packageSpec = row.expSpec;
