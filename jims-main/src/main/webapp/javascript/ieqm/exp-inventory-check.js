@@ -222,9 +222,10 @@ $(function () {
             type: 'numberbox',
             formatter:function(value,row,index){
                 if($.trim(value)==""){
-                    return value=0;
+                    return value=0.00;
                 }else{
-                    return value;
+                    var newValue = toDecimal2(value);
+                    return newValue;
                 }
             }
         }, {
@@ -245,7 +246,42 @@ $(function () {
                     size: 8,
                     min: 0,
                     maxlength: 8,
-                    precision: 2
+                    precision: 2,
+                    onChange: function (newValue, oldValue) {
+                        var rows = $('#dg').datagrid('getRows');
+                        var allActualQuantity = 0.00;//实盘数总计
+                        var allQuantity = 0.00;    //盈亏数总计
+                        var allRealAmount = 0.00;   //实盘额总计
+                        for(var i = 0; i < rows.length; i++){
+                            if(typeof(rows[i].expName) == 'undefined'){
+                                continue;
+                            }
+                            //更新实盘数总计
+                            if(typeof(rows[i].actualQuantity) == 'number'){
+                                allActualQuantity += rows[i].actualQuantity;
+                            }else{
+                                allActualQuantity += parseFloat(rows[i].actualQuantity);
+                            }
+                            //更新盈亏数总计
+                            if (typeof(rows[i].quantity) == 'number') {
+                                allQuantity += rows[i].quantity;
+                            } else {
+                                allQuantity += parseFloat(rows[i].quantity);
+                            }
+                            //更新实盘额总计
+                            if (typeof(rows[i].realAmount) == 'number') {
+                                allRealAmount += rows[i].realAmount;
+                            } else {
+                                allRealAmount += parseFloat(rows[i].realAmount);
+                            }
+                        }
+                        rows[rows.length-1].actualQuantity = allActualQuantity;     //实盘数总计
+                        rows[rows.length-1].quantity = allQuantity;                 //盈亏数总计
+                        rows[rows.length-1].realAmount = allRealAmount;             //实盘额总计
+                        rows[rows.length-1].profitAmount = allRealAmount - parseFloat(rows[rows.length-1].paperAmount);
+                        //刷新最后一行(合计行)
+                        $('#dg').datagrid('refreshRow',rows.length-1);
+                    }
                 }
             },
             formatter:function(value,row,index){
@@ -272,26 +308,44 @@ $(function () {
             title: '账面额',
             field: 'paperAmount',
             align: 'center',
-            width: "5%"
+            width: "5%",
+            formatter: function (value, row, index) {
+                if ($.trim(value) == "") {
+                    return value = 0.00;
+                } else {
+                    var newValue = toDecimal2(value);
+                    return newValue;
+                }
+            }
         }, {
             title: '实盘额',
             field: 'realAmount',
             align: 'center',
             width: "6%",
-            styler: cellStyler
+            styler: cellStyler,
+            formatter: function (value, row, index) {
+                if ($.trim(value) == "") {
+                    return value = 0.00;
+                } else {
+                    var newValue = toDecimal2(value);
+                    return newValue;
+                }
+            }
         }, {
             title: '盈亏额',
             field: 'profitAmount',
             align: 'center',
             width: "6%",
             styler: cellStyler,
-            formatter: function (value, row, index) {
-                if ($.trim(value) == "") {
-                    return value = 0;
-                } else {
-                    return value;
+                formatter: function (value, row, index) {
+                    if ($.trim(value) == "") {
+                        return value = 0.00;
+                    } else {
+                        var newValue = toDecimal2(value);
+                        //newValue = parseFloat(newValue);
+                        return newValue;
+                    }
                 }
-            }
         }, {
             title: '批号',
             field: 'batchNo',
@@ -382,25 +436,37 @@ $(function () {
                 var hospitalId = parent.config.hospitalId;
                 $.get("/api/exp-inventory-check/get-inventory?type=search&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&checkMonth=" + formatterDate(date) + "&subStorage=" + subStorage, function (data) {
                     //账面额=账面数*单价
-                    var sumAccountQuantity = 0.00;
-                    var sumActualQuantity = 0.00;
-                    var sumPaperAmount = 0.00;
+                    var sumAccountQuantity = 0.00;      //账面数合计
+                    var sumActualQuantity = 0.00;       //实盘数合计
+                    var sumQuantity = 0.00;             //盈亏数
+                    var sumPaperAmount = 0.00;          //账面额合计
+                    var sumRealAmount = 0.00;           //实盘额合计
+                    var sumProfitAmount = 0.00;         //盈亏数合计
 
                     $.each(data, function (index, item) {
+                        console.log(item);
                         item.no = index + 1;
-                        item.paperAmount = item.retailPrice * item.accountQuantity;
-                        item.quantity = item.actualQuantity - item.accountQuantity;
-                        item.profitAmount = item.quantity* item.retailPrice;
-                        sumAccountQuantity += item.accountQuantity;
-                        sumActualQuantity += item.actualQuantity;
-                        sumPaperAmount += item.paperAmount;
+                        item.paperAmount = item.retailPrice * item.accountQuantity;     //账面额计算
+                        item.quantity = item.actualQuantity - item.accountQuantity;     //盈亏数计算
+                        item.profitAmount = item.quantity* item.retailPrice;    //盈亏额计算
+
+                        sumAccountQuantity += item.accountQuantity;     //账面数合计
+                        sumActualQuantity += item.actualQuantity;       //实盘数合计
+                        sumPaperAmount += item.paperAmount;             //账面额合计
+                        sumQuantity += item.quantity;                   //盈亏数合计
+                        sumProfitAmount += item.profitAmount;           //盈亏额合计
+                        sumRealAmount = sumPaperAmount + sumProfitAmount;   //实盘额合计
                     });
                     $("#count").textbox("setText", data.length);
                     $("#dg").datagrid('loadData', data);
                     $('#dg').datagrid('appendRow', {
-                        accountQuantity: sumAccountQuantity,
-                        actualQuantity: sumActualQuantity,
-                        paperAmount: sumPaperAmount
+                        expForm: '合计:',
+                        accountQuantity: sumAccountQuantity,    //账面数合计
+                        actualQuantity: sumActualQuantity,      //实盘数合计
+                        quantity: sumQuantity,                   //盈亏数合计
+                        paperAmount: sumPaperAmount,            //账面额合计
+                        realAmount: sumRealAmount,              //实盘额合计
+                        profitAmount: sumProfitAmount           //盈亏额合计
                     });
                     //$("#dg").datagrid("autoMergeCells", ['expCode']);
                     $("#listDialog").dialog('close');
@@ -418,7 +484,7 @@ $(function () {
 
     $('#check').tooltip({
         position: 'right',
-        content: '<span style="color:	#FF3030">账面数为0的数据请在零库存管理页面维护</span>',
+        content: '<span style="color:#FF3030">账面数为0的数据请在零库存管理页面维护</span>',
         hideDelay:1000,
         onShow: function () {
             $(this).tooltip('tip').css({backgroundColor: '#00ffcc', borderColor: '#FFEFD5'});
@@ -702,4 +768,23 @@ $(function () {
         $("#printDiv").dialog('close')
         $("#dg").datagrid('loadData', {total: 0, rows: []});
     })
+
+    //强制保留2位小数，如：2，会在2后面补上00.即2.00   返回类型为string
+    function toDecimal2(x) {
+        var f = parseFloat(x);
+        if (isNaN(f)) {
+            return false;
+        }
+        var f = Math.round(x * 100) / 100;
+        var s = f.toString();
+        var rs = s.indexOf('.');
+        if (rs < 0) {
+            rs = s.length;
+            s += '.';
+        }
+        while (s.length <= rs + 2) {
+            s += '0';
+        }
+        return s;
+    }
 });
