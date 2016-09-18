@@ -265,6 +265,9 @@ public class ExpStockFacade extends BaseFacade {
                 expImportMaster.setAcctdate(null);
             }
         }
+        if(null == expImportMaster.getSupplier()){
+            expImportMaster.setSupplier(expImportMaster.getStorage()); //盘盈入库
+        }
         merge(expImportMaster);
         List<ExpImportDetail> details = importVo.getExpImportDetailBeanChangeVo().getInserted();
         for (ExpImportDetail detail : details) {
