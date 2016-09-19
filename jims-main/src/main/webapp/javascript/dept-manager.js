@@ -2,6 +2,13 @@
  * Created by heren on 2015/9/14.
  */
 $(function () {
+    //科室临床属性
+    $('#deptAttr').combobox({
+        url: '/api/base-dict/list-by-type?baseType=' + 'DEPT_CLINIC_ATTR_DICT',
+        valueField: 'baseCode',
+        textField: 'baseName',
+        method: 'get'
+    });
 
     $("#dept").searchbox({
         searcher: function (value, name) {
@@ -239,12 +246,16 @@ $(function () {
         deptDict.deptClass = $("#deptClass").combobox('getValue') ;
         deptDict.deptType = $("#deptType").combobox('getValue') ;
         deptDict.endDept = $("#endDept").combobox('getValue') ;
-        deptDict.deptAttr=$("#deptAttr").val();
+        deptDict.deptAttr=$("#deptAttr").combobox('getValue');
 
 
         deptDict.hospitalDict.id = parent.config.hospitalId;
 
         if ($("#fm").form('validate')) {
+            if($.trim(deptDict.deptAttr) == ''){
+                $.messager.alert('系统提示','请选择科室临床属性','info');
+                return;
+            }
             $.postJSON("/api/dept-dict/add", deptDict, function (data) {
                 $.messager.alert("系统提示", "保存成功");
                 loadDept();
