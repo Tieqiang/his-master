@@ -154,9 +154,9 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "   WHERE M.STORAGE = '"+storage+"' " +
                 "          AND M.HOSPITAL_ID = '"+hospitalId+"' " +
                 "          AND M.DOCUMENT_NO(+) = D.DOCUMENT_NO   \n" +
-                "          AND D.exp_spec = A.exp_spec   \n" +
-                "          AND D.exp_code = A.exp_code   \n" +
-                "          AND D.units = A.units   \n";
+                //"          AND D.exp_spec = A.exp_spec   \n" +
+                "          AND D.exp_code = A.exp_code   \n";
+                //"          AND D.units = A.units   \n";
 //                "          AND M.storage = A.storage_code   \n" +
 //                "\t        AND D.QUANTITY > NVL(D.DISBURSE_COUNT,0)\n";
         if (s1 != null) {
