@@ -263,12 +263,12 @@ $(function () {
             align: 'right',
             width: "10%"
         }, {
-            title: '零售价',
+            title: '总零价',
             field: 'payAmount',
             align: 'right',
             width: "10%"
         }, {
-            title: '进价',
+            title: '总进价',
             field: 'purchaseAmount',
             align: 'right',
             width: "10%"
