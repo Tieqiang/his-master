@@ -26,11 +26,14 @@ public class ExpInventoryCheckFacade extends BaseFacade {
     private EntityManager entityManager;
     private ExpStockFacade expStockFacade;
     private ExpSubStorageDictFacade expSubStorageDictFacade;
+    private ExpStorageDeptFacade expStorageDeptFacade;
     @Inject
-    public ExpInventoryCheckFacade(EntityManager entityManager, ExpStockFacade expStockFacade, ExpSubStorageDictFacade expSubStorageDictFacade) {
+    public ExpInventoryCheckFacade(EntityManager entityManager, ExpStockFacade expStockFacade, ExpSubStorageDictFacade
+            expSubStorageDictFacade,ExpStorageDeptFacade expStorageDeptFacade) {
         this.entityManager = entityManager;
         this.expStockFacade = expStockFacade;
         this.expSubStorageDictFacade = expSubStorageDictFacade;
+        this.expStorageDeptFacade = expStorageDeptFacade;
     }
 
     /**
@@ -149,6 +152,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
             //生成入库单号
             String documentNo="";
             short i = 0;
+            Double count = 0.00;    //计算总金额
             for (ExpInventoryCheck dict : rows) {
                 i++;
                 //生成一次入库master
@@ -166,7 +170,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     importMaster.setStorage(dict.getStorage());
                     importMaster.setImportDate(dict.getCheckYearMonth());
                     //importMaster.setSupplier();
-                    importMaster.setAccountReceivable(dict.getQuantity()*dict.getPurchasePrice());
+                    //importMaster.setAccountReceivable(dict.getQuantity()*dict.getPurchasePrice());
                     importMaster.setAccountPayed(0.0);
                     importMaster.setAdditionalFee(0.0);
                     importMaster.setImportClass("盘盈入库");
@@ -222,15 +226,24 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 //importDetail.setOrderBatch();
                 //importDetail.setTenderNo();
                 importDetail.setHospitalId(dict.getHospitalId());
-
-
                 importDetailInserted.add(importDetail);
             }
             expImportDetailBeanChangeVo.setInserted(importDetailInserted);
 
             importVo.setExpImportDetailBeanChangeVo(expImportDetailBeanChangeVo);
             importVo.setExpImportMasterBeanChangeVo(expImportMasterBeanChangeVo);
+
+            Integer level = expStorageDeptFacade.findLevelByStorageCode(rows.get(0).getStorage(), rows.get(0).getHospitalId());//当前库房级别
+            for (ExpInventoryCheck row : rows) {
+                if(level == 1){
+                    count += row.getQuantity() * row.getPurchasePrice(); //一级库房，总金额  进价 * 数量
+                }else{
+                    count += row.getQuantity() * row.getRetailPrice();  //不是一级库房，总金额  售价 * 数量
+                }
+            }
+            importVo.getExpImportMasterBeanChangeVo().getInserted().get(0).setAccountReceivable(count);     //设置主表总金额
         }
+
         return importVo;
     }
     //根据盘点记录生成出库数据
@@ -246,6 +259,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
             boolean masterExportFlag = false;
             String documentNo = "";
             short i = 0;
+            Double count = 0.00;    //计算总金额
             for (ExpInventoryCheck dict : rows) {
                 i++;
                 //生成一次出库master
@@ -264,11 +278,11 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     exportMaster.setExportClass("盘亏出库");
                     exportMaster.setExportDate(dict.getCheckYearMonth());
                     exportMaster.setReceiver(dict.getStorage());
-                    exportMaster.setAccountReceivable(-dict.getQuantity()*dict.getPurchasePrice());
+                    //exportMaster.setAccountReceivable(-dict.getQuantity()*dict.getPurchasePrice());
                     exportMaster.setAccountPayed(0.0);
                     exportMaster.setAdditionalFee(0.0);
                     exportMaster.setSubStorage(dict.getSubStorage());
-                    //exportMaster.setAccountIndicator();
+                    exportMaster.setAccountIndicator(true);
                     //exportMaster.setMemos();
                     //exportMaster.setFundItem();
                     //exportMaster.setOperator();
@@ -315,10 +329,21 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 //exportDetail.setBigFirmId();
                 //exportDetail.setBigSpec();
                 //exportDetail.setMemo();
+                exportDetail.setExpSgtp("1");
                 exportDetail.setHospitalId(dict.getHospitalId());
 
                 expImportDetailInserted.add(exportDetail);
             }
+            Integer level = expStorageDeptFacade.findLevelByStorageCode(rows.get(0).getStorage(), rows.get(0).getHospitalId());//当前库房级别
+            for (ExpInventoryCheck row : rows) {
+                if (level == 1) {
+                    count += -row.getQuantity() * row.getPurchasePrice(); //一级库房，总金额  进价 * 数量
+                } else {
+                    count += -row.getQuantity() * row.getRetailPrice();  //不是一级库房，总金额  售价 * 数量
+                }
+            }
+            exportVo.getExpExportMasterBeanChangeVo().getInserted().get(0).setAccountReceivable(count);     //设置盘亏出库主表总金额
+
             expExportDetailBeanChangeVo.setInserted(expImportDetailInserted);
             exportVo.setExpExportDetailBeanChangeVo(expExportDetailBeanChangeVo);
         }

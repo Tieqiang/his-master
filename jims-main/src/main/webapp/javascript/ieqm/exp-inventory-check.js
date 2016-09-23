@@ -444,7 +444,6 @@ $(function () {
                     var sumProfitAmount = 0.00;         //盈亏数合计
 
                     $.each(data, function (index, item) {
-                        console.log(item);
                         item.no = index + 1;
                         item.paperAmount = item.retailPrice * item.accountQuantity;     //账面额计算
                         item.quantity = item.actualQuantity - item.accountQuantity;     //盈亏数计算
@@ -700,7 +699,7 @@ $(function () {
                             item.recStatus = 1;
                             item.checkYearMonth = new Date(item.checkYearMonth);
                         });
-
+                        console.log(rows);
                         $.postJSON("/api/exp-inventory-check/save", rows, function (data) {
                             $.messager.alert("系统提示", "保存成功", "info");
                         });
