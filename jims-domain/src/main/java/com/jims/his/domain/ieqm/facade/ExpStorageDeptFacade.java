@@ -7,6 +7,7 @@ import com.jims.his.domain.ieqm.entity.ExpStorageDept;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,5 +103,19 @@ public class ExpStorageDeptFacade extends BaseFacade {
     public List<ExpStorageDept> findStroageByHospitalId(String hospitalId) {
         String hql = "from ExpStorageDept as dept where dept.hospitalId='"+hospitalId+"'" ;
         return createQuery(ExpStorageDept.class,hql,new ArrayList<Object>()).getResultList() ;
+    }
+
+    /**
+     * 根据库房代码查询该库房级别
+     * @param storageCode 库房代码
+     * @param hospitalId  组织机构ID
+     * @return
+     * @author fengyuguang
+     */
+    public Integer findLevelByStorageCode(String storageCode,String hospitalId){
+        String sql = "select storage_level from jims.exp_storage_dept where storage_code = '" + storageCode + "'\n" +
+                "and hospital_id = '" + hospitalId + "'";
+        List result = super.createNativeQuery(sql).getResultList();
+        return ((BigDecimal) result.get(0)).intValue();
     }
 }
