@@ -454,7 +454,7 @@ public class ExpExportFacade extends BaseFacade {
         String s1 = formatter.format(startDate.getTime());
         String s2 = formatter.format(stopDate.getTime());
         String sql = "SELECT EXP_DICT.EXP_NAME,\n" +
-                "         EXP_DICT.EXP_FORM,   \n" +
+                "         EXP_EXPORT_DETAIL.EXP_FORM,   \n" +
                 "         EXP_EXPORT_DETAIL.BATCH_NO,   \n" +
                 "         EXP_EXPORT_DETAIL.EXPIRE_DATE,   \n" +
                 "         EXP_EXPORT_DETAIL.EXP_CODE,   \n" +
@@ -487,7 +487,7 @@ public class ExpExportFacade extends BaseFacade {
             sql += " AND EXP_EXPORT_MASTER.SUB_STORAGE like '"+subStorage+"' ";
         }
         if(true){
-            sql +=" GROUP BY  EXP_DICT.EXP_NAME,EXP_DICT.EXP_FORM,EXP_EXPORT_DETAIL.EXP_CODE,   \n" +
+            sql +=" GROUP BY  EXP_DICT.EXP_NAME,EXP_EXPORT_DETAIL.EXP_FORM,EXP_EXPORT_DETAIL.EXP_CODE,   \n" +
                     "EXP_EXPORT_DETAIL.BATCH_NO,EXP_EXPORT_DETAIL.EXPIRE_DATE,\n" +
                     "EXP_EXPORT_DETAIL.PACKAGE_SPEC,EXP_EXPORT_DETAIL.PACKAGE_UNITS,\n" +
                     "EXP_EXPORT_DETAIL.DOCUMENT_NO, EXP_EXPORT_DETAIL.FIRM_ID";
