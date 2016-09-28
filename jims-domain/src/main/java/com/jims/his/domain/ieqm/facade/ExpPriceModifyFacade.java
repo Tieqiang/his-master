@@ -3,6 +3,7 @@ package com.jims.his.domain.ieqm.facade;
 import com.google.inject.persist.Transactional;
 import com.jims.his.common.BaseFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
+import com.jims.his.domain.ieqm.entity.ExpClassDict;
 import com.jims.his.domain.ieqm.entity.ExpPriceList;
 import com.jims.his.domain.ieqm.entity.ExpPriceModify;
 import com.jims.his.domain.ieqm.entity.ExpPriceModifyProfit;
@@ -146,9 +147,12 @@ public class ExpPriceModifyFacade extends BaseFacade {
     public ExpPriceModify getExpPriceModify(String firmId, String expSpec, String expCode,String hospitalId ) {
         String hql = "from ExpPriceModify as mo where sysdate between mo.noticeEfficientDate and mo.actualEfficientDate and " +
                 "mo.firmId = '" + firmId + "' and mo.expSpec = '" + expSpec + "' and expCode = '" + expCode + "' and mo.hospitalId = '"+hospitalId+"'";
+        String sql = "select * from exp_price_modify mo where sysdate between mo.notice_Efficient_Date and mo.actual_Efficient_Date\n" +
+                "   and mo.firm_Id = '+ " + firmId + " +'  and mo.exp_Spec = '" + expSpec + "' and exp_Code = '" + expCode + "'\n" +
+                "   and mo.hospital_Id = '" + hospitalId + "'";
 
-
-        List resultList = this.entityManager.createQuery(hql).getResultList();
+        //List resultList = this.entityManager.createQuery(hql).getResultList();
+        List<ExpPriceModify> resultList = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceModify.class);
         if(resultList.size()>0){
             return (ExpPriceModify) resultList.get(0);
         }else{

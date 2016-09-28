@@ -1029,6 +1029,11 @@ $(function () {
     }
     var saveFlag ;
     $("#saveBatchBtn").on('click',function(){
+        var value = $("#documentNo").textbox('getValue');
+        if($.trim(value) == "" || typeof(value) == "undefined"){
+            $.messager.alert('系統提示','单据号为空，请检查子库房或库房是否存在!!','info');
+            return ;
+        }
         if (editIndex || editIndex == 0) {
             $("#importDetail").datagrid('endEdit',editIndex);
         }

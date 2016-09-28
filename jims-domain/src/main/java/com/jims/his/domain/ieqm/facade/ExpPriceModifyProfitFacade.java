@@ -46,7 +46,6 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
                 " and a.exp_code  = c.exp_code and a.exp_spec = d.exp_spec  and a.exp_code=d.exp_code and actual_efficient_date <= to_date('"+ longStopTime+"','YYYY-MM-DD HH24:MI:SS')       and " +
                 "a.hospital_id = '"+hospitalId+"'";
         List<ExpPriceModifyProfit> nativeQuery = super.createNativeQuery(sql, new ArrayList<Object>(), ExpPriceModifyProfit.class);
-        System.out.println("nativeQuery");
         return nativeQuery;
     }
 
@@ -164,7 +163,6 @@ public class ExpPriceModifyProfitFacade extends BaseFacade {
     private ExpPriceModifyProfit getPriceModifyProfit(String stockageCode, String expCode, String expSpec, String firmId, Date actualEfficientDate,String hospitalId) {
         String hql = "from ExpPriceModifyProfit pro where pro.storage = '"+stockageCode+"' and pro.expCode = '"+expCode+"' and " +
                 "pro.expSpec = '"+expSpec+"' and pro.hospitalId = '"+hospitalId+"' and  pro.actualEfficientDate = "+actualEfficientDate;
-
         List resultList = this.entityManager.createQuery(hql).getResultList();
         if(resultList.size()>0){
             return (ExpPriceModifyProfit) resultList.get(0);
