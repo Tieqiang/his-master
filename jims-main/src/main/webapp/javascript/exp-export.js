@@ -3,6 +3,7 @@
  */
 
 $(function () {
+    var purchaseFlag = true;    //判断出库是出给供应商(生产商)还是出给各级库房   true为出给供应商(生产商)  false为出给各级库房
     var fieldNo = 0;    //从左往右，光标停留在第几个单元格
     var currentSelect = 0;//当前选中的规格
     var exportToFlag = undefined;//退库的时候，标志，用于区分是否退货给供应商。
@@ -64,7 +65,7 @@ $(function () {
     var flag;
     var editIndex;
     var currentExpCode;
-    var exportFlag=true;
+    var exportFlag = true;
 
     var upStorageFlag;
     var panelHeight = $(window).height - 300;
@@ -208,13 +209,18 @@ $(function () {
                             dataType: "JSON",
                             cache: false,
                             success: function (data) {
+                                if(typeof(data) != 'undefined' && data != {}){
+                                    purchaseFlag = true;
+                                }else{
+                                    purchaseFlag = false;
+                                }
                                 var selectRows = $("#exportDetail").datagrid('getData').rows;
                                 var purchasePrice = selectRows[editIndex].purchasePrice;
                                 var retailPrice = selectRows[editIndex].retailPrice;
-                                var disNum = selectRows[editIndex].disNum ;
-                                if(newValue>disNum){
-                                    $.messager.alert("系统提示","输入的数量大于当前库存量，请重新输入");
-                                    return ;
+                                var disNum = selectRows[editIndex].disNum;
+                                if (newValue > disNum) {
+                                    $.messager.alert("系统提示", "输入的数量大于当前库存量，请重新输入");
+                                    return;
                                 }
 
                                 var amountEd = $("#exportDetail").datagrid('getEditor', {index: editIndex, field: 'amount'});
@@ -248,10 +254,10 @@ $(function () {
                                 }
                                 $("#accountReceivable").numberbox('setValue', totalAmount);
 
-                                var maxIdex = $("#exportDetail").datagrid('getRowIndex',selectRows[selectRows.length-1]);
-                                if(maxIdex>editIndex){
-                                }else{
-                                    addRow() ;
+                                var maxIdex = $("#exportDetail").datagrid('getRowIndex', selectRows[selectRows.length - 1]);
+                                if (maxIdex > editIndex) {
+                                } else {
+                                    addRow();
                                 }
                             }
                         });
@@ -617,6 +623,18 @@ $(function () {
 
 
     $("#addRow").on('click', function () {
+        stopEdit();
+        var oldRows = $("#exportDetail").datagrid('getRows');
+        if(oldRows.length > 0){
+            $.each(oldRows, function (index, item) {
+                if (typeof(item.expCode) == 'undefined' && typeof(item.expName) == 'undefined' || $.trim(item.expCode) == '' || $.trim(item.expCode) == null
+                    || typeof(item.expName) == '' || typeof(item.expname) == null) {
+                    var index = $('#exportDetail').datagrid('getRowIndex', item);
+                    $('#exportDetail').datagrid('deleteRow', index);
+                }
+            });
+        }
+
         flag = 0;
         $("#exportDetail").datagrid('appendRow', {amount: 0});
         var rows = $("#exportDetail").datagrid('getRows');
@@ -636,6 +654,19 @@ $(function () {
     //新增一行
     var addRow = function () {
         stopEdit();
+        var oldRows = $("#exportDetail").datagrid('getRows');
+        if (oldRows.length > 0) {
+            $.each(oldRows, function (index, item) {
+                if (typeof(item.expCode) == 'undefined' && typeof(item.expName) == 'undefined' || $.trim(item.expCode) == '' || $.trim(item.expCode) == null
+                    || typeof(item.expName) == '' || typeof(item.expname) == null) {
+                    var index = $('#exportDetail').datagrid('getRowIndex', item);
+                    $('#exportDetail').datagrid('deleteRow', index);
+                }
+            });
+        }
+
+        var rows = $("#exportDetail").datagrid('getRows');
+
         $("#exportDetail").datagrid('appendRow', {});
         var rows = $("#exportDetail").datagrid('getRows');
         var addRowIndex = $("#exportDetail").datagrid('getRowIndex', rows[rows.length - 1]);
@@ -874,26 +905,37 @@ $(function () {
      * 进行数据校验
      */
     var dataValid = function () {
+        stopEdit();
         var rows = $("#exportDetail").datagrid('getRows');
+        if (rows.length == 0) {
+            $.messager.alert("系统提示", "明细记录为空，不允许保存", 'error');
+            return false;
+        }
+        $.each(rows,function(index,item){
+            if($.trim(item.expCode) == "" && $.trim(item.expName) == ""){
+                var index = $('#exportDetail').datagrid('getRowIndex',item);
+                $('#exportDetail').datagrid('deleteRow',index);
+                rows = $("#exportDetail").datagrid('getRows');
+            }
+        });
         for (var i = 0; i < rows.length; i++) {
-            if (rows[i].quantity == 0) {
+            if (rows[i].quantity == 0 && $.trim(rows[i].expCode) != "" && $.trim(rows[i].expName) != "") {
                 $.messager.alert("系统提示", "第" + parseInt(i + 1) + "行出库数量为0 请重新填写", 'error');
                 $("#exportDetail").datagrid('beginEdit', i);
                 return false;
             }
 
-            if(rows[i].expCode==null||(!rows[i].expCode) || rows[i].expSpec==null||(!rows[i].expSpec) ||rows[i].firmId==null||(
-                    !rows[i].firmId) || rows[i].purchasePrice==null || (!rows[i].purchasePrice) || rows[i].tradePrice==null ||(
-                    !rows[i].tradePrice) || rows[i].retailPrice==null || (!rows[i].retailPrice)){
-                console.log(rows[i])
+            if (rows[i].expCode == null || (!rows[i].expCode) || rows[i].expSpec == null || (!rows[i].expSpec) || rows[i].firmId == null || (
+                    !rows[i].firmId) || rows[i].purchasePrice == null || (!rows[i].purchasePrice) || rows[i].tradePrice == null || (
+                    !rows[i].tradePrice) || rows[i].retailPrice == null || (!rows[i].retailPrice)) {
                 $.messager.alert("系统提示", "第" + i + "行入库记录信息不完善 请重新填写", 'error');
                 return false;
             }
-        }
 
-        if (rows.length == 0) {
-            $.messager.alert("系统提示", "明细记录为空，不允许保存", 'error');
-            return false;
+            if (rows[i].disNum <= 0) {
+                $.messager.alert("系统提示", "第" + parseInt(i + 1) + "行产品库房中不存在，不能出库", 'error');
+                return false;
+            }
         }
 
         //判断供货商是否为空
@@ -909,16 +951,12 @@ $(function () {
             $.messager.alert("系统提示", "产品出库，出库时间不能为空", 'error');
             return false;
         }
-        var rows = $("#exportDetail").datagrid('getRows');
-        for (var i = 0; i < rows.length; i++) {
-            if (rows[i].disNum <= 0) {
-                $.messager.alert("系统提示", "第" + parseInt(i + 1) + "行产品库房中不存在，不能出库", 'error');
-                return false;
-            }
-        }
         return true;
     }
+
     var getCommitData = function () {
+        stopEdit();
+        var total = 0.00;   //计算总金额
         var expExportMasterBeanChangeVo = {};
         expExportMasterBeanChangeVo.inserted = [];
         var exportMaster = {};
@@ -927,7 +965,7 @@ $(function () {
         exportMaster.exportDate = new Date($("#exportDate").datetimebox('getValue'));
         exportMaster.storage = parent.config.storageCode;
         exportMaster.receiver = $("#receiver").combogrid('getValue');
-        exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
+        //exportMaster.accountReceivable = $("#accountReceivable").numberbox('getValue');
         exportMaster.accountPayed = $("#accountPayed").numberbox('getValue');
         exportMaster.additionalFee = $("#additionalFee").numberbox('getValue');
         exportMaster.subStorage = $("#subStorage").combobox('getValue');
@@ -952,7 +990,6 @@ $(function () {
         expExportDetailBeanChangeVo.inserted = [];
 
         var rows = $("#exportDetail").datagrid('getRows');
-
         for (var i = 0; i < rows.length; i++) {
             var detail = {};
             detail.documentNo = exportMaster.documentNo;
@@ -975,7 +1012,7 @@ $(function () {
             detail.subPackageUnits2 = rows[i].subPackageUnits2;
             detail.subPackageSpec2 = rows[i].subPackageSpec2;
             detail.purchasePrice = rows[i].purchasePrice;
-            if(!rows[i].expireDate){
+            if (!rows[i].expireDate) {
                 detail.expireDate = new Date(rows[i].expireDate);
             }
             detail.expForm = rows[i].expForm;
@@ -1000,7 +1037,16 @@ $(function () {
             detail.memo = rows[i].memo;
             detail.hospitalId = parent.config.hospitalId;
             expExportDetailBeanChangeVo.inserted.push(detail);
+            if(rows[i].amount  == 0){
+                if(purchaseFlag){
+                    rows[i].amount = rows[i].purchasePrice * parseFloat(rows[i].quantity);
+                }else{
+                    rows[i].amount = rows[i].retailPrice * parseFloat(rows[i].quantity);
+                }
+            }
+            total += parseFloat(rows[i].amount);
         }
+        exportMaster.accountReceivable = total;   //出库主表总金额
 
         var importVo = {};
         importVo.expExportMasterBeanChangeVo = expExportMasterBeanChangeVo;
@@ -1011,16 +1057,13 @@ $(function () {
      * 保存功能
      */
     $("#saveBtn").on('click', function () {
-        if (editIndex || editIndex == 0) {
-            $("#exportDetail").datagrid('endEdit', editIndex);
-        }
+        stopEdit();
         if (!exportFlag) {
-            console.log(exportFlag)
             return;
         }
         if (dataValid()) {
             var importVo = getCommitData();
-            //console.log(importVo);
+            console.log(importVo);
             $.postJSON("/api/exp-stock/exp-export-manage", importVo, function (data) {
                 if (data.errorMessage) {
                     $.messager.alert("系统提示", data.errorMessage, 'error');
@@ -1104,7 +1147,7 @@ $(function () {
                 var disNum1 = $(disNum.target).textbox('getValue');
                 if (quantity1 == "" || quantity1 == null || typeof(quantity1) == "underfined") {
                     $.messager.alert("系统提示", "请先填写出库数量", "error");
-                    e.preventDefault() ;
+                    e.preventDefault();
                     return;
                 } else {
 
@@ -1112,7 +1155,8 @@ $(function () {
 
 
             }
-        };
+        }
+        ;
 
         if (!options.closed) {
             e.preventDefault();
