@@ -760,6 +760,12 @@ $(function () {
         }
     })
     $("#print").on('click', function () {
+        var rows = $('#dg').datagrid('getRows');
+        if(rows[0].recStatus == 0){
+            $.messager.alert('系统提示','请点击保存按钮，保存成功后才能打印','info');
+            return;
+        }
+        console.log(rows);
         $("#search").click();
         printFlag = true;
     })
