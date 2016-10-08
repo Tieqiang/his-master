@@ -62,6 +62,18 @@ $.extend($.fn.datagrid.methods, {
 });
 
 $(function () {
+    //判断当前日期在不在月底盘点日期之间，如果不在，禁用保存按钮
+    $.get("/api/app-configer-parameter/list?hospitalId=" + parent.config.hospitalId + "&name=INVENTORY_TIME", function (data) {
+        if (data != [] && data != null) {
+            var valueArr = data[0].parameterValue.split("|");
+            var date = new Date().getDate();
+            var result = valueArr.indexOf($.trim(date + ""));
+            if(result == -1){
+                $('#save').linkbutton('disable');
+            }
+        }
+    });
+
     var printFlag;
     var printDate;
     var editIndex;
