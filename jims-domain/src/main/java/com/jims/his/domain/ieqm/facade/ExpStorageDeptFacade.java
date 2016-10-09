@@ -31,7 +31,7 @@ public class ExpStorageDeptFacade extends BaseFacade {
     public List<ExpStorageDept> getByHospitalId(String hospitalId, String inputCode, String name) {
         String sql = "select * from EXP_STORAGE_DEPT exp where exp.hospital_id='"+hospitalId+"'" ;
         if(null != inputCode && !inputCode.trim().equals("")){
-            sql +="  and upper(exp.disburse_no_prefix) like upper('" + inputCode + "%')";
+            sql +="  and upper(exp.disburse_no_prefix) like upper('%" + inputCode + "%')";
         }
         if (null != name && !name.trim().equals("")) {
             sql += "  and exp.storage_name like '%" + name.trim() + "%'";

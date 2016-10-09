@@ -51,7 +51,7 @@ public class DeptDictFacade extends BaseFacade {
     public List<DeptDict> findByHospitalIdAndQuer(String hospitalId, String q) {
         String hql = "from DeptDict as dept where dept.hospitalDict.id='" + hospitalId + "' ";
         if (q != null) {
-            hql += " and dept.inputCode like upper('%" + q + "%')";
+            hql += " and upper(dept.inputCode) like upper('%" + q + "%')";
         }
 
         Query query = entityManager.createQuery(hql);
