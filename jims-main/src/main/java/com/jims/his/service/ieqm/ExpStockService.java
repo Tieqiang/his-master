@@ -40,6 +40,22 @@ public class ExpStockService {
     }
 
     /**
+     * 查询当前库房下的所有物品
+     * @param hospitalId   组织机构ID
+     * @param storageCode  库房代码
+     * @param subStorage   子库房名称
+     * @param quantityFlag  是否查询数量为0的物品  true查询，flase不查询
+     * @return
+     * @author fengyuguang
+     */
+    @GET
+    @Path("list-all")
+    public List<ExpStock> listAllExpStock(@QueryParam("hospitalId")String hospitalId,@QueryParam("storageCode")String storageCode,
+                                          @QueryParam("subStorage")String subStorage,@QueryParam("quantityFlag")boolean quantityFlag){
+        return expStockFacade.listAllExpStock(hospitalId, storageCode, subStorage, quantityFlag);
+    }
+
+    /**
      * 查询数据，可以使用子库房名字进行查询
      * @param subStorage
      * @return

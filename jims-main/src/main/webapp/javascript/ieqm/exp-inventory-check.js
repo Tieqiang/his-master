@@ -62,16 +62,54 @@ $.extend($.fn.datagrid.methods, {
 });
 
 $(function () {
-    //判断当前日期在不在月底盘点日期之间，如果不在，禁用保存按钮
+    var allStockData = [];   //当前库房下的所有物品(类型为'全部'时查询出所有物品)
+    var inventoryTime = [];  //盘点时间
+    //获取规定的盘点时间
     $.get("/api/app-configer-parameter/list?hospitalId=" + parent.config.hospitalId + "&name=INVENTORY_TIME", function (data) {
         if (data != [] && data != null) {
-            var valueArr = data[0].parameterValue.split("|");
-            var date = new Date().getDate();
-            var result = valueArr.indexOf($.trim(date + ""));
-            if(result == -1){
-                $('#save').linkbutton('disable');
-            }
+            inventoryTime = data;
         }
+    });
+
+    if ($('#check').is(':checked')) {
+        var quantityFlag = false;
+        //获取当前库房下的所有物品
+        var subStorage = $("#subStorage").combobox("getText");
+        var url = '/api/exp-stock/list-all?hospitalId=' + parent.config.hospitalId + '&storageCode=' + parent.config.storageCode + '&subStorage=' + subStorage + '&quantityFlag=' + quantityFlag;
+            $.get(url,function(data){
+                allStockData = data;
+            });
+    }
+
+    //产品类型
+    $.get('/api/exp-form-dict/list',function(data){
+        var all = {};
+        all.formName = '全部';
+        data.unshift(all);
+        $('#expForm').combobox({
+            panelHeight: '200',
+            method: 'get',
+            data: data,
+            valueField: 'formName',
+            textField: 'formName',
+            onLoadSuccess: function(){
+                $(this).combobox('select','全部');
+            },
+            onSelect: function(data){
+                if($.trim(data.formName) == '全部'){
+                    var valueArr = inventoryTime[0].parameterValue.split("|");
+                    var date = new Date().getDate();
+                    var result = valueArr.indexOf($.trim(date + ""));
+                    if (result == -1) {
+                        $('#save').linkbutton('disable');
+                    } else {
+                        $('#save').linkbutton('enable');
+                    }
+                }else{
+                    $('#save').linkbutton('disable');
+                }
+            }
+        });
     });
 
     var printFlag;
@@ -83,6 +121,7 @@ $(function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
             var row = $('#dg').datagrid('getData').rows[index];
+            console.log(row);
             var balance = (row.actualQuantity * 1- row.accountQuantity * 1)*1;
             row.quantity = balance;
             row.profitAmount = balance* row.retailPrice;
@@ -406,9 +445,11 @@ $(function () {
         onClickRow: function (index, row) {
             stopEdit();
 
-            $(this).datagrid('beginEdit', index);
-            currentActualQuantity = row.actualQuantity;
-            editIndex = index;
+            if(typeof(row.expCode) != 'undefined' && row.expCode != null && $.trim(row.expCode) != ''){
+                $(this).datagrid('beginEdit', index);
+                currentActualQuantity = row.actualQuantity;
+                editIndex = index;
+            }
         }
     });
 
@@ -446,7 +487,12 @@ $(function () {
                 var subStorage = $("#subStorage").combobox("getText");
                 var storageCode = parent.config.storageCode;
                 var hospitalId = parent.config.hospitalId;
-                $.get("/api/exp-inventory-check/get-inventory?type=search&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&checkMonth=" + formatterDate(date) + "&subStorage=" + subStorage, function (data) {
+                var expForm = $('#expForm').combobox('getValue');
+                if($.trim(expForm) == '全部'){
+                    expForm = '';
+                }
+                date = formatterDate(date).substr(0,7);
+                $.get("/api/exp-inventory-check/get-inventory?type=search&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&checkMonth=" + date + "&subStorage=" + subStorage + "&expForm=" + expForm, function (data) {
                     //账面额=账面数*单价
                     var sumAccountQuantity = 0.00;      //账面数合计
                     var sumActualQuantity = 0.00;       //实盘数合计
@@ -504,7 +550,11 @@ $(function () {
 
     //生成
     $("#get").on('click', function () {
+        editIndex = undefined;
+        $('#dg').datagrid('loadData',[]);
+        stopEdit();
         var date = $("#startDate").datetimebox('getText');
+        date = date.substr(0, 7);
         var storageCode = parent.config.storageCode;
         var subStorage = $("#subStorage").combobox("getText");
         var hospitalId = parent.config.hospitalId;
@@ -512,35 +562,134 @@ $(function () {
         if($('#check').is(':checked')){
             hiddenFlag = '1';
         }
+        var expForm = $('#expForm').combobox('getValue');
+        if($.trim(expForm) == '全部'){
+            expForm = '';
+            $.get("/api/exp-inventory-check/get-inventory-num?storageCode=" + storageCode + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hospitalId=" + hospitalId + "&expForm=" + expForm,function(data){
+                if(data.length == 0){   //本月还没有盘点
+                    $.get("/api/exp-inventory-check/get-inventory?type=get&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hiddenFlag=" + hiddenFlag + "&expForm=" + expForm, function (data) {
+                        //账面额=账面数*单价
+                        var sumAccountQuantity = 0.00;
+                        var sumActualQuantity = 0.00;
+                        var sumPaperAmount = 0.00;
 
-        $.get("/api/exp-inventory-check/get-inventory-num?storageCode=" + storageCode + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hospitalId=" + hospitalId, function (data) {
-            if(data<=0){
-                $.get("/api/exp-inventory-check/get-inventory?type=get&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hiddenFlag=" + hiddenFlag, function (data) {
-                    //账面额=账面数*单价
-                    var sumAccountQuantity = 0.00;
-                    var sumActualQuantity = 0.00;
-                    var sumPaperAmount = 0.00;
+                        $.each(data, function (index, item) {
+                            item.no = index + 1;
+                            item.paperAmount = item.retailPrice * item.accountQuantity;
+                            sumAccountQuantity += item.accountQuantity;
+                            sumActualQuantity += item.actualQuantity;
+                            sumPaperAmount += item.paperAmount;
+                        });
+                        $("#count").textbox("setText", data.length);
+                        $("#dg").datagrid('loadData', data);
+                        $('#dg').datagrid('appendRow', {
+                            accountQuantity: sumAccountQuantity,
+                            actualQuantity: sumActualQuantity,
+                            paperAmount: sumPaperAmount
+                        });
+                    });
+                }else if(data.length == allStockData.length){   //本月已经全部盘点完毕
+                    var thisMonth = new Date($("#startDate").datetimebox('getValue')).getMonth() + 1;
+                    $.messager.alert("提示", "全院子库" + thisMonth + "月份盘点记录已存在，请按检索按钮调出！");
+                }else{   //本月部分物品已经盘点，还有一部分物品没有盘点
+                    $.get("/api/exp-inventory-check/get-inventory?type=get&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hiddenFlag=" + hiddenFlag + "&expForm=" + expForm, function (allData) {
+                        /*//账面额=账面数*单价
+                        var sumAccountQuantity = 0.00;
+                        var sumActualQuantity = 0.00;
+                        var sumPaperAmount = 0.00;
 
-                    $.each(data, function (index, item) {
-                        item.no = index+1;
-                        item.paperAmount = item.retailPrice*item.accountQuantity;
-                        sumAccountQuantity += item.accountQuantity;
-                        sumActualQuantity += item.actualQuantity;
-                        sumPaperAmount += item.paperAmount;
+                        $.each(allData, function (index, item) {
+                            item.no = index + 1;
+                            item.paperAmount = item.retailPrice * item.accountQuantity;
+                            sumAccountQuantity += item.accountQuantity;
+                            sumActualQuantity += item.actualQuantity;
+                            sumPaperAmount += item.paperAmount;
+                        });
+                        $("#count").textbox("setText", allData.length);*/
+                        //盘点表暂存的数据，覆盖掉查询出的所有数据中 相同数据
+                        $.get('/api/exp-inventory-check/inventory-list-by-time?storageCode=' + storageCode + "&checkMonth=" + date + "&hospitalId=" + hospitalId + "&expForm=" + expForm, function (inventoryData) {
+                            //覆盖相同数据
+                            for (var i = 0; i < allData.length; i++) {
+                                if (typeof(allData[i].expCode) != 'undefined' && typeof(allData[i].expName) != 'undefined') {
+                                    for (var j = 0; j < inventoryData.length; j++) {
+                                        if (inventoryData[j].expForm != allData[i].expForm) {
+                                            continue;
+                                        } else {
+                                            if ($.trim(inventoryData[j].expCode) == $.trim(allData[i].expCode) && $.trim(inventoryData[j].expName) == $.trim(allData[i].expName)
+                                                && $.trim(inventoryData[j].expSpec) == $.trim(allData[i].expSpec) && $.trim(inventoryData[j].units) == $.trim(allData[i].units)
+                                                && $.trim(inventoryData[j].firmId) == $.trim(allData[i].firmId) && inventoryData[j].retailPrice == allData[i].retailPrice) {
+                                                allData[i].actualQuantity = inventoryData[j].actualQuantity;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            //账面额=账面数*单价
+                            var sumAccountQuantity = 0.00;      //账面数合计
+                            var sumActualQuantity = 0.00;       //实盘数合计
+                            var sumQuantity = 0.00;             //盈亏数
+                            var sumPaperAmount = 0.00;          //账面额合计
+                            var sumRealAmount = 0.00;           //实盘额合计
+                            var sumProfitAmount = 0.00;         //盈亏数合计
+
+                            $.each(allData, function (index, item) {
+                                item.no = index + 1;
+                                item.paperAmount = item.retailPrice * item.accountQuantity;     //账面额计算
+                                item.quantity = item.actualQuantity - item.accountQuantity;     //盈亏数计算
+                                item.profitAmount = item.quantity * item.retailPrice;    //盈亏额计算
+
+                                sumAccountQuantity += item.accountQuantity;     //账面数合计
+                                sumActualQuantity += item.actualQuantity;       //实盘数合计
+                                sumPaperAmount += item.paperAmount;             //账面额合计
+                                sumQuantity += item.quantity;                   //盈亏数合计
+                                sumProfitAmount += item.profitAmount;           //盈亏额合计
+                                sumRealAmount = sumPaperAmount + sumProfitAmount;   //实盘额合计
+                            });
+                            $("#count").textbox("setText", allData.length);
+                            $("#dg").datagrid('loadData', allData);
+                            $('#dg').datagrid('appendRow', {
+                                expForm: '合计:',
+                                accountQuantity: sumAccountQuantity,    //账面数合计
+                                actualQuantity: sumActualQuantity,      //实盘数合计
+                                quantity: sumQuantity,                   //盈亏数合计
+                                paperAmount: sumPaperAmount,            //账面额合计
+                                realAmount: sumRealAmount,              //实盘额合计
+                                profitAmount: sumProfitAmount           //盈亏额合计
+                            });
+                        });
                     });
-                    $("#count").textbox("setText", data.length);
-                    $("#dg").datagrid('loadData', data);
-                    $('#dg').datagrid('appendRow', {
-                        accountQuantity: sumAccountQuantity,
-                        actualQuantity: sumActualQuantity,
-                        paperAmount: sumPaperAmount
+                }
+            });
+        }else{  //某个具体类型,比如 '医用耗材'
+            $.get("/api/exp-inventory-check/get-inventory-num?storageCode=" + storageCode + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hospitalId=" + hospitalId + "&expForm=" + expForm, function (data) {
+                if (data.length == 0) { //此类型本月还没有盘点
+                    $.get("/api/exp-inventory-check/get-inventory?type=get&storageCode=" + storageCode + "&hospitalId=" + hospitalId + "&subStorage=" + subStorage + "&checkMonth=" + date + "&hiddenFlag=" + hiddenFlag + "&expForm=" + expForm, function (data) {
+                        //账面额=账面数*单价
+                        var sumAccountQuantity = 0.00;
+                        var sumActualQuantity = 0.00;
+                        var sumPaperAmount = 0.00;
+
+                        $.each(data, function (index, item) {
+                            item.no = index + 1;
+                            item.paperAmount = item.retailPrice * item.accountQuantity;
+                            sumAccountQuantity += item.accountQuantity;
+                            sumActualQuantity += item.actualQuantity;
+                            sumPaperAmount += item.paperAmount;
+                        });
+                        $("#count").textbox("setText", data.length);
+                        $("#dg").datagrid('loadData', data);
+                        $('#dg').datagrid('appendRow', {
+                            accountQuantity: sumAccountQuantity,
+                            actualQuantity: sumActualQuantity,
+                            paperAmount: sumPaperAmount
+                        });
                     });
-                    //$("#dg").datagrid("autoMergeCells", ['expCode']);
-                });
-            }else{
-                $.messager.alert("提示","全院子库"+date+"月份的盘点记录已存在，请按检索按钮调出！")
-            }
-        });
+                } else{
+                    var thisMonth = new Date($("#startDate").datetimebox('getValue')).getMonth() + 1;
+                    $.messager.alert("提示", thisMonth + "月份" + expForm + "的盘点记录已存在，请按检索按钮调出！");
+                }
+            });
+        }
 
     });
     //实盘填充
@@ -663,11 +812,10 @@ $(function () {
             $("#dg").datagrid('endEdit', editIndex);
         }
         if($("#dg").datagrid("getRows").length>0){
-            //$("#dg").datagrid("deleteRow", $("#dg").datagrid("getRows").length - 1);
             var rows = $("#dg").datagrid("getRows");
             $.each(rows, function (index, item) {
                 item.recStatus = 0;
-                //item.checkYearMonth = new Date(item.checkYearMonth);
+                item.checkYearMonth = new Date($('#startDate').datetimebox('getText'));
             });
             $.postJSON("/api/exp-inventory-check/save", rows, function (data) {
                 $.messager.alert("系统提示", "暂存成功", "info");
@@ -692,11 +840,17 @@ $(function () {
 
         return over;
     }
+
     //保存
     $("#save").on('click', function () {
         if (editIndex || editIndex == 0) {
             $("#dg").datagrid('endEdit', editIndex);
         }
+        stopEdit();
+        var editRow = $('#dg').datagrid('getSelected');
+        var editRowIndex = $('#dg').datagrid('getRowIndex',editRow);
+        $('#dg').datagrid('endEdit', editRowIndex);
+        $('#dg').datagrid('unselectAll');
         if ($("#dg").datagrid("getRows").length > 0) {
             //$("#dg").datagrid("deleteRow", $("#dg").datagrid("getRows").length - 1);
             var rows = $("#dg").datagrid("getRows");
@@ -709,9 +863,8 @@ $(function () {
                     if (r) {
                         $.each(rows, function (index, item) {
                             item.recStatus = 1;
-                            item.checkYearMonth = new Date(item.checkYearMonth);
+                            item.checkYearMonth = new Date($('#startDate').datetimebox('getText'));
                         });
-                        console.log(rows);
                         $.postJSON("/api/exp-inventory-check/save", rows, function (data) {
                             $.messager.alert("系统提示", "保存成功", "info");
                         });
@@ -722,28 +875,32 @@ $(function () {
             }else{
                 $.each(rows, function (index, item) {
                     item.recStatus = 1;
-                    item.checkYearMonth = new Date(item.checkYearMonth);
+                    item.checkYearMonth = new Date($('#startDate').datetimebox('getText'));
                 });
-
                 $.postJSON("/api/exp-inventory-check/save", rows, function (data) {
                     $.messager.alert("系统提示", "保存成功", "info");
                 });
             }
-
         } else {
             $.messager.alert("系统提示", "数据为空，不允许操作", "error");
         }
     });
     //检索
     $("#search").on('click', function () {
-        var date = $("#startDate").datetimebox('getText').substr(0, 10);
+        var date = $("#startDate").datetimebox('getText').substr(0, 7);
         var storageCode = parent.config.storageCode;
         var hospitalId = parent.config.hospitalId;
-        $.get('/api/exp-inventory-check/inventory-list-by-time?storageCode=' + storageCode + "&checkMonth=" + date + "&hospitalId=" + hospitalId,function(data){
+        var expForm = $('#expForm').combobox('getValue');
+        if($.trim(expForm) == '全部'){
+            expForm = '';
+        }
+        $.get('/api/exp-inventory-check/inventory-list-by-time?storageCode=' + storageCode + "&checkMonth=" + date + "&hospitalId=" + hospitalId + "&expForm=" + expForm,function(data){
            if(data.length <=0){
                $.messager.alert("系统提示", "没有"+date+"月份的盘点记录", "info");
            }else{
-               $("#list").datagrid("loadData",data);
+               var list = [];
+               list[0] = data[0];
+               $("#list").datagrid("loadData", list);
                $("#listDialog").dialog('open');
            }
         });
@@ -777,7 +934,6 @@ $(function () {
             $.messager.alert('系统提示','请点击保存按钮，保存成功后才能打印','info');
             return;
         }
-        console.log(rows);
         $("#search").click();
         printFlag = true;
     })

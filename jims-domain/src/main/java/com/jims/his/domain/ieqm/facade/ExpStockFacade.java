@@ -42,6 +42,29 @@ public class ExpStockFacade extends BaseFacade {
     }
 
     /**
+     * 查询当前库房下的所有物品
+     * @param hospitalId   组织机构ID
+     * @param storageCode  库房代码
+     * @param subStorage   子库房名称
+     * @param quantityFlag 是否查询数量为0的物品  true查询，flase不查询
+     * @return
+     * @author fengyuguang
+     */
+    public List<ExpStock> listAllExpStock(String hospitalId, String storageCode, String subStorage, boolean quantityFlag) {
+        String sql = "select t.* from jims.exp_stock t where t.hospital_id = '" + hospitalId + "' and t.storage = '" + storageCode + "'";
+        if(subStorage.trim().equals("") || subStorage.trim().equals("全部")){
+
+        }else{
+            sql += " and t.sub_storage='" + subStorage + "'";
+        }
+        if(!quantityFlag){
+            sql += " and t.quantity > 0";
+        }
+        sql += " order by t.exp_code";
+        return super.createNativeQuery(sql,new ArrayList<Object>(),ExpStock.class);
+    }
+
+    /**
      * 查询
      *
      * @param subStorage

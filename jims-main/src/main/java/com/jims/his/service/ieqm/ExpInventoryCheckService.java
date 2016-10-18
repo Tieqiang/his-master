@@ -34,8 +34,9 @@ public class ExpInventoryCheckService {
      */
     @GET
     @Path("get-inventory-num")
-    public int getInventoryNum(@QueryParam("hospitalId") String hospitalId, @QueryParam("storageCode") String storageCode, @QueryParam("subStorage") String subStorage, @QueryParam("checkMonth") String checkMonth) {
-        return expInventoryCheckFacade.getInventoryNum(hospitalId, storageCode, subStorage, checkMonth);
+    public List<ExpInventoryCheck> getInventoryNum(@QueryParam("hospitalId") String hospitalId, @QueryParam("storageCode") String storageCode, @QueryParam
+            ("subStorage") String subStorage, @QueryParam("checkMonth") String checkMonth,@QueryParam("expForm")String expForm) {
+        return expInventoryCheckFacade.getInventoryNum(hospitalId, storageCode, subStorage, checkMonth,expForm);
     }
     /**
      * 根据查询条件生成待盘点产品数据集合
@@ -44,20 +45,23 @@ public class ExpInventoryCheckService {
      * @param subStorage
      * @param checkMonth
      * @param hiddenFlag  隐藏账面数为0的标志
+     * @param expForm   产品类型
      * @return
      */
     @GET
     @Path("get-inventory")
     public List<ExpInventoryCheck> getInventory(@QueryParam("type") String type, @QueryParam("storageCode") String storageCode,
                                                 @QueryParam("hospitalId") String hospitalId, @QueryParam("subStorage") String subStorage,
-                                                @QueryParam("checkMonth") String checkMonth,@QueryParam("hiddenFlag")String hiddenFlag){
-        return expInventoryCheckFacade.getInventory(type,storageCode, hospitalId, subStorage, checkMonth,hiddenFlag);
+                                                @QueryParam("checkMonth") String checkMonth,@QueryParam("hiddenFlag")String hiddenFlag,
+                                                @QueryParam("expForm")String expForm){
+        return expInventoryCheckFacade.getInventory(type,storageCode, hospitalId, subStorage, checkMonth,hiddenFlag, expForm);
     }
 
     @GET
     @Path("inventory-list-by-time")
-    public List<ExpInventoryCheck> inventoryListByTime(@QueryParam("hospitalId") String hospitalId,@QueryParam("storageCode") String storageCode, @QueryParam("checkMonth") String checkMonth){
-        return expInventoryCheckFacade.inventoryListByTime(hospitalId,storageCode, checkMonth);
+    public List<ExpInventoryCheck> inventoryListByTime(@QueryParam("hospitalId") String hospitalId,@QueryParam("storageCode") String storageCode,
+                                                       @QueryParam("checkMonth") String checkMonth,@QueryParam("expForm")String expForm){
+        return expInventoryCheckFacade.inventoryListByTime(hospitalId,storageCode, checkMonth,expForm);
     }
 
     /**
@@ -77,6 +81,7 @@ public class ExpInventoryCheckService {
         } catch (Exception e) {
             ErrorException errorException = new ErrorException();
             errorException.setMessage(e);
+            errorException.printStackTrace();
             if(errorException.getErrorMessage().toString().indexOf("最大值")!=-1){
                 errorException.setErrorMessage("输入数据超过长度！");
             }else if(errorException.getErrorMessage().toString().indexOf("唯一")!=-1){

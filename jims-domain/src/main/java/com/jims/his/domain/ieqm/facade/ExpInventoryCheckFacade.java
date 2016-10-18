@@ -8,6 +8,7 @@ import com.jims.his.domain.ieqm.entity.*;
 import com.jims.his.domain.ieqm.vo.ExpExportDetialVo;
 import com.jims.his.domain.ieqm.vo.ExpExportManageVo;
 import com.jims.his.domain.ieqm.vo.ExpImportVo;
+import org.hibernate.cfg.beanvalidation.IntegrationException;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -43,10 +44,32 @@ public class ExpInventoryCheckFacade extends BaseFacade {
      * @param checkMonth
      * @return
      */
-    public int getInventoryNum(String hospitalId, String storageCode, String subStorage, String checkMonth){
-        String sql = "select nvl(count (*),0) from exp_INVENTORY_CHECK where storage ='"+storageCode+"' and hospital_id='"+hospitalId+"' and to_char(check_year_month,'YYYY-MM') =to_char(to_date('" + checkMonth + "','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM') and ( sub_storage ='"+subStorage+"' or '"+subStorage+"' ='全部' ) \n";
-        List result = super.createNativeQuery(sql).getResultList();
-        return ((BigDecimal)result.get(0)).intValue();
+    public List<ExpInventoryCheck> getInventoryNum(String hospitalId, String storageCode, String subStorage, String checkMonth,String expForm){
+        String[] temps = checkMonth.split("-");
+        String otherMonth = temps[0] + Integer.toString(Integer.parseInt(temps[1]) + 1);
+        String sql = "select\n" +
+                "        exp_inventory_check.*,\n" +
+                "        d.exp_form \n" +
+                "    from\n" +
+                "        exp_INVENTORY_CHECK,\n" +
+                "        jims.exp_dict d \n" +
+                "    where\n" +
+                "        exp_inventory_check.exp_code = d.exp_code \n" +
+                "        and exp_inventory_check.exp_name = d.exp_name \n" +
+                "        and exp_inventory_check.exp_spec = d.exp_spec \n" +
+                "        and exp_INVENTORY_CHECK.storage ='" + storageCode + "'\n" +
+                "        and exp_INVENTORY_CHECK.hospital_id='" + hospitalId + "' \n" +
+                "        and exp_INVENTORY_CHECK.Check_Year_Month > to_date('" + checkMonth + "-01 00:00:00','yyyy-MM-dd hh24:mi:ss') \n" +
+                "        and exp_INVENTORY_CHECK.Check_Year_Month < to_date('" + otherMonth + "-01 00:00:00','yyyy-MM-dd hh24:mi:ss') \n" +
+                "        and (\n" +
+                "            exp_INVENTORY_CHECK.sub_storage ='" + subStorage + "' \n" +
+                "            or '" + subStorage + "' ='全部' \n" +
+                "        )";
+        if(!expForm.equals("") && null != expForm){
+            sql += " and d.exp_form = '" + expForm + "' ";
+        }
+        sql += " order by d.exp_form,d.exp_name";
+        return super.createNativeQuery(sql).getResultList();
     }
 
     /**
@@ -60,7 +83,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
      * @return
      */
     public List<ExpInventoryCheck> getInventory(String type, String storageCode, String hospitalId,
-                                                String subStorage, String checkMonth,String hiddenFlag) {
+                                                String subStorage, String checkMonth,String hiddenFlag,String expForm) {
         String sql = "";
         if(type.equals("get")){
             sql = "SELECT EXP_STOCK.STORAGE STORAGE,   \n" +
@@ -80,7 +103,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     "         nvl(EXP_PRICE_LIST.RETAIL_PRICE,0) RETAIL_PRICE,   \n" +
                     "         nvl(EXP_STOCK.PURCHASE_PRICE,0) PURCHASE_PRICE,\n" +
                     "         EXP_STOCK.HOSPITAL_ID HOSPITAL_ID,\n" +
-                    "         to_date('" + checkMonth + "','YYYY-MM-DD HH24:MI:SS') CHECK_YEAR_MONTH,   \n" +
+                    "         to_date('" + checkMonth + "','YYYY-MM') CHECK_YEAR_MONTH,   \n" +
                     "         0 REC_STATUS,\n" +
                     "         '          ' LOCATION\n" +
                     "    FROM EXP_DICT,\n" +
@@ -100,19 +123,43 @@ public class ExpInventoryCheckFacade extends BaseFacade {
             if(hiddenFlag.trim().equals("1")){
                 sql += " and exp_stock.quantity > 0";
             }
+            if(!expForm.trim().equals("") && null != expForm){
+                sql += " and exp_dict.exp_form = '" + expForm + "'";
+            }
+            sql += " order by exp_dict.exp_form,exp_dict.exp_name";
         }
+        String[] temps = checkMonth.split("-");
+        String otherMonth = temps[0] + Integer.toString(Integer.parseInt(temps[1]) + 1);
         if(type.equals("search")){
-            sql = "SELECT EXP_INVENTORY_CHECK.*,   \n" +
-                    "         EXP_DICT.EXP_FORM EXP_FORM,   \n" +
-                    "         '          ' LOCATION\n" +
-                    "    FROM EXP_DICT,   \n" +
-                    "         EXP_INVENTORY_CHECK  \n" +
-                    "   WHERE EXP_INVENTORY_CHECK.STORAGE = '" + storageCode + "' and    \n" +
-                    "         EXP_INVENTORY_CHECK.HOSPITAL_ID = '" + hospitalId + "' and    \n" +
-                    "         ( EXP_dict.EXP_code (+) = EXP_inventory_check.EXP_code) and  \n" +
-                    "         ( EXP_dict.EXP_spec (+) = EXP_inventory_check.min_spec) and  \n" +
-                    "         ( EXP_INVENTORY_CHECK.CHECK_YEAR_MONTH = to_date('" + checkMonth + "','YYYY-MM-DD HH24:MI:SS')  AND  \n" +
-                    "         ( \"EXP_INVENTORY_CHECK\".\"SUB_STORAGE\" = '" + subStorage + "' OR '" + subStorage + "' = '全部') )";
+            sql = "SELECT\n" +
+                    "        EXP_INVENTORY_CHECK.*,\n" +
+                    "        EXP_DICT.EXP_FORM EXP_FORM,\n" +
+                    "        '          ' LOCATION     \n" +
+                    "    FROM\n" +
+                    "        EXP_DICT,\n" +
+                    "        EXP_INVENTORY_CHECK      \n" +
+                    "    WHERE\n" +
+                    "        EXP_INVENTORY_CHECK.STORAGE = '" + storageCode + "' \n" +
+                    "        and              EXP_INVENTORY_CHECK.HOSPITAL_ID = '"  + hospitalId +  "' \n" +
+                    "        and              (\n" +
+                    "            EXP_dict.EXP_code = EXP_inventory_check.EXP_code\n" +
+                    "        ) \n" +
+                    "        and            (\n" +
+                    "            EXP_dict.EXP_spec = EXP_inventory_check.min_spec\n" +
+                    "        ) \n" +
+                    "        and            (\n" +
+                    "            EXP_INVENTORY_CHECK.CHECK_YEAR_MONTH > to_date('" + checkMonth + "-01 00:00:00','YYYY-MM-dd hh24:mi:ss')\n" +
+                    "            and EXP_INVENTORY_CHECK.CHECK_YEAR_MONTH < to_date('" + otherMonth + "-01 00:00:00','YYYY-MM-dd hh24:mi:ss')\n" +
+                    "            AND            (\n" +
+                    "                \"EXP_INVENTORY_CHECK\".\"SUB_STORAGE\" = '" + subStorage + "' \n" +
+                    "                OR '" + subStorage + "' = '全部'\n" +
+                    "            ) \n" +
+                    "        )";
+
+            if (!expForm.trim().equals("") && null != expForm) {
+                sql += " and exp_dict.exp_form = '" + expForm + "'";
+            }
+            sql += " order by exp_dict.exp_form,exp_dict.exp_name";
         }
 
         List<ExpInventoryCheck> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpInventoryCheck.class);
@@ -126,11 +173,24 @@ public class ExpInventoryCheckFacade extends BaseFacade {
      * @param checkMonth
      * @return
      */
-    public List<ExpInventoryCheck> inventoryListByTime(String hospitalId,String storageCode, String checkMonth){
-        String sql = "select distinct CHECK_YEAR_MONTH CHECK_YEAR_MONTH\n" +
-                "from EXP_INVENTORY_CHECK\n" +
-                "where STORAGE = '"+ storageCode+"' and hospital_id='" +hospitalId+
-                "' and to_char(CHECK_YEAR_MONTH,'yyyy-mm-dd hh24:mi:ss') like '"+ checkMonth+"'||'%'";
+    public List<ExpInventoryCheck> inventoryListByTime(String hospitalId,String storageCode, String checkMonth,String expForm){
+        String[] temps = checkMonth.split("-");
+        String otherMonth = temps[0] + Integer.toString(Integer.parseInt(temps[1]) + 1);
+        String sql = "select\n" +
+                "        distinct EXP_INVENTORY_CHECK.*,d.exp_form \n" +
+                "    from\n" +
+                "        EXP_INVENTORY_CHECK,\n" +
+                "        jims.exp_dict d \n" +
+                "    where exp_inventory_check.exp_code = d.exp_code and exp_inventory_check.exp_name = d.exp_name\n" +
+                "        and exp_inventory_check.exp_spec = d.exp_spec\n" +
+                "        and STORAGE = '" + storageCode + "' \n" +
+                "        and hospital_id='" + hospitalId + "' \n" +
+                "        and exp_INVENTORY_CHECK.Check_Year_Month > to_date('" + checkMonth + "-01 00:00:00','yyyy-MM-dd hh24:mi:ss') \n" +
+                "        and exp_INVENTORY_CHECK.Check_Year_Month < to_date('" + otherMonth + "-01 00:00:00','yyyy-MM-dd hh24:mi:ss') ";
+        if(!expForm.trim().equals("")){
+            sql += " and d.exp_form = '" + expForm + "'";
+        }
+        sql += " order by d.exp_form,exp_inventory_check.exp_name";
         List<ExpInventoryCheck> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpInventoryCheck.class);
 
         return result;
@@ -188,6 +248,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                     expImportMasterBeanChangeVo.setInserted(importMasterInserted);
                 }
 
+
                 //生成多条入库记录
                 importDetail = new ExpImportDetail();
                 importDetail.setDocumentNo(documentNo);
@@ -204,7 +265,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 importDetail.setRetailPrice(dict.getRetailPrice());
                 //importDetail.setDiscount();
                 importDetail.setPackageSpec(dict.getMinSpec());
-                importDetail.setQuantity(dict.getQuantity());
+                importDetail.setQuantity(Math.abs(dict.getActualQuantity() - dict.getAccountQuantity()));
                 importDetail.setPackageUnits(dict.getMinUnits());
                 //importDetail.setSubPackage1();
                 //importDetail.setSubPackageUnits1();
@@ -235,10 +296,11 @@ public class ExpInventoryCheckFacade extends BaseFacade {
 
             Integer level = expStorageDeptFacade.findLevelByStorageCode(rows.get(0).getStorage(), rows.get(0).getHospitalId());//当前库房级别
             for (ExpInventoryCheck row : rows) {
+                Double quantity = Math.abs(row.getActualQuantity() - row.getAccountQuantity());
                 if(level == 1){
-                    count += row.getQuantity() * row.getPurchasePrice(); //一级库房，总金额  进价 * 数量
+                    count += quantity * row.getPurchasePrice(); //一级库房，总金额  进价 * 数量
                 }else{
-                    count += row.getQuantity() * row.getRetailPrice();  //不是一级库房，总金额  售价 * 数量
+                    count += quantity * row.getRetailPrice();  //不是一级库房，总金额  售价 * 数量
                 }
             }
             importVo.getExpImportMasterBeanChangeVo().getInserted().get(0).setAccountReceivable(count);     //设置主表总金额
@@ -311,7 +373,7 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 exportDetail.setTradePrice(dict.getTradePrice());
                 exportDetail.setRetailPrice(dict.getRetailPrice());
                 exportDetail.setPackageSpec(dict.getMinSpec());
-                exportDetail.setQuantity(-dict.getQuantity());
+                exportDetail.setQuantity(Math.abs(dict.getActualQuantity() - dict.getAccountQuantity()));
                 exportDetail.setPackageUnits(dict.getMinUnits());
                 ////exportDetail.setSubPackage1();
                 ////exportDetail.setSubPackageSpec1();
@@ -336,10 +398,11 @@ public class ExpInventoryCheckFacade extends BaseFacade {
             }
             Integer level = expStorageDeptFacade.findLevelByStorageCode(rows.get(0).getStorage(), rows.get(0).getHospitalId());//当前库房级别
             for (ExpInventoryCheck row : rows) {
+                Double quantity = Math.abs(row.getActualQuantity() - row.getAccountQuantity());
                 if (level == 1) {
-                    count += -row.getQuantity() * row.getPurchasePrice(); //一级库房，总金额  进价 * 数量
+                    count += quantity * row.getPurchasePrice(); //一级库房，总金额  进价 * 数量
                 } else {
-                    count += -row.getQuantity() * row.getRetailPrice();  //不是一级库房，总金额  售价 * 数量
+                    count += quantity * row.getRetailPrice();  //不是一级库房，总金额  售价 * 数量
                 }
             }
             exportVo.getExpExportMasterBeanChangeVo().getInserted().get(0).setAccountReceivable(count);     //设置盘亏出库主表总金额
@@ -360,8 +423,8 @@ public class ExpInventoryCheckFacade extends BaseFacade {
             for (ExpInventoryCheck dict : rows) {
                 //最后一行统计信息不进行数据库操作
                 if(null != dict.getExpCode() && !dict.getExpCode().trim().equals("")){
-                    java.sql.Timestamp d = new java.sql.Timestamp(dict.getCheckYearMonth().getTime());
-                    dict.setCheckYearMonth(d);
+                    //java.sql.Timestamp d = new java.sql.Timestamp(dict.getCheckYearMonth().getTime());
+                    //dict.setCheckYearMonth(d);
                     //状态为保存的盘点数据
                     if (dict.getRecStatus().intValue() == 1) {
 
@@ -376,10 +439,24 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                             saveCheckDict.add(dict);
 
                     }else{
+                        //暂存前，先查询盘点表中是否有这个月的盘点暂存数据，如果有，先删除暂存的数据,否则会有问题(比如 10月28日暂存了一次数据,
+                        // 10月31日才正式保存,那么必须先删掉暂存的数据,否则暂存的物品会和保存的物品重复)
+                        Date checkYearMonth = dict.getCheckYearMonth();
+                        String storage = dict.getStorage();
+                        String searchTime = Integer.toString(checkYearMonth.getYear() + 1900) + "-" + Integer.toString(checkYearMonth.getMonth() + 1);
+                        List<ExpInventoryCheck> tempInventoryList = getTempInventory(storage, searchTime,dict.getExpForm());
+                        if (tempInventoryList.size() > 0) {
+                            for (ExpInventoryCheck expInventoryCheck : tempInventoryList) {
+                                delete(expInventoryCheck.getId());
+                            }
+                        }
                         newUpdateDict.add(merge(dict));
                     }
                 }
             }
+
+
+
             if (importCheckDict.size() > 0) {
                 //入库
                 ExpImportVo importVo = generateImport(importCheckDict);
@@ -402,12 +479,60 @@ public class ExpInventoryCheckFacade extends BaseFacade {
                 //}
             }
             if (saveCheckDict.size() > 0) {
+                //保存前，先查询盘点表中是否有这个月的盘点暂存数据，如果有，先删除暂存的数据,否则会有问题(比如 10月28日暂存了一次数据,
+                // 10月31日才正式保存,那么必须先删掉暂存的数据,否则暂存的物品会和保存的物品重复)
+                Date checkYearMonth = saveCheckDict.get(0).getCheckYearMonth();
+                String storage = saveCheckDict.get(0).getStorage();
+                String searchTime = Integer.toString(checkYearMonth.getYear() + 1900) + "-" + Integer.toString(checkYearMonth.getMonth() + 1);
+                List<ExpInventoryCheck> tempInventoryList = getTempInventory(storage, searchTime,null);
+                if (tempInventoryList.size() > 0) {
+                    for (ExpInventoryCheck expInventoryCheck : tempInventoryList) {
+                        delete(expInventoryCheck.getId());
+                    }
+                }
                 for (ExpInventoryCheck dict : saveCheckDict) {
                     newUpdateDict.add(merge(dict));
                 }
             }
         }
-
         return newUpdateDict;
+    }
+
+    /**
+     * 查询盘点表中暂存的数据  (暂存标志：0,暂存；1,保存)
+     * @param storage  库房代码
+     * @param checkYearMonth  月份，查询具体某个月的暂存判断数据  格式为: "2016-10"
+     * @param expForm  物品类型   '低值耗材','高值耗材','医用耗材','其他材料'
+     * @return
+     * @author fengyuguang
+     */
+    public List<ExpInventoryCheck> getTempInventory(String storage,String checkYearMonth,String expForm){
+        String[] temps = checkYearMonth.split("-");
+        String otherMonth = temps[0] + "-" + Integer.toString(Integer.parseInt(temps[1]) + 1);
+        String sql = "select t.* \n" +
+                "    from\n" +
+                "        jims.exp_inventory_check t,\n" +
+                "        jims.exp_dict d \n" +
+                "    where\n" +
+                "        t.exp_code = d.exp_code and t.exp_spec = d.exp_spec\n" +
+                "        and t.storage = '" + storage + "' \n" +
+                "        and t.rec_status = 0  \n" +
+                "        and t.check_year_month > to_date('" + checkYearMonth + "-01 00:00:00','yyyy-MM-dd hh24:mi:ss')  \n" +
+                "        and t.check_year_month < to_date('" + otherMonth + "-01 00:00:00','yyyy-MM-dd hh24:mi:ss')";
+        if(null != expForm && !expForm.trim().equals("")){
+            sql += " and d.exp_form = '" + expForm + "'";
+        }
+        return super.createNativeQuery(sql, new ArrayList<Object>(), ExpInventoryCheck.class);
+    }
+
+    /**
+     * 根据ID删除盘点数据
+     * @param id
+     * @author fengyuguang
+     */
+    @Transactional
+    public void delete(String id){
+        String sql = "delete from jims.exp_inventory_check where id = '" + id + "'";
+        entityManager.createNativeQuery(sql).executeUpdate();
     }
 }
