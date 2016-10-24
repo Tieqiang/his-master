@@ -203,28 +203,38 @@ public class ExpExportFacade extends BaseFacade {
      * @return
      */
     public List<ExpExportVo> getExportDetailByExportClass(String storage, String hospitalId, String expClass, String startDate, String endDate) {
-        String sql = "SELECT RECEIVER," +
-                "          count(exp_export_detail.document_no) import_no,  \n" +
-                "          count(distinct exp_export_detail.exp_code) import_code,  \n" +
-                "          sum(quantity*RETAIL_PRICE) import_amount  \t\t  \n" +
-                "FROM exp_export_detail,exp_export_master  \t\t\n" +
-                "WHERE exp_export_detail.document_no = exp_export_master.document_no \t\n";
-        if (null != storage && !storage.trim().equals("")) {
-            sql += " AND exp_export_master.storage = '" + storage + "' \t\n";
-        }
-        if (null != hospitalId && !hospitalId.trim().equals("")) {
-            sql += " AND EXP_EXPORT_DETAIL.HOSPITAL_ID = '" + hospitalId + "'  ";
-        }
-        if (null != startDate && !startDate.trim().equals("")) {
-            sql += " AND exp_export_master.export_date >= to_date('" + startDate + "','YYYY-MM-DD HH24:MI:SS')\n";
-        }
-        if (null != endDate && !endDate.trim().equals("")) {
-            sql += " AND exp_export_master.export_date <= to_date('" + endDate + "','YYYY-MM-DD HH24:MI:SS')\n";
-        }
-        if (null != expClass && !expClass.trim().equals("")) {
-            sql += " AND (exp_export_master.EXPORT_CLASS = '" + expClass + "' OR '" + expClass + "' = '全部')\n";
-        }
-        sql += "GROUP BY  RECEIVER";
+        String sql = "select receiver,\n" +
+                "       import_no,\n" +
+                "       import_code,\n" +
+                "       import_amount,\n" +
+                "       nvl(-m.account_receivable, 0) amount\n" +
+                "  from (\n" +
+                "        \n" +
+                "        SELECT RECEIVER,\n" +
+                "                count(jims.exp_export_detail.document_no) import_no,\n" +
+                "                count(distinct jims.exp_export_detail.exp_code) import_code,\n" +
+                "                sum(quantity * RETAIL_PRICE) import_amount\n" +
+                "          FROM jims.exp_export_detail, jims.exp_export_master\n" +
+                "         WHERE jims.exp_export_detail.document_no =\n" +
+                "               jims.exp_export_master.document_no\n" +
+                "           AND jims.exp_export_master.storage = '" + storage + "'\n" +
+                "           AND jims.EXP_EXPORT_DETAIL.HOSPITAL_ID =\n" +
+                "               '" + hospitalId + "'\n" +
+                "           AND jims.exp_export_master.export_date >=\n" +
+                "               to_date('" + startDate + "', 'YYYY-MM-DD HH24:MI:SS')\n" +
+                "           AND jims.exp_export_master.export_date <=\n" +
+                "               to_date('" + endDate + "', 'YYYY-MM-DD HH24:MI:SS')\n" +
+                "           AND (jims.exp_export_master.EXPORT_CLASS = '" + expClass + "' OR '" + expClass + "' = '全部')\n" +
+                "         GROUP BY RECEIVER) a\n" +
+                "  left outer join jims.exp_import_master m\n" +
+                "    on m.storage = '" + storage + "'\n" +
+                "   and m.supplier = receiver\n" +
+                "   and m.import_date >=\n" +
+                "       to_date('" + startDate + "', 'YYYY-MM-DD HH24:MI:SS')\n" +
+                "   and m.import_date <=\n" +
+                "       to_date('" + endDate + "', 'YYYY-MM-DD HH24:MI:SS')\n" +
+                "   and m.import_class = '退货入库'\n" +
+                " and m.hospital_id = '" + hospitalId + "'";
         List<ExpExportVo> result = super.createNativeQuery(sql, new ArrayList<Object>(), ExpExportVo.class);
         return result;
     }

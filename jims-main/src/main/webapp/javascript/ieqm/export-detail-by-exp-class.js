@@ -144,17 +144,22 @@ $(function () {
             title: '品次',
             field: 'importNo',
             align: 'center',
-            width: "20%"
+            width: "18%"
         }, {
             title: '品种',
             field: 'importCode',
             align: 'center',
-            width: "20%"
+            width: "18%"
         }, {
             title: '金额',
             field: 'importAmount',
             align: 'right',
-            width: "20%"
+            width: "18%"
+        },{
+            title: '退货入库',
+            field: 'amount',
+            align: 'right',
+            width: '18%'
         }]]
     });
 
@@ -168,16 +173,19 @@ $(function () {
         $.get("/api/exp-export/export-detail-by-exp-class?type=expClass&storage=" + storageCode + "&hospitalId=" + hospitalId + "&startDate=" + startDate + "&endDate=" + endDate + "&value=" + expClass, function (data) {
             if (data.length > 0) {
                 var sum = 0.00;
+                var amount = 0.00;
                 startDates=startDate;
                 stopDates=endDate;
                 expClasss=expClass;
                 $.each(data, function (index, item) {
                     sum += parseFloat(item.importAmount);
+                    amount += parseFloat(item.amount);
                 });
                 $("#dg").datagrid('loadData', data);
                 $('#dg').datagrid('appendRow', {
                     receiver: "合计：",
-                    importAmount: sum.toFixed(2)
+                    importAmount: sum.toFixed(2),
+                    amount: amount.toFixed(2)
                 });
                 $("#dg").datagrid('loadData', data);
             } else {
