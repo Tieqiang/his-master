@@ -133,7 +133,7 @@ $(function () {
                 type: 'numberbox'
             }
         }, {
-            title: '包装规格',
+            title: '规格',
             field: 'expSpec',
             align: 'center',
             width: "6%",
@@ -146,7 +146,7 @@ $(function () {
              return value;
              }*/
         }, {
-            title: '包装单位',
+            title: '单位',
             field: 'units',
             align: 'center',
             width: "6%",
@@ -697,10 +697,12 @@ $(function () {
                 var price = {};
                 price.expCode = item.expCode;
                 price.expName = item.expName;
-                price.amountPerPackage = item.dosePerUnit;
-                price.minSpec = item.expSpec;
-                price.minUnits = item.doseUnits;
-                price.units = item.doseUnits;
+                price.expSpec = item.expSpec;
+                price.units = item.units;
+                //price.amountPerPackage = item.dosePerUnit;
+                //price.minSpec = item.expSpec;
+                //price.minUnits = item.doseUnits;
+                //price.units = item.doseUnits;
                 price.hospitalId = parent.config.hospitalId;
                 simplePrice.push(price);
             });
