@@ -419,7 +419,7 @@ var rowValue = undefined;
                 for (var i = 0; i < selectedRows.length; i++) {
                     var acct = {};
                     acct.acctDeptId = rowValue.id;
-                    acct.deptDictId = selectedRows[i].deptCode;
+                    acct.deptDictId = selectedRows[i].id;
                     acctVsDepts.push(acct);
                 }
 

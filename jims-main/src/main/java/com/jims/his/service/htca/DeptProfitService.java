@@ -33,7 +33,8 @@ public class DeptProfitService {
     @Path("list")
     public List<AcctDeptProfit> listProfit(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth){
 
-        String hql ="from AcctDeptProfit as profit where profit.yearMonth='"+yearMonth+"' and profit.hospitalId='"+hospitalId+"'"  ;
+        String hql ="select profit from AcctDeptProfit as profit,AcctDeptDict dept  where profit.yearMonth='"+yearMonth+"' and profit.hospitalId='"+hospitalId+"'" +
+                " and profit.acctDeptId=dept.id order by dept.position"  ;
         return acctDeptProfitFacade.createQuery(AcctDeptProfit.class,hql,new ArrayList<Object>()).getResultList() ;
 
     }
