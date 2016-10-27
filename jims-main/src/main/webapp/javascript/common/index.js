@@ -111,15 +111,20 @@ window.updateTab = function (title, href) {
 };
 $(function () {
     var hospitalId = getUrlParameter("hospitalId");
-    //判断当前日期在不在月底盘点日期之间，如果在，提醒用户可以盘点
-    $.get("/api/app-configer-parameter/list?hospitalId=" + hospitalId + "&name=INVENTORY_TIME", function (data) {
-        if(data != [] && data != null){
-            var valueArr = data[0].parameterValue.split("|");
-            var date = new Date().getDate();
-            $.each(valueArr,function(index,item){
-                if(parseInt($.trim(item)) == date){
-                    $.messager.alert('系统提示','月底盘点功能可以使用了，请尽快完成盘点操作，过期将不能盘点','info');
-                    return ;
+    var moduleId = getUrlParameter("moduleId");
+    $.get('/api/module-dict/find-by-id?id=' + moduleId,function(data){
+        if($.trim(data.moduleName) == '消耗品管理系统'){
+            //判断当前日期在不在月底盘点日期之间，如果在，提醒用户可以盘点
+            $.get("/api/app-configer-parameter/list?hospitalId=" + hospitalId + "&name=INVENTORY_TIME", function (data) {
+                if (data != [] && data != null) {
+                    var valueArr = data[0].parameterValue.split("|");
+                    var date = new Date().getDate();
+                    $.each(valueArr, function (index, item) {
+                        if (parseInt($.trim(item)) == date) {
+                            $.messager.alert('系统提示', '月底盘点功能可以使用了，请尽快完成盘点操作，过期将不能盘点', 'info');
+                            return;
+                        }
+                    });
                 }
             });
         }

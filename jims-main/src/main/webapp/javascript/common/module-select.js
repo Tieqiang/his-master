@@ -119,7 +119,7 @@ $(function(){
         //if(validateSelect()){
         $.postJSON("/api/login/add-login-info", config, function (data) {
             //登录成功跳转至index.html
-            location.href = "/index.html?staffId=" + staffId + "&hospitalId=" + hospitalId;
+            location.href = "/index.html?staffId=" + staffId + "&hospitalId=" + hospitalId + "&moduleId=" + moduleId;
         }, function (data) {
 
         })

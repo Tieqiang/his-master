@@ -17,6 +17,18 @@ import java.util.Set;
  * Created by heren on 2015/10/26.
  */
 public class ModuleDictFacade extends BaseFacade {
+
+    /**
+     * 根据模块ID获取模块信息
+     * @param id
+     * @return
+     * @author Fyg
+     */
+    public ModulDict getById(String id) {
+        String sql = "select * from jims.modul_dict where id = '" + id + "'";
+        return super.createNativeQuery(sql,new ArrayList<Object>(),ModulDict.class).get(0);
+    }
+
     /**
      * 查找
      * @param name

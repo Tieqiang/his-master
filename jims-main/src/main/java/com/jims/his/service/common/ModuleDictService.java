@@ -6,11 +6,13 @@ import com.jims.his.domain.common.entity.ModuleVsMenu;
 import com.jims.his.domain.common.entity.StaffVsModule;
 import com.jims.his.domain.common.facade.ModuleDictFacade;
 import com.jims.his.domain.common.vo.BeanChangeVo;
+import org.jboss.logging.Param;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.AssertFalse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -33,6 +35,18 @@ public class ModuleDictService {
         this.resp = resp;
         this.moduleDictFacade = moduleDictFacade;
         this.httpSession = httpSession;
+    }
+
+    /**
+     * 根据模块ID获取模块信息
+     * @param id
+     * @return
+     * @author Fyg
+     */
+    @GET
+    @Path("find-by-id")
+    public ModulDict getById(@QueryParam("id")String id){
+        return moduleDictFacade.getById(id);
     }
 
     /**
