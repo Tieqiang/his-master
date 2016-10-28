@@ -93,7 +93,7 @@ public class DeptDictFacade extends BaseFacade {
      */
     public List<DeptDict> findByHospitalIdAndAcctDeptId(String hospitalId, String acctDeptId) {
 
-        String hql = "select dept from DeptDict as dept ,AcctDeptVsDeptDict vs where dept.deptCode=vs.deptDictId and " +
+        String hql = "select dept from DeptDict as dept ,AcctDeptVsDeptDict vs where dept.id=vs.deptDictId and " +
                 "vs.acctDeptId='" + acctDeptId + "' and dept.hospitalDict.id='" + hospitalId + "'";
 
         Query query = entityManager.createQuery(hql);

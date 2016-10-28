@@ -52,6 +52,7 @@ var rowValue = undefined;
         var depts = [];
         var treeDepts = [];
         var loadPromise = $.get("/api/acct-dept-dict/acct-list?hospitalId=" + parent.config.hospitalId, function (data) {
+            console.log(data) ;
             $.each(data, function (index, item) {
                 var obj = {};
                 obj.deptCode = item.deptCode;
@@ -84,10 +85,12 @@ var rowValue = undefined;
         loadPromise.done(function () {
             for (var i = 0; i < depts.length; i++) {
                 for (var j = 0; j < depts.length; j++) {
-                    if (depts[i].id == depts[j].parentId) {
+                    if (depts[i].id == depts[j].parentId ) {
+                        depts[i].state='closed';
                         depts[i].children.push(depts[j]);
                     }
                 }
+
                 if (depts[i].children.length > 0 && !depts[i].parentId) {
                     treeDepts.push(depts[i]);
                 }
@@ -658,5 +661,15 @@ var rowValue = undefined;
                 })
             }
         }
+    })
+
+    //全部合并
+    $("#colBtn").on('click',function(){
+        $("#acctDeptDataGrid").treegrid("collapseAll") ;
+    })
+
+    //全部展开
+    $("#expBtn").on('click',function(){
+        $("#acctDeptDataGrid").treegrid("expandAll") ;
     })
 })
