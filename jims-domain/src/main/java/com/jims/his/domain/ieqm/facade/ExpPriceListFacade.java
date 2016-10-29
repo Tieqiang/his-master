@@ -224,8 +224,8 @@ public class ExpPriceListFacade extends BaseFacade {
                 " and   d.storage(+) like '" + StorageCode + "'||'%'\n" +
                 //"AND   nvl(d.quantity,0) > 0" +
 
-                "and   upper(b.input_code) like upper('%" + inputCode + "%')" +
-                " and   d.quantity>0";
+                "and   upper(b.input_code) like upper('%" + inputCode + "%')";/* +
+                " and   d.quantity>0";*/
         return super.createNativeQuery(sql,new ArrayList<Object>(), ExpPriceListVo.class);
     }
     /**

@@ -99,7 +99,7 @@ $(document).ready(function () {
                     ]],
                     onClickRow: function (rowIndex, rowData) {
                         $("#dg").datagrid('endEdit', editRowIndex);
-                        if (rowData.amountPerPackage > 0 && rowData.supplyIndicator == 1) {
+                        //if (rowData.amountPerPackage > 0 && rowData.supplyIndicator == 1) {
                             var rows = $('#dg').datagrid('getRows');
                             for(var i = 0; i < rows.length; i++){
                                  var rowIndex = $('#dg').datagrid('getRowIndex',rows[i]);
@@ -128,21 +128,22 @@ $(document).ready(function () {
                             rowDetail.expCode = rowData.expCode;
                             rowDetail.packageUnits = rowData.units;
                             rowDetail.expSpec = rowData.minSpec;
+                            rowDetail.quantity = rowData.quantity;
                             limitNumber = rowData.amountPerPackage;
                             $("#dg").datagrid('refreshRow', editRowIndex);
                             $("#dg").datagrid('beginEdit', editRowIndex);
-                        } else {
-                            $.messager.alert('系统消息', '申请库房暂不供应此产品', 'info');
-                            $("#dg").datagrid('beginEdit', editRowIndex);
-                            return;
-                        }
+                        //}else {
+                        //    $.messager.alert('系统消息', '申请库房暂不供应此产品', 'info');
+                        //    $("#dg").datagrid('beginEdit', editRowIndex);
+                        //    return;
+                        //}
 
                     },
                     keyHandler: $.extend({}, $.fn.combogrid.defaults.keyHandler, {
                         enter: function (e) {
                             var row = $(this).combogrid('grid').datagrid('getSelected');
                             $(this).combogrid('hidePanel');
-                            if (row && row.amountPerPackage > 0 && row.supplyIndicator == 1) {
+                            //if (row && row.amountPerPackage > 0 && row.supplyIndicator == 1) {
                                 var rows = $('#dg').datagrid('getRows');
                                 for (var i = 0; i < rows.length; i++) {
                                     var rowIndex = $('#dg').datagrid('getRowIndex', rows[i]);
@@ -175,11 +176,12 @@ $(document).ready(function () {
                                 rowDetail.packageUnits = row.units;
                                 rowDetail.expSpec = row.minSpec;
                                 rowDetail.expName = row.expName;
+                                rowDetail.quantity = row.quantity;
                                 limitNumber = row.amountPerPackage;
-                            } else {
-                                $.messager.alert('系统消息', '申请库房暂不供应此产品', 'info');
-                                return;
-                            }
+                            //} else {
+                            //    $.messager.alert('系统消息', '申请库房暂不供应此产品', 'info');
+                            //    return;
+                            //}
                             $("#dg").datagrid('beginEdit', editRowIndex);
                             //光标定位到数量单元格
                             var selector = "#datagrid-row-r2-2-" + editRowIndex + " > td:nth-child(" + fieldNo + ") > div > table > tbody > tr > td > span > input";
@@ -227,7 +229,7 @@ $(document).ready(function () {
             align: 'center',
             width: "10%",
             value: 0,
-            editor: {type: "numberbox"},
+            editor: {type: "numberbox"}/*,
             formatter: function (value, row, index) {
                 if (value > limitNumber) {
                     $.messager.alert("提示", "第" + (parseInt(index + 1)) + "行申请数量超过申领库房的数量，请重新填写申请数量。", "info");
@@ -236,7 +238,7 @@ $(document).ready(function () {
                     appFlag = false;
                 }
                 return value;
-            }
+            }*/
         }, {
             title: "申请人",
             field: "applicationMan",
@@ -364,9 +366,9 @@ $(document).ready(function () {
                 return;
             }
         }
-        if (appFlag) {
+        /*if (appFlag) {
             return;
-        }
+        }*/
         var insertData = $("#dg").datagrid("getChanges", "inserted");
         var updateData = $("#dg").datagrid("getChanges", "updated");
         var deleteData = $("#dg").datagrid("getChanges", "deleted");
