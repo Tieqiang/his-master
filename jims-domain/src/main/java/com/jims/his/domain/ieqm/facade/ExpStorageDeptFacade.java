@@ -96,9 +96,19 @@ public class ExpStorageDeptFacade extends BaseFacade {
                 " and exp.storage_level>(select storage_level-2 from EXP_STORAGE_DEPT where storage_code ='" + storageCode + "')";
 
         return super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageDept.class);
-
-
     }
+
+    /**
+     * 查询所有一级库房
+     * @return
+     * @author fengyuguang
+     */
+    public List<ExpStorageDept> listLevelBy1() {
+        String sql = "select * from jims.exp_storage_dept where storage_level = '1'";
+
+        return super.createNativeQuery(sql, new ArrayList<Object>(), ExpStorageDept.class);
+    }
+
 
     public List<ExpStorageDept> findStroageByHospitalId(String hospitalId) {
         String hql = "from ExpStorageDept as dept where dept.hospitalId='"+hospitalId+"'" ;

@@ -65,6 +65,17 @@ public class ExpStorageDeptService {
     }
 
     /**
+     * 查询所有一级库房
+     * @return
+     * @author fengyuguang
+     */
+    @GET
+    @Path("list-level-by-1")
+    public List<ExpStorageDept> listLevelBy1(){
+        return expStorageDeptFacade.listLevelBy1();
+    }
+
+    /**
      * 通过库房代码、医院Id查找前后缀
      *
      * @param hospitalId

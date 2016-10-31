@@ -14,7 +14,7 @@ $(document).ready(function () {
     var appFlag;
 
     //库房加载
-    var storageDictsPromise = $.get("/api/exp-storage-dept/listLevelUp?hospitalId=" + parent.config.hospitalId + "&storageCode=" + parent.config.storageCode, function (data) {
+    var storageDictsPromise = $.get("/api/exp-storage-dept/list-level-by-1", function (data) {
         $.each(data, function (index, item) {
             var storage = {};
             storage.storageCode = item.storageCode;
