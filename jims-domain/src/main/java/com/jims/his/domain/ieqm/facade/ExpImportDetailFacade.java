@@ -585,7 +585,8 @@ public class ExpImportDetailFacade extends BaseFacade {
                 "          exp_import_detail.exp_code = exp_dict.exp_code(+) AND \n" +
                 "          exp_import_detail.exp_spec = exp_dict.exp_spec(+)";
         if(supplier!=null && !supplier.trim().equals("")){
-            sql+=" and exp_import_master.supplier = '"+supplier+"'";
+            //sql+=" and exp_import_master.supplier = '"+supplier+"'";
+            sql += " and exp_import_detail.firm_id = '" + supplier + "'";
         }
         if(true){
             sql+="   GROUP BY   exp_import_detail.exp_code,exp_name,package_spec,package_units,firm_id";
