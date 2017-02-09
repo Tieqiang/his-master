@@ -52,7 +52,6 @@ var rowValue = undefined;
         var depts = [];
         var treeDepts = [];
         var loadPromise = $.get("/api/acct-dept-dict/acct-list?hospitalId=" + parent.config.hospitalId, function (data) {
-            console.log(data) ;
             $.each(data, function (index, item) {
                 var obj = {};
                 obj.deptCode = item.deptCode;
@@ -75,6 +74,7 @@ var rowValue = undefined;
                 obj.position = item.position;
                 obj.buildArea = item.buildArea ;
                 obj.staffNum = item.staffNum ;
+                obj.standardFlag = item.standardFlag ;
                 obj.children = [];
                 depts.push(obj);
             });
@@ -149,6 +149,19 @@ var rowValue = undefined;
                 }
                 if(value==1){
                     return '住院'
+                }
+                return value ;
+            }
+        },{
+            title:"是否标准三级科",
+            field:"standardFlag",
+            width:'10%',
+            formatter:function(value,rowIndex,row){
+                if(value=='0'){
+                    return '否'
+                }
+                if(value=='1'){
+                    return "是"
                 }
                 return value ;
             }
@@ -258,6 +271,14 @@ var rowValue = undefined;
                             $("#endDept").combobox('setValue',"");
                         }
                         $("#acctDeptFormWindow").window('open') ;
+
+                        if(row.standardFlag=="1"){
+                            $("#standardFlag").combobox('setValue','1');
+                        }else if(row.standardFlag=="0"){
+                            $("#standardFlag").combobox("setValue",'0');
+                        }else{
+                            $("#standardFlag").combobox("setValue","");
+                        }
                     }
                     if(item.id=='modifyDeptVs'){
                         $("#deptDictTable").datagrid('reload') ;
@@ -309,6 +330,7 @@ var rowValue = undefined;
             acc.position = rows[i].position ;
             acc.staffNum = rows[i].staffNum ;
             acc.endDept = rows[i].endDept
+            acc.standardFlag = rows[i].standardFlag;
             acc.delFlag = '1' ;
             acctDeptDict.push(acc);
         }
@@ -360,6 +382,7 @@ var rowValue = undefined;
 
         acctDeptDict.endDept = $("#endDept").combobox('getValue') ;
         acctDeptDict.position = $("#position").textbox('getValue') ;
+        acctDeptDict.standardFlag = $("#standardFlag").combobox("getValue");
         acctDeptDict.delFlag = '1';
 
         if (!acctDeptDict.deptName || !acctDeptDict.deptCode) {

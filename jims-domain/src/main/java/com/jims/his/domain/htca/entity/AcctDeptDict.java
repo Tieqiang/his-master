@@ -49,6 +49,7 @@ public class AcctDeptDict implements java.io.Serializable {
     private Double staffNum ;//在编人数
     private String delFlag ;
     private String position ;
+    private String standardFlag  ;//是否标准3级科室
 	// Constructors
 
 	/** default constructor */
@@ -61,7 +62,7 @@ public class AcctDeptDict implements java.io.Serializable {
                         String deptLocation, String deptOther, String deptStopFlag,
                         String hospitalId, String costAppInd, String costAppLevel,
                         String deptType,
-                        String deptClass, String endDept, String parentId, Double buildArea, Double staffNum, String delFlag, String position) {
+                        String deptClass, String endDept, String parentId, Double buildArea, Double staffNum, String delFlag, String position, String standardFlag) {
 		this.deptCode = deptCode;
 		this.deptName = deptName;
 		this.deptAttr = deptAttr;
@@ -82,6 +83,7 @@ public class AcctDeptDict implements java.io.Serializable {
         this.staffNum = staffNum;
         this.delFlag = delFlag;
         this.position = position;
+        this.standardFlag = standardFlag;
     }
 
 	// Property accessors
@@ -275,5 +277,14 @@ public class AcctDeptDict implements java.io.Serializable {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    @Column(name="standard_flag")
+    public String getStandardFlag() {
+        return standardFlag;
+    }
+
+    public void setStandardFlag(String standardFlag) {
+        this.standardFlag = standardFlag;
     }
 }
