@@ -29,7 +29,7 @@ public class ServiceDeptIncomeService  {
     @Path("list")
     public List<ServiceDeptIncome> listIncome(@QueryParam("hospitalId")String hospitalId,@QueryParam("yearMonth")String yearMonth,
                                               @QueryParam("deptId")String deptId){
-        String hql ="fromo ServiceDeptIncome income where income.hospitalId='"+hospitalId+"' and " +
+        String hql ="from ServiceDeptIncome income where income.hospitalId='"+hospitalId+"' and " +
                 "income.acctDeptId='"+deptId+"' and income.yearMonth='"+yearMonth+"'" ;
         return serviceDeptIncomeFacade.createQuery(ServiceDeptIncome.class,hql,new ArrayList<Object>()).getResultList() ;
     }

@@ -92,7 +92,12 @@ public class FetchDataHolidayFacade extends BaseFacade {
                     calcIncomeDetail.setIncomeItemCode((String) objects[0]);
                     calcIncomeDetail.setClassOnRecking((String) objects[2]);
                     //设置执行科室
-                    calcIncomeDetail.setPerformedBy((String) objects[3]);
+                    String classOnRecking = (String)objects[2] ;
+                    if(classOnRecking !=null&&"P".equals(classOnRecking.substring(0,1))&&(!"150101".equals((String)objects[3]))){
+                        calcIncomeDetail.setPerformedBy("150101");
+                    }else{
+                        calcIncomeDetail.setPerformedBy((String) objects[3]);
+                    }
                     calcIncomeDetail.setPerformedDoctor((String) objects[4]);
 
                     //设置开单科室

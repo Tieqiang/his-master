@@ -425,93 +425,104 @@ public class AcctDeptCostFacade extends BaseFacade {
             startDate = strings[0] + "-" + 2 + "-01 00:00:00";
             endDate = strings[0] + "-" + 3 + "-01 00:00:00";
         }
-        String sql = "select q.ward_code, sum(days)\n" +
-                "  from (\n" +
-                "        ---------在院\n" +
-                "        select (case\n" +
-                "                  when a.discharge_date_time is not null then\n" +
-                "                   a.dept_discharge_from\n" +
-                "                  else\n" +
-                "                   (select decode(dept_code_lend,\n" +
-                "                                  null,\n" +
-                "                                  dept_code,\n" +
-                "                                  dept_code_lend)\n" +
-                "                      from pats_in_hospital\n" +
-                "                     where patient_id = a.patient_id\n" +
-                "                       and visit_id = a.visit_id)\n" +
-                "                end) visit_dept,\n" +
-                "                0 as money,\n" +
-                "                --b.request_doctor_id doctor,       \n" +
-                "                (case\n" +
-                "                  when trunc(a.admission_date_time) <\n" +
-                "                       trunc(to_date('"+startDate+"',\n" +
-                "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
-                "                   trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss')) -\n" +
-                "                   trunc(to_date('"+startDate+"', 'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
-                "                  else\n" +
-                "                   trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss')) -\n" +
-                "                   trunc(a.admission_date_time) + 1\n" +
-                "                end) days\n" +
-                "          from pat_visit a, mr_on_line b\n" +
-                "         where a.patient_id = b.patient_id\n" +
-                "           and a.visit_id = b.visit_id\n" +
-                "           and trunc(a.admission_date_time) <\n" +
-                "               trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss'))\n" +
-                "           and b.request_doctor_id <> '*'\n" +
-                "           and a.discharge_date_time is null\n" +
-                "        union all\n" +
-                "        -----------出院\n" +
-                "        select (case\n" +
-                "                 when a.discharge_date_time is not null then\n" +
-                "                  a.dept_discharge_from\n" +
-                "                 else\n" +
-                "                  (select decode(dept_code_lend,\n" +
-                "                                 null,\n" +
-                "                                 dept_code,\n" +
-                "                                 dept_code_lend)\n" +
-                "                     from pats_in_hospital\n" +
-                "                    where patient_id = a.patient_id\n" +
-                "                      and visit_id = a.visit_id)\n" +
-                "               end) visit_dept,\n" +
-                "               0 as money,\n" +
-                "               --b.request_doctor_id doctor,\n" +
-                "               (case\n" +
-                "                  when trunc(a.discharge_date_time) <\n" +
-                "                       trunc(to_date('"+endDate+"',\n" +
-                "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
-                "                   (case\n" +
-                "                  when trunc(a.admission_date_time) <\n" +
-                "                       trunc(to_date('"+startDate+"',\n" +
-                "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
-                "                   trunc(a.discharge_date_time) -\n" +
-                "                   trunc(to_date('"+startDate+"', 'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
-                "                  else\n" +
-                "                   trunc(a.discharge_date_time) - trunc(a.admission_date_time) + 1\n" +
-                "                end) else(case\n" +
-                "                 when trunc(a.admission_date_time) <\n" +
-                "                      trunc(to_date('"+startDate+"',\n" +
-                "                                    'yyyy-mm-dd hh24:mi:ss')) then\n" +
-                "                  trunc(to_date('"+endDate+"',\n" +
-                "                                'yyyy-mm-dd hh24:mi:ss')) -\n" +
-                "                  trunc(to_date('"+startDate+"',\n" +
-                "                                'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
-                "                 else\n" +
-                "                  trunc(to_date('"+endDate+"',\n" +
-                "                                'yyyy-mm-dd hh24:mi:ss')) -\n" +
-                "                  trunc(a.admission_date_time) + 1\n" +
-                "               end) end) days\n" +
-                "          from pat_visit a, mr_on_line b\n" +
-                "         where a.patient_id = b.patient_id\n" +
-                "           and a.visit_id = b.visit_id\n" +
-                "           and b.request_doctor_id <> '*'\n" +
-                "           and a.discharge_date_time is not null\n" +
-                "           and a.discharge_date_time >=\n" +
-                "               (to_date('"+startDate+"', 'yyyy-mm-dd  hh24:mi:ss'))\n" +
-                "           and a.admission_date_time <\n" +
-                "               (to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss'))) p,\n" +
-                "       dept_vs_ward q\n" +
-                " where p.visit_dept = q.dept_code\n" +
-                " group by q.ward_code" ;
+        //String sql = "select q.ward_code, sum(days)\n" +
+        //        "  from (\n" +
+        //        "        ---------在院\n" +
+        //        "        select (case\n" +
+        //        "                  when a.discharge_date_time is not null then\n" +
+        //        "                   a.dept_discharge_from\n" +
+        //        "                  else\n" +
+        //        "                   (select decode(dept_code_lend,\n" +
+        //        "                                  null,\n" +
+        //        "                                  dept_code,\n" +
+        //        "                                  dept_code_lend)\n" +
+        //        "                      from pats_in_hospital\n" +
+        //        "                     where patient_id = a.patient_id\n" +
+        //        "                       and visit_id = a.visit_id)\n" +
+        //        "                end) visit_dept,\n" +
+        //        "                0 as money,\n" +
+        //        "                --b.request_doctor_id doctor,       \n" +
+        //        "                (case\n" +
+        //        "                  when trunc(a.admission_date_time) <\n" +
+        //        "                       trunc(to_date('"+startDate+"',\n" +
+        //        "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
+        //        "                   trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss')) -\n" +
+        //        "                   trunc(to_date('"+startDate+"', 'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
+        //        "                  else\n" +
+        //        "                   trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss')) -\n" +
+        //        "                   trunc(a.admission_date_time) + 1\n" +
+        //        "                end) days\n" +
+        //        "          from pat_visit a, mr_on_line b\n" +
+        //        "         where a.patient_id = b.patient_id\n" +
+        //        "           and a.visit_id = b.visit_id\n" +
+        //        "           and trunc(a.admission_date_time) <\n" +
+        //        "               trunc(to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss'))\n" +
+        //        "           and b.request_doctor_id <> '*'\n" +
+        //        "           and a.discharge_date_time is null\n" +
+        //        "        union all\n" +
+        //        "        -----------出院\n" +
+        //        "        select (case\n" +
+        //        "                 when a.discharge_date_time is not null then\n" +
+        //        "                  a.dept_discharge_from\n" +
+        //        "                 else\n" +
+        //        "                  (select decode(dept_code_lend,\n" +
+        //        "                                 null,\n" +
+        //        "                                 dept_code,\n" +
+        //        "                                 dept_code_lend)\n" +
+        //        "                     from pats_in_hospital\n" +
+        //        "                    where patient_id = a.patient_id\n" +
+        //        "                      and visit_id = a.visit_id)\n" +
+        //        "               end) visit_dept,\n" +
+        //        "               0 as money,\n" +
+        //        "               --b.request_doctor_id doctor,\n" +
+        //        "               (case\n" +
+        //        "                  when trunc(a.discharge_date_time) <\n" +
+        //        "                       trunc(to_date('"+endDate+"',\n" +
+        //        "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
+        //        "                   (case\n" +
+        //        "                  when trunc(a.admission_date_time) <\n" +
+        //        "                       trunc(to_date('"+startDate+"',\n" +
+        //        "                                     'yyyy-mm-dd hh24:mi:ss')) then\n" +
+        //        "                   trunc(a.discharge_date_time) -\n" +
+        //        "                   trunc(to_date('"+startDate+"', 'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
+        //        "                  else\n" +
+        //        "                   trunc(a.discharge_date_time) - trunc(a.admission_date_time) + 1\n" +
+        //        "                end) else(case\n" +
+        //        "                 when trunc(a.admission_date_time) <\n" +
+        //        "                      trunc(to_date('"+startDate+"',\n" +
+        //        "                                    'yyyy-mm-dd hh24:mi:ss')) then\n" +
+        //        "                  trunc(to_date('"+endDate+"',\n" +
+        //        "                                'yyyy-mm-dd hh24:mi:ss')) -\n" +
+        //        "                  trunc(to_date('"+startDate+"',\n" +
+        //        "                                'yyyy-mm-dd hh24:mi:ss')) + 1\n" +
+        //        "                 else\n" +
+        //        "                  trunc(to_date('"+endDate+"',\n" +
+        //        "                                'yyyy-mm-dd hh24:mi:ss')) -\n" +
+        //        "                  trunc(a.admission_date_time) + 1\n" +
+        //        "               end) end) days\n" +
+        //        "          from pat_visit a, mr_on_line b\n" +
+        //        "         where a.patient_id = b.patient_id\n" +
+        //        "           and a.visit_id = b.visit_id\n" +
+        //        "           and b.request_doctor_id <> '*'\n" +
+        //        "           and a.discharge_date_time is not null\n" +
+        //        "           and a.discharge_date_time >=\n" +
+        //        "               (to_date('"+startDate+"', 'yyyy-mm-dd  hh24:mi:ss'))\n" +
+        //        "           and a.admission_date_time <\n" +
+        //        "               (to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss'))) p,\n" +
+        //        "       dept_vs_ward q\n" +
+        //        " where p.visit_dept = q.dept_code\n" +
+        //        " group by q.ward_code" ;
+
+        //2016-11-14 双滦区人民医院修改占床日的修改方法
+        String sql = "select b.id, count(*)\n" +
+                "  from MEDADM.bedpats_in_hospital a, JIMS.dept_dict b\n" +
+                " where stat_date_time >\n" +
+                "       to_date('"+startDate+"', 'yyyy-mm-dd hh24:mi:ss')\n" +
+                "   and stat_date_time <\n" +
+                "       to_date('"+endDate+"', 'yyyy-mm-dd hh24:mi:ss')\n" +
+                "   and a.ward_code = b.dept_code\n" +
+                " group by b.id\n" +
+                " order by b.id" ;
 
         List<Object[]> values = createNativeQuery(sql).getResultList() ;
         double totalCost = 0.0 ;

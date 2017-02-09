@@ -1145,6 +1145,28 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/apache/oltu/commons/org.apache.oltu.commons.json/1.0.0/org.apache.oltu.commons.json-1.0.0-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: org.apache.shiro:shiro-core:1.2.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/shiro/shiro-core/1.2.2/shiro-core-1.2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/shiro/shiro-core/1.2.2/shiro-core-1.2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/shiro/shiro-core/1.2.2/shiro-core-1.2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.shiro:shiro-web:1.2.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/shiro/shiro-web/1.2.2/shiro-web-1.2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/shiro/shiro-web/1.2.2/shiro-web-1.2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/shiro/shiro-web/1.2.2/shiro-web-1.2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: org.bouncycastle:bcprov-jdk15on:1.50">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/bouncycastle/bcprov-jdk15on/1.50/bcprov-jdk15on-1.50.jar!/" />
@@ -1453,6 +1475,17 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/json/json/20131018/json-20131018-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: org.secnod.shiro:shiro-jersey:0.1.0">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/secnod/shiro/shiro-jersey/0.1.0/shiro-jersey-0.1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/secnod/shiro/shiro-jersey/0.1.0/shiro-jersey-0.1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/secnod/shiro/shiro-jersey/0.1.0/shiro-jersey-0.1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: org.slf4j:jul-to-slf4j:1.7.5">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/jul-to-slf4j/1.7.5/jul-to-slf4j-1.7.5.jar!/" />
@@ -1462,6 +1495,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/jul-to-slf4j/1.7.5/jul-to-slf4j-1.7.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.slf4j:slf4j-api:1.6.4">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:slf4j-api:1.7.5">

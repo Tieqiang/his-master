@@ -15,19 +15,19 @@
     </modules>
 
     <repositories>
-        <repository>
-            <id>Releases</id>
-            <name>nexus-public</name>
-            <url>http://192.168.6.143:8081/nexus/content/groups/public/</url>
-        </repository>
+        <!--<repository>-->
+            <!--<id>Releases</id>-->
+            <!--<name>nexus-public</name>-->
+            <!--<url>http://192.168.6.143:8081/nexus/content/groups/public/</url>-->
+        <!--</repository>-->
     </repositories>
     <distributionManagement>
-        <snapshotRepository>
-            <id>Snapshots</id>
-            <name>snap-server</name>
-            <!--<url>http://192.168.6.143:8081/nexus/content/repositories/ztq-snapshot/</url>-->
-            <url>http://192.168.6.143:8081/nexus/content/groups/public/</url>
-        </snapshotRepository>
+        <!--<snapshotRepository>-->
+            <!--<id>Snapshots</id>-->
+            <!--<name>snap-server</name>-->
+            <!--&lt;!&ndash;<url>http://192.168.6.143:8081/nexus/content/repositories/ztq-snapshot/</url>&ndash;&gt;-->
+            <!--<url>http://192.168.6.143:8081/nexus/content/groups/public/</url>-->
+        <!--</snapshotRepository>-->
     </distributionManagement>
 
     <properties>
@@ -258,6 +258,22 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15on</artifactId>
                 <version>1.50</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.secnod.shiro</groupId>
+                <artifactId>shiro-jersey</artifactId>
+                <version>0.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-core</artifactId>
+                <version>1.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-web</artifactId>
+                <version>1.2.2</version>
             </dependency>
         </dependencies>
 

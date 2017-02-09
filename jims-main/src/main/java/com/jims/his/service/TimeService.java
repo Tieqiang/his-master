@@ -1,6 +1,10 @@
 package com.jims.his.service;
 
 
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
+import org.secnod.shiro.jaxrs.Auth;
 import sun.security.util.Password;
 
 import javax.ws.rs.*;
@@ -42,6 +46,23 @@ public class TimeService {
     @Path("list")
     public List<DemoUser> listDemoUsers(){
         return this.demoUsers ;
+    }
+
+
+    @GET
+    @Path("auth")
+    public List<DemoUser> testString(@Auth Subject user){
+        DemoUser demoUser = new DemoUser(user.getPrincipal().toString(),user.getSession().getHost()) ;
+        UsernamePasswordToken token   = new UsernamePasswordToken("zhao","123") ;
+        try {
+            user.login(token);
+            System.out.println("认证成功");
+        } catch (AuthenticationException e) {
+            System.out.println("认证失败");
+            e.printStackTrace();
+        }
+        this.demoUsers.add(demoUser);
+        return this.demoUsers;
     }
 
     @XmlRootElement

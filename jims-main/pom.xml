@@ -63,25 +63,38 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-        <groupId>com.sun.jersey.contribs</groupId>
-        <artifactId>jersey-moxy</artifactId>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-moxy</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.secnod.shiro</groupId>
+            <artifactId>shiro-jersey</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
         </dependency>
         <!--帆软报表-->
         <!--<dependency>-->
-            <!--<groupId>fakepath</groupId>-->
-            <!--<artifactId>fr-server</artifactId>-->
+        <!--<groupId>fakepath</groupId>-->
+        <!--<artifactId>fr-server</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>fakepath</groupId>-->
-            <!--<artifactId>fr-third</artifactId>-->
+        <!--<groupId>fakepath</groupId>-->
+        <!--<artifactId>fr-third</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>fakepath</groupId>-->
-            <!--<artifactId>jtds</artifactId>-->
+        <!--<groupId>fakepath</groupId>-->
+        <!--<artifactId>jtds</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>fakepath</groupId>-->
-            <!--<artifactId>commons-codec</artifactId>-->
+        <!--<groupId>fakepath</groupId>-->
+        <!--<artifactId>commons-codec</artifactId>-->
         <!--</dependency>-->
     </dependencies>
 
