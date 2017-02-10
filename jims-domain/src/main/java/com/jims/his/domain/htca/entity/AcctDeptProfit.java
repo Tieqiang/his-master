@@ -32,6 +32,7 @@ public class AcctDeptProfit implements java.io.Serializable {
     //ALL_ROUND_INCOME
     private Double allRoundIncome ;//全项奖
     private String position ;//辅助排序想
+    private Double managerCostMinus ;//管理成本减免
 
 
 
@@ -44,7 +45,7 @@ public class AcctDeptProfit implements java.io.Serializable {
 	/** full constructor */
 	public AcctDeptProfit(String yearMonth, String hospitalId,
                           Double deptIncome, Double deptCost, Double pleasedNum,
-                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate, Double acctBalance, Double managerProfitCost, Double managerStaffCost, Double incomeChangeItem, Double costChangeItem, Double otherRewardsOrPunishments, Double allRoundIncome, String position) {
+                          Double specialIncome, String acctDeptId, Double deptLastIncome, Double convertRate, Double acctBalance, Double managerProfitCost, Double managerStaffCost, Double incomeChangeItem, Double costChangeItem, Double otherRewardsOrPunishments, Double allRoundIncome, String position, Double managerCostMinus) {
 		this.yearMonth = yearMonth;
 		this.hospitalId = hospitalId;
 		this.deptIncome = deptIncome;
@@ -62,6 +63,7 @@ public class AcctDeptProfit implements java.io.Serializable {
         this.otherRewardsOrPunishments = otherRewardsOrPunishments;
         this.allRoundIncome = allRoundIncome;
         this.position = position;
+        this.managerCostMinus = managerCostMinus;
     }
 
 	// Property accessors
@@ -230,5 +232,14 @@ public class AcctDeptProfit implements java.io.Serializable {
 
     public void setOtherRewardsOrPunishments(Double otherRewardsOrPunishments) {
         this.otherRewardsOrPunishments = otherRewardsOrPunishments;
+    }
+
+    @Column(name="manager_cost_minus")
+    public Double getManagerCostMinus() {
+        return managerCostMinus;
+    }
+
+    public void setManagerCostMinus(Double managerCostMinus) {
+        this.managerCostMinus = managerCostMinus;
     }
 }

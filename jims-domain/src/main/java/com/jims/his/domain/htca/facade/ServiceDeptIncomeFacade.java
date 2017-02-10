@@ -89,11 +89,17 @@ public class ServiceDeptIncomeFacade extends BaseFacade {
                         acctDeptCost.setYearMonth(income.getYearMonth());
                         acctDeptCost.setHospitalId(income.getHospitalId());
                         double calcRate = getCalcRate(income, costItemDicts);
-                        acctDeptCost.setMinusCost(income.getTotalIncome() * (100 - calcRate) / 100);
+                        AcctDeptDict acctDeptDict = get(AcctDeptDict.class, acctDeptCost.getAcctDeptId());
+
                         acctDeptCost.setCostItemId(income.getIncomeTypeId());
                         acctDeptCost.setFetchWay(income.getGetWay());
                         acctDeptCost.setOperatorDate(income.getOperatorDate());
                         acctDeptCost.setOperator(income.getOperator());
+                        if (acctDeptDict != null && "0".equals(acctDeptDict.getStandardFlag())) {
+                            acctDeptCost.setMinusCost(income.getTotalIncome() * (100 - calcRate) / 100);
+                        }else{
+                            acctDeptCost.setMinusCost(0.0);
+                        }
                         merge(acctDeptCost);
                     }
                 }

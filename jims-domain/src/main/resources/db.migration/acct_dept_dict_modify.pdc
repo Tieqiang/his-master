@@ -1,0 +1,12 @@
+-- Alter table 
+alter table ACCT_DEPT_DICT
+  storage
+  (
+    next 8
+  )
+;
+-- Add/modify columns 
+alter table ACCT_DEPT_DICT add standard_flag varchar2(2) default 0;
+-- Add comments to the columns 
+comment on column ACCT_DEPT_DICT.standard_flag
+  is '是否标准的三级科，是1，否0 ,标准3级科室则各类成本不减免，非标准3级科室，可进行成本减免';

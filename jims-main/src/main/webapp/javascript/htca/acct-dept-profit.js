@@ -207,6 +207,13 @@ $(function () {
             formatter: function (value, row, index) {
                 return value.toFixed(2);
             }
+        },{
+            title:"管理成本减免",
+            field:"managerCostMinus",
+            width:"10%",
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         }, {
             title: '绩效提成比例',
             field: 'convertRate',
