@@ -152,7 +152,7 @@ public class AcctDeptProfitFacade extends BaseFacade {
                             if(acctDeptDictProfit!=null && "0".equals(acctDeptDictProfit.getStandardFlag())){
                                 profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.5);
                             }else{
-                                profit.setManagerCostMinus(0.0);
+                                profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.2);
                             }
 
                         } else {
@@ -165,7 +165,7 @@ public class AcctDeptProfitFacade extends BaseFacade {
                             if(acctDeptDictProfit!=null && "0".equals(acctDeptDictProfit.getStandardFlag())){
                                 profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.5);
                             }else{
-                                profit.setManagerCostMinus(0.0);
+                                profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.2);
                             }
                         }
                     } else {
@@ -177,7 +177,7 @@ public class AcctDeptProfitFacade extends BaseFacade {
                             if(acctDeptDictProfit!=null && "0".equals(acctDeptDictProfit.getStandardFlag())){
                                 profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.5);
                             }else{
-                                profit.setManagerCostMinus(0.0);
+                                profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.2);
                             }
                         } else {
                             double n = acctDeptDict.getStaffNum();
@@ -189,7 +189,7 @@ public class AcctDeptProfitFacade extends BaseFacade {
                             if(acctDeptDictProfit!=null && "0".equals(acctDeptDictProfit.getStandardFlag())){
                                 profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.5);
                             }else{
-                                profit.setManagerCostMinus(0.0);
+                                profit.setManagerCostMinus((profit.getManagerProfitCost()+profit.getManagerStaffCost())*0.2);
                             }
                         }
                     }
