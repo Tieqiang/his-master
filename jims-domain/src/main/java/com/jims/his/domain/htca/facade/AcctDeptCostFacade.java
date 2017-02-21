@@ -731,8 +731,11 @@ public class AcctDeptCostFacade extends BaseFacade {
             }
             cost.setCost(totalMoney * (v / staffNums));
             AcctDeptDict acctDeptDict = get(AcctDeptDict.class, cost.getAcctDeptId());
-            if (cost.getCost() != 0 && acctDeptDict != null && "0".equals(acctDeptDict.getStandardFlag())) {
+            if ( "0".equals(acctDeptDict.getStandardFlag())) {
                 cost.setMinusCost(cost.getCost() * (100 - calcPercent) / 100);
+            }
+
+            if(cost.getCost() != 0 && acctDeptDict != null){
                 costs.add(cost);
             }
         }
