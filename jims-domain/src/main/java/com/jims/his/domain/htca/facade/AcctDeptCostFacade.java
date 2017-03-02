@@ -214,6 +214,11 @@ public class AcctDeptCostFacade extends BaseFacade {
                     " and income.reckItemCode='" + objects[4] + "' and " +
                     " income.hospitalId='" + hospitalId + "'";
             List<CostItemDict> costItemDicts = createQuery(CostItemDict.class, hql, new ArrayList<Object>()).getResultList();
+
+            //20170302 解决收入细项分割比例与成本分割比例不同造成的Bug
+            String incomeItemDictHql = "from IncomeItemDict as income where income.priceItemCode='"+objects[6]+"'" ;
+            List<IncomeItemDict> incomeItemDicts = createQuery(IncomeItemDict.class,incomeItemDictHql,new ArrayList<Object>()).getResultList() ;
+
             if (costItemDicts.size() > 0) {
                 CostItemDict itemDict = costItemDicts.get(0);
                 String hql2 = "from AcctReckItemClassDict as income where income.reckItemCode='" + objects[4] + "' and income.hospitalId='" + hospitalId + "'";
@@ -237,9 +242,17 @@ public class AcctDeptCostFacade extends BaseFacade {
                 }
                 String inpOrOutp = (String) objects[5];
                 if ("1".equals(inpOrOutp)) {
-                    inpOrder = (itemDict.getInpOrderRate() == null ? 0 : itemDict.getInpOrderRate()) / 100;
-                    inpPerform = (itemDict.getInpPerformRate() == null ? 0 : itemDict.getInpPerformRate()) / 100;
-                    ward = (itemDict.getInpWardRate() == null ? 0 : itemDict.getInpWardRate()) / 100;
+                    if(incomeItemDicts!=null&&incomeItemDicts.size()>0){
+                        IncomeItemDict incomeItemDict = incomeItemDicts.get(0);
+                        inpOrder = (incomeItemDict.getInpOrderedBy()== null ? 0 : Double.parseDouble(incomeItemDict.getInpOrderedBy())) / 100;
+                        inpPerform = (incomeItemDict.getInpPerformedBy()== null ? 0 : Double.parseDouble(incomeItemDict.getInpPerformedBy())) / 100;
+                        ward = (incomeItemDict.getInpWardCode()== null ? 0 : Double.parseDouble(incomeItemDict.getInpWardCode())) / 100;
+                    }else{
+                        inpOrder = (itemDict.getInpOrderRate() == null ? 0 : itemDict.getInpOrderRate()) / 100;
+                        inpPerform = (itemDict.getInpPerformRate() == null ? 0 : itemDict.getInpPerformRate()) / 100;
+                        ward = (itemDict.getInpWardRate() == null ? 0 : itemDict.getInpWardRate()) / 100;
+                    }
+
 
                     if (inpOrder != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
@@ -300,15 +313,32 @@ public class AcctDeptCostFacade extends BaseFacade {
 
                     }
                 } else {
-                    if (emgWard != null && emgWard.equals((String) objects[2])) {
-                        outpOrder = (itemDict.getInpOrderRate() == null ? 0 : itemDict.getInpOrderRate()) / 100;
-                        outpPerformRate = (itemDict.getInpPerformRate() == null ? 0 : itemDict.getInpPerformRate()) / 100;
-                        outpWardRate = (itemDict.getInpWardRate() == null ? 0 : itemDict.getInpWardRate()) / 100;
-                    } else {
-                        outpOrder = (itemDict.getOutpOrderRate() == null ? 0 : itemDict.getOutpOrderRate()) / 100;
-                        outpPerformRate = (itemDict.getOutpPerformRate() == null ? 0 : itemDict.getOutpPerformRate()) / 100;
-                        outpWardRate = (itemDict.getOutpWardRate() == null ? 0 : itemDict.getOutpWardRate()) / 100;
+                    //首先判断，是否有细项分割比例，如果有分割比例，则按照细项提取分割比例。
+                    if(incomeItemDicts!=null&&incomeItemDicts.size()>0){
+                        IncomeItemDict incomeItemDict = incomeItemDicts.get(0);
+                        //判断是否急诊护理，如果为急诊护理则按照住院的比例进行分割
+                        if (emgWard != null && emgWard.equals((String) objects[2])) {
+                            outpOrder = (incomeItemDict.getInpOrderedBy()== null ? 0 : Double.parseDouble(incomeItemDict.getInpOrderedBy())) / 100;
+                            outpPerformRate = (incomeItemDict.getInpPerformedBy()== null ? 0 : Double.parseDouble(incomeItemDict.getInpPerformedBy())) / 100;
+                            outpWardRate = (incomeItemDict.getInpWardCode()== null ? 0 : Double.parseDouble(incomeItemDict.getInpWardCode())) / 100;
+                        } else {
+                            outpOrder = (incomeItemDict.getOutpOrderedBy() == null ? 0 : Double.parseDouble(incomeItemDict.getOutpOrderedBy())) / 100;
+                            outpPerformRate = (incomeItemDict.getOutpPerformedBy() == null ? 0 : Double.parseDouble(incomeItemDict.getOutpPerformedBy())) / 100;
+                            outpWardRate = (incomeItemDict.getOutpWardCode() == null ? 0 : Double.parseDouble(incomeItemDict.getOutpWardCode())) / 100;
+                        }
+                    }else{
+                        if (emgWard != null && emgWard.equals((String) objects[2])) {
+                            outpOrder = (itemDict.getInpOrderRate() == null ? 0 : itemDict.getInpOrderRate()) / 100;
+                            outpPerformRate = (itemDict.getInpPerformRate() == null ? 0 : itemDict.getInpPerformRate()) / 100;
+                            outpWardRate = (itemDict.getInpWardRate() == null ? 0 : itemDict.getInpWardRate()) / 100;
+                        } else {
+                            outpOrder = (itemDict.getOutpOrderRate() == null ? 0 : itemDict.getOutpOrderRate()) / 100;
+                            outpPerformRate = (itemDict.getOutpPerformRate() == null ? 0 : itemDict.getOutpPerformRate()) / 100;
+                            outpWardRate = (itemDict.getOutpWardRate() == null ? 0 : itemDict.getOutpWardRate()) / 100;
+                        }
                     }
+
+
 
                     if (outpOrder != 0) {
                         AcctDeptCost cost = new AcctDeptCost();
