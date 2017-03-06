@@ -3,6 +3,8 @@ package com.jims.his.service.htca;
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.common.vo.PageEntity;
 import com.jims.his.domain.htca.entity.AcctDeptCost;
+import com.jims.his.domain.htca.entity.AcctDeptProfit;
+import com.jims.his.domain.htca.entity.CostItemDict;
 import com.jims.his.domain.htca.entity.ServiceDeptIncome;
 import com.jims.his.domain.htca.facade.AcctDeptCostFacade;
 
@@ -267,6 +269,41 @@ public class AcctDeptCostService {
             ErrorException errorException = new ErrorException() ;
             errorException.setMessage(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorException.getErrorMessage()).build() ;
+        }
+
+    }
+
+
+
+    @GET
+    @Path("profit-cost")
+    public List<AcctDeptCost> fetchProfitAcctDeptCost(@QueryParam("yearMonth")String yearMonth ,@QueryParam("hospitalId")String hospitalId){
+
+        try {
+            String hql = "select profit from AcctDeptProfit as profit where yearMonth = '"+yearMonth+"' and hospitalId='"+hospitalId+"'" ;
+            String costItemHql = "from CostItemDict where id='402880905a207a8b015a209dbfef01c0'" ;
+            CostItemDict costItemDict = acctDeptCostFacade.createQuery(CostItemDict.class,costItemHql,new ArrayList<Object>()).getSingleResult();
+            List<AcctDeptProfit> acctDeptProfits = acctDeptCostFacade.createQuery(AcctDeptProfit.class,hql,new ArrayList<Object>()).getResultList() ;
+            List<AcctDeptCost> acctDeptCosts = new ArrayList<>() ;
+
+            for(AcctDeptProfit profit :acctDeptProfits){
+                AcctDeptCost cost = new AcctDeptCost();
+                cost.setAcctDeptId(profit.getAcctDeptId());
+                double costValue = profit.getDeptIncome()-profit.getDeptCost()+profit.getIncomeChangeItem()-profit.getCostChangeItem()-profit.getManagerStaffCost()-profit.getManagerProfitCost()+profit.getManagerCostMinus() ;
+                costValue = costValue*(profit.getConvertRate()/100)+profit.getSpecialIncome();
+                //如果绩效奖金正数，则计入成本，否则不计成本
+                if(costValue>0){
+                    cost.setCost(costValue);
+                }else{
+                    cost.setCost(0.0);
+                }
+                cost.setMinusCost(cost.getCost()*((100-Double.parseDouble(costItemDict.getCalcPercent()))/100));
+                cost.setCostItemId("402880905a207a8b015a209dbfef01c0");//绩效成本
+                acctDeptCosts.add(cost);
+            }
+            return acctDeptCosts ;
+        }catch (Exception e){
+            return null ;
         }
 
     }

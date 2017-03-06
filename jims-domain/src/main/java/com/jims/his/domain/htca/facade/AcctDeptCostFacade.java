@@ -73,15 +73,17 @@ public class AcctDeptCostFacade extends BaseFacade {
             String acctDeptDictHql = "from AcctDeptDict as add where add.id='"+cost.getAcctDeptId()+"'" ;
             AcctDeptDict acctDeptDict = createQuery(AcctDeptDict.class,acctDeptDictHql,new ArrayList<Object>()).getSingleResult();
             CostItemDict singleResult = createQuery(CostItemDict.class, hql, new ArrayList<Object>()).getSingleResult();
+            //手工录入的成本，不做减免判断，减免由手工录入
 
-            if(singleResult!=null&&acctDeptDict!=null&&"0".equals(acctDeptDict.getStandardFlag())){
-                //如果获取成本项目,并且使非成熟科室
-                double calcPercent = Double.parseDouble(singleResult.getCalcPercent()) ;
-                cost.setMinusCost(cost.getCost()*(100-calcPercent)/100);
-            }else{
-                //不满足以上条件，则不计入减免。减免为0.0
-                cost.setMinusCost(0.0);
-            }
+            //if(singleResult!=null&&acctDeptDict!=null&&"0".equals(acctDeptDict.getStandardFlag())){
+            //    //如果获取成本项目,并且使非成熟科室
+            //    double calcPercent = Double.parseDouble(singleResult.getCalcPercent()) ;
+            //    cost.setMinusCost(cost.getCost()*(100-calcPercent)/100);
+            //}else{
+            //    //不满足以上条件，则不计入减免。减免为0.0
+            //    cost.setMinusCost(0.0);
+            //}
+
             cost.setFetchWay("录入");
             merge(cost);
         }

@@ -109,14 +109,20 @@ $(function(){
             width:'10%',
             editor:{type:'validatebox',options:{
                 validType:'number'
-            }}
+            }},
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         },{
             title:'减免成本',
             field:'minusCost',
             width:'10%',
             editor:{type:'validatebox',options:{
                 validType:'number'
-            }}
+            }},
+            formatter: function (value, row, index) {
+                return value.toFixed(2);
+            }
         },{
             title:'备注信息',
             field:'memo',
@@ -164,6 +170,18 @@ $(function(){
         options.url = "/api/acct-dept-cost/list?hospitalId="+parent.config.hospitalId+"&costItemId="+costItemId+"&yearMonth="+yearMonth ;
         $("#acctCostTable").datagrid('reload') ;
 
+    })
+
+    //提取效益成本
+    $("#profitFetchBtn").on('click',function(){
+        var yearMonth = $("#fetchDate").datebox('getValue') ;
+        if(!yearMonth){
+            $.messager.alert("系统提示","查询时间不能为空",'info') ;
+            return ;
+        }
+        var options = $("#acctCostTable").datagrid('options') ;
+        options.url = "/api/acct-dept-cost/profit-cost?hospitalId="+parent.config.hospitalId+"&yearMonth="+yearMonth ;
+        $("#acctCostTable").datagrid('reload') ;
     })
 
 
