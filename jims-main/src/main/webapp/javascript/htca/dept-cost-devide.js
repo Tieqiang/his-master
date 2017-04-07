@@ -5,6 +5,7 @@
 $(function () {
 
     var depts = undefined;
+    var costItemIds = [] ;//删除的成本项目
     var incomeDeptId = undefined;
     var acctDeptDict = [];
     $.get("/api/acct-dept-dict/acct-list?hospitalId=" + parent.config.hospitalId, function (data) {
@@ -14,15 +15,11 @@ $(function () {
     var costItems = [];
     $.get("/api/cost-item/list-item?hospitalId=" + parent.config.hospitalId, function (data) {
         //costItems = data ;
-        console.log("1")
-        console.log(data);
         for (var i = 0; i < data.length; i++) {
             costItems.push(data[i])
         }
     })
     $.get("/api/service-income-type/list-all?hospitalId=" + parent.config.hospitalId, function (data) {
-        console.log("2")
-        console.log(data);
         for (var i = 0; i < data.length; i++) {
             var obj = {};
             obj.id = data[i].id;
@@ -344,6 +341,8 @@ $(function () {
         closed: true
     });
 
+
+
     //分摊计算
     $("#devideBtn").on('click', function () {
         var yearMonth = $("#fetchDate").datebox('getValue');
@@ -430,6 +429,36 @@ $(function () {
         }
     });
 
+
+    //删除成本窗口
+    $("#deleteAcctDeptCostWindow").window({
+        title:'待删除成本项目',
+        width:'500',
+        height:'500',
+        modal:true,
+        closed:true,
+        onOpen:function(){
+            $(this).window('center')
+        }
+    }) ;
+
+    //成本项目表格
+    $("#delAcctDeptCostItemTb").datagrid({
+        method: 'GET',
+        fit: true,
+        fitColumns: true,
+        url: '/api/cost-item/list-by-class?hospitalId=' + parent.config.hospitalId + "&classId=4028803e519f790001519fac9c760009",
+        columns: [[{
+            title: "编号",
+            field: 'id',
+            checkbox: true
+        }, {
+            title: '成本名称',
+            field: 'costItemName',
+            width: '80%'
+        }]]
+    })
+
     $("#acctDeptTable").datagrid({
         method: 'GET',
         fit: true,
@@ -450,6 +479,43 @@ $(function () {
         }]]
     });
 
+    //删除取消按钮
+    $("#cancelDelAcctDeptBtn").on('click',function(){
+        $("#deleteAcctDeptCostWindow").window('close');
+    })
+
+    //删除按钮
+    $("#delAcctDeptBtn").on('click',function(){
+        var rows = $("#delAcctDeptCostItemTb").datagrid('getSelections');
+        costItemIds=[] ;
+        if (rows.length > 0) {
+            for (var i = 0; i < rows.length; i++) {
+                costItemIds.push(rows[i].id);
+            }
+        }
+
+        if(costItemIds.length<=0){
+            $.messager.alert('系统提示', '没有选择要删除的成本，请选择', 'info');
+            return ;
+        }
+        var yearMonth = $("#fetchDate").datebox('getValue');
+        if (!yearMonth) {
+            $.messager.alert('系统提示', '获取日期失败', 'info');
+            return;
+        }
+
+        $.postJSON("/api/acct-dept-cost/del-cost?yearMonth="+yearMonth,costItemIds,function(data){
+            $.messager.alert("删除成功");
+
+        })
+        $("#deleteAcctDeptCostWindow").window('close');
+
+
+    })
+
+    $("#delDevideBtn").on("click",function(){
+        $("#deleteAcctDeptCostWindow").window("open")
+    })
 
     //取消按钮
     $("#cancelAcctDeptBtn").on('click', function () {

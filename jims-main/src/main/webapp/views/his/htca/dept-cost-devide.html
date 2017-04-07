@@ -17,6 +17,7 @@
     时间：<input type="text" id="fetchDate"  class="easyui-datebox" >
     <a href="#" id="devideSetBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">分摊设置</a>
     <a href="#" id="saveDevideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存分摊结果</a>
+    <a href="#" id="delDevideBtn" class="easyui-linkbutton">删除分摊结果</a>
 </div>
 <!--项目分类-->
 <div id="itemWin" class="easyui-window" data-options="footer:'#itemWinFt',title:'核算类型维护'">
@@ -46,8 +47,19 @@
     <a href="#" id="closeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
 </div>
 
+<!--可供选择科室-->
 <div id="acctDeptWin" class="easyui-window" data-options="footer:'#acctTb'">
     <table id="acctDeptTable" class="easyui-datagrid"></table>
+</div>
+
+<!--选择的成本项目-->
+<div class="easyui-window" id="deleteAcctDeptCostWindow" data-options="footer:'#delAcctTb'">
+    <table class="easyui-datagrid" id="delAcctDeptCostItemTb"></table>
+</div>
+
+<div style="padding:5px;text-align:right;" id="delAcctTb">
+    <a href="#" id="delAcctDeptBtn" class="easyui-linkbutton" icon="icon-ok">删除选中成本</a>
+    <a href="#" id="cancelDelAcctDeptBtn" class="easyui-linkbutton" icon="icon-cancel">取消删除选中成本</a>
 </div>
 
 <div style="padding:5px;text-align:right;" id="acctTb">

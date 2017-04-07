@@ -1,5 +1,6 @@
 package com.jims.his.service.htca;
 
+import com.google.inject.persist.Transactional;
 import com.jims.his.common.expection.ErrorException;
 import com.jims.his.domain.common.vo.PageEntity;
 import com.jims.his.domain.htca.entity.AcctDeptCost;
@@ -306,6 +307,29 @@ public class AcctDeptCostService {
             return null ;
         }
 
+    }
+
+    /**
+     * 删除某一个月份的分摊成本项目
+     * @param yearMonth
+     * @param costItemIds
+     * @return
+     */
+    @Path("del-cost")
+    @POST
+    @Transactional
+    public Response deleteDevideCost(@QueryParam("yearMonth")String yearMonth ,List<String> costItemIds){
+        try {
+            for(String id :costItemIds){
+                String hql1 = "delete AcctDeptCost as cost where cost.costItemId='"+id+"' and cost.yearMonth = '"+yearMonth+"' and cost.fetchWay='分摊'";
+                String hql2 = "delete ServiceDeptIncome as income where incomeTypeId = '"+id+"' and income.yearMonth = '"+yearMonth+"' and  income.getWay='分摊'" ;
+                acctDeptCostFacade.getEntityManager().createQuery(hql1).executeUpdate();
+                acctDeptCostFacade.getEntityManager().createQuery(hql2).executeUpdate();
+            }
+            return Response.status(Response.Status.OK).build();
+        }catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorException(e.getMessage())).build();
+        }
     }
 
 }
