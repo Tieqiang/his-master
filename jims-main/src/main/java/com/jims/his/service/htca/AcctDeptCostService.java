@@ -318,6 +318,7 @@ public class AcctDeptCostService {
     @Path("del-cost")
     @POST
     @Transactional
+    @Produces("text/plain")
     public Response deleteDevideCost(@QueryParam("yearMonth")String yearMonth ,List<String> costItemIds){
         try {
             for(String id :costItemIds){
@@ -326,9 +327,9 @@ public class AcctDeptCostService {
                 acctDeptCostFacade.getEntityManager().createQuery(hql1).executeUpdate();
                 acctDeptCostFacade.getEntityManager().createQuery(hql2).executeUpdate();
             }
-            return Response.status(Response.Status.OK).build();
+            return Response.status(Response.Status.OK).entity("OK").build();
         }catch (Exception e){
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorException(e.getMessage())).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorException(e.getMessage()).getErrorMessage()).build();
         }
     }
 

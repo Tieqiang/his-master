@@ -505,10 +505,14 @@ $(function () {
         }
 
         $.postJSON("/api/acct-dept-cost/del-cost?yearMonth="+yearMonth,costItemIds,function(data){
-            $.messager.alert("删除成功");
+            if(data=='OK'){
+
+                $.messager.alert("删除成功");
+                $("#deleteAcctDeptCostWindow").window('close');
+            }
 
         })
-        $("#deleteAcctDeptCostWindow").window('close');
+
 
 
     })
