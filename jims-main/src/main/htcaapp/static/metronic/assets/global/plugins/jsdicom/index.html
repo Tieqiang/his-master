@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>DICOM</title>
+    <link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.8.20.custom.css" />
+    <link rel="stylesheet" type="text/css" href="main.css" />
+
+    <script type="text/javascript" src="js/glMatrix-0.9.5.min.js"></script>
+    <script type="text/javascript" src="js/glpainter.js"></script>
+    <script type="text/javascript" src="js/shaders.js"></script>
+    <script type="text/javascript" src="js/canvaspainter.js"></script>
+    <script type="text/javascript" src="jquery/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="jquery/js/jquery-ui-1.8.20.custom.min.js"></script>
+
+    <!-- External jsdicom-lib -->
+    <script type="text/javascript" src="jsdicom-lib/src/dcmdict.js"></script>
+    <script type="text/javascript" src="jsdicom-lib/src/binutils.js"></script>
+    <script type="text/javascript" src="jsdicom-lib/src/dcmfile.js"></script>
+    <script type="text/javascript" src="jsdicom-lib/src/dicomparser.js"></script>
+    <script type="text/javascript" src="jsdicom-lib/src/transfersyntax.js"></script>
+    <script type="text/javascript" src="jsdicom-lib/src/qr.js"></script>
+
+    <script type="text/javascript" src="js/GLU.js"></script>
+    <script type="text/javascript" src="js/cluts.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/tools.js"></script>
+    <script type="text/javascript" src="js/utilities.js"></script>
+    <script type="text/javascript" src="js/dcmseries.js"></script>
+    <script type="text/javascript" src="js/presentation.js"></script>
+    <script type="text/javascript">
+
+    var app = new DcmApp('view-area');
+
+    function load_urllist_from_url(url) {
+        app.load_urllist_from_url(url);
+    }
+
+    function testscroll(i, len) {
+        if(i > len-1)
+            return;
+        app.curr_file_idx = i;
+        app.draw_image();
+        console.log("draw image ")
+        setTimeout((function(a, b) {
+                    return function() {
+                        testscroll(a, b);
+                    }})(i+1, len), 0);
+    }
+
+
+
+    $(document).ready(function() {
+        app.init();
+        $("input[type=file]").change(function(evt) {
+            //app.load_files(evt);
+        });
+        $("#test-scroll").click(function() {
+            console.log(app.files.length);
+            testscroll(0, app.files.length);
+        });
+        // Setup cluts
+        for(clut in cluts) {
+            $("#clut-select optgroup").append($("<option>").val(clut).text(clut));
+        }
+
+        // Setup tools
+        for(let tool in tools) {
+            console.log(tool);
+            var button = $("<div>").addClass("tool-button").text(tool);
+            $("#button-bar-horz").prepend(button);
+            $(button).click(function() {
+                $(this).parent().find("div").removeClass("butt-selected");
+                $(this).addClass("butt-selected");
+                app.activate_tool(tool);
+            });
+        }
+
+        $("#slider").slider();
+
+        $("button").button();
+
+        $("#axial-view").buttonset();
+
+        $("#view-metadata").click(function() {
+            app.fill_metadata_table();
+            $("#metadata-dialog").dialog({
+                modal: true,
+                width: 600,
+                button: {
+                    'Ok': function() {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+        });
+
+        $("#open").click(function() {
+            $("#open-dialog").dialog({
+                    modal: true,
+                    buttons: {
+                        'Ok': function() {
+                            var file_input = $("input[type=file]")[0];
+                            app.load_files(file_input.files);
+                            $(this).dialog('close');
+                        },
+                        'Cancel': function() {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+        });
+
+        $("#butt-reset").click(function() {
+            app.reset_levels();
+        });
+        $("#clut-select").change(function() {
+            app.set_clut($(this).val());
+        });
+        $("#window-presets").change(function() {
+            app.set_window_preset($(this).val());
+        });
+        function handleDragOver(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        }
+        function handleFileSelect(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            app.load_files(evt.dataTransfer.files);
+        }
+
+        // Setup the dnd listeners.
+        var dropZone = document.getElementById('filebox');
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+        //webGLStart();
+    });
+
+    </script>
+</head>
+<body>
+    <div id="filebox" class="box">
+        <h2>文件浏览</h2>
+        <div class="box-content">
+            <div id="open" class="tool-button">打开文件</div>
+	     <!--<div id="browse" class="tool-button">Browse PACS</div>-->
+            <ul id="series-selection"></ul>
+        </div>
+    </div>
+    <div id="viewer" class="box">
+        <h2>图像查看</h2>
+        <div id="viewer-bar">
+            <div id="view-metadata" class="tool-button">元数据</div>
+            <div id="test-scroll" class="tool-button">Slide through</div>
+            <select id="clut-select">
+                <optgroup label="CLUT">
+                </optgroup>
+            </select>
+            <select id="window-presets">
+                <optgroup label="Window presets">
+                </optgroup>
+            </select>
+            <div id="button-bar-horz">
+                <div id="butt-reset" class="tool-button">重置</div>
+            </div>
+        </div>
+
+        <div class="slider-holder">
+            <div id="slider"></div>
+        </div>
+        <div id="view-area">
+        </div>
+    </div>
+
+    <!-- Dialogs -->
+    <div id="open-dialog" class="hidden" title="Open files" style="display: none;">
+        <p>选择文件</p>
+        <form name="selectfile">
+            <label for="file">文件</label>
+            <input type="file" name="file" id="file" multiple="multiple"/>
+        </form>
+    </div>
+    <div id="browse-dialog" class="hidden" title="Browse PACS" style="display: none;">
+      <form>
+        PACS:
+      	<div id="browse-pacs-radio">
+	</div> 
+      </form>
+	<div id="studiesaccordion">
+	</div>
+    </div>
+    <canvas id="secondary_canvas" width="512" height="512" style="display: none;"></canvas>
+    <div id="metadata-dialog" class="hidden" title="Metadata" style="display: none;">
+        <table id="metadata-table" width="100%">
+            <thead>
+                <tr>
+                    <td width="15%">Tag</td>
+                    <td width="40%">Name</td>
+                    <td width="35%">Value</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
