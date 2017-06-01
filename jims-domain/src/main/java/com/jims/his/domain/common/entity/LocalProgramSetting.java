@@ -26,7 +26,6 @@ public class LocalProgramSetting implements java.io.Serializable {
     private String picUrl ;
 
 	// Constructors
-
 	/** default constructor */
 	public LocalProgramSetting() {
 	}
