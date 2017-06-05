@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>消耗品目录维护</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+
+    <div class="easyui-layout" id="dg">
+        <div region="north" title="消耗品目录维护" border="false">
+            <table id="top" class="easyui-datagrid" style="width:100%"></table>
+        </div>
+        <div region="south" border="false">
+            <table id="bottom" class="easyui-datagrid" style="width:100%"></table>
+        </div>
+        <div region="west" border="false" style="width:300px;">
+            <table id="expNameDict" class="easyui-datagrid"></table>
+        </div>
+        <div region="center" border="false">
+            <table id="expDict" class="easyui-datagrid"></table>
+        </div>
+    </div>
+
+
+<div id="tbNameDict">
+    <a id="addExpName" href="#" class="easyui-linkbutton" iconCls="icon-add">新增</a>
+    <a id="removeExpName" href="#" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+</div>
+<div id="tbDict">
+    <a id="appendExp" href="#" class="easyui-linkbutton" iconCls="icon-add">新增</a>
+    <a id="removeExp" href="#" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    <a id="listPrice" href="#" class="easyui-linkbutton" iconCls="icon-remove">价格</a>
+</div>
+<div id="tb" style="padding:2px 5px;">
+    <input type="radio" class="radios" name="two" value="" checked>产品名称：</input>
+    <select id="expName" title="消耗品字典" style="width:200px;"></select>
+    产品范围：<select id="expScope" class="easyui-combobox" name="state" style="width:200px ;" data-options="panelHeight:'auto' " >
+        <option value="1" selected>全院产品</option>
+        <option value="2">普通产品</option>
+    </select>
+    产品类别：<select id="expType" class="easyui-combobox"></select>
+    产品类型：<select id="expCategory" class="easyui-combobox"></select>
+    </br>
+    <input type="radio" class="radios" name="two" value="">产品代码：</input>
+    <select id="expCode" title="消耗品字典" disabled="true" style="width:200px;"></select>
+
+</div>
+<div id="ft">
+    <a href="#" id="filter" class="easyui-linkbutton" iconCls="icon-filter">提取</a>
+    <a href="#" id="clear" class="easyui-linkbutton" iconCls="icon-clear">清屏</a>
+    <a href="#" id="save" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/exp-name-dict.js"></script>
+</body>
+</html>

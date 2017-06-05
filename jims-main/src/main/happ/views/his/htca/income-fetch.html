@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>收入数据提取</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+<div id="main" data-options="region:'center'" style="padding:1px;background:#eee;">
+    <table id="incomeDatagrid">
+    </table>
+</div>
+
+
+<div id="ft" style="margin:5px;">
+    <input type="text" id="fetchDate"  class="easyui-datebox" >
+    <input type="text" id="fetchType" class="easyui-combobox" />
+    <a href="#" id="fetchIncomeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">重新提取收入数据</a>
+    <a href="#" id="devideIncomeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">分割收入</a>
+    <a href="#" id="fetchItemBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">提取收入明细</a>
+    <a href="#" id="saveIncomeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'" data-options="iconCls:'icon-remove'" style="visibility: hidden">保存分割后输入</a>
+    <a href="#" id="removeReckItemClassBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" style="visibility: hidden">删除核算项目</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/income-fetch.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

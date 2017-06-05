@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>二线科室收入统计</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+<div id="main" data-options="region:'center'">
+    <table id="serviceDeptIncomeTable" class="easyui-datagrid">
+
+    </table>
+</div>
+<!--添加单项收入-->
+<div id="itemWin" class="easyui-window" data-options="footer:'#itemWinFt',title:'科室单项收入录入'">
+    <form id="itemForm" data-options="fit:true" style="padding:10px;">
+
+        <div style="padding-top: 1px">
+            <label for="acctDeptId">核算单元：</label>
+            <input class="easyui-combobox" type="text" id="acctDeptId"/>
+            <label for="incomeTypeId">收入项目：</label>
+            <input class="easyui-combobox" id="incomeTypeId" type="text"  />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="detailIncomeId">明细项目：</label>
+            <input class="easyui-combobox" id="detailIncomeId" type="text" />
+            <label for="totalIncome">收入金额：</label>
+            <input class="easyui-textbox" id="totalIncome" type="text" />
+        </div>
+        <div style="padding-top: 10px;">
+            <label for="outFlag">院内院外：</label>
+            <input class="easyui-combobox" id="outFlag"/>
+            <label for="serviceForDeptId">服务单位：</label>
+            <input class="easyui-combobox" id="serviceForDeptId" type="text"  />
+        </div>
+        <input type="hidden" id="id" />
+    </form>
+</div>
+
+<div style="padding:5px;text-align:right;" id="itemWinFt">
+    <a href="#" id="saveIncomeBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="cancelIncomeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<div id="ft" style="text-align: left">
+    提取月份：<input type="text" id="synDate" class="easyui-datebox" />
+    二线科室：<input type="text" class="easyui-combobox" id="secondLevelDept" />
+    <a href="#" id="queryBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询收入</a>
+    <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
+    <a href="#" id="delBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+    <!--<a href="#" id="commitBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>-->
+    <!--<a href="#" id="delAllBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除多条</a>-->
+    <!--<a href="#" id="queryGoodBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询审核成功</a>-->
+    <!--<a href="#" id="queryFailBtn" class="easyui-linkbutton" data-options="iconCls:'icon-reload'">查询审核失败</a>-->
+</div>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/service-dept-income.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

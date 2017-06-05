@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>产品供应商目录维护</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div id="topbar" style="height: 30px">
+    <input type="radio" id="supplierType" name="radioOne" checked  onclick="checkRadio()" />供应商类别
+    <select id="supplierSelect" class="easyui-combobox" style="width: 200px">
+        <option value="供应商" >供应商</option>
+        <option value="生产商" selected>生产商</option>
+    </select>
+
+    <input type="radio" id="supplierSearch" name="radioOne" onclick="checkRadio()" />供应商拼音字头
+    <input type="text" id="searchInputCode" class="easyui-combogrid" disabled style="width: 200px">
+</div>
+
+<table id="dg" class="easyui-datagrid">
+</table>
+
+
+<div id="tb" style="padding:2px 5px;">
+    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+    <a href="#" id="addBtn" class="easyui-linkbutton" iconCls="icon-add">添加</a>
+    <!--<a href="#" id="editBtn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>-->
+    <a href="#" id="delBtn" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+    <a href="#" id="clearBtn" class="easyui-linkbutton" iconCls="icon-clear">清屏</a>
+    <!--<a href="#" id="saveOtherBtn" class="easyui-linkbutton" iconCls="icon-save" plain="true">另存为</a>-->
+</div>
+
+
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/exp-supplier-catalog.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

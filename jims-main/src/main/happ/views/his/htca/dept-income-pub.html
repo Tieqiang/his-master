@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>科室收入公布</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+
+    <![endif]-->
+    <script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/javascript/tool.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var date = new Date() ;
+            var year = date.getFullYear() ;
+            var month = date.getMonth() ;
+            var yearMonth = undefined ;
+            if(month<10&& month>0){
+                yearMonth = year+ "-0" + month ;
+            }else{
+                yearMonth = year+"-"+month ;
+            }
+            if(month==0){
+                yearMonth = year-1 + "-12" ;
+            }
+            console.log("stawrt")
+            console.log(parent.config) ;
+            var url = "/api/acct-pub/list?hospitalId=" + parent.config.hospitalId + "&yearMonth=" + yearMonth;
+            $.get(url,function(data){
+
+                if(data.length){
+                    for(var i =0 ;i<data.length;i++){
+                        if(data[i].incomeFlag=="1"){
+                            var d = data[i].openStartDate.split("-");
+                            console.log(d) ;
+                            var d1 = data[i].openEndDate.split("-")
+                            console.log(d1) ;
+                            var openStartDate = new Date(d[0],parseInt(d[1])-1,d[2]) ;
+                            var openEndDate =  new Date(d1[0],parseInt(d1[1])-1,d1[2]) ;
+                            if(date >= openStartDate && date <= openEndDate){
+                                console.log(parent.config)
+                                var u = "http://192.168.0.6:8080/report/ReportServer?reportlet=htca%2Fdept_income_single_dept.cpt&__bypagesize__=false"+"&dept_id="+parent.config.acctDeptId ;
+                                console.log(u) ;
+                                location.href=u ;
+                            }else{
+                            }
+                        }
+                    }
+                }
+
+            })
+        })
+    </script>
+
+</head>
+<body>
+<div id="wrapper"><a class="logo" href="/"></a>
+
+    <div id="main">
+        <header id="header">
+            <h1><span class="icon">!</span>收入<span class="sub">不在公布期</span></h1>
+        </header>
+        <div id="content">
+            <h2>成本或收入不在公布期，敬请期待</h2>
+
+            <div class="utilities">
+                <div class="clear"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

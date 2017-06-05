@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>服务科室成本分摊</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+<div id="main" data-options="region:'center'">
+    <table id="deptCostTable">
+    </table>
+</div>
+<div id="ft" style="margin:5px;">
+    时间：<input type="text" id="fetchDate"  class="easyui-datebox" >
+    <a href="#" id="devideSetBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">分摊设置</a>
+    <a href="#" id="saveDevideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存分摊结果</a>
+    <a href="#" id="delDevideBtn" class="easyui-linkbutton">删除分摊结果</a>
+</div>
+<!--项目分类-->
+<div id="itemWin" class="easyui-window" data-options="footer:'#itemWinFt',title:'核算类型维护'">
+    <form id="itemForm" data-options="fit:true" style="padding:10px;">
+        <input type="hidden" id="id" />
+        <div style="padding-top: 10px">
+            <label for="serviceDeptIncomeId">计算单元：</label>
+            <input class="easyui-combobox" type="text" id="serviceDeptIncomeId"/>
+        </div>
+        <div style="padding-top: 10px">
+            <label for="costItemId">所属成本：</label>
+            <input class="easyui-combobox" type="text" id="costItemId"/>
+        </div>
+        <div style="padding-top:10px;">
+            <label for="devideWay">分摊方法：</label>
+            <input class="easyui-combobox" id="devideWay" type="text"  />
+        </div>
+        <div style="padding-top:10px;">
+            <label for="devideMoney">分摊金额：</label>
+            <input class="easyui-textbox" id="devideMoney" type="text" />
+        </div>
+    </form>
+</div>
+<div style="padding:5px;text-align:right;" id="itemWinFt">
+    <a href="#" id="sameWithLastMonth" class="easyui-linkbutton" icon="icon-reload">同上月</a>
+    <a href="#" id="devideBtn" class="easyui-linkbutton" icon="icon-ok">分摊</a>
+    <a href="#" id="closeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+<!--可供选择科室-->
+<div id="acctDeptWin" class="easyui-window" data-options="footer:'#acctTb'">
+    <table id="acctDeptTable" class="easyui-datagrid"></table>
+</div>
+
+<!--选择的成本项目-->
+<div class="easyui-window" id="deleteAcctDeptCostWindow" data-options="footer:'#delAcctTb'">
+    <table class="easyui-datagrid" id="delAcctDeptCostItemTb"></table>
+</div>
+
+<div style="padding:5px;text-align:right;" id="delAcctTb">
+    <a href="#" id="delAcctDeptBtn" class="easyui-linkbutton" icon="icon-ok">删除选中成本</a>
+    <a href="#" id="cancelDelAcctDeptBtn" class="easyui-linkbutton" icon="icon-cancel">取消删除选中成本</a>
+</div>
+
+<div style="padding:5px;text-align:right;" id="acctTb">
+    <a href="#" id="saveAcctDeptBtn" class="easyui-linkbutton" icon="icon-ok">确定</a>
+    <a href="#" id="cancelAcctDeptBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+</div>
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/dept-cost-devide.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

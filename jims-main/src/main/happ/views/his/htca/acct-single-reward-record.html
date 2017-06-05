@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>科室单项成本录入</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+
+<div id="mainPanel" data-options="region:'center'">
+    <table id="acctCostTable"></table>
+</div>
+
+<div id="ft" style="margin:5px;">
+    时间：<input type="text" id="fetchDate"  class="easyui-datebox" >
+    单项奖项目：<input type="text" class="easyui-combobox" id="rewardItem" />
+    <a href="#" id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询单项奖</a>
+    <a href="#" id="addBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加单项奖</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存单项奖</a>
+    <a href="#" id="removeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除单项奖</a>
+</div>
+
+<!--&lt;!&ndash;项目分类&ndash;&gt;-->
+<!--<div id="itemWin" class="easyui-window" data-options="footer:'#itemWinFt',title:'专项奖录入'">-->
+    <!--<form id="itemForm" data-options="fit:true" style="padding:10px;">-->
+        <!--<input type="hidden" id="id" />-->
+        <!--<div style="padding-top: 10px">-->
+            <!--<label for="acctDeptId">核算单元：</label>-->
+            <!--<input class="easyui-combobox" type="text" id="acctDeptId"/>-->
+        <!--</div>-->
+        <!--<div style="padding-top: 10px">-->
+            <!--<label for="yearMonth">录入月份：</label>-->
+            <!--<input class="easyui-combobox" type="text" id="yearMonth"/>-->
+        <!--</div>-->
+        <!--<div style="padding-top: 10px">-->
+            <!--<label for="rewardNum">专项奖：</label>-->
+            <!--<input class="easyui-combobox" type="text" id="rewardNum"/>-->
+        <!--</div>-->
+    <!--</form>-->
+<!--</div>-->
+<!--<div style="padding:5px;text-align:right;" id="itemWinFt">-->
+    <!--<a href="#" id="devideBtn" class="easyui-linkbutton" icon="icon-ok">保存</a>-->
+    <!--<a href="#" id="closeBtn" class="easyui-linkbutton" icon="icon-cancel">取消</a>-->
+<!--</div>-->
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/acct-single-reward-record.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

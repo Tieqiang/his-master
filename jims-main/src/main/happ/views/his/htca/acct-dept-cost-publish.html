@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>成本发布</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout">
+
+
+<div id="mainPanel" data-options="region:'center'">
+    <table id="acctCostTable"></table>
+</div>
+
+<div id="ft" style="margin:5px;">
+    时间：<input type="text" id="fetchDate"  class="easyui-datebox" >
+    成本项目：<input type="text" class="easyui-combogrid" id="costType" />
+    <a href="#" id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询成本</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">发布成本</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/acct-dept-cost-publish.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

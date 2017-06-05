@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>产品盘点</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div class="easyui-datagrid" id="dg">
+
+</div>
+<div id="ft">
+    盘点月份：<input id="startDate" class="easyui-validatebox easyui-datetimebox"/>
+    子库房：<select id="subStorage" class="easyui-combobox" name="state" style="width:150px"></select>
+    查找：<input id="expName" class="easyui-searchbox" prompt="请输入产品名称" style="width:200px"/>
+    <input type="checkbox" id="check">隐藏账面数0
+    处理进度：<input id="count" class="easyui-textbox"disabled/>
+</div>
+<div id="tb">
+    <a href="#" id="get" class="easyui-linkbutton" iconCls="">生成</a>
+    <a href="#" id="fill" class="easyui-linkbutton" iconCls="">实盘填充</a>
+    <!--
+    <a href="#" id="import" class="easyui-linkbutton" iconCls="">盘盈入库</a>
+    <a href="#" id="export" class="easyui-linkbutton" iconCls="">盘亏出库</a> -->
+    <a href="#" id="tempSave" class="easyui-linkbutton" iconCls="">暂存</a>
+    <a href="#" id="save" class="easyui-linkbutton" iconCls="">保存</a>
+    <a href="#" id="search" class="easyui-linkbutton" iconCls="">检索</a>
+    <a href="#" id="clear" class="easyui-linkbutton" iconCls="">清屏</a>
+    <!--<a href="#" id="saveAs" class="easyui-linkbutton" iconCls="">另存为</a>-->
+    <a href="#" id="print" class="easyui-linkbutton" iconCls="">打印</a>
+</div>
+<div id="listDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="list">
+
+    </div>
+</div>
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px" id="report">
+    </iframe>
+</div>
+<div id="printft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel'" id="printClose">关闭</a>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-inventory-check.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>
+
+    </title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+<div class="easyui-layout"id="dg">
+    <div region="north" title="采购计划生成" border="false">
+        <table id="top" class="easyui-datagrid" style="width:100%"></table>
+    </div>
+    <div region="south" border="false">
+        <table id="bottom" class="easyui-datagrid" style="width:100%"></table>
+    </div>
+    <div region="west" border="false" style="width:300px;">
+        <table id="left" class="easyui-datagrid"></table>
+    </div>
+    <div region="center" border="false">
+        <table id="right" class="easyui-datagrid"></table>
+    </div>
+</div>
+<div id="ft">
+    产品名称：<input id="expName" class="easyui-searchbox" prompt="请输入查询内容" style="width:250px"/>
+    采购单号：<input id="buyId" class="easyui-combobox" style="width:250px"/>
+    生成采购数量依据：<select id="expScope" class="easyui-combobox" name="state" style="width:150px">
+    <option value="1">上限值</option>
+    <option value="2">下限值</option>
+    <option value="3" selected>销售量</option>
+</select>
+    <input id="day" class="easyui-textbox" style="width:50px" value="7"/>天
+    <input type="radio" class="radios" name="two" value="0" checked>低于下限</input>
+    <input type="radio" class="radios" name="two" value="1">全部</input>
+</div>
+<div id="tb">
+    <a href="#" id="add" class="easyui-linkbutton" iconCls="icon-add">增加</a>
+    <a href="#" id="delete" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    <a href="#" id="join" class="easyui-linkbutton" iconCls="">加入</a>
+    <a href="#" id="joinAll" class="easyui-linkbutton" iconCls="">全部加入</a>
+    <a href="#" id="new" class="easyui-linkbutton" iconCls="">新建</a>
+    <a href="#" id="getNum" class="easyui-linkbutton" iconCls="icon-sum">生成采购数</a>
+    <a href="#" id="ts" class="easyui-linkbutton" iconCls="">暂存</a>
+    <a href="#" id="save" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+    <a href="#" id="print" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+</div>
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px"  id="report">
+    </iframe>
+</div>
+
+<div id="stockRecordDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="stockRecordDatagrid">
+
+    </div>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../javascript/buy-exp-plan.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

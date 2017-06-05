@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>消耗品入库处理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+        select{
+            width:139px
+        }
+        input{
+            width:135px;
+        }
+        label{
+            width:40px;
+            margin:2px;
+        }
+        .row{
+            margin-left:10px;
+            margin-top:5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="expImportMaster">
+    <form id="masterForm" class="easyui-form">
+        <div class="row">
+            <label for="importClass">入库类别：</label>
+            <select id="importClass" class="easyui-combobox"></select>
+
+            <label for="importDate">入库日期：</label>
+            <input type="text" id="importDate" class="easyui-datetimebox" required="required">
+
+            <label for="subStorage">&nbsp;子库房：</label>
+            <select id="subStorage"  class="easyui-combobox"></select>
+
+            <label for="documentNo">&nbsp;单据号：</label>
+            <input type="text" id="documentNo"  class="easyui-textbox" >
+            <label for="memos">&nbsp;&nbsp;备注：</label>
+            <input type="text" id="memos"  class="easyui-textbox" >
+
+        </div>
+        <div class="row">
+            <label for="accountPayed">&nbsp;已付款：</label>
+            <input type="text" id="accountPayed" class="easyui-numberbox" value="0.00" data-options="max: 9999999.99,size: 11,maxlength: 11,precision: 2">
+
+            <label for="accountReceivable">&nbsp;应付款：</label>
+            <input type="text" id="accountReceivable"  class="easyui-numberbox" value="0.00" data-options="max: 9999999.99,size: 11,maxlength: 11,precision: 2">
+
+            <label for="additionalFee">&nbsp;附加费：</label>
+            <input type="text" id="additionalFee"  class="easyui-numberbox" value="0.00" data-options="max: 9999999.99,size: 11,maxlength: 11,precision: 2">
+
+            <label for="tenderType">招标方式：</label>
+            <select id="tenderType"  class="easyui-combogrid"></select>
+            <label for="tenderNo">招标文号：</label>
+            <input type="text" id="tenderNo"  class="easyui-textbox">
+        </div>
+        <div class="row">
+            <label for="buyer">&nbsp;采购员：</label>
+            <select id="buyer"  class="easyui-combogrid"></select>
+
+            <label for="checkMan">&nbsp;验收人：</label>
+            <select id="checkMan"  class="easyui-combogrid"></select>
+            <label for="principal">&nbsp;负责人：</label>
+            <select id="principal"  class="easyui-combogrid"></select>
+
+            <label for="storekeeper">&nbsp;保管员：</label>
+            <select id="storekeeper"  class="easyui-combogrid"></select>
+
+
+            <label for="supplier">&nbsp;供货方：</label>
+            <select id="supplier"  class="easyui-combogrid"></select>
+        </div>
+    </form>
+</div>
+
+<div class="easyui-datagrid" id="importDetail">
+
+</div>
+
+<div id="ft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cut'" id="delRow">删除</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'" id="addRow">追加</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-print'" id="printBtn">打印</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'" id="saveBtn">保存</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-search'" id="searchBtn">查询入库单</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-add'" id="newSupplier">定义新供应商</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-edit'" id="newBtn">新单</a>
+    <!--<a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-clear'">退出</a>-->
+</div>
+<div id="printft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel'" id="printClose">关闭</a>
+</div>
+
+<div id="stockRecordDialog" class="easyui-dialog" style="width:500px;height:300px;">
+    <div id="stockRecordDatagrid">
+
+    </div>
+</div>
+
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px" id="report">
+    </iframe>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/exp-import.js"></script>
+</body>
+</html>

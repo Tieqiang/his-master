@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>基础数据维护-收入项目维护</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <!--<script type="text/javascript" src="/ReportServer?op=emb&resource=finereport.js"></script>-->
+</head>
+<body class="easyui-layout">
+
+<div id="ft" style="margin:5px;" data-options="region:'north'">
+    选择月份：<input type="text" id="synDate" class="easyui-datebox" />
+    <a href="#" id="getDataBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">获取本月暂存数据</a>
+    <a href="#" id="reCalcBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">重新计算</a>
+    <a href="#" id="reGetDataBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save'">重新归集费用</a>
+    <a href="#" id="printBtn" class="easyui-linkbutton" data-options="iconCls:'icon-print'">打印</a>
+    <a href="#" id="devideBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">分割收入</a>
+</div>
+<div id="main" data-options="region:'center'">
+
+    <!--<table id="hospitalIncomeRecordDatagrid">-->
+
+    <!--</table>-->
+
+    <iframe id="reportFrame" src=""
+             width = 100% height = 96% marginheight="0" marginwidth="0"></iframe>
+</div>
+
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/javascript/htca/hospital-income-record.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

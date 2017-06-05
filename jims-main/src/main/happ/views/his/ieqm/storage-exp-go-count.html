@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>库房产品去向汇总</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body>
+
+<div class="easyui-datagrid" id="importMaster">
+
+</div>
+
+
+<div id="tb">
+    日期区间：
+    <input type="text" id="startDate"  name="checkboxOne" class="easyui-datetimebox">到
+    <input type="text" id="stopDate"  name="checkboxOne" class="easyui-datetimebox">&nbsp;
+    产品类别:
+    <input type="text" id="formClass"  name="checkboxOne">&nbsp;
+    子库房:
+    <input type="text" id="subStorage"  name="checkboxOne">&nbsp;
+</div>
+<div id="ft">
+    <a class="easyui-linkbutton" id="searchBtn" href="#" data-options="iconCls:'icon-search'">查询</a>
+    <a class="easyui-linkbutton" id="saveBtn" href="#" data-options="iconCls:'icon-save'">保存</a>
+    <a class="easyui-linkbutton" id="printBtn" href="#" data-options="iconCls:'icon-print'">打印</a>
+    <!--<a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-clear'">退出</a>-->
+</div>
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px" id="report">
+    </iframe>
+</div>
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/storage-exp-go-count.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>库存量查询</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout" style="width: 100%;height:100%;border: 0px;" >
+
+    <div region="north" title="库存量查询" collapsed=false style="height:110px;" >
+        <form id="numberForm" class="easyui-form"  style="padding:15px">
+
+            <div class="row">
+                <input type="checkbox" id="expName" name="checkboxOne"  onclick="checkRadio()" />产品名称：
+                <input type="text" id="searchInput"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+                <input type="checkbox" id="formClassName" name="checkboxOne"  onclick="checkRadio()" />类&nbsp;型：&nbsp;
+                <input type="text" id="formClass"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+                <input type="radio" id="okPrint" name="radioOne" checked value="0"/>&nbsp;显示零库存
+            </div>
+
+            <div class="row">
+                <input type="checkbox" id="stockClass" name="checkboxOne"  onclick="checkRadio()" />子库房&nbsp;：
+                <input type="text" id="subStorageClass"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+                <input type="checkbox" id="supply" name="checkboxOne"  onclick="checkRadio()" />生产厂家：
+                <input type="text" id="supplier"  name="checkboxOne" style="width: 200px" disabled="true">&nbsp;
+                <input type="radio" id="noPrint" name="radioOne"  value="" />不显示零库存
+            </div>
+            <div class="row">
+
+
+            </div>
+
+
+        </form>
+    </div>
+    <div region="center" >
+        <table id="expStockCol" class="easyui-datagrid"> </table>
+    </div>
+
+
+
+<!--<div id="tb">-->
+    <!---->
+<!--</div>-->
+
+<!--<div class="easyui-datagrid" id="expStockCol">-->
+
+<!--</div>-->
+
+<div id="ft">
+    <a class="easyui-linkbutton" id="searchBtn" href="#" data-options="iconCls:'icon-search'">查询</a>
+    <a class="easyui-linkbutton" id="printBtn" href="#" data-options="iconCls:'icon-print'">打印</a>
+</div>
+
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px" id="report">
+    </iframe>
+</div>
+</div>
+<div id="printft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel'" id="printClose">关闭</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-stock-number-search.js"></script>
+</body>
+</html>

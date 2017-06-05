@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>零库存管理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+</head>
+<body class="easyui-layout" style="width: 100%;height:100%" >
+
+
+<div region="north" title="零库存查询" collapsed=false style="height:80px;" >
+    <form id="mysearch" method="post" style="padding:15px">
+        产品名称:&nbsp;&nbsp;&nbsp;<input name="clinicIndexName" class="easyui-validatebox"  value="" id="expName"/>
+    </form>
+</div>
+<div region="center" >
+    <table id="dg" class="easyui-datagrid"> </table>
+</div>
+
+<!--<div id="ft" style="padding:2px 5px;">-->
+    <!--产品名称：<input id="expName" class="easyui-searchbox" prompt="请输入查询内容" style="width:250px"/>-->
+<!--</div>-->
+
+
+
+<div id="tb" style="padding:2px 5px;">
+    <a href="#" id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">提取</a>
+    <a href="#" id="deleteBtnAll" class="easyui-linkbutton" iconCls="icon-remove">删除全部</a>
+    <a href="#" id="deleteBtn" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    <a href="#" id="saveBtn" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+    <a href="#" id="printBtn" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+</div>
+
+
+
+
+
+<div id="printDiv" class="easyui-dialog" style="width:1100px;height:520px;">
+    <iframe width="1100px" height="520px" id="report">
+    </iframe>
+</div>
+
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../../javascript/exp-storage-zero-manage.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+</body>
+</html>

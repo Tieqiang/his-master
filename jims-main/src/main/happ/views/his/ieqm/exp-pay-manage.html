@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>付款处理</title>
+    <link rel="stylesheet" href="/assert/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/color.css">
+    <link rel="stylesheet" href="/assert/easyui/themes/icon.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <style>
+
+        form{
+            margin-bottom: 3px;
+        }
+        .row{
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+<div id="tb">
+    <form id="detailForm" class="easyui-form">
+        <div class="row">
+            <input type="checkbox" id="supply" name="checkboxOne"  onclick="checkRadio()" />供货商&nbsp;
+            <input type="text" id="supplier"  name="checkboxOne" style="width: 155px" disabled="true">&nbsp;
+            付款单号&nbsp;<input type="text" id="payDocument"   class="easyui-textbox"  name="checkboxOne" style="width: 150px" disabled="true">&nbsp;
+            供货单位&nbsp;<input type="text" id="supplierUnits"   class="easyui-textbox"  name="checkboxOne" style="width: 150px" disabled="true">&nbsp;&nbsp;
+            开户行&nbsp;<input type="text" id="bank"  class="easyui-textbox"   name="checkboxOne" style="width: 150px" >&nbsp;
+
+
+        </div>
+        <div class="row">
+            <input type="checkbox" id="dateTime" name="checkboxOne"  onclick="checkRadio()" />日期区间
+            <input type="text" id="startDate"  name="checkboxOne" class="easyui-datetimebox"  style="width: 155px" disabled="true">&nbsp;&nbsp;&nbsp;到&nbsp;&nbsp;
+            <input type="text" id="stopDate"  name="checkboxOne" class="easyui-datetimebox"  style="width: 151px" disabled="true">&nbsp;
+
+            &nbsp;支票号&nbsp;<input type="text" id="payNo" class="easyui-textbox" style="width: 150px" >&nbsp;
+            帐&nbsp;&nbsp;号&nbsp;<input type="text" id="accountNo" class="easyui-textbox"  style="width: 150px">&nbsp;
+        </div>
+        <div class="row">
+            <input type="checkbox" id="importDocument" name="checkboxOne"  onclick="checkRadio()" />入库单号
+            <input type="text" id="documentNo"  class="easyui-textbox"  name="checkboxOne" style="width: 155px" disabled="true">&nbsp;
+            付款金额&nbsp;<input type="text"  class="easyui-numberbox" id="payPrice"   style="width: 150px" disabled="true">&nbsp;
+            零价金额&nbsp;<input type="text"  class="easyui-numberbox" id="detailPrice"   style="width: 150px" disabled="true">&nbsp;
+            批价金额&nbsp;<input type="text"  class="easyui-numberbox" id="tradePrice"   style="width: 150px" disabled="true">&nbsp;
+        </div>
+    </form>
+</div>
+
+
+<div class="easyui-datagrid" id="importDetail">
+</div>
+
+
+<div id="ft">
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-search'" id="searchBtn">查询</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-edit'" id="editBtn">填付</a>
+    <a class="easyui-linkbutton" href="#" data-options="iconCls:'icon-save'" id="saveBtn">保存</a>
+</div>
+
+<script type="text/javascript" src="/assert/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/assert/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/javascript/tool.js"></script>
+<script type="text/javascript" src="/javascript/ieqm/exp-pay-manage.js"></script>
+</body>
+</html>
