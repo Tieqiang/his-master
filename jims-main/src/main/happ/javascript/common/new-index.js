@@ -26,13 +26,13 @@ var buildTree=function(dom,data){
     for(var i=0;i<data.length;i++){
         var li = $("<li></li>");
         if(data[i].children.length){
-            var a =$("<a href=\"#\">\n    <i class=\"fa fa-home\"></i>\n   <span class=\"nav-label\">data[i].text</span>\n    <span class=\"fa arrow\"></span>\n</a>")
+            var a =$("<a href=\"#\">\n    <i class=\"fa fa-home\"></i>\n   <span class=\"nav-label\">"+data[i].text+"</span>\n    <span class=\"fa arrow\"></span>\n</a>")
             var ul =$("<ul class=\"nav nav-second-level\"></ul>")
             buildTree(ul,data[i].children);
             li.append(a);
             li.append(ul);
         }else{
-            var aherf = $("<a class=\"J_menuItem\" href=\"layouts.html\"><i class=\"fa fa-columns\"></i> <span class=\"nav-label\">data[i].text</span></a>")
+            var aherf = $("<a class=\"J_menuItem\" href='views"+data[i].attributes.url+".html'><i class=\"fa fa-columns\"></i> <span class=\"nav-label\">"+data[i].text+"</span></a>")
             li.append(aherf);
         }
 
@@ -59,6 +59,10 @@ $(function () {
             $.messager.alert("系统提示",data.errorMessage,'error');
         }
         config = data;
+        console.log(config);
+        $("#moduleName").html(config.moduleName);
+        $("#loginName").html("登陆者："+config.staffName);
+
         if(config.limitDays<30){
             $.messager.alert("系统提示","系统将在"+config.limitDays+"天后过期",'info');
         }
@@ -68,9 +72,12 @@ $(function () {
         var menus = [];//菜单列表
         var menuTreeData = [];//菜单树的列表
         var url = "api/menu/list-login-module?moduleId=" + config.moduleId + "&loginName=" + config.loginName;
+        console.log(url);
         var lisAll = "api/menu/list";
         $(".site_title").append(config.hospitalName + "-" + config.moduleName);
         var menuPromise = $.get(url, function (data) {
+
+            console.log(data);
             $.each(data, function (index, item) {
                 var menu = {};
                 menu.attributes = {};
@@ -110,9 +117,11 @@ $(function () {
         });
         //初始化菜单
         menuPromise.done(function () {
-            buildTree($("#side-menu"),menuTreeData);
+            console.log(menuTreeData);
+            buildTree($("#side-menu"),menuTreeData[0].children);
 
-            $("#side-menu").metisMenu()
+            contabs();
+            readyfunction();
         });
     })
 

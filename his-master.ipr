@@ -68,28 +68,11 @@
     </artifact>
   </component>
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
-    <resourceExtensions />
-    <wildcardResourcePatterns>
-      <entry name="!?*.java" />
-      <entry name="!?*.form" />
-      <entry name="!?*.class" />
-      <entry name="!?*.groovy" />
-      <entry name="!?*.scala" />
-      <entry name="!?*.flex" />
-      <entry name="!?*.kt" />
-      <entry name="!?*.clj" />
-      <entry name="!?*.aj" />
-    </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="false">
-        <processorPath useClasspath="true" />
-      </profile>
-      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="jims-domain" />
         <module name="jims-generate" />
         <module name="jims-main" />
@@ -548,7 +531,7 @@
   <component name="DBNavigator.Project.StatementExecutionManager">
     <execution-variables />
   </component>
-  <component name="DataSourceManagerImpl" format="xml" hash="820349241">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="JIMSSERVER" uuid="4f1e5104-d578-404f-bd1b-2a6a937d9d58">
       <driver-ref>oracle</driver-ref>
       <auto-commit>false</auto-commit>
@@ -579,10 +562,13 @@
     <file url="file://$PROJECT_DIR$/jims-generate/src/main/java/com/jims/his/common/utils/Threads.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jims-generate/src/main/java/com/jims/his/generate" charset="UTF-8" />
   </component>
-  <component name="EntryPointsManager">
-    <entry_points version="2.0" />
-  </component>
   <component name="IdProvider" IDEtalkID="3E0534D9054133576C6572808BF06510" />
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
@@ -724,7 +710,7 @@
       <module fileurl="file://$PROJECT_DIR$/jims-main/jims-main.iml" filepath="$PROJECT_DIR$/jims-main/jims-main.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="1.7" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SvnBranchConfigurationManager">
@@ -746,7 +732,9 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="dataSourceStorageLocal">
-    <data-source name="JIMSSERVER" uuid="4f1e5104-d578-404f-bd1b-2a6a937d9d58" />
+    <data-source name="JIMSSERVER" uuid="4f1e5104-d578-404f-bd1b-2a6a937d9d58">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" />
+    </data-source>
   </component>
   <component name="libraryTable">
     <library name="Maven: ant:ant:1.6.5">
@@ -837,15 +825,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/google/inject/guice/3.0/guice-3.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.oracle:ojdbc6:11.2.0.1.0">
+    <library name="Maven: com.oracle:ojdbc6:12.1.0.1-atlassian-hosted">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/oracle/ojdbc6/11.2.0.1.0/ojdbc6-11.2.0.1.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/oracle/ojdbc6/12.1.0.1-atlassian-hosted/ojdbc6-12.1.0.1-atlassian-hosted.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/oracle/ojdbc6/11.2.0.1.0/ojdbc6-11.2.0.1.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/oracle/ojdbc6/12.1.0.1-atlassian-hosted/ojdbc6-12.1.0.1-atlassian-hosted-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/oracle/ojdbc6/11.2.0.1.0/ojdbc6-11.2.0.1.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/oracle/ojdbc6/12.1.0.1-atlassian-hosted/ojdbc6-12.1.0.1-atlassian-hosted-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.sun.jersey.contribs:jersey-guice:1.17">
